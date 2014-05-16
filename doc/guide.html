@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<title>Jd Guide</title>
+<link rel="stylesheet" href="jda.css" type="text/css">
+
+<body>
+<div class=masthead>
+<img src="./jblue.png" width="50px" height="50px"/>
+<span class=md>d</span>
+<span class=mt>&nbsp;Guide</span>
+<span class=ms>J-integrated<br>columnar<br>analytics</span>
+</div>
+
+<div contenteditable="false">
+
+<p>Guide to Jd database amd client/server terminology.</p>
+
+<h2>definitions</h2>
+
+<b>admin</b> - manages dan rules for users<br>
+<b>dac</b> - data column - folder for table column<br>
+<b>dan</b> - database access name<br>
+<b>dyc</b> - dynamic column - folder for system column (jd prefix)<br>
+<b>db</b> - database - folder with all data and metadata for db tables and columns<br>
+<b>intask</b> - ops run in the Jd task (jconsole/jijx) - client and server are same task<br>
+<b>remote</b> - ops run in different task (socket) - client and server are different tasks<br>
+<b>user</b> - access controlled by dan<br>
+
+<h2>names</h2>
+<p>Column, table, db, dan names must be usable as file and J names.
+Windows file names are not case sensitive. Table f with columns a and
+A would work in Linux, but not in windows.</p>
+
+<h2>db</h2>
+<p>A db is a folder with a folder for each table.
+Each table folder has a folder for each column (dac and dyc).
+Each folder has a few metadata files (prefix jd).
+Following is a simplified db folder/file list:</p>
+<code>db
+  jdlock           - lock prevents multiple task access
+  jdclass          - 'database'
+  jdstate          - state (3!:1)
+  admin.ijs        - dan rules
+  custmom.ijs      - custom code
+  table folder f
+    jdclass        - 'table'
+    jdstate
+    dac a
+      jdclass      - 'column'
+      jdstate
+      dat          - column data - file mapped as J noun with col data
+    dac b
+      ...
+    dyc jdactive
+      ...
+      dat          - boolean - row active/deleted
+  table folder g
+    ...
+</code>
+<p></p>
+
+<h2>admin</h2>
+<p>Manages user access to a db with dan rules.
+A dan selects a db and which user/pswds and ops are allowed.
+Different dans (different rules) can access the same or different folders.</p>   
+
+<p>Admin can configure the Jd task to listen on a socket for requests from remote users.</p>
+
+<p>Dan rules are usually set by the db admin.ijs (defaults used if admin.ijs does not exist).</p>
+
+<p>Following ~temp/jd/test/admin.ijs sets dans all and ro for a db.</p>
+<code>'all' jdadminfp ''            NB. all dan uses db that contains this script
+'all' jdadminup 'abc/def'     NB.   requires this user/pswd           
+'all' jdadminop '*'           NB.   allows all ops                       
+
+'ro'  jdadminfp ''            NB. ro dan uses db that contains this script
+'ro'  jdadminup 'ab/de gh/jk' NB.   requires these user/pswds            
+'ro'  jdadminop 'read reads ' NB.   allows only read and reads           
+</code>
+
+<p>Following is intask:</p>
+<code>   jdadmin '~temp/jd/test' NB. load ~temp/jd/test/admin.ijs
+   jdadmin ''              NB. report
+┌───┬───────────────────────────────────────┐
+│[w]│c:/users/eric/j64-701-user/temp/jd/test│
+├───┼───────────────────────────────────────┤
+│all│~temp/jd/test                          │
+├───┼───────────────────────────────────────┤
+│all│abc/def                                │
+├───┼───────────────────────────────────────┤
+│all│*                                      │
+├───┼───────────────────────────────────────┤
+│ro │~temp/jd/test                          │
+├───┼───────────────────────────────────────┤
+│ro │ab/de gh/jk                            │
+├───┼───────────────────────────────────────┤
+│ro │read reads                             │
+└───┴───────────────────────────────────────┘
+</code>
+<p>[w] line indicates a lock to prevent interference from other tasks.</p>
+
+<p>A user accesses the db with a dan.
+Access with dan all requires abc/def and allows all ops.
+Access with dan ro requires a ab/de or gh/jk and allows only read/reads.</p>
+
+<h2>custom.ijs</h2>
+<p>Admin can customize a database with custom.ijs.</p>
+
+<ul><li>signal an error if column data for insert was negative</li>
+<li>force column insert data to be in a range</li>
+<li>provide missing column insert data (e.g derive year col data from date data)</li>
+<li>custom jd ops (e.g., common complex query handled as simpler op with simpler args)</li>
+<li>custom aggregations</li></ul>
+<h2>user</h2>
+<p>A db user performs jd ops such as read/insert/delete/update on a db.</p>
+
+<p>A jd op has implicit args of dan, user/pswd, intask/remote.
+Remote is indicated by localhost:port</p>
+
+<p>A db user sets the implicit args with verb jdaccess in a Jd client task (or equivalent if a non-J task).</p>
+<code>   jdaccess 'all abc/def intask'
+   jd'read from j' NB. all dan - intask
+
+   jdaccess 'ro ab/de localhost:65002'
+   jd'read from j' NB. ro dan - socket request to localhost:65002
+</code>
+
+<h2>intask</h2>
+<p>A Jd task can run jd ops intask. That is, the op is done right there and is not sent through a socket to a Jd server.
+Client and server are the same task.</p>
+
+<h2>remote</h2>
+<p>Admin can configure a Jd task to service ops that come in as http requests from other tasks.
+Security is provided by an SSH tunnel that connects client localhost port to the server localhost port.</p>
+
+<p>JHS jjd can service jd ops (reads/delete/insert/update/etc.). The http request processed by jjd can take request data in several formats and return the result in several formats.
+Supported formats include: JBIN (3!:1/2), Java JSON, html, text. Supported formats are easily extended.</p>
+<code>   load'~addons/data/jd/api/jjd.ijs' NB. Jd service to http clients
+</code>
+
+<p>A client posts an http request to URL localhost:port/jjd with request data that includes dan, user/pswd,
+and the op data.</p>
+
+<p>Admin can also configure a Jd task to service custom browser apps.</p>
+
+<code>   load'~addons/data/jd/demo/jhs/jdapp1.ijs'
+</code>
+
+<p>Browse to URL localhost:65001/jdapp1 to use the jdapp1 service.</p>
+
+<h2>Jd task</h2>
+<p>A Jd task makes a db available to admin and users. A Jd task is a J task with the Jd code loaded.</p>
+<code>start J
+   load'data/jd'
+Jd is Copyright (C) 2013 by Jsoftware Inc. All Rights Reserved.
+Jd is provided "AS IS" without warranty or liability of any kind.
+...
+   jdadmin 'northwind' NB. make northwind db available
+</code><br>
+
+<h2>J client</h2>
+<p>A J task can run just the Jd client code. It does not need to run Jd or provide any db access itself.</p>
+<code>   load'~addons/data/jd/api/client.ijs' NB. just client code
+   jdaccess 'foo me/my localhost:65002'
+   jd'read from j'                      NB. read from server db
+</code>
+<p></p>
+
+<h2>APL client</h2>
+<p>The Jd client code is simple and can easily be provided in APL.
+All that is required is to pack the data for the request in a suitable format
+and do an http post request. For APL it is probably worthwhile to do the
+work to allow the APL client to use JBIN format as this is the most efficient
+and the conversion between JBIN and APL arrays would be easy to implement.</p>
+
+<h2>c# etc client</h2>
+<p>The Jd client code is simple and can be easily ported to any programming
+environment that allows http post requests. In these cases support of
+JBIN may not be straightforward and JSON, XML, HTML, etc. are quite satisfactory.</p>
+
+<p>The simplest non-J client, available on any platform, is a shell script with wget or curl.</p>
+
+<h2>browser client</h2>
+<p>A Jd server can be configured to serve pages to a browser and to handle ajax requests that are jd ops.
+This makes it very easy to provide browser/javascript access to Jd.
+At some point growth in this kind of use would justify the extra work to provide Apache/nginx between
+the browsers and the Jd task.</p>
+
+<h2>server</h2>
+<p>start jconsole:<code>
+   load'data/jd'
+   initserver'default' NB. load ~addons/data/jd/config/server_default.ijs
+</code></p>
+
+<p>The above starts a JHS server on port 65011.
+The server loads Jd and makes the northwind db available.
+This server serves J IDE pages such as jijx.
+It also serves page jjd which provides services to Jd http clients.
+It also serves page jdapp1 which provides a demo Jd service to a browser.
+Keep in mind that a JHS server serves different kinds of requests (pages).</p>
+
+<p>jijx etc pages provide the J IDE and combined with Jd serves Jd admin and user.</p>
+
+<p>jjd page serves Jd users. A client sends an http post to the jjd URL
+with request parameters and gets back a formatted Jd result.
+The result can be formatted as text, html, json, or internal J (3!:1).
+It is easy to add support for custom formats.</p>
+
+<p>jdapp1 page provides a demo service to a browser. The browser client
+sends an http request for page localhost:65011/jdapp1 with parameters
+and gets back an html formatted Jd result.</p>
+
+<p>Browse to localhost:65011/jijx to have full IDE access to J and Jd(user/pswd test/test).</p>
+
+<p>A Jd client sends a Jd request (as an http post request) to a Jd
+server and gets back a response. A J task can access a Jd server by
+loading the Jd client.ijs code.<br><br>
+
+start jconsole:<code>
+  load'~addons/data/jd/api/client.ijs' NB. just client code
+  jdaccess'norhwind u/p localhost:65011'
+  jd'reads from from Suppliers'
+</code></p>
+
+<p>Any program can send an http request (for example shell command wget)
+can access the Jd server. A browser can access pages that the Jd server serves (e.g.,
+jdapp1).</p>
+
+<p>See <tt>~addons/data/jd/config/server_default.ijs</tt> for details on the default server.
+In a production system you would not include jdapp1 and you would not
+support the test and demo databases. Instead you would have something like:
+<code>
+   OKURL_jhs_=: 'jjd' NB. serve requests to URL jjd
+   jdaccess'northwind u/p localhost:65011'
+</code></p>
+
+<p>A Jd server can serve one or more databases. A machine can host 1 or more
+Jd servers. This is flexible and scalable. In one scenario a single
+server on a single machine could serve all your databases. In another scenario
+each database could be served by its own dedicated server running on its own dedicated hardware.</p>
+
+<h2>server security</h2>
+
+<p>If all your servers and clients are in a secure intranet this may not
+be much of an issue and you can have servers on different local
+network ip addresses and ports.</p>
+
+<p>But this isn't OK if your server is on a cloud machine and your clients
+are everywhere. In this case Jd uses the proven security provided by SSH.</p>
+
+<p>Each client who wants to use the server needs an shh account on the
+server. This means account admin and security are handled by normal
+host/user mechanisms. A Jd client who wants to access a Jd server
+running on a machine must be able to ssh to the machine. This provide
+a secure encrypted data transport between the client and the server
+machine. The ssh connection provides a tunnel between a local port on
+the client machine and a local port on the server. For example,
+<ul><li>machine XYZ runs Jd server with admin for DB1 on localhost:65010</li>
+<li>client does ssh to XYZ - ssh config provides tunnel localhost:65002 - localhost:65010</li>
+<li>client sends http request to localhost:65002 which gets passed to Jd server on XYZ</li></ul></p>
+
+<h2>northwind remote server</h2>
+
+<p>Steps to create a server for the northwind db on a different machiine than the client.
+Client and server can be on the same machine, but things are more
+interesting if the server is on a different machine.
+If client/server are on the same machine they communicate securely through localhost ports.
+If client is on a different machine, then it needs to ssh to the server so ssh can
+provide login security and encrypted data transport through a tunnel.</p>
+
+Prepare northwind server:
+<ol><li>select a server to which you  have ssh access</li>
+<li>configure ssh to provide a localhost tunnel for port 65011</li>
+<li>ssh to the server</li>
+<li>install J, Jd, and update all packages</li>
+<li>start jconsole<code>
+   load'data/jd'
+   jdtests'' NB. validate install and craete northwind db
+   exit''</code></li></ol>
+
+Start northwind server:
+<ol><li>ssh to server</li>
+<li>start jconsole<code>
+   load'data/jd'
+   initserver'' NB. list of available server configs
+   initserver'default'</code></li></ol>
+
+Use northwind as a remote client:
+<ol><li>start new J  task (another/same machine) (jconsole/JHS)<code>
+   load'~addons/data/jd/api/client.ijs' NB. just client, not full Jd
+   jdaccess'northwind u/p localhost:65011'
+   jd'reads CompanyName from Suppliers'</code></li></ol>
+
+Access Jd northwind server as dbadmin:
+<ol><li>start browser</li>
+<li>browse to localhost:65011:jijx</li>
+<li>login with user test password test<code>
+   jdadmin''</code></li></ol>
+
+</div></body></html>

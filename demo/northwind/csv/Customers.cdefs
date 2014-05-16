@@ -1,0 +1,12 @@
+1  Address      varbyte    
+2  City         varbyte    
+3  CompanyName  varbyte    
+4  ContactName  varbyte    
+5  ContactTitle varbyte    
+6  Country      varbyte    
+7  CustomerID   byte    10 
+8  Fax          varbyte    
+9  Phone        varbyte    
+10 PostalCode   varbyte    
+11 Region       varbyte    
+options TAB LF NO \ 0

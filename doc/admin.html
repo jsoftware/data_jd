@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<title>Jd Admin</title>
+<link rel="stylesheet" href="jda.css" type="text/css">
+
+<body>
+<div class=masthead>
+<img src="./jblue.png" width="50px" height="50px"/>
+<span class=md>d</span>
+<span class=mt>&nbsp;Admin</span>
+<span class=ms>J-integrated<br>columnar<br>analytics</span>
+</div>
+<div contenteditable="false">
+<codenopre><p>Admin is done in the Jd task.
+Admin names have jd prefix and are defined in jd locale.
+See tutorial admin_tut.</p>
+<hr><p>jd... access/admin verbs in z locale:<br>
+<a href="#jdaccess">jdaccess</a>
+<a href="#jdadmin">jdadmin</a>
+<a href="#jdadminx">jdadminx</a></p>
+<p>jd... admin util verbs in jd locale:<br>
+<a href="#jdadminfp">jdadminfp</a>
+<a href="#jdadminlk">jdadminlk</a>
+<a href="#jdadminop">jdadminop</a>
+<a href="#jdadminup">jdadminup</a></p>
+<p>admin topics:<br>
+<a href="#admin.ijs">admin.ijs</a> <a href="#custom.ijs">custom.ijs</a>
+<a href="#datatune">datatune</a></p> 
+<hr><p>jd... utility verbs in jd locale:<br>
+<!-- jdindex a --><a href="#jdcols">jdcols</a>
+<a href="#jdcreatefolder">jdcreatefolder</a>
+<a href="#jddamage">jddamage</a>
+<a href="#jddeletefolder">jddeletefolder</a>
+<a href="#jddeletefolderok">jddeletefolderok</a>
+<a href="#jdex">jdex</a>
+<a href="#jdflush">jdflush</a>
+<a href="#jdfrom">jdfrom</a>
+<a href="#jdfroms">jdfroms</a>
+<a href="#jdglc">jdglc</a>
+<a href="#jdglt">jdglt</a>
+<a href="#jdlinkmove">jdlinkmove</a>
+<a href="#jdlinkset">jdlinkset</a>
+<a href="#jdlinktargets">jdlinktargets</a>
+<a href="#jdpath">jdpath</a>
+<a href="#jdrt">jdrt</a>
+<a href="#jdserverstop">jdserverstop</a>
+<a href="#jdshare">jdshare</a>
+<a href="#jdshuffle">jdshuffle</a>
+<a href="#jdtables">jdtables</a>
+<a href="#jdtesterrors">jdtesterrors</a>
+<a href="#jdtests">jdtests</a>
+<a href="#jdtrace">jdtrace</a>
+<!-- jdindex z --></p></codenopre><code><hr><a name="jdaccess"><h2>jdaccess</h2></a>
+set DAN (db access name), user/pswd, and server for jd ops
+
+server intask      - op runs in current J task
+server localhost:x - op runs in J task at port x
+SSH tunnel connects localhost:x to J task on server
+
+jdaccess 'test me/xx intask' NB. DAN test, user/pswd u/p
+jdaccess 'foo'               NB. same as 'foo u/p intask'
+jdaccess 'zz me/xx localhost:65002'
+jdaccess ''                  NB. report
+jdaccess 0                   NB. clear access  
+<hr><a name="jdadmin"><h2>jdadmin</h2></a>
+make db folder available with default jdaccess
+
+jdadmin 'ab'     NB. make ~temp/jd/ab available
+jdadmin '.../ab' NB. make .../ab available
+jdadmin ''       NB. report 
+jdadmin 0        NB. clear all admin and release all locks
+
+default jdaccess is for: ab u/p intask
+
+DAN (db access name) maps to folder,user/pswds,ops
+different DANs can access the same or different folders
+
+DAN rules set by admin.ijs in db folder
+creates default admin.ijs if it does not exist
+
+lock on db folder prevents interference by other tasks
+jdadmin '...' NB. gets lock
+jdadmin 0     NB. releases all locks
+<hr><a name="jdadminx"><h2>jdadminx</h2></a>
+delete old folder, create new db folder, do jdadmin
+
+jdadminx'ab'     NB. create ~temp/jd/ab
+jdadminx'.../ab' NB. create .../ab
+<hr><a name="admin.ijs"><h2>admin.ijs</h2></a>
+admin.ijs - in db folder - loaded by jdadmin
+
+*** admin.ijs default for jdadmin'ab'
+'ab' jdadminfp ''    NB. DAN ab maps to ~temp/jd/ab     
+'ab' jdadminup 'u/p' NB. requires default user/pswd
+'ab' jdadminop '*'   NB. allow all ops
+***
+
+*** admin.ijs example
+'test'   jdadminfp ''            NB. DAN test maps to this db folder
+'test'   jdadminup 'u/p'         NB.  requires this user/pswd
+'test'   jdadminop '*'           NB.  allow all ops
+'testro' jdadminfp ''            NB. DAN testro maps to this db folder
+'testro' jdadminup 'ab/de gh/jk' NB.  requires these user/pswds
+'testro' jdadminop 'read reads'  NB.  allow only read and reads
+*** admin.ijs end
+
+jdadminfp/jdadminup/jdadminop usually run only in admin.ijs
+use directly for temp changes or tests
+<hr><a name="custom.ijs"><h2>custom.ijs</h2></a>
+custom.ijs - in db folder - loaded in db locale when db opened
+
+defines:
+ dynamic        - creates ref/reference cols
+ datatune_table - adjusts insert/update args
+ jd_xxx         - jd op
+ ... addagg ... - custom aggregation
+ 
+jd'loadcustom' NB. reloads custom.ijs
+
+tutorials custom_tut, datatune_tut, aggregation_tut
+<hr><a name="datatune"><h2>datatune</h2></a>
+insert/update calls datatune_tab in the db locale before doing the operation
+datatune_tab defined in custom.ijs
+arg is list of col names and names and values from the user
+result is col values for insert/update
+
+datatune_tab can be used in many ways:
+ validate data    - assert v>0
+ modify data      - convert float dollars to cents
+ derive new cols  - y m d cols from datetime col
+
+tutorial datatune_tut
+<hr><a name="jdadminfp"><h2>jdadminfp</h2></a>
+set DAN file path
+
+'test' jdadminfp_jd_ ''
+       jdadminfp_jd_ '' NB. report
+<hr><a name="jdadminlk"><h2>jdadminlk</h2></a>
+set lock on DAN db folder
+
+'test' jdadminlk_jd_ ''
+       jdadminlk_jd_ '' NB. report
+<hr><a name="jdadminop"><h2>jdadminop</h2></a>
+set ops allowed with DAN
+
+'test' jdadminop_jd_ 'read reads insert'
+       jdadminop_jd_ '' NB. report
+<hr><a name="jdadminup"><h2>jdadminup</h2></a>
+set user/pswds allowed with DAN
+
+'test' jdadminup_jd_ 'fred/secret sam/birthday'
+       jdadminup_jd_ '' NB. report
+<hr><a name="jdcols"><h2>jdcols</h2></a>
+jdcols'tab' NB. return col names,.locales sorted by name
+<hr><a name="jdcreatefolder"><h2>jdcreatefolder</h2></a>
+jdcreatefolder'~temp/jd/a/b' NB. creates required folders for path
+<hr><a name="jddamage"><h2>jddamage</h2></a>
+jddamage_jd_'error message'
+
+writes jddamage file to db folder to prevent further access
+<hr><a name="jddeletefolder"><h2>jddeletfolder</h2></a>
+jddeletefolder_jd_   '~temp/jd/test'    NB. OK (jddeletefolderok default)
+jddeletefodler_jd_   '~temp/foo'        NB. error unless empty
+jddeletefolderok_jd_ '/important/stuff' NB. error unless empty
+
+jddeletefolderok_jd_ '/important'       NB. allow deletes only in this path
+jddeletefolder_jd_   '/important/stuff' NB. OK
+<hr><a name="jddeletefolderok"><h2>jddeletfolderok</h2></a>
+jddeletefolderok_jd_ '~temp/jd'           NB. default path
+jddeletefolderok_jd_ '/database/testarea' NB. allow deletes only in this path
+<hr><a name="jdex"><h2>jdex</h2></a>
+jdex'insert' NB. run insert example from User
+<hr><a name="jdflush"><h2>jdflush</h2></a>
+jdflush_jd_''
+
+pm (performance measurement) scripts use jdflush for more accurate benchmarks
+
+Windows: noop
+
+Linux: calls jdflush shell script
+define jdflush shell script in path as appropriate for your system
+
+***
+#!/bin/bash
+sudo sync
+sudo blockdev --flushbuf /dev/sda
+sudo blockdev --flushbuf /dev/sdb
+sudo sysctl vm/drop_caches=3
+***
+<hr><a name="jdfrom"><h2>jdfrom</h2></a>
+'col' jdfrom_jd_ jd'read from f' NB. col data from raed
+
+<hr><a name="jdfroms"><h2>jdfroms</h2></a>
+'col' jdfroms_jd_ jd'reads from f' NB. col data from reads
+<hr><a name="jdglc"><h2>jdglc</h2></a>
+jdglc_jd_'tab col'
+
+get tab/col locale
+<hr><a name="jdglt"><h2>jdglt</h2></a>
+jdglt_jd_'tab'
+
+get tab locale
+<hr><a name="jdlinkmove"><h2>jdlinkmove</h2></a>
+jdlinkmove_jd_ 'tab/col ~temp/linker'
+
+col data files can be moved (usually to another drive)
+folder structure updated so col folder links to new location
+
+some reasons for relocating cols
+ - improve performance by having i/o on multiple drives
+ - take advantage of particular drives
+   - ssd or slower or faster or high capacity
+
+tutorial link_tut
+<hr><a name="jdlinkset"><h2>jdlinkset</h2></a>
+jdlinkset_jd_ 0 : 0
+f/int     ~temp/linker0
+f/varbyte ~temp/linker1
+)
+
+jdlinkset_jd_'' NB. report db links.txt
+
+set (tab/col path) definitions in db folder link.txt file
+create col (including csvrd/csvrestore) use link.txt to do folder links
+
+tutorial link_tut
+<hr><a name="jdlinktargets"><h2>jdlinktargets</h2></a>
+jdlinktargets_jd_'' NB. report jdlinkmove/jdlinkset folder targets
+
+tutorial link_tut
+<hr><a name="jdpath"><h2>jdpath</h2></a>
+jdpath_jd_'' NB. path (ending in /) to db folder
+
+<hr><a name="jdrt"><h2>jdrt</h2></a>
+jdrt_jd_''      NB. list tutorials
+jdrt_jd_'intro' NB. run tutorial
+
+<hr><a name="jdserverstop"><h2>jdserverstop</h2></a>
+jdserverserverstop_jd_''
+
+Sets OKURL_jhs_ to empty to stop Jd from serving clients.
+<hr><a name="jdshare"><h2>jdshare</h2></a>
+jdshare_jd_'rwrwrw' NB. rw or r- or -- for owner/group/others
+normally the Jd task account owns the db folder
+
+giving another account access to the db folder allows
+Jd tasks running as that account to access the db
+
+lock prevents problems with multiple Jd tasks running as the
+owner or another account from using the db at the same time 
+
+adjust permissions to access the db from another account
+best done with host tools by someone who understands security
+jdshare might be useful in simple situations
+
+<hr><a name="jdshuffle"><h2>jdshuffle</h2></a>
+jdshuffle_jd_ 'tab'
+
+Randomly deletes and reinserts rows.
+Table at the end has the same rows it started with.
+Used in tests for proper functioning of dynamic cols.
+<hr><a name="jdtables"><h2>jdtables</h2></a>
+jdtables_jd_'tab'
+
+table names,.locales sorted by names
+<hr><a name="jdtesterrors"><h2>jdtesterrors</h2></a>
+jdtesterrors_jd_'' NB.test error formatting
+<hr><a name="jdtests"><h2>jdtests</h2></a>
+jdtests_jd_''      NB. run all tests/tutorials/demos
+jdtests_jd_ 0      NB. set ALLTESTS as list of tests - no tests run
+
+NOTE: tests in core are run with 0!:3 and have implied assert on every line
+      all other tests depend on explicit assert to signal error
+
+~addons/data/jd/test     test scripts
+~addons/data/jd/core     original locale based (non api) test scripts
+~addons/data/jd/tutorial tutorials that can run as test scripts
+~addons/data/jd/demo     scripts that build/test northwind,sandp,sed,vr
+<hr><a name="jdtrace"><h2>jdtrace</h2></a>
+jdtrace_jd_ b NB. toggle trace on/off
+
+if trace on, records written to TRACEFILE_jd (~temp/jd/trace.txt)
+ for events such as map, unmap, createjmf, jd'op ...'
+
+</code></div></div></body></html>

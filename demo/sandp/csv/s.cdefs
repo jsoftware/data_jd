@@ -1,0 +1,5 @@
+1 sid    byte 3  
+2 sname  byte 10 
+3 status int     
+4 city   byte 10 
+options TAB LF NO \ 0
