@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '1.0.22'
+VERSION=: '1.0.21>'
 
 FILES=: 0 : 0
 jd.ijs
@@ -59,23 +59,23 @@ csv/csvtest.ijs
 demo/common.ijs
 demo/jhs/jdapp1.ijs
 demo/northwind/northwind.ijs
-demo/northwind/csv/categories.cdefs
-demo/northwind/csv/categories.csv
+demo/northwind/csv/Categories.cdefs
+demo/northwind/csv/Categories.csv
 demo/northwind/csv/custom.ijs
-demo/northwind/csv/customers.cdefs
-demo/northwind/csv/customers.csv
-demo/northwind/csv/employees.cdefs
-demo/northwind/csv/employees.csv
-demo/northwind/csv/orderdetails.cdefs
-demo/northwind/csv/orderdetails.csv
-demo/northwind/csv/orders.cdefs
-demo/northwind/csv/orders.csv
-demo/northwind/csv/products.cdefs
-demo/northwind/csv/products.csv
-demo/northwind/csv/shippers.cdefs
-demo/northwind/csv/shippers.csv
-demo/northwind/csv/suppliers.cdefs
-demo/northwind/csv/suppliers.csv
+demo/northwind/csv/Customers.cdefs
+demo/northwind/csv/Customers.csv
+demo/northwind/csv/Employees.cdefs
+demo/northwind/csv/Employees.csv
+demo/northwind/csv/OrderDetails.cdefs
+demo/northwind/csv/OrderDetails.csv
+demo/northwind/csv/Orders.cdefs
+demo/northwind/csv/Orders.csv
+demo/northwind/csv/Products.cdefs
+demo/northwind/csv/Products.csv
+demo/northwind/csv/Shippers.cdefs
+demo/northwind/csv/Shippers.csv
+demo/northwind/csv/Suppliers.cdefs
+demo/northwind/csv/Suppliers.csv
 demo/sandp/sandp.ijs
 demo/sandp/csv/custom.ijs
 demo/sandp/csv/j.cdefs
