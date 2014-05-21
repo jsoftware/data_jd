@@ -142,7 +142,7 @@ pointer_to_name=: 1 { [: memr (0 4,JINT) ,~ symget@boxopen@,
 gethad=: 1 { [: memr 0 4 4 ,~ [: symget <
 
 3 : 0''
-t=. jpath'~addons/data/jd/cd/'
+t=. jpath JDP,'cd/'
 p=. jpath'~tools/regex/'
 if. UNAME-:'Linux' do.
  t=. t,'libjd.so'

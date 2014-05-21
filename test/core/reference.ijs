@@ -1,5 +1,4 @@
 NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
-require '~addons/data/jd/test/core/util.ijs'
 
 f =: Open_jd_ jpath '~temp/jd'
 d =: (Create__f [ Drop__f) 'btest'

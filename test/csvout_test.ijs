@@ -1,8 +1,6 @@
 NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 NB. Tests for csv dump utility.
 
-require '~addons/data/jd/test/core/util.ijs'
-
 NB. enum type removed as it is not fully supported
 nms =. toupper&.> types =. ;:'boolean int float byte varbyte'
 DATA =: <@".;._2 ]0 :0

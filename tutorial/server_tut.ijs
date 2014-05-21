@@ -9,7 +9,7 @@ jdadmin 0 NB. clear previous
 jdadmin 'sandp'
 jd'reads from j' 
 
-load'~addons/data/jd/api/jjd.ijs' NB. provide Jd service to http clients
+load JDP_jd_,'api/jjd.ijs' NB. provide Jd service to http clients
 
 NB. J client (J does http post request to server)
 ''[0 : 0
@@ -19,7 +19,7 @@ first we'll see a J client access this server from a jconsole task
 
 start jconsole task
 
-load'~addons/data/jd/api/client.ijs' NB. just client.ijs - not data/jd!
+load JDP_jd_,'api/client.ijs' NB. just client.ijs - not data/jd!
 jdaccess 'sandp u/p localhost:65001'
 jd'reads from j'
 jd'read  from j'
@@ -89,7 +89,7 @@ exercise for the reader
 resume tutorial
 )
 
-load'~addons/data/jd/demo/jhs/jdapp1.ijs' NB. serve JHS browser app jdapp1
+load JDP_jd_,'demo/jhs/jdapp1.ijs' NB. serve JHS browser app jdapp1
 NB. browser client of JHS page jdapp1
 ''[0 : 0
 server runs JHS app jdapp1 to provide Jd service to browser
@@ -127,7 +127,7 @@ first we'll see a J client access this server from a jconsole task
 start a new jconsole task to use as a client
 or use the one you started as a client in a previous step
 
-load'~addons/data/jd/api/client.ijs' NB. only necessary if new task
+load JDP_jd_,'api/client.ijs' NB. only necessary if new task
 jdaccess'northwind u/p localhost:65011' NB. northwind at port 65011
 jd'reads ProductName from Products'
 

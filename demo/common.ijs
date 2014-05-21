@@ -3,28 +3,17 @@ NB. demo common
 
 builddemo=: 3 : 0
 jdadminx y
-CSVFOLDER=: '~addons/data/jd/demo/',y,'/csv'
+CSVFOLDER=: JDP_jd_,'demo/',y,'/csv'
 jd'csvrestore'
 jd'loadcustom'
 jd'createdynamic'
 
 jdadminx y,'_shuffle'
-CSVFOLDER=: '~addons/data/jd/demo/',y,'/csv'
+CSVFOLDER=: JDP_jd_,'demo/',y,'/csv'
 jd'csvrestore'
 jd'loadcustom'
 jd'createdynamic'
 jdshuffle_jd_ each {."1 jdtables_jd_''
-)
-
-0 : 0 NB. old ref stuff
-jdadminx y,'_ref'
-CSVFOLDER=: '~addons/data/jd/demo/',y,'/csv'
-jd'csvrestore'
-f=. '~temp/jd/',y,'_ref/custom.ijs'
-d=. fread f 
-(d rplc 'reference';'ref')fwrite f
-jd'loadcustom'
-jd'createdynamic'
 )
 
 setdemodb=: 3 : 0

@@ -4,7 +4,6 @@ NB. demos built by jdtests''
 NB. C.J.Date's suppliers and parts database (sandp)
 NB. data matches that in the SQLite addon
 
-load'~addons/data/jd/demo/common.ijs'
 setdemodb'sandp'
 
 drd'from j'

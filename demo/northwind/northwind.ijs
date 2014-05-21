@@ -1,7 +1,6 @@
 NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 NB. demos built by jdtests''
 
-load'~addons/data/jd/demo/common.ijs'
 setdemodb'northwind'
 
 drd'Description from Categories'

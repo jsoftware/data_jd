@@ -292,16 +292,14 @@ RESIZESTRESS_jdcsv_=: 0
 NB. force demo builds
 jddeletefolder_jd_ each(<'~temp/jd/'),each 'northwind';'sandp';'sed';'vr'
 
-t=. _4}.each 1 dir'~addons/data/jd/test/*.ijs'
+t=. _4}.each 1 dir JDP_jd_,'test/*.ijs'
 t=. (>:;t i: each '/')}.each t
 tsts=. 'core/testall';t
-tsts=. (<'~addons/data/jd/test/'),each tsts,each<'.ijs'
-NB. apituts=. {."1[ 1!:0 <jpath'~addons/data/jd/tutorial/*.ijs'
-NB. apituts=. (<'~addons/data/jd/tutorial/'),each apituts
-tuts=. {."1[ 1!:0 <jpath'~addons/data/jd/tutorial/*.ijs'
-tuts=. (<'~addons/data/jd/tutorial/'),each tuts
+tsts=. (<JDP_jd_,'test/'),each tsts,each<'.ijs'
+tuts=. {."1[ 1!:0 <jpath JDP_jd_,'tutorial/*.ijs'
+tuts=. (<JDP_jd_,'tutorial/'),each tuts
 t=. ALLTESTS=:  /:~tuts,tsts NB. sorted so they run in same order on windows and linux
-if. -.IFJHS do. t=. t-.<'~addons/data/jd/tutorial/server.ijs' end.
+if. -.IFJHS do. t=. t-.<JDP_jd_,'tutorial/server.ijs' end.
 
 failed=: ''
 if. 0-:y do. i.0 0 return. end.
@@ -318,7 +316,7 @@ end.
 jdserverstop_jd_''
 
 NB. csv tests
-load'~addons/data/jd/csv/csvtest.ijs'
+load JDP_jd_,'csv/csvtest.ijs'
 RESIZESTRESS_jdcsv_=: 0
 tests''
 RESIZESTRESS_jdcsv_=: 1
@@ -332,8 +330,6 @@ if. #failed do.
  NB. echo LF,'known problems:'
  echo LF,'following tests failed:'
  echo each (<'loadd'''),each failed,each<''''
-else.
- (fread'~addons/data/jd/manifest.ijs')fwrite'~temp/jd/manifest.ijs'
 end.
 if. #conl 1 do.
  echo LF,'check for orphan locals in conl 1'  
@@ -403,13 +399,13 @@ t=. t-.'testerrors';'ref';,'x'
 d=. (<'<a href="#'),each t,each <'">'
 d=. d,each t,each <'</a>'
 d=. ;d,each LF
-r=. fread '~addons/data/jd/doc/user.html'
+r=. fread JDP,'jd/doc/user.html'
 a=. '<!-- opindex a -->'
 z=. '<!-- opindex z -->'
 i=. (#a)+1 i.~ a  E. r
 j=. 1 i.~ z E. r
 r=. (i{.r),d,j}.r
-r fwrite '~addons/data/jd/doc/user.html'
+r fwrite JDP,'doc/user.html'
 f=. ''
 for_n. t do.
  f=. f,(0=+/('<a name="',(;n),'">') E. r)#n
@@ -427,13 +423,13 @@ t=. t-.'jdcreatejmf';'jdmap';'jdunmap';'jdx'
 d=. (<'<a href="#'),each t,each <'">'
 d=. d,each t,each <'</a>'
 d=. ;d,each LF
-r=. fread '~addons/data/jd/doc/admin.html'
+r=. fread JDP,'doc/admin.html'
 a=. '<!-- jdindex a -->'
 z=. '<!-- jdindex z -->'
 i=. (#a)+1 i.~ a  E. r
 j=. 1 i.~ z E. r
 r=. (i{.r),d,j}.r
-r fwrite '~addons/data/jd/doc/admin.html'
+r fwrite JDP,'doc/admin.html'
 f=. ''
 for_n. t do.
  f=. f,(0=+/('<a name="',(;n),'">') E. r)#n
@@ -549,7 +545,7 @@ if. TRACE do. ((10{.x,': '),,(showbox boxopen y),.LF)fappend TRACEFILE end.
 )
 
 jdrt=: 3 : 0
-pa=. '~addons/data/jd/tutorial/'
+pa=. JPD,'tutorial/'
 ta=. (<pa),each {."1[1!:0 jpath pa,'*.ijs'
 aa=. _4}.each(>:;ta i: each '/')}.each ta
 aa=. (_4*;(_4{.each aa)=<'_tut')}.each aa 

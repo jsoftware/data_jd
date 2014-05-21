@@ -71,7 +71,7 @@ jd_z_=: jd_jd_
 
 ECOUNT=: 'incorrect arg count'
 
-demos=: (<'~addons/data/jd/demo/'),each 'sandp/sandp.ijs';'northwind/northwind.ijs';'sed/sed.ijs';'vr/vr.ijs'
+demos=: (<JDP,'jd/demo/'),each 'sandp/sandp.ijs';'northwind/northwind.ijs';'sed/sed.ijs';'vr/vr.ijs'
 
 NB. jdget 'tab col'
 jd_get=: 3 : 0
@@ -132,12 +132,12 @@ JDOK
 
 initserver_z_=: 3 : 0
 if. ''-:y do.
- d=. {."1[1!:0 jpath'~addons/data/jd/config/server_*.ijs'
+ d=. {."1[1!:0 jpath JDP,'config/server_*.ijs'
  >_4}.each 7}.each d
  return.
 end. 
 load'~addons/ide/jhs/core.ijs'
-load'~addons/data/jd/config/server_',y,'.ijs'
+load JDP,'config/server_',y,'.ijs'
 smoutput BIND_jhs_,':',":PORT_jhs_
 smoutput jdadmin''
 smoutput 'OKURL',;' ',each OKURL_jhs_
@@ -873,7 +873,7 @@ r;a
 
 jdex=: 3 : 0
 y=. dltb y
-d=. toJ fread '~addons/data/jd/doc/user.html'
+d=. toJ fread JDP,'doc/user.html'
 d=. dltb each<;._2 d,LF
 if. ''-:y do.
  s=. 'NB. example '

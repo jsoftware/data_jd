@@ -1,7 +1,11 @@
 NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 NB. Test that joins are performed in an optimal order
 
-require '~addons/data/jd/test/core/utilref.ijs'
+tc=: 4 : 0
+jd'droptable';x
+jd'createtable';x;'a int'
+jd'insert';x;'a';y
+)
 
 NB. y is a list of boxed integer lists.
 NB. For each make a table with the list in column a, and link them in order.

@@ -1,8 +1,6 @@
 NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 NB. Test queries, using all datatypes, joins, insertions, and deletes.
 
-require '~addons/data/jd/test/core/util.ijs'
-
 read =: [: >@{:@{:@jd 'read ' , ]
 read1=: [: read 'dat from a' , (' where ' #~ *@#) , ]
 

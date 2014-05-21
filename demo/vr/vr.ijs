@@ -4,8 +4,6 @@ NB. vr - based on lab vehicle registration database
 NB. original example had multiple tables to show idea of enums
 NB. this version is a single table
 
-load'~addons/data/jd/demo/common.ijs'
-
 NB. utilities
 toss=: ? @ (# #) { ]              NB. toss x dice with faces y
 wordlines=: [: ;: [: ; ,&' ';._2  NB. multiline wf

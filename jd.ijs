@@ -1,12 +1,20 @@
 NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 
-3 : 0''
-echo 'placeholder for Jd addon'
-'addon is not ready for use'assert 0
-)
+'placeholder - do not use until announced'assert 0
 
-PATH =. '~addons/data/jd/'
-load@:(PATH&,);._2 ]0 :0
+NB. production Jd library is ~addons/data/jd and it is installed/updated by JAL
+NB.   load'data/jd' NB. sets JDP_jd_ as path to production Jd library
+
+NB. developer Jd library is repo at ~/home/dev/addons/data/jd
+NB.    load'~home/dev/addons/data/jd' NB. sets JDP_jd_ as developer Jd library
+NB. driven by manifest.ijs - developer repo files are copied to an svn repo that
+NB. is pushed to Jsoftware for building JAL data/jd packages
+
+NB. all use of the Jd library is through JDP_jd_
+
+JDP_jd_=: ;((<jpath'~addons/data/jd/jd.ijs')e. jpath each 4!:3''){'~home/dev/addons/data/jd/';'~addons/data/jd/'
+
+load@:(JDP_jd_&,);._2 ]0 :0
 base/util.ijs
 base/zutil.ijs
 base/common.ijs
@@ -34,40 +42,9 @@ load (<y) ,&.> (boxxopen x) ~.@, {."1 ]1!:0 y,'*.ijs'
 
 load'data/jmf'
 
-(<;._1' base.ijs numeric.ijs') loadall PATH,'types/'
-(<;._1' base.ijs hash.ijs')    loadall PATH,'dynamic/'
+(<;._1' base.ijs numeric.ijs') loadall JDP_jd_,'types/'
+(<;._1' base.ijs hash.ijs')    loadall JDP_jd_,'dynamic/'
 erase'loadall'
-
-echo 0 : 0 rplc 'BOOKMARK';jpath'~addons/data/jd/doc/toc.html'
-Jd is Copyright 2014 by Jsoftware Inc. All Rights Reserved.
-Jd is provided "AS IS" without warranty or liability of any kind.
-
-Commercial users must have a Jd Commercial Support Agreement.
-Jd software license is free.
-
-Keep addons (base, JHS, jmf, etc) up to date.
-
-There is a slight bias for JHS as the front end.
-JHS is the base technology for Jd clent/server.
-
-Get started:
-   bookmark documentation in your browser:
-     file:///BOOKMARK
-   jdex_jd_''       NB. list examples from user.html
-   jdex_jd_'insert' NB. run insert example
-   jdrt_jd_''       NB. list tutorials
-   jdrt_jd_'intro'  NB. run intro
-)
-
-3 : 0''
-b=. *./('northwind';'sed';'sandp';'vr') e. {."1[ 1!:0 jpath'~temp/jd/*'
-b=. b*.(fread'~addons/data/jd/manifest.ijs')-:fread'~temp/jd/manifest.ijs'
-if. -.b do.
- echo ' '
- echo 'jdtests strongly reccomended!'
- echo '   jdtests_jd_'''' NB. validate install - create demos - takes minutes'
-end.
-)
 
 NB. assert for platorm and environment
 3 : 0''
@@ -94,4 +71,34 @@ if. _1=nc<'TEMPCOLS_jd_' do. TEMPCOLS_jd_=: i.0 2 end.
 if. -.IFJHS do. require'~addons/ide/jhs/sp.ijs' end.
 if. IFQT do. labs_run_jqtide_=: 3 : 'spx''''' end.
 i.0 0
+)
+
+echo 0 : 0 rplc 'BOOKMARK';jpath JDP_jd_,'doc/toc.html'
+Jd is Copyright 2014 by Jsoftware Inc. All Rights Reserved.
+Jd is provided "AS IS" without warranty or liability of any kind.
+
+Commercial users must have a Jd Commercial Support Agreement.
+Jd software license is free.
+
+Keep addons (base, JHS, jmf, etc) up to date.
+
+There is a slight bias for JHS as the front end.
+JHS is the base technology for Jd clent/server.
+
+Get started:
+   jdtests_jd_'' NB. validate - after install or update - takes minutes
+
+   bookmark documentation in your browser:
+     file:///BOOKMARK
+
+   jdex_jd_''       NB. list examples from user.html
+   jdex_jd_'insert' NB. run insert example
+   jdrt_jd_''       NB. list tutorials
+   jdrt_jd_'intro'  NB. run intro
+)
+
+echo (0=#fdir'~temp/jd')#0 : 0
+
+Run jdtests as the ~temp/jd folder does not exist!
+   jdtests_jd_''
 )

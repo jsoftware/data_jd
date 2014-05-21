@@ -1,7 +1,6 @@
 NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 NB. Test that all the datatypes work with insertion, deletion
 
-require '~addons/data/jd/test/core/util.ijs'
 f =: Open_jd_ jpath '~temp/jd'
 d =: (Create__f [ Drop__f) 'btest'
 

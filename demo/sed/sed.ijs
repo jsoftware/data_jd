@@ -11,7 +11,6 @@ NB.       e(ename,secnum)
 NB.       |
 NB. t(tno,enum,tname,tsize)
 
-load'~addons/data/jd/demo/common.ijs'
 setdemodb'sed'
 
 drd'from r'
