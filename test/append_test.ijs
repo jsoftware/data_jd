@@ -1,7 +1,7 @@
 NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 NB. tests for tableappend
 
-load JDP_jd_,'demo/common.ijs'
+load JDP,'demo/common.ijs'
 builddemo'sandp'
 
 jdadmin'sandp'

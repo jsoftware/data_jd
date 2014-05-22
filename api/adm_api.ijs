@@ -292,14 +292,14 @@ RESIZESTRESS_jdcsv_=: 0
 NB. force demo builds
 jddeletefolder_jd_ each(<'~temp/jd/'),each 'northwind';'sandp';'sed';'vr'
 
-t=. _4}.each 1 dir JDP_jd_,'test/*.ijs'
+t=. _4}.each 1 dir JDP,'test/*.ijs'
 t=. (>:;t i: each '/')}.each t
 tsts=. 'core/testall';t
-tsts=. (<JDP_jd_,'test/'),each tsts,each<'.ijs'
-tuts=. {."1[ 1!:0 <jpath JDP_jd_,'tutorial/*.ijs'
-tuts=. (<JDP_jd_,'tutorial/'),each tuts
+tsts=. (<JDP,'test/'),each tsts,each<'.ijs'
+tuts=. {."1[ 1!:0 <jpath JDP,'tutorial/*.ijs'
+tuts=. (<JDP,'tutorial/'),each tuts
 t=. ALLTESTS=:  /:~tuts,tsts NB. sorted so they run in same order on windows and linux
-if. -.IFJHS do. t=. t-.<JDP_jd_,'tutorial/server.ijs' end.
+if. -.IFJHS do. t=. t-.<JDP,'tutorial/server.ijs' end.
 
 failed=: ''
 if. 0-:y do. i.0 0 return. end.
@@ -316,7 +316,7 @@ end.
 jdserverstop_jd_''
 
 NB. csv tests
-load JDP_jd_,'csv/csvtest.ijs'
+load JDP,'csv/csvtest.ijs'
 RESIZESTRESS_jdcsv_=: 0
 tests''
 RESIZESTRESS_jdcsv_=: 1
@@ -545,7 +545,7 @@ if. TRACE do. ((10{.x,': '),,(showbox boxopen y),.LF)fappend TRACEFILE end.
 )
 
 jdrt=: 3 : 0
-pa=. JPD,'tutorial/'
+pa=. JDP,'tutorial/'
 ta=. (<pa),each {."1[1!:0 jpath pa,'*.ijs'
 aa=. _4}.each(>:;ta i: each '/')}.each ta
 aa=. (_4*;(_4{.each aa)=<'_tut')}.each aa 

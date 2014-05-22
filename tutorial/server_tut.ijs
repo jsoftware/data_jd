@@ -9,7 +9,7 @@ jdadmin 0 NB. clear previous
 jdadmin 'sandp'
 jd'reads from j' 
 
-load JDP_jd_,'api/jjd.ijs' NB. provide Jd service to http clients
+load JDP,'api/jjd.ijs' NB. provide Jd service to http clients
 
 NB. J client (J does http post request to server)
 ''[0 : 0
@@ -19,7 +19,7 @@ first we'll see a J client access this server from a jconsole task
 
 start jconsole task
 
-load JDP_jd_,'api/client.ijs' NB. just client.ijs - not data/jd!
+load '~addons/data/jd/api/client.ijs' NB. just client.ijs
 jdaccess 'sandp u/p localhost:65001'
 jd'reads from j'
 jd'read  from j'
@@ -65,7 +65,7 @@ cat "RESULT"
 tlinux=. tlinux rplc 'RESULT';(jpath'~temp\result');'PORT';":PORT_jhs_
 tlinux fwrite jpath'~temp/dowget.sh'
 
-(jpath'~temp/dowget.exe')rplc'/';'\'
+(jpath'~temp/dowget.bat')rplc'/';'\'
 jpath'~temp/dowget.sh'
 
 NB. non-J client (wget.exe) does http post request to server
@@ -75,11 +75,11 @@ any http client such as wget or curl can access the JD server
 note: wget shell script has u/p hardwired user/pswd
 
 Windows command prompt:
->.../j64-701-user/temp/dowget.exe sandp "reads from j"
+>.../j64-801-user\temp\dowget.bat sandp "reads from j"
 
 Linux command prompt:
-$ chmod +x .../j64-701-user/temp/dowget.sh
-$ .../j64-701-user/temp/dowget.sh sandp "reads from j"
+$ chmod +x .../j64-801-user/temp/dowget.sh
+$ .../j64-801-user/temp/dowget.sh sandp "reads from j"
 
 Mac command prompt:
 Mac shell script not built
@@ -89,7 +89,7 @@ exercise for the reader
 resume tutorial
 )
 
-load JDP_jd_,'demo/jhs/jdapp1.ijs' NB. serve JHS browser app jdapp1
+load JDP,'demo/jhs/jdapp1.ijs' NB. serve JHS browser app jdapp1
 NB. browser client of JHS page jdapp1
 ''[0 : 0
 server runs JHS app jdapp1 to provide Jd service to browser
@@ -127,7 +127,7 @@ first we'll see a J client access this server from a jconsole task
 start a new jconsole task to use as a client
 or use the one you started as a client in a previous step
 
-load JDP_jd_,'api/client.ijs' NB. only necessary if new task
+load '~addons/data/jd/api/client.ijs'   NB. not necessary if already loaded
 jdaccess'northwind u/p localhost:65011' NB. northwind at port 65011
 jd'reads ProductName from Products'
 

@@ -3,7 +3,7 @@ NB. copy to server_xxx.ijs (same folder) and edit
 NB. xxx can be port or database or name
 
 NB. start jconsole
-NB.    load'data/jd'
+NB.    load 'data/jd'
 NB.    initserver'' NB. list config xxx names
 NB.    initserver'xxx'
 
@@ -23,5 +23,5 @@ PASS_jhs_=: 'test'
 LHOK_jhs_=: 0
 BIND_jhs_=: 'localhost'
 OKURL_jhs_=: a:
-load JDP_jd_'api/jjd.ijs'         NB. serve JHS jjd requests from wget clients
+load JDP,'api/jjd.ijs' NB. serve JHS jjd requests from wget clients
 jdadmin'northwind'

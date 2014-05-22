@@ -3,13 +3,13 @@ NB. demo common
 
 builddemo=: 3 : 0
 jdadminx y
-CSVFOLDER=: JDP_jd_,'demo/',y,'/csv'
+CSVFOLDER=: JDP,'demo/',y,'/csv'
 jd'csvrestore'
 jd'loadcustom'
 jd'createdynamic'
 
 jdadminx y,'_shuffle'
-CSVFOLDER=: JDP_jd_,'demo/',y,'/csv'
+CSVFOLDER=: JDP,'demo/',y,'/csv'
 jd'csvrestore'
 jd'loadcustom'
 jd'createdynamic'

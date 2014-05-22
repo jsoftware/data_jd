@@ -1,7 +1,7 @@
 NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 APIRULES_jd_=: 0 NB. run with locale rather than api rules
 
-PATH =. jpath JDP_jd_,'test/core/'
+PATH =. jpath JDP,'test/core/'
 load PATH,'util.ijs'
 
 jdadminx'testall'

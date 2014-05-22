@@ -1,20 +1,18 @@
 NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 
-'placeholder - do not use until announced'assert 0
-
 NB. production Jd library is ~addons/data/jd and it is installed/updated by JAL
-NB.   load'data/jd' NB. sets JDP_jd_ as path to production Jd library
+NB.   load'data/jd' NB. sets JDP_z_ as path to production Jd library
 
 NB. developer Jd library is repo at ~/home/dev/addons/data/jd
-NB.    load'~home/dev/addons/data/jd' NB. sets JDP_jd_ as developer Jd library
+NB.   load'~home/dev/addons/data/jd' NB. sets JDP_z_ as developer Jd library
 NB. driven by manifest.ijs - developer repo files are copied to an svn repo that
 NB. is pushed to Jsoftware for building JAL data/jd packages
 
-NB. all use of the Jd library is through JDP_jd_
+NB. all use of the Jd library is through JDP_z_
 
-JDP_jd_=: ;((<jpath'~addons/data/jd/jd.ijs')e. jpath each 4!:3''){'~home/dev/addons/data/jd/';'~addons/data/jd/'
+JDP_z_=: ;((<jpath'~addons/data/jd/jd.ijs')e. jpath each 4!:3''){'~home/dev/addons/data/jd/';'~addons/data/jd/'
 
-load@:(JDP_jd_&,);._2 ]0 :0
+load@:(JDP&,);._2 ]0 :0
 base/util.ijs
 base/zutil.ijs
 base/common.ijs
@@ -42,8 +40,8 @@ load (<y) ,&.> (boxxopen x) ~.@, {."1 ]1!:0 y,'*.ijs'
 
 load'data/jmf'
 
-(<;._1' base.ijs numeric.ijs') loadall JDP_jd_,'types/'
-(<;._1' base.ijs hash.ijs')    loadall JDP_jd_,'dynamic/'
+(<;._1' base.ijs numeric.ijs') loadall JDP,'types/'
+(<;._1' base.ijs hash.ijs')    loadall JDP,'dynamic/'
 erase'loadall'
 
 NB. assert for platorm and environment
@@ -73,7 +71,7 @@ if. IFQT do. labs_run_jqtide_=: 3 : 'spx''''' end.
 i.0 0
 )
 
-echo 0 : 0 rplc 'BOOKMARK';jpath JDP_jd_,'doc/toc.html'
+echo 0 : 0 rplc 'BOOKMARK';jpath JDP,'doc/toc.html'
 Jd is Copyright 2014 by Jsoftware Inc. All Rights Reserved.
 Jd is provided "AS IS" without warranty or liability of any kind.
 
