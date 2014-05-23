@@ -4,7 +4,8 @@ NB. demos built by jdtests''
 NB. C.J.Date's suppliers and parts database (sandp)
 NB. data matches that in the SQLite addon
 
-setdemodb'sandp'
+load JDP,'demo/common.ijs'
+demoadmin'sandp'
 
 drd'from j'
 dassert 'city';7 10 fixr 'Paris Rome Athens Athens London Oslo London'

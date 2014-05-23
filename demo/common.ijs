@@ -16,8 +16,13 @@ jd'createdynamic'
 jdshuffle_jd_ each {."1 jdtables_jd_''
 )
 
-setdemodb=: 3 : 0
-if. -.(<DB_jd_)e.y;y,'_reference' do. jdadmin y end.
+NB. allow demo scripts to run on db and db_shuffle
+demoadmin=: 3 : 0
+if. DB_jd_-:y,'_shuffle' do.
+ jdadmin y,'_shuffle'
+else. 
+ jdadmin y
+end.
 )
 
 dassert=: 3 : 0

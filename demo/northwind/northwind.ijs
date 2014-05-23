@@ -1,7 +1,8 @@
 NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 NB. demos built by jdtests''
 
-setdemodb'northwind'
+load JDP,'demo/common.ijs'
+demoadmin'northwind'
 
 drd'Description from Categories'
 assert 8 58-:$;{:R

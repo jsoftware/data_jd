@@ -1,5 +1,19 @@
 NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 
+NB. asserts for platorm and environment
+'Jd requires J64'assert IF64=1
+('Jd not supported on UNAME ',UNAME) assert (<UNAME)e.'Win';'Linux';'Darwin' 
+'Jd libjd.dylib not current'assert -.UNAME-:'Darwin'
+
+3 : 0''
+if. IFWIN do.
+ 'Jd requires Windows version > XP'assert 5<{:,(8#256)#:;'kernel32.dll GetVersion x' cd ''
+ try. 'msvcr110.dll foo x'cd'' catch. end.
+ t=. 'Jd requires msvcr110.dll',LF,'http://www.microsoft.com/en-ca/download/details.aspx?id=30679',LF,'download vcredist_x64.exe and run to install msvcr110.dll'
+ t assert 2 0=cder''
+end.
+)
+
 NB. production Jd library is ~addons/data/jd and it is installed/updated by JAL
 NB.   load'data/jd' NB. sets JDP_z_ as path to production Jd library
 
@@ -44,19 +58,6 @@ load'data/jmf'
 (<;._1' base.ijs hash.ijs')    loadall JDP,'dynamic/'
 erase'loadall'
 
-NB. assert for platorm and environment
-3 : 0''
-'Jd requires J64'assert IF64=1
-('Jd not supported on UNAME ',UNAME) assert (<UNAME)e.'Win';'Linux';'Darwin' 
-'Jd libjd.dylib not current'assert -.UNAME-:'Darwin'
-if. IFWIN do.
- 'Jd requires Windows version > XP'assert 5<{:,(8#256)#:;'kernel32.dll GetVersion x' cd ''
- try. 'msvcr110.dll foo x'cd'' catch. end.
- t=. 'Jd requires msvcr110.dll',LF,'http://www.microsoft.com/en-ca/download/details.aspx?id=30679',LF,'download vcredist_x64.exe and run to install msvcr110.dll'
- t assert 2 0=cder''
-end.
-)
-
 NB. initial values
 3 : 0''
 if. _1=nc<'ALLOW_DELETE_jd_' do.
@@ -95,8 +96,14 @@ Get started:
    jdrt_jd_'intro'  NB. run intro
 )
 
+
+echo IFQT#0 : 0
+ctrl+j hijacked for managed execution of tutorials
+ctrl+j will not work with traditional labs'
+)
+
 echo (0=#fdir'~temp/jd')#0 : 0
 
 Run jdtests as the ~temp/jd folder does not exist!
-   jdtests_jd_''
+   jdtests_jd_'' NB. validate install - takes minutes
 )

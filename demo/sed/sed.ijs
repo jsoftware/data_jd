@@ -11,7 +11,8 @@ NB.       e(ename,secnum)
 NB.       |
 NB. t(tno,enum,tname,tsize)
 
-setdemodb'sed'
+load JDP,'demo/common.ijs'
+demoadmin'sed'
 
 drd'from r'
 drd'from s'

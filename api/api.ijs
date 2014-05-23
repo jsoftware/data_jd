@@ -71,7 +71,7 @@ jd_z_=: jd_jd_
 
 ECOUNT=: 'incorrect arg count'
 
-demos=: (<JDP,'jd/demo/'),each 'sandp/sandp.ijs';'northwind/northwind.ijs';'sed/sed.ijs';'vr/vr.ijs'
+demos=: (<JDP,'demo/'),each 'sandp/sandp.ijs';'northwind/northwind.ijs';'sed/sed.ijs';'vr/vr.ijs'
 
 NB. jdget 'tab col'
 jd_get=: 3 : 0

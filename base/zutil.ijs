@@ -12,6 +12,8 @@ d=. ($d)$' ' ((t e. 32{.a.)#i.#t)}t
 (-.*./"1 d="1 1[' '#~{:$d)#d
 )
 
+decho_z_=: echo_z_
+
 NB. JHS echo to console - should be in JHS core or even stdlib
 echoc=: 3 : 0
 if. IFJHS do.
@@ -27,6 +29,8 @@ else.
  echo y
 end. 
 )
+
+dechoc_z_=: echoc_z_
 
 NB. redirect
 

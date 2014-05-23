@@ -31,6 +31,21 @@ See Admin jdlinkmove, jdlinkset, and jdlinktargets for details.
 <h2>performance measurement</h2>
 <p>Folder pm has scripts for performance measurement.</p>
 
+<h2>developer</h2>
+<p>Jd is distributed with JAL (Package Manager) and the Jd library is at ~addons/data/jd.
+The data/jd package is built from the Jsoftware addon svn repo. This Jd library is accessed with:<br>
+<code>   load'data/jd' NB. same as ~addons/data/jd/jd.ijs</code><p>
+
+<p>A developer works with a different repo and their local data/jd source is in
+~home/dev/addons/data/jd. This library is accessed with:<br>
+<code>   load'~home/dev/addons/data/jd/jd.ijs'</code></p>
+
+<p>Loading jd.ijs sets JDP_jd_ as the path to the Jd library
+(~addons/data/jd/ or ~home/addons/data/jd)
+and this is used for all library references.</p>
+
+<p>An automated process copies the developer repo to the addon svn repo to build a new Jd release.</p>
+
 <h2>col - locale/mapping</h2>
 <p>Column data is stored in a file in the database folder structure.
 The file is mapped to a J noun for processing.
