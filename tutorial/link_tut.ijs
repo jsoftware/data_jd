@@ -80,6 +80,8 @@ showbox jdlinktargets_jd_''
 NB. it is possible to relocate a column to another location
 NB. note that this is independent from jdlinkset and does not adjust the linkj definitions
 jdadminx'test'
+jddeletefolderok_jd_'~temp/linker'
+jddeletefolder_jd_  '~temp/linker'
 jd'gen one f 3 2'
 jdlinkmove_jd_ 'f/a0 ~temp/linker'
 jdlinktargets_jd_''
