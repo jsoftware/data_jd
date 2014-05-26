@@ -7,6 +7,7 @@ CSVFOLDER=: JDP,'demo/',y,'/csv'
 jd'csvrestore'
 jd'loadcustom'
 jd'createdynamic'
+jd'close' NB. avoid file handle limit problems
 
 jdadminx y,'_shuffle'
 CSVFOLDER=: JDP,'demo/',y,'/csv'
@@ -14,6 +15,7 @@ jd'csvrestore'
 jd'loadcustom'
 jd'createdynamic'
 jdshuffle_jd_ each {."1 jdtables_jd_''
+jd'close' NB. avoid file handle limit problems
 )
 
 NB. allow demo scripts to run on db and db_shuffle
