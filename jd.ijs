@@ -2,8 +2,7 @@ NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 
 NB. asserts for platorm and environment
 'Jd requires J64'assert IF64=1
-('Jd not supported on UNAME ',UNAME) assert (<UNAME)e.'Win';'Linux';'Darwin' 
-'Jd libjd.dylib not current'assert -.UNAME-:'Darwin'
+('Jd not supported on UNAME: ',UNAME) assert (<UNAME)e.'Win';'Linux';'Darwin' 
 
 3 : 0''
 if. IFWIN do.
