@@ -68,9 +68,10 @@ end.
 i.0 0
 )
 
-build''
+build 1000
 
 jdadmin'vr'
-drd'count lic by make from vr'
-drd'from vr where lic<1000000100 and make="Ford"'
+jd'reads count lic from vr'
+jd'reads count lic by make from vr'
+jd'reads from vr where lic<1000000100 and make="Ford"'
 

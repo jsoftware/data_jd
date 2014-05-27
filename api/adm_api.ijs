@@ -279,18 +279,19 @@ if. _1=nc<'LOCKED'  do. LOCKED=:  0 2$'' end.
 LIBC=: unxlib'c'
 )
 
+
+
 NB. assume headers are non-numeric and end at first number in any column
 NB. '' runs all - 0 just sets ALLTESTS
 jdtests=: 3 : 0
+
 cocurrent'base' NB. defined in jd, but must run in base
+
 NB. assert -.(<'jjd')e. conl 0['jdtests must be run in task that is not acting as a server'
 jdserverstop_jd_''
 jd'close'
 jdadmin 0
 RESIZESTRESS_jdcsv_=: 0
-
-NB. force demo builds
-jddeletefolder_jd_ each(<'~temp/jd/'),each 'northwind';'sandp';'sed';'vr'
 
 t=. _4}.each 1 dir JDP,'test/*.ijs'
 t=. (>:;t i: each '/')}.each t
@@ -298,11 +299,17 @@ tsts=. 'core/testall';t
 tsts=. (<JDP,'test/'),each tsts,each<'.ijs'
 tuts=. {."1[ 1!:0 <jpath JDP,'tutorial/*.ijs'
 tuts=. (<JDP,'tutorial/'),each tuts
+tuts=. tuts,demos_jd_
 t=. ALLTESTS=:  /:~tuts,tsts NB. sorted so they run in same order on windows and linux
 if. -.IFJHS do. t=. t-.<JDP,'tutorial/server.ijs' end.
 
 failed=: ''
 if. 0-:y do. i.0 0 return. end.
+
+load JDP,'demo/common.ijs'
+builddemo'northwind'
+builddemo'sandp'
+builddemo'sed'
 
 for_n. i.#t do.
   try.

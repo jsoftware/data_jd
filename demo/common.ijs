@@ -2,6 +2,7 @@ NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 NB. demo common
 
 builddemo=: 3 : 0
+jd'close' NB. avoid file handle limit problem
 jdadminx y
 CSVFOLDER=: JDP,'demo/',y,'/csv'
 jd'csvrestore'
@@ -16,15 +17,6 @@ jd'loadcustom'
 jd'createdynamic'
 jdshuffle_jd_ each {."1 jdtables_jd_''
 jd'close' NB. avoid file handle limit problems
-)
-
-NB. allow demo scripts to run on db and db_shuffle
-demoadmin=: 3 : 0
-if. DB_jd_-:y,'_shuffle' do.
- jdadmin y,'_shuffle'
-else. 
- jdadmin y
-end.
 )
 
 dassert=: 3 : 0
@@ -45,10 +37,8 @@ smoutput d
 assert 0
 )
 
-fixr=: 4 : 0
-x;~,x{.><;._1 ' ',deb y
-)
-
 drd=: 3 : 0
 R=: jd 'reads ',y
+ALLR=: ALLR,<R
+R
 )

@@ -1,9 +1,6 @@
 NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 NB. tests for tableappend
 
-load JDP,'demo/common.ijs'
-builddemo'sandp'
-
 jdadmin'sandp'
 s1=. jd'read * from s where status < 20'
 s2=. jd'read * from s where status < 30 and status >= 20'

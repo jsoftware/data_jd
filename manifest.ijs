@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '1.0.30'
+VERSION=: '1.0.1'
 
 FILES=: 0 : 0
 jd.ijs
@@ -122,7 +122,6 @@ test/basic_test.ijs
 test/cd_query_test.ijs
 test/createcol_test.ijs
 test/csvout_test.ijs
-test/demo_test.ijs
 test/dynamic_test.ijs
 test/float_test.ijs
 test/hashx_test.ijs
@@ -131,9 +130,12 @@ test/hash_test.ijs
 test/insert_test.ijs
 test/joinorder_test.ijs
 test/join_test.ijs
+test/northwind_test.ijs
 test/orderby_test.ijs
 test/query_test.ijs
 test/ref_test.ijs
+test/sandp_test.ijs
+test/sed_test.ijs
 test/stress_test.ijs
 test/update_test.ijs
 test/validate_test.ijs
