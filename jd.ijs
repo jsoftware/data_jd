@@ -106,3 +106,12 @@ echo (0=#fdir'~temp/jd')#0 : 0
 Run jdtests as the ~temp/jd folder does not exist!
    jdtests_jd_'' NB. validate install - takes minutes
 )
+
+3 : 0''
+if. -.UNAME-:'Win' do.
+ n=. ".}:2!:0'ulimit -n'
+ if. n<4096 do.
+  echo LF,(":n),' for "ulimit -n" is low. See Technotes "file handles" for details.'
+ end.
+end.
+)
