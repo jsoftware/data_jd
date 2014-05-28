@@ -17,6 +17,33 @@
 
 <div contenteditable="false">
 
+<h2>file handles</h2>
+<p>Jd requires lots of file handles. Each column uses a handle
+and each reference can use 5 handles.
+A database with many columns (over multiple tables) can require 100s of handles.
+The northwind demo database requires 173 handles.</p>
+
+<p>Requirements are hard to calculate. Normal columns are mapped as required,
+so a table with 2000 columns where only a few are used in the session requires only a few handles.
+A <code> jd'close' </code> frees the file handles
+for that database.</p>
+
+<p>Linux/Mac typically have a default limit on handles of 256 or 1024.
+There is no reason to not raise the limit significantly for Jd.
+A limit of 256 is enough to run <code> jdtests_jd_'' </code>, but is not enough for
+larger databases. You probably want to raise the limit to at least 4096 and depending on
+your databases and use patterns you may need more.</p>
+
+<p>Windows does not have a limit on file handles.</p>
+
+<p>Jd fails badly if it runs out of handles. It is unable to access a required file and grinds to a stop.
+This can be reported as a failure to map a file or as a limit error on file operations. You can check
+the number of handles used by mapped files with <code>#mappings_jmf_</code> and compare this with your
+limit on file handles.</p>
+
+<p>You can check your file handle limit with <code> 2!:0'ulimit -n' </code> in J. You can't increase
+the limit from within J and need to increase it in the shell task before launching J.</p>
+
 <h2>links</h2>
 <P>Folder symbolic links (Windows folder junctions) are used to place db cols on different drives.</p>
 
@@ -33,15 +60,21 @@ See Admin jdlinkmove, jdlinkset, and jdlinktargets for details.
 
 <h2>developer</h2>
 <p>Jd is distributed with JAL (Package Manager) and the Jd library is at ~addons/data/jd.
-The data/jd package is built from the Jsoftware addon svn repo. This Jd library is accessed with:<br>
-<code>   load'data/jd' NB. same as ~addons/data/jd/jd.ijs</code><p>
+The data/jd package is built from the Jsoftware addon svn repo. This Jd library is
+accessed with one of the following 3 equivalent lines:<br>
+<code>   load'data/jd'</code><br>
+<code>   load'~addons/data/jd/jd.ijs'</code><br>
+<code>   load'~Jd/jd.ijs' NB. assumes Jd is in ~config/folders.cfg</code></p>
 
 <p>A developer works with a different repo and their local data/jd source is in
-~home/dev/addons/data/jd. This library is accessed with:<br>
-<code>   load'~home/dev/addons/data/jd/jd.ijs'</code></p>
+its own folder. A developer should set ~config/folders.cfg to have line:<br>
+<code>Jddev ~home/dev/addons/data/jd</code><br>
+to allow easy use of the development library. Access the development library with:<br>
+<code>   load'~Jddev/jd.ijs'</code><br>
+
 
 <p>Loading jd.ijs sets JDP_jd_ as the path to the Jd library
-(~addons/data/jd/ or ~home/addons/data/jd)
+(~addons/data/jd/ or ~Jddev)
 and this is used for all library references.</p>
 
 <p>An automated process copies the developer repo to the addon svn repo to build a new Jd release.</p>

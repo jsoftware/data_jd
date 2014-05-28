@@ -16,14 +16,14 @@ end.
 NB. production Jd library is ~addons/data/jd and it is installed/updated by JAL
 NB.   load'data/jd' NB. sets JDP_z_ as path to production Jd library
 
-NB. developer Jd library is repo at ~/home/dev/addons/data/jd
-NB.   load'~home/dev/addons/data/jd' NB. sets JDP_z_ as developer Jd library
+NB. developer Jd library is repo at ~Jddev
+NB.   load'~Jddev/jd.ijs' NB. sets JDP_z_ as developer Jd library
 NB. driven by manifest.ijs - developer repo files are copied to an svn repo that
 NB. is pushed to Jsoftware for building JAL data/jd packages
 
 NB. all use of the Jd library is through JDP_z_
 
-JDP_z_=: ;((<jpath'~addons/data/jd/jd.ijs')e. jpath each 4!:3''){'~home/dev/addons/data/jd/';'~addons/data/jd/'
+JDP_z_=: ;((<jpath'~addons/data/jd/jd.ijs')e. jpath each 4!:3''){'~Jddev/';'~addons/data/jd/'
 
 load@:(JDP&,);._2 ]0 :0
 base/util.ijs
