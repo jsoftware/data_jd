@@ -25,10 +25,10 @@ drd'job_cnt:count jname by city from j order by city'
 dassert 'job_cnt';2 2 1 1 1;5 1
 drd'sum weight by color from p where city<>"Paris" order by weight'
 dassert 'weight';17 45;2 1
-drd'sum weight by color,city from p order by weight'
-dassert 'weight';12 17 17 45;4 1
-drd'avg weight by city,color from p order by weight'
-dassert 'weight';12 15 17 17;4 1
+drd'sum weight by color,city from p order by color,city'
+dassert 'weight';17 12 17 45;4 1
+drd'avg weight by city,color from p order by color,city'
+dassert 'weight';17 12 17 15;4 1
 
 drd'avg weight,pone:first pid by where:city,color from p order by pone'
 NB. can not validate shuffle (random and first)
