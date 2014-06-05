@@ -838,7 +838,6 @@ t=. getloc {.y
 s=. {."1 SUBSCR__t
 for_sx. s do.
  w=. getloc__t sx
- if. (-.ALLOW_DELETE)*.'reference'-:typ__w do. throw 'jde: reference prevents delete/update' end.
 end.
 )
 

@@ -59,13 +59,11 @@ erase'loadall'
 
 NB. initial values
 3 : 0''
-if. _1=nc<'ALLOW_DELETE_jd_' do.
- ALLOW_DELETE_jd_=: 1 NB. 1 allows delete (and update) with reference - problems now resolved
- ALLOW_FVE_jd_=:  0 NB. 1 allows hash float - see test/api_float.ijs
-end.
+APIRULES_jd_=: 1
+OP_jd_=: 'none'
+ALLOW_FVE_jd_=:  0 NB. 1 allows hash float - see test/api_float.ijs
 if. _1=nc<'TRACE_jd_' do. jdtrace_jd_ 0 end.
 if. _1=nc<'TEMPCOLS_jd_' do. TEMPCOLS_jd_=: i.0 2 end.
-
 if. -.IFJHS do. require'~addons/ide/jhs/sp.ijs' end.
 if. IFQT do. labs_run_jqtide_=: 3 : 'spx''''' end.
 i.0 0
