@@ -100,11 +100,12 @@ demo/sed/csv/t.cdefs
 demo/sed/csv/t.csv
 demo/vr/vr.ijs
 doc/admin.html
-doc/agreement.html
 doc/guide.html
 doc/jblue.png
 doc/jda.css
+doc/license.html
 doc/overview.html
+doc/support.html
 doc/technotes.html
 doc/toc.html
 doc/user.html
