@@ -10,7 +10,7 @@ MySQL, Oracle, DB2, SQL Server, and others, it is closer
 in spirit and design to Kx's kdb, Jsoftware's free JDB,
 and old APL financial systems on mainframes in 70s and 80s.
 
-The key difference between Jd and most other systems
+The key difference between Jd and most other systems 
 is that Jd comes with a fully integrated and mature
 programming language. Jd is implemented in J and lives
 openly and dynamically in the J execution and development
@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '1.0.38'
+VERSION=: '1.0.39'
 
 FILES=: 0 : 0
 jd.ijs
@@ -179,4 +179,4 @@ types/numeric.ijs
 types/varbyte.ijs
 )
 
-RELEASE=: 'j701 j801 j802 j803'
+RELEASE=: 'j701 j801 j802'
