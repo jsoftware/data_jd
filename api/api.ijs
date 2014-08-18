@@ -720,7 +720,7 @@ jd_droptable tab
 jd_createtable tab;'x int'
 jd_insert tab;'x';i.n NB. insert sets Tlen and new col creates get default data
 jd_createcol tab,' datetime datetime'
-jd_set tab;'datetime';(n#20130524303132)-10000000000*?.n#20
+jd_set tab;'datetime';(n#20130524203132)-10000000000*?.n#20
 jd_createcol tab,' float float'
 jd_set tab;'float';0.5+i.n
 jd_createcol tab,' boolean boolean'

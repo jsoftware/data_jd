@@ -13,7 +13,7 @@ jd'reads avg_wt:avg weight by color from p'
 jd'reads avg_wt:avg weight,max_wt:max weight by color from p'
 jd'reads avg_wt:avg weight,max_wt:max weight by city,color from p'
 
-NB. aliases are particularly usefull with different aggregations to a column
+NB. aliases are particularly useful with different aggregations to a column
 
 NB. full syntax for an aggregation is:
 NB.   Aggregation(,Aggregation)* by column(,column)*

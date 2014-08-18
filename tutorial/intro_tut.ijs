@@ -70,7 +70,7 @@ jd'reads /lr from f' NB. labeled rows
 jd'gen ref2 a 10 0 b 5' NB. test tables a and b
 jd'reads from a,a.b'
 
-jdadmin 0 NB. remove admin - no db avaiable
+jdadmin 0 NB. remove admin - no db available
 jd etx 'reads from t1 where year<2003 and team="blue" and product="hats"'
 jdlast
 
@@ -79,7 +79,7 @@ jd'reads from t1 where team="blue" and product="hats"'
 
 jd'info schema'
 jd'dropdb'
-jd etx 'reads rom t1'
+jd etx 'reads from t1'
 jdlast
 jd 'createdb'
 jd'info schema'

@@ -1,6 +1,6 @@
 NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 NB. from join_tut with assert added
-NB. join examples from wikepedia - sql join
+NB. join examples from wikipedia - sql join
 NB. join section in admin.html
 
 NB.  sort col data - sort colums and rows - easier to compare

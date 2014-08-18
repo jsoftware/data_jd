@@ -43,10 +43,10 @@ options AUTO AUTO NO NO 0
 )
 
 build_tab0=: 3 : 0
-jdfolder=: jpath'~temp/jd/test/tab0' NB. JD table to create
+jdfolder=: jpath'~temp/jd/test/tab0'        NB. JD table to create
 csvreportclear_jdcsv_''                     NB. clear log file of old reports
 csvdefs_jdcsv_ cdef                         NB. column definitions
-csvfolder=: jpath'~temp/jd/test/csv' NB. temp folder for csv loader
+csvfolder=: jpath'~temp/jd/test/csv'        NB. temp folder for csv loader
 csvload_jdcsv_ csvfolder;csvfile0;0         NB. csvfolder files <- csvfile
 jdfromcsv_jdcsv_ jdfolder;csvfolder         NB. JD table <- csvfolder files
 )
@@ -57,11 +57,11 @@ csvreport_jdcsv_''
 csvreportsummary_jdcsv_''
 
 build_tab0a=: 3 : 0
-jdfolder=: jpath'~temp/jd/test/tab0a' NB. JD table to create
+jdfolder=: jpath'~temp/jd/test/tab0a'    NB. JD table to create
 csvreportclear_jdcsv_''                  NB. clear log file of old reports
 csvdefs_jdcsv_ cdef                      NB. column definitions
-csvfolder=: jpath'~temp/jd/test/csv' NB. temp folder for csv loader
-csvload_jdcsv_ csvfolder;csvfile0a;0      NB. csvfolder files <- csvfile
+csvfolder=: jpath'~temp/jd/test/csv'     NB. temp folder for csv loader
+csvload_jdcsv_ csvfolder;csvfile0a;0     NB. csvfolder files <- csvfile
 jdfromcsv_jdcsv_ jdfolder;csvfolder      NB. JD table <- csvfolder files
 )
 
@@ -74,11 +74,11 @@ csverrorcount
 
 NB. you can append multiple csv files with the same format
 build_tab1=: 3 : 0
-jdfolder=: jpath'~temp/jd/test/tab1'  NB. JD table to create
+jdfolder=: jpath'~temp/jd/test/tab1'      NB. JD table to create
 csvreportclear_jdcsv_''                   NB. clear log file of old reports
-csvfolder=: jpath'~temp/jd/test/csv0' NB. temp folder for csv loader
-csvdefs_jdcsv_ cdef                      NB. column definitions
-csvload_jdcsv_   csvfolder;csvfile0;0       NB. csvfolder files <- csvfile
+csvfolder=: jpath'~temp/jd/test/csv0'     NB. temp folder for csv loader
+csvdefs_jdcsv_ cdef                       NB. column definitions
+csvload_jdcsv_   csvfolder;csvfile0;0     NB. csvfolder files <- csvfile
 csvappend_jdcsv_ csvfolder;csvfile1;0
 jdfromcsv_jdcsv_ jdfolder;csvfolder       NB. JD table        <- csvfolder files
 )
@@ -89,13 +89,13 @@ jd'reads from tab1'
 
 NB. you can append the result of a load to an existing conformable table
 build_tab2=: 3 : 0
-jdfolder=: jpath'~temp/jd/test/tab2' NB. JD table to create
+jdfolder=: jpath'~temp/jd/test/tab2'     NB. JD table to create
 csvdefs_jdcsv_ cdef                      NB. column definitions
-csvfolder=: jpath'~temp/jd/test/csv' NB. temp folder for csv loader
+csvfolder=: jpath'~temp/jd/test/csv'     NB. temp folder for csv loader
 csvload_jdcsv_ csvfolder;csvfile0;0      NB. csvfolder files <- csvfile
 jdfromcsv_jdcsv_ jdfolder;csvfolder      NB. JD table <- csvfolder files
 
-jdfolder=: jpath'~temp/jd/test/tab3' NB. JD table to create
+jdfolder=: jpath'~temp/jd/test/tab3'     NB. JD table to create
 csvload_jdcsv_ csvfolder;csvfile1;0      NB. csvfolder files <- csvfile
 jdfromcsv_jdcsv_ jdfolder;csvfolder      NB. JD table <- csvfolder files
 )

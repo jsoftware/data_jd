@@ -3,7 +3,7 @@ NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 0 : 0
 temp col(s) can be created at the start of a read statement
 a temp col can be used just like any other col
-in particular a temp col can be use in select/by/where
+in particular a temp col can be used in select/by/where
 
 a temp col is the result of a J expression that can use data from any other database col
 

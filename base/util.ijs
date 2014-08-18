@@ -68,12 +68,13 @@ rmdir_jd_ y
 
 jddeletefolder=: 3 : 0
 p=. jpath y
-if. _1=nc<'rmdirok' do. rmdirok=: '~temp/jd/' end.
+if. _1=nc<'rmdirok' do. rmdirok_jd_=: '~temp/jd/' end.
 
 if. 0~:#fdir y,'/*' do. NB. allow delete of empty folder
  t=. jpath rmdirok
- rmdirok=: '~temp/jd/'
- ('not in ',rmdirok)assert t-:(#t){.p,('/'~:{:p)#'/'
+ a=. rmdirok
+ rmdirok_jd_=: '~temp/jd/'
+ ('not in ',a,' (jddeletefolderok sets allowed delete path)')assert t-:(#t){.p,('/'~:{:p)#'/'
 end. 
 rmdir_jd_ y
 )
@@ -83,7 +84,7 @@ jddeletefolderok=: 3 : 0
 t=. jpathsep y
 t=. t,('/'~:{:t)#'/'
 'ignored - to few path seperators'assert 3<+/'/'=jpath t
-rmdirok=: t
+rmdirok_jd_=: t
 )
 
 formatdir=: [: jpath }:^:('/'={:)

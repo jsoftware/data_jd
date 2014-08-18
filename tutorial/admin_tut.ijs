@@ -23,7 +23,7 @@ jdadmin 0     NB. remove all admin
 jdadmin'test' NB. admin for ~temp/test (load ~temp/jd/test/admin.ijs)
 jdadmin''
 
-jdaccess'all u/p intask'    NB. DAN sll uses admin rows with all
+jdaccess'all u/p intask'    NB. DAN all uses admin rows with all
 jd'createtable';'f';'a int'
 jd'insert';'f';'a';23 24
 jd'read from f'             NB. all ops allowed

@@ -1,10 +1,10 @@
 NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 
 NB. createunique creates hash on 1 or more cols
-NB. similar to hash except there is no link as there duplicates are not allowed
+NB. similar to hash except there is no link as duplicates are not allowed
 NB. a unique col can be used in a reference
 NB. createunique signals error if not unique
-NB. subsequent inserts/updates signal error if no unique
+NB. subsequent inserts/updates signal error if not unique
 
 er=. 'not unique - ('
 

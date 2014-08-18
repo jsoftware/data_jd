@@ -9,7 +9,7 @@ test 10    1     5
 jd'gen ref2 arows acols brows' create tables a and b
 tables are csv dumped and restored
 operations are timed and reported
-usefull in stress testing larger data against hardware (particularly ram)
+useful in stress testing larger data against hardware (particularly ram)
 
 test 10    2  3     NB. creats small tables and runs quickly
 test 50e6  10 10000 NB. runs in a few minutes with 6gb

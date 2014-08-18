@@ -47,8 +47,12 @@ for_i. i.#ns do.
   if. 1<#$v do. throw m end.
   cnt=. ,#v
  case. 1 do.
-  if. (2~:#$v)+.shape__c~:{:$v do. throw m end.
   if. (<typ__c)e.;:'datetime date time' do. throw m end.
+  if. typ__c-:'byte' do.
+   if. (2~:#$v)+.shape__c<{:$v do. throw m end.
+  else. 
+   if. (2~:#$v)+.shape__c~:{:$v do. throw m end.
+  end. 
   cnt=. {.$v
  case.   do.
   throw m

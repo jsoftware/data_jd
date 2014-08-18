@@ -1,5 +1,5 @@
 NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
-NB. join examples from wikepedia - sql join
+NB. join examples from wikipedia - sql join
 NB. see join section in user.html
 
 jdadminx'wj'

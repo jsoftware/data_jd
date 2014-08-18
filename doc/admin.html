@@ -85,8 +85,11 @@ jdadmin '...' NB. gets lock
 jdadmin 0     NB. releases all locks
 <hr><a name="jdadminx"><h2>jdadminx</h2></a>
 delete old folder, create new db folder, do jdadmin
+jddeletefolderok allows delete that is not in ~temp/jd path
 
 jdadminx'ab'     NB. create ~temp/jd/ab
+
+jddeletefolderok_jd_ '...'
 jdadminx'.../ab' NB. create .../ab
 <hr><a name="admin.ijs"><h2>admin.ijs</h2></a>
 admin.ijs - in db folder - loaded by jdadmin
@@ -160,16 +163,16 @@ jdcreatefolder'~temp/jd/a/b' NB. creates required folders for path
 jddamage_jd_'error message'
 
 writes jddamage file to db folder to prevent further access
-<hr><a name="jddeletefolder"><h2>jddeletfolder</h2></a>
+<hr><a name="jddeletefolder"><h2>jddeletefolder</h2></a>
 jddeletefolder_jd_   '~temp/jd/test'    NB. OK (jddeletefolderok default)
 jddeletefodler_jd_   '~temp/foo'        NB. error unless empty
 jddeletefolderok_jd_ '/important/stuff' NB. error unless empty
 
-jddeletefolderok_jd_ '/important'       NB. allow deletes only in this path
+jddeletefolderok_jd_ '/important'       NB. allow one time delete in this path
 jddeletefolder_jd_   '/important/stuff' NB. OK
-<hr><a name="jddeletefolderok"><h2>jddeletfolderok</h2></a>
+<hr><a name="jddeletefolderok"><h2>jddeletefolderok</h2></a>
 jddeletefolderok_jd_ '~temp/jd'           NB. default path
-jddeletefolderok_jd_ '/database/testarea' NB. allow deletes only in this path
+jddeletefolderok_jd_ '/database/testarea' NB. allow one time delete in this path
 <hr><a name="jdex"><h2>jdex</h2></a>
 jdex'insert' NB. run insert example from User
 <hr><a name="jdflush"><h2>jdflush</h2></a>

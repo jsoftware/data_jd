@@ -70,7 +70,7 @@ jd 'reads from t1:A, t2:t1.B, t1.F, t2.C'
 NB. we can do multiple joins at once, skipping a table.
 jd 'reads from A, A.F.E'
 NB. it is possible to reach the same table in two different ways
-NB. in this case, an alieas is required to avoid name conflict
+NB. in this case, an alias is required to avoid name conflict
 jd 'reads from A, E1:A.B.E, E2:A.F.E'
 NB. another way to refer to a table is to use the name of the reference
 NB. column which connects the current table to the next table
@@ -95,7 +95,7 @@ NB. if one of the items on the left does not match anything
 NB. The right join is the same as the left join with the two sides reversed
 
 NB. outer join contains all the rows in either the left or right join
-NB. so NB. that all rows on both sides appear at least once
+NB. so that all rows on both sides appear at least once
 
 jd 'reads *.word from C, C=D' NB. Outer join
 jd 'reads *.word from C, outer C.D' NB. Alternative notation
