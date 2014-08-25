@@ -71,8 +71,10 @@ if. 1=#t do. t=. t,'u/p';'intask' end.
 assert 3=#t['bad arg'
 a=. ;{:t
 if. -.'intask'-:a do.
- p=. (>:a i. ':')}.a
+ i=. a i.':'
+ p=. a}.~>:i
  assert (0~:#p)*.0=#p-.'0123456789'['bad port number'
+ assert -.'255.255.255.255'-:;{:sdgethostbyname_jsocket_ i{.a['bad ip address or hostname'
 end.
 'DB UP SERVER'=: DBX_jd_=: t
 i.0 0
