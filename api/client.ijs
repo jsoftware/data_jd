@@ -71,8 +71,8 @@ if. 1=#t do. t=. t,'u/p';'intask' end.
 assert 3=#t['bad arg'
 a=. ;{:t
 if. -.'intask'-:a do.
- assert 'localhost:'-:10{.a['bad host'
- assert 0=#(10}.a)-.'0123456789'['bad port number'
+ p=. (>:a i. ':')}.a
+ assert (0~:#p)*.0=#p-.'0123456789'['bad port number'
 end.
 'DB UP SERVER'=: DBX_jd_=: t
 i.0 0

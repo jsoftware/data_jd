@@ -56,8 +56,11 @@ See tutorial admin_tut.</p>
 set DAN (db access name), user/pswd, and server for jd ops
 
 server intask      - op runs in current J task
-server localhost:x - op runs in J task at port x
-SSH tunnel connects localhost:x to J task on server
+server localhost:x - op runs in J JHS task at port x
+server ipaddress:x - op runs in J JHS task at ipaddress port x
+server hostname:x  - op runs in J JHS task at hostname t port x
+
+SSH tunnel can securely connect localhost:x to J task on server
 
 jdaccess 'test me/xx intask' NB. DAN test, user/pswd u/p
 jdaccess 'foo'               NB. same as 'foo u/p intask'
