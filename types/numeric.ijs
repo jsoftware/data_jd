@@ -12,8 +12,8 @@ fixtype =: [: ,@boxopen fixtype_num
 
 NB. =========================================================
 coclass deftype_jdtnumeric_ 'boolean'
-DATAFILL =: 0
-DATASIZE =: 8
+DATAFILL=: 0
+DATASIZE=: 1
 fixtype_num =: 3 : 0
   if. 1 ~: 3!:0 y do.
     throwif -. y *./@:e. 0 1
@@ -23,7 +23,8 @@ fixtype_num =: 3 : 0
 
 NB. =========================================================
 coclass deftype_jdtnumeric_ 'int'
-DATAFILL =: -~2
+DATAFILL=: -~2
+DATASIZE=: 8
 fixtype_num =: 3 : 0
   if. 4 ~: 3!:0 y do.
     throwif y -.@-: int=. <. :: 0: y
@@ -37,7 +38,7 @@ DATAFILL =: _1
 
 NB. =========================================================
 coclass deftype_jdtnumeric_ 'float'
-DATASIZE =: 64
+DATASIZE=: 8
 DATAFILL =: -~2.1
 fixtype_num =: 3 : 0
   if. 8 ~: 3!:0 y do.

@@ -3,7 +3,7 @@ coclass 'jdtbase'
 
 NB. =========================================================
 coclass deftype 'byte'
-DATASIZE =: 8
+DATASIZE =: 1
 DATAFILL =: ' '
 fixvalue=: 3 : 0
 'Invalid data rank' throwif (#$y) > ADDRANK + >:#shape

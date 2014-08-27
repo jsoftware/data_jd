@@ -41,6 +41,17 @@ create=: 3 : 0
 'typ shape' =: y
 init ''
 makecolfiles ''
+
+NB. record column names in order of creation
+if. -.'jd'-:2{.NAME do.
+ f=. PATH__PARENT,'column_create_order.txt'
+ t=. NAME,' '
+ if. fexist f do.
+  t fappend f
+ else.
+  t fwrite f
+ end.
+end. 
 )
 
 NB. refcount problems

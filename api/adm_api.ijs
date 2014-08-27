@@ -284,9 +284,8 @@ LIBC=: unxlib'c'
 NB. assume headers are non-numeric and end at first number in any column
 NB. '' runs all - 0 just sets ALLTESTS
 jdtests=: 3 : 0
-
 cocurrent'base' NB. defined in jd, but must run in base
-
+jdtrace_jd_ 1
 NB. assert -.(<'jjd')e. conl 0['jdtests must be run in task that is not acting as a server'
 jdserverstop_jd_''
 jd'close'
@@ -312,11 +311,14 @@ builddemo'sandp'
 builddemo'sed'
 
 for_n. i.#t do.
+  a=. n{t
+  'test'trace_jd_ a
   try.
-    load n{t
+    load a
   catch.
+   'test failed'trace_jd_ a
    echo LF,('failed: ',;n{t),LF,13!:12''
-   failed=: failed,n{t
+   failed=: failed,a
   end.
 end.
 
@@ -325,8 +327,10 @@ jdserverstop_jd_''
 NB. csv tests
 load JDP,'csv/csvtest.ijs'
 RESIZESTRESS_jdcsv_=: 0
+'test csv'trace_jd_ 0 
 tests''
 RESIZESTRESS_jdcsv_=: 1
+'test csv'trace_jd_ 1 
 tests''
 RESIZESTRESS_jdcsv_=: 0
 
@@ -548,7 +552,15 @@ i.0 0
 )
 
 trace=: 4 : 0
-if. TRACE do. ((10{.x,': '),,(showbox boxopen y),.LF)fappend TRACEFILE end.
+if. TRACE do.
+ t=. (25{.x),': '
+ if. ''-:y do.
+  t=. t,LF
+ else.
+  t=. t,,(showbox boxopen y),.LF
+ end.
+ t fappend TRACEFILE
+end. 
 )
 
 jdrt=: 3 : 0

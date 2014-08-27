@@ -43,6 +43,7 @@ dynamicreset''
 )
 
 dynamicreset =: 3 : 0
+'dynamicreset reference'trace''
 'datl datr' =: ;~$0
 InsertSimple@:(,&<  [:3 :'<Export__y $0'"0 [:getcols {&subscriptions)"0 i.2
 writestate''

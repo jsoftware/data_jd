@@ -8,7 +8,7 @@ visible =: 1
 static =: 1
 MAP =: ;:'dat'
 
-DATASIZE =: IF64 { 32 64
+DATASIZE =: 8 NB. default 8 bytes
 DATAFILL =: 0
 
 testcreate=: ]

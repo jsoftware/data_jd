@@ -37,11 +37,11 @@ makecolfiles =: 3 : 0
   nms =. }. nms  NB. drop it from nms
  end.
 
- ADOPTED=: InsertCol__PARENT@> nms ([,' ',])&.> typs	NB. they act as children but aren't; they're adopted
- ADOPTEDNAMES=: (3 :'<NAME__y')"0 ADOPTED				NB. names of the adopted columns
- (3 :'static__y=: 0')"0  ADOPTED						NB. adopted come from static types but aren't static
- NAME (4 :'ADOPTEDBY__y=: x')"_ 0  ADOPTED				NB. adopted must know their adopter
- (3 :'STATE__y=: ~.STATE__y,''static'';''ADOPTEDBY''')"0  ADOPTED	NB. adopted must remember their adopter
+ ADOPTED=: InsertCol__PARENT@> nms ([,' ',])&.> typs NB. they act as children but aren't; they're adopted
+ ADOPTEDNAMES=: (3 :'<NAME__y')"0 ADOPTED    NB. names of the adopted columns
+ (3 :'static__y=: 0')"0  ADOPTED      NB. adopted come from static types but aren't static
+ NAME (4 :'ADOPTEDBY__y=: x')"_ 0  ADOPTED    NB. adopted must know their adopter
+ (3 :'STATE__y=: ~.STATE__y,''static'';''ADOPTEDBY''')"0  ADOPTED NB. adopted must remember their adopter
  (3 :'writestate__y ''''')"0  ADOPTED
 
  dynamicreset qloc
@@ -56,6 +56,7 @@ Insert=: 3 : 0
 )
 
 dynamicreset=: 3 : 0
+'dynamicreset summaryset'trace''
  GRANDPARENT=: PARENT__PARENT
  if. y-:'' do. y=. newqueryloc__GRANDPARENT query end. NB. y is query locale or '' to create one
  assert. 1=#len=. ,/~. #@> read__y

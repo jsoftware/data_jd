@@ -41,10 +41,27 @@ dynamicreset''
 )
 
 dynamicreset =: 3 : 0
+'dynamicreset hash'trace''
 len =: Tlen
-hash =: _1 $~ gethashlen ''
+
+NB.!
+try.
+ hash=: _1 $~ gethashlen ''
+catch.
+ resizemap 'hash' ; DATASIZE_jdtint_ * 11 >. gethashlen''
+ hash=: _1 $~ gethashlen ''
+end.
+
 if. -.unique do.
-  link =: Tlen$_1
+
+ NB.!
+ try.
+  link=: Tlen$_1
+ catch.
+  resizemap 'link';Padvar*DATASIZE_jdtint_ * 4>.Tlen
+  link=: Tlen$_1
+ end.
+ 
 end.
 
 0 insert ".&.> MAPCOL
