@@ -144,14 +144,13 @@ end.
 tl =. tloc {~ inds=:nt|inds
 
 NB. expand * columns
-'c nc' =. (; ,&< #@>) tl ([:< 4 :'/:~getallvisible__x y'^:((<,'*')=]))"0 c
+'c nc' =. (; ,&< #@>) tl ([:< 4 :'getdefaultselection__x y'^:((<,'*')=]))"0 c
 tl =. nc#tl  [  t =. nc#t  [  inds=:nc#inds
 cnms =: {.@:(-.&a:)"1  stripsp&.> (nc#a),. t([,('.'#~*@#@[),])&.>c
 
 cloc =: tl  4 :'getloc__x y'"0  c
 EMPTY
 )
-
 
 NB. =========================================================
 NB. ***** WHERE *****

@@ -22,6 +22,17 @@ getvisible=: #~ 3 :'visible__y'@getloc@>^:(*@#)
 getvisiblestatic=: #~ 3 :'visible__y *. static__y'@getloc@>^:(*@#)
 getallvisible=: HIDCOL -.~ [: getvisible ".@:('NAMES'"_)
 
+getdefaultselection=: 3 : 0
+f=. PATH,'column_create_order.txt'
+n=. getallvisible y
+if. optionsort +. -.fexist f do.
+ /:~n
+else. 
+ con=. ~.n,~;:fread f
+ (con e. n)#con
+end.
+)
+
 open=: 3 : 0
 openallchildren ''
 3 :'(2}.y)=:getloc y'@> HIDCOL

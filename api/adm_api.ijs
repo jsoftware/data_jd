@@ -286,6 +286,7 @@ NB. '' runs all - 0 just sets ALLTESTS
 jdtests=: 3 : 0
 cocurrent'base' NB. defined in jd, but must run in base
 jdtrace_jd_ 1
+jd'option sort 1' NB. required for tests for now
 NB. assert -.(<'jjd')e. conl 0['jdtests must be run in task that is not acting as a server'
 jdserverstop_jd_''
 jd'close'
@@ -346,6 +347,8 @@ if. #conl 1 do.
  echo LF,'check for orphan locals in conl 1'  
 end.
 echo LF,(":#t),' tests run',LF,(":#failed),' failed'
+jd'option sort 0' NB. required for tests for now
+jdtrace_jd_ 0
 i.0 0
 )
 

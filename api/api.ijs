@@ -645,7 +645,8 @@ jd_option=: 3 : 0
 a=. ;:y
 select. ;{.a 
 case. 'space' do. optionspace=: 1=0".;1{a
-case.             do. assert 0['unsupported option'
+case. 'sort'  do. optionsort =: 1=0".;1{a
+case.         do. assert 0['unsupported option'
 end.
 JDOK
 )

@@ -4,6 +4,8 @@ NB. only script required by J client of Jd server
 require'socket'
 
 optionspace_jd_=: 0
+optionsort_jd_ =: 0
+
 lastcmd_jd_    =: 'none'
 lasttime_jd_   =: _1
 lastspace_jd_  =: _1
@@ -117,7 +119,7 @@ if. 'intask'-:SERVER do.
  end.
  'op'trace <OP
  opx=. ;('x'-:{.OP){OP;'x'
- if. -. (<OP) e. 'close';'createdb' do. NB. ops without DB
+ if. -. (<OP) e. 'close';'createdb';'option' do. NB. ops without DB
   DBL=: getdb'' NB. DBL global and test for damage
   t=. JDE1000
   NB. DB in DBPATHS
