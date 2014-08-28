@@ -73,8 +73,7 @@ echo 0 : 0 rplc 'BOOKMARK';jpath JDP,'doc/toc.html'
 Jd is Copyright 2014 by Jsoftware Inc. All Rights Reserved.
 Jd is provided "AS IS" without warranty or liability of any kind.
 
-Commercial users must have a Jd Commercial Support Agreement.
-Jd software license is free.
+Commercial users must have a Jd License from Jsoftware.
 
 Keep addons (base, JHS, jmf, etc) up to date.
 

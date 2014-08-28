@@ -91,6 +91,24 @@ formatdir=: [: jpath }:^:('/'={:)
 
 rmdir=: (rmdirrecursive@[ ^:('d'=4{4{::{.@])^:(1=#@]) 1!:0)@:formatdir
 
+0 : 0
+Windows Search Service (content indexing, ...) can interfer
+with file operatons (in particular create and delete) and
+should not be run when using Jd.
+
+Unfortunately stopping/disabling Windows Search Service
+does not help with the unexpected failues in file deletes
+or in jdcreatejmf.
+
+Disable Windows Search Service as follow:
+ 1. command prompt ...>serivces.msc
+ 2. scroll  down and right click Windows Search
+ 3. click Properties
+ 4. click Stop button to stop service if it is running
+ 5. change Startup type: to Disabled
+ 6. click Apply
+)
+
 rmdirrecursive=: 3 : 0
 y=.jpath y
 subfiles =. (,&.> [: {."1 (1!:0)@:(,&'*'&.>)) <(, '/'-.{:) y

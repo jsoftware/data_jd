@@ -10,6 +10,13 @@ NB. the error checks should eventually be included in jmf
 jdcreatejmf=: 3 : 0
 'createjmf'trace y
 createjmf_jmf_ y
+
+if. -.fexist {.y do.
+ 'jd createjmf failed'trace {.y
+ 6!:3[5
+ createjmf_jmf_ y
+end. 
+
 if. (fsize {.y)~:HS_jmf_+;1{y do.
  jddamage'create failed (disk full?): ',;{.y
 end.
