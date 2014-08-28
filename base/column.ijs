@@ -100,36 +100,36 @@ jdunmap (name,Cloc);size
 mapcolfile name
 )
 
-NB. get size of mapped file
-getmapsize=: 3 : 0
-try.
-  msize_jmf_ 6 pick (({."1 mappings_jmf_) i. <y,Cloc){mappings_jmf_
-catch.
-  0
+NB. append/replace data in mapped name
+NB. mapped name might need to be resized (unmap/size/map)
+NB. could run faster with C memmove rather than J append
+ardata=: 3 : 0
+'name data flag'=. y
+while. 1 do.
+ try.
+  if. flag do.
+   ". 'name=:name,data' rplc 'name';name
+  else.
+   (name)=: data
+  end. 
+  break.
+ catch.
+  assert 32=13!:11'' NB. allocation error
+  ((;flag{'replacemap';'appendmap'),' resize') trace NAME;name;fsize PATH,name
+  resizemap name;>.Padvar*fsize PATH,name
+ end.
 end.
-)
-NB. append data y to mapped name x
-appendmap =: 4 : 0
-req=. +/ 7!:5 x;'y'
-act=. getmapsize x
-if. req > act do.
-  resizemap x ; Padvar>.@*req
-end.
-". 'x=:x,y' rplc 'x';x
-EMPTY
-)
-NB. replace with data y to mapped name x
-replacemap =: 4 : 0
-req=. 7!:5 <'y'
-act=. getmapsize x
-if. req > act do.
-  resizemap x ; Padvar>.@*req
-end.
-(x)=: y
-EMPTY
+EMPTY NB. result
 )
 
-NB. =========================================================
+appendmap=: 4 : 0
+ardata x;y;1
+)
+
+replacemap=: 4 : 0
+ardata x;y;0
+)
+
 NB. Export column to boxes
 ExportMap=: 3 :'MAP ,&.> <Cloc'
 Export=: [: ".&.> [: ". 'MAP'"_
