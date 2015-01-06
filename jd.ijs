@@ -13,7 +13,7 @@ NB. all use of the Jd library is through JDP_z_
 NB. asserts for platorm and environment
 'Jd requires J64'assert IF64=1
 ('Jd not supported on UNAME: ',UNAME) assert (<UNAME)e.'Win';'Linux';'Darwin' 
-'Contact Jsoftware for Darwin support' assert -.UNAME-:'Darwin'
+NB. 'Contact Jsoftware for Darwin support' assert -.UNAME-:'Darwin'
 
 3 : 0''
 if. IFWIN do.

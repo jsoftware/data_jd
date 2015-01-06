@@ -20,29 +20,24 @@
 <h2>file handles</h2>
 <p>Jd requires lots of file handles. Each column uses a handle
 and each reference can use 5 handles.
-A database with many columns (over multiple tables) can require 100s of handles.
-The northwind demo database requires 173 handles.</p>
-
-<p>Requirements are hard to calculate. Normal columns are mapped as required,
-so a table with 2000 columns where only a few are used in the session requires only a few handles.
-A <code> jd'close' </code> frees the file handles
-for that database.</p>
+A database with many columns (over multiple tables) can require many 100s of handles.</p>
 
 <p>Linux/Mac typically have a default limit on handles of 256 or 1024.
 There is no reason to not raise the limit significantly for Jd.
-A limit of 256 is enough to run <code> jdtests_jd_'' </code>, but is not enough for
-larger databases. You probably want to raise the limit to at least 4096 and depending on
+A limit of 256 will cause<code> jdtests_jd_'' </code>to fail.
+You probably want to raise the limit to at least 4096 and depending on
 your databases and use patterns you may need more.</p>
 
 <p>Windows does not have a limit on file handles.</p>
 
-<p>Jd fails badly if it runs out of handles. It is unable to access a required file and grinds to a stop.
-This can be reported as a failure to map a file or as a limit error on file operations. You can check
-the number of handles used by mapped files with <code>#mappings_jmf_</code> and compare this with your
-limit on file handles.</p>
+<p>Jd fails badly if it runs out of handles. It is unable to access a required file
+and this can be reported as a failure to map a file or as a limit error on file operations.
+You can check the number of handles used by mapped files with <code>#mappings_jmf_</code>
+and compare this with your limit on file handles.</p>
 
-<p>You can check your file handle limit with <code> 2!:0'ulimit -n' </code> in J. You can't increase
-the limit from within J and need to increase it in the shell task before launching J.</p>
+<p>You can't increase the limit from within J and need to increase it in the shell task
+(e.g. <code>...$ ulimit -n 4096 </code>) before launching J.
+You can check your file handle limit with<code> 2!:0'ulimit -n' </code>in J.</p>
 
 <h2>links</h2>
 <P>Folder symbolic links (Windows folder junctions) are used to place db cols on different drives.</p>
