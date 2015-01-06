@@ -1,6 +1,8 @@
 NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 coclass 'jdcolumn'
 
+throw=: 13!:8&101 NB. jd not in our path
+
 NB. There are 3 col types: static, dynamic, and summary (which may be killed off)
 
 CLASS=: <'jdcolumn'
@@ -9,10 +11,7 @@ CHILD=: a:
 STATE=: <;._2 ]0 : 0
 typ
 shape
-unique
 )
-
-unique=: 0 NB. default STATE value
 
 NB. =========================================================
 init=: 3 : 0
@@ -20,13 +19,11 @@ Cloc =: '_',(>LOCALE),'_'
 coinserttofront 'jdt',typ
 )
 
-NB. cols mapped as required except for a few cases where all are mapped up front
 open=: 3 : 0
 init ''
-if. (-.APIRULES)+.(<OP)e.'reference';'tableappend';'validate';'info' do.
- mapcolfile"0 MAP
- opentyp ''
-end.
+NB. map as required!
+mapcolfile"0 MAP
+opentyp ''
 )
 
 close=: 3 : 'unmapcolfile"0 MAP'
@@ -76,19 +73,24 @@ jdunmap (>y),Cloc
 NB. x is (type;shape), y is the name of the file
 makecolfile=: 4 : 0
 typ=.<'jdt',typ  [  'typ shape' =. x
-size=. >. (4>.Tlen) * (*/shape) * DATASIZE__typ
-
-NB. createmap y ; Padvar>.@*size
-
-jdcreatejmf (PATH,y);Padvar>.@*size
+r=. getallocr''
+jdcreatejmf (PATH,y);r*DATASIZE__typ**/shape
 jdmap (y,Cloc);PATH,y
-
 if. 0=nc<'DATACOL_jd_' do.
  (y)=: DATACOL_jd_
  erase 'DATACOL_jd_'
 else.
  (y) =: (($,)~ Tlen,shape,$@]) DATAFILL__typ
 end. 
+)
+
+NB. map datr - sized to match other table
+makecolfile_datr=: 3 : 0
+typ=.<'jdt',typ  [  'typ shape' =. ('index';$0)
+r=. getallocr__y''
+jdcreatejmf (PATH,'datr');r*DATASIZE__typ**/shape
+jdmap ('datr',Cloc);PATH,'datr'
+NB.! datr=: (($,)~ Tlen__y,shape,$@]) DATAFILL__typ
 )
 
 NB. resize single mapped name
@@ -100,35 +102,76 @@ jdunmap (name,Cloc);size
 mapcolfile name
 )
 
-NB. append/replace data in mapped name
-NB. mapped name might need to be resized (unmap/size/map)
-NB. could run faster with C memmove rather than J append
-ardata=: 3 : 0
+NB. resize file if required - flag 1 for replace
+resize_if=: 3 : 0
 'name data flag'=. y
+if. flag do. old=. 0 else. old=. getbytes name~ end.
+new=. getbytes data
+if. (old+new)>getmsize_jmf_ name,Cloc do.
+ if. (<name)e.;:'datr val nub' do.
+  b=. >.1.5*old+new  NB.! how big should these guys be?
+ elseif. 1 do.
+  b=. (getbytes{.data)*ROWSMIN>.>.ROWSMULT*ROWSXTRA+(#name~)+#data
+ end.
+ resizemap name;b
+end.
+)
+
+appendmap=: 4 : 0
+resize_if x;y;0
+". 'name=:name,y' rplc 'name';x
+EMPTY NB. result
+)
+
+replacemap=: 4 : 0
+name=. x
+data=. y
 while. 1 do.
  try.
-  if. flag do.
-   ". 'name=:name,data' rplc 'name';name
-  else.
-   (name)=: data
-  end. 
+  (name)=: data
   break.
- catch.
+ catch. NB. not catchd. as this error is expected and required
   assert 32=13!:11'' NB. allocation error
-  ((;flag{'replacemap';'appendmap'),' resize') trace NAME;name;fsize PATH,name
   resizemap name;>.Padvar*fsize PATH,name
  end.
 end.
 EMPTY NB. result
 )
 
-appendmap=: 4 : 0
-ardata x;y;1
+replacemap=: 4 : 0
+resize_if x;y;1
+name=. x
+(name)=: y
+EMPTY NB. result
 )
 
-replacemap=: 4 : 0
-ardata x;y;0
+
+
+getbytes=: 3 : 0
+((JTYPES i. 3!:0 y){JSIZES)**/$y
 )
+
+NB. y is dat val hash link etc
+NB. return msize rows (how many rows will fit in msize) 
+getmsr=: 3 : 0
+r=. getmsize_jmf_ y,Cloc
+select. y 
+case. 'dat' do.
+ if. 'varbyte'-:typ do.
+  a=. 8[s=. 2
+ else.
+  a=. DATASIZE [ s=. shape
+ end. 
+case. 'val' do.
+ a=. 1
+ s=. ''
+case. do.
+ a=. 8
+ s=. ''
+end. 
+<.r%a**/s
+)
+
 
 NB. Export column to boxes
 ExportMap=: 3 :'MAP ,&.> <Cloc'

@@ -68,7 +68,7 @@ i.0 0
 getmsize=: 3 : 0
 sad=. symget <fullname y
 had=. 1{memr sad,0 4,JINT
-memr had,HADM,1,JINT
+''$memr had,HADM,1,JINT
 )
 
 NB. newsize fn;size

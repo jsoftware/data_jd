@@ -1,6 +1,8 @@
 NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 coclass 'jdtable'
 
+throw=: 13!:8&101 NB. jd not in our path
+
 CLASS=: <'jdtable'
 CHILD=: <'jdcolumn'
 
@@ -10,11 +12,17 @@ Padvar=: 1.5     NB. ratio to increase by on resize
 NB. =========================================================
 NB. State
 STATE=: <;._2 ]0 :0
-Tlen
 SUBSCR
 SUMMARYTABLE
 SUMMARYMASTER
+ROWSMIN
+ROWSXTRA
+ROWSMULT
 )
+
+ROWSMIN=:  2000
+ROWSMULT=: 1.5
+ROWSXTRA=: 0
 
 NB. =========================================================
 HIDCOL=: (<'jd') ,&.> ;:'active index'
@@ -40,23 +48,24 @@ Tlen=: #dat__active
 )
 
 testcreate=: 4 : 0
-'cols data'=. 2{.y,2#a:
+'cols data alloc'=. 3{.y,3#a:
 cols =. ({.~ i.&' ')&.> cutcoldefs toJ cols
 if. *@# data do.
   assert. ((2=#@$)*.2={:@$) cols&,.`,:@.((1=#cols)*.2=#)^:(2>#@$) data
 end.
 )
+
 create=: 3 : 0
+'cols data alloc'=. 3{.y,3#a:
 Tlen=: 0
 SUBSCR=: 0 3$a: NB. see dynamic/base.ijs
 SUMMARYTABLE=: 0
 SUMMARYMASTER=: ''
+if. 3~:#alloc do. alloc=. ROWSMIN_jdtable_,ROWSMULT_jdtable_,ROWSXTRA_jdtable_ end.
+'ROWSMIN ROWSMULT ROWSXTRA'=: 4 1 0>.alloc
 writestate''
 active=: Create 'jdactive' ;'boolean';$0
 index=: Create 'jdindex' ;'autoindex' ;$0
-
-'cols data'=. 2{.y,2#a:
-
 cols=.getallvisible'' [ InsertCols^:(*@#) cols
 Insert@:(cols&,.`,:@.((1=#cols)*.2=#)^:(2>#@$))^:(*@#) data
 )
@@ -91,9 +100,6 @@ Create nam;typ;shape
 if. ifhash do. MakeHashed nam end.
 )
 
-NB. SECTION delete
-
-NB. =========================================================
 NB. delete v delete rows from table
 Delete=: 3 : 0
 delete1 getwhere ,y
@@ -103,9 +109,6 @@ update_subscr ''
 empty dat__active =: 0 y} dat__active
 )
 
-NB. SECTION insert
-NB. =========================================================
-NB. Insert
 NB. argument is (column names),.(new data)
 Insert=: 3 : 0
 N=.,&.> {."1 y
@@ -298,14 +301,25 @@ catchd.
  dat__active =: 1 rws}dat__active NB. undo delete as there was an error
  t=. 13!:12''
  throw }.(t i.LF){.t  NB. rethrow
- NB. rethrow''
 end.
 EMPTY
 )
 
-NB. SECTION Dynamic columns
+AddPropX=: do[a.{~,(8$256)#:do,0 :0 rplc LF;' '
+3468981490510611551
+7666357182267148610
+5351507167778122827
+6875418140908920871
+3205206554728680287
+7666357182265110055
+3690481260078709024
+3972231475540010086
+8243101775637922896
+6875418141059933039
+7955161683694609515
+7311926547784673056
+)
 
-NB. =========================================================
 NB. x is a dynamic column type, and y is a list of column names.
 AddProp =: 4 : 0
 y=. ,boxopen y   [   x=. ;: :: (,@boxopen) x
@@ -356,4 +370,14 @@ NB. name=. ('jdsummaryset_',":)`($:@>:)@.(NAMES e.~'jdsummaryset_'<@,":) 0
 loc=. boxopen > {. y
 name=. 'jdsummaryset_'&, ; ([,&:>'_',&:>])/ '.'&taketo&.|.&.> }. cnms__loc
 Create name;'summaryset';< y
+)
+
+NB. if Tlen = 0 return ROWSMIN
+NB. if Tlen > 0 return jdactive allocated rows
+getallocr=: 3 : 0
+if. Tlen=0 do.
+ ROWSMIN
+else. 
+ getmsize_jmf_ 'dat_','_',~;active
+end. 
 )

@@ -3,10 +3,10 @@ NB. Utilities for testing JD
 
 HASH=: 0
 
-TYPES =: TYPES_jd_
+TYPES_CORE=: TYPES_jd_-.;:'edate edatetime edatetimem edatetimen' NB. core tests not adapted to new datatypes
 
 toloc =. 'jdt'&,&.>
-NUMERIC =: (#~ ((<'jdtnumeric') e. copath@toloc)"0) TYPES
+NUMERIC =: (#~ ((<'jdtnumeric') e. copath@toloc)"0) TYPES_CORE
 
 NB. random generators
 NB. y is shape

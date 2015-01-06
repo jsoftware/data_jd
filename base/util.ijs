@@ -294,10 +294,14 @@ varbyte
 date
 datetime
 time
+edate
+edatetime
+edatetimem
+edatetimen
 )
 
 NB. 3!:0 TYPES values
-TYPESj=: 1 4 8 2 4 4 4 4 4
+TYPESj=: 1 4 8 2 4 4 4 4 4 4 4 4 4
 
 NB. sudo sync/blockdev flushbuf/drop_caches
 jdflush=: 3 : 0
@@ -317,10 +321,11 @@ NB. (100<.#rows) random rows are deleted/insertt in bulk
 NB. result is arg which allows: jdshuffle^:3 'foo'
 jdshuffle=: 3 : 0
 'tab'=. y
-d=. /:~|:><"1 each ,.each {:jd'reads from ',tab
+d=. /:~|:><"1 each ,.each {:QA__=:jd'reads from ',tab
 
 NB. shuffle random rows 1 at a time
-v=. ((100<.>.0.25*#v){.?~#v){v=. ,>{:jd'reads jdindex from ',tab
+v=. ((100<.>.0.25*#v){.?~#v){v=. ,>{:QINDEX__=: jd'reads jdindex from ',tab
+
 for_i. v do.
  t=. jd'read from ',tab,' where jdindex=',":i
  jd ('delete ',tab);'jdindex=',":i
@@ -334,7 +339,7 @@ t=. jd'read from ',tab,' where ',test
 jd ('delete ',tab);test
 jd ('insert ',tab);,t
 
-z=. /:~|:><"1 each ,.each {:jd'reads from ',tab
-assert d-:z
+z=. /:~|:><"1 each ,.each {:QZ__=: jd'reads from ',tab
+'shuffle failed' assert d-:z
 y
 )

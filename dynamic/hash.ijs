@@ -6,7 +6,7 @@ NB. A hash column stores a hash table for the referenced column(s).
 NB. This forces lookups to use the hash.
 
 typ =: 'hash'
-STATE=: STATE_jddbase_ , <'len'
+STATE=: STATE_jddbase_ ,;:'len unique'
 MAP =: ;:'hash link'
 unique =: 0
 
@@ -26,7 +26,11 @@ end.
 MAPCOL =: ; 3 :'ExportMap__y $0'&.> <"0 COLS
 )
 
-gethashlen =: 3 : '4 p: +:2>.Tlen' NB. A prime before +:Tlen
+gethashlen=: 3 : 0
+4 p: +:getmsize_jmf_ 'dat_','_',~;active
+NB. 4 p: +:getmsize_jmf_ 'dat_','_',~;active__PARENT
+)
+
 dynamicinit =: 3 : 0
 assert. 1 = #subscriptions
 assert. NAME__PARENT -: >{.{.subscriptions
@@ -44,25 +48,19 @@ dynamicreset =: 3 : 0
 'dynamicreset hash'trace''
 len =: Tlen
 
-NB.!
-try.
- hash=: _1 $~ gethashlen ''
-catch.
- resizemap 'hash' ; DATASIZE_jdtint_ * 11 >. gethashlen''
- hash=: _1 $~ gethashlen ''
+t=. 8*gethashlen''
+if. t>getmsize_jmf_ 'hash',Cloc do.
+ resizemap 'hash';t
 end.
+hash=: _1 $~ gethashlen ''
 
 if. -.unique do.
-
- NB.!
- try.
-  link=: Tlen$_1
- catch.
-  resizemap 'link';Padvar*DATASIZE_jdtint_ * 4>.Tlen
-  link=: Tlen$_1
+ t=. 8*getmsize_jmf_ 'dat_','_',~;active__PARENT
+ if. t>getmsize_jmf_ 'link',Cloc do.
+  resizemap 'link';t
  end.
- 
-end.
+ link=: Tlen$_1
+end. 
 
 0 insert ".&.> MAPCOL
 writestate''
@@ -152,10 +150,7 @@ NB. Resize hash column
 NB. Assumes link is properly allocated
 NB. In fact, we can ignore link as insert will overwrite it.
 resize=: 3 : 0
-NB. 11 >. prevents a mysterious bug that happens if the hash map is resized
-NB. to size ten or less
-resizemap 'hash' ; DATASIZE_jdtint_ * 11 >. gethashlen''
-
+resizemap 'hash' ; 8*gethashlen''
 hash =: _1 $~ gethashlen ''
 0 insert ".&.> MAPCOL
 )

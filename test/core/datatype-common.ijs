@@ -16,8 +16,8 @@ tVals5 =: (({.,5,}.)@:$$5&(,@:#))&.> _3}.tVals
 NB. Add shape 3 2
 tVals32 =: (({.,3 2,}.)@:$$6&(,@:#))&.> _3}.tVals
 
-tNms =: (],(,&'5')&.>,&(_3&}.)(,&'32')&.>) TYPES
-tCol =: ; tNms (LF,~[,' ',(HASH#'hash '),])&.> (],(,&' 5')&.>,&(_3&}.)(,&' 3 2')&.>) TYPES
+tNms =: (],(,&'5')&.>,&(_3&}.)(,&'32')&.>) TYPES_CORE
+tCol =: ; tNms (LF,~[,' ',(HASH#'hash '),])&.> (],(,&' 5')&.>,&(_3&}.)(,&' 3 2')&.>) TYPES_CORE
 tVals =: tVals , tVals5 , tVals32
 
 t =: Create__d 't';tCol;<tNms,.tVals

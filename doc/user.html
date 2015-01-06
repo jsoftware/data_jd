@@ -38,6 +38,7 @@
 <a href="#get">get</a>
 <a href="#info">info</a>
 <a href="#insert">insert</a>
+<a href="#list">list</a>
 <a href="#loadcustom">loadcustom</a>
 <a href="#option">option</a>
 <a href="#read">read</a>
@@ -52,7 +53,7 @@
 <a href="#update">update</a>
 <a href="#validate">validate</a>
 <!-- opindex z -->
-</codenopre><code><hr><a href="#use">use</a>      - <a href="#delete">delete</a> <a href="#info">info</a> <a href="#insert">insert</a> <a href="#read">read</a> <a href="#reads">reads</a> <a href="#readtc">readtc</a> <a href="#update">update</a><br>
+</codenopre><code><hr><a href="#use">use</a>      - <a href="#delete">delete</a> <a href="#info">info</a> <a href="#insert">insert</a> <a href="#list">list</a> <a href="#read">read</a> <a href="#reads">reads</a> <a href="#readtc">readtc</a> <a href="#update">update</a><br>
 <a href="#manage">manage</a>   - <a href="#createcol">createcol</a> <a href="#createdb">createdb</a> <a href="#createtable">createtable</a><br>           <a href="#dropcol">dropcol</a> <a href="#dropdb">dropdb</a> <a href="#dropfilesize">dropfilesize</a> <a href="#droptable">droptable</a><br>
 <a href="#dynamic">dynamic</a>  - <a href="#createdynamic">createdynamic</a> <a href="#createhash">createhash</a> <a href="#createunique">createunique</a><br>           <a href="#dropdynamic">dropdynamic</a> <a href="#reference">reference</a></a><br>
 <a href="#csv">csv...</a>   - <a href="#csvcdefs">csvcdefs</a> <a href="#csvdump">csvdump</a> <a href="#csvrd">csvrd</a> <a href="#csvreport">csvreport</a> <a href="#csvrestore">csvrestore</a> <a href="#csvwr">csvwr</a> <br>
@@ -99,7 +100,7 @@ CSVFOLDER__ - implicit arg - path for csv and related files
 csv files can be on a different drvie than Jd tables
 csv intermediate files are on the same drive as Jd tables
 f.csv metadata in f.cdefs
- tutorial csv_tut
+ tutorial csv
 
 <hr><a name="table"><h2>table...</h2></a>
 <a href="#tableappend">tableappend</a> snktable  srctable srcdan
@@ -107,7 +108,7 @@ f.csv metadata in f.cdefs
 <a href="#tablecopy">tablecopy</a>   snktable  srctable srcdan
 <a href="#tablemove">tablemove</a>   snktable  srctable srcdan
 
-tutorial table_table_tut
+tutorial table_table_table
 
 <hr><a name="misc"><h2>misc</h2></a>
 <a href="#gen">gen</a>     type      ...                  - create test table(s)
@@ -133,12 +134,22 @@ standard types: boolean, int, float, byte
 all standard types can have trailing shape
 jd'createtable f a int 2,b byte 4' NB. n,2 int and n,4 byte
 
+edate (epochdt) types:
+iso 8601 format - stored as int - converted on read and write
+epochdt int is nanoseconds before/after 2000-01-01
+
+edate      - 2014-01-02
+edatetime  - 2014-01-02T03:04:05
+edatetimem - 2014-01-02T03:04:05,123
+edatetimen - 2014-01-02T03:04:05,123456789
+
+tutorial epochdt
+
 date types:
 date     - int with digits yyyymmdd
 datetime - int with digits yyyymmddhmmss
-not much different than int - might be simpler to use int
 csv loader supports yyyy/mm/dd vs dd/mm/yyyy
- 
+
 varbyte:
 less important in Jd than in most other systems
 byte 200 that held the data is probably better
@@ -195,13 +206,20 @@ hash col has 2 mapped nouns hash and link
 #link is same as #col and links rows with the same values
 
 <hr><a name="createtable"><h2>createtable</h2></a>
-createtable table [coldefs]
+createtable table [alloc] [coldefs]
 
 createtable with 0 or more cols
 each col defined by: col type [trailing-shape]
 
 string arg coldefs separated by , or LF
 boxed arg coldefs in separate boxes
+
+alloc is 3 values - elided default is 2000 1.5 0
+ROWMIN  minimum rows
+ROMMULT multiplier
+ROWXTRA extra rows
+when insert requires mapped col file resize, new size is:
+   ROWMIN>.>.ROWMULT*ROWXTRA+current_rows+new_rows
 
 NB. example createtable
 jdadminx'example'[olddan=:jdaccess''
@@ -219,7 +237,7 @@ jdaccess olddan
 <hr><a name="createunique"><h2>createunique</h2></a>
 createunique t1 cols...
 
-tutorial unique_tut
+tutorial unique
 
 <hr><a name="csvcdefs"><h2>csvcdefs</h2></a>
 csvcdefs   [options] csvfile
@@ -373,18 +391,16 @@ varbyte - indexes;values
 can be used with set to efficiently adjust col data
  
 <hr><a name="info"><h2>info</h2></a>
-jd'info ...'
+jd'info ...' NB. info about current DB
  agg                        - select aggregators
  last                       - cmd time space
  map       [table [column]]
- open                       - open databases
  reference [table]
  schema    [table [column]]
  state     [table [column]] - jdstate
  summary   [table]
  table
  varbyte   [table [column]]
- version
  
  NB. example info
  jdadminx'example'[olddan=:jdaccess''
@@ -410,6 +426,11 @@ jd'insert';'f';'a';24 25;'b';'bc';'b4';2 4$'aaaabbbb'
 jd'reads from f'
 jdaccess olddan
 
+<hr><a name="list"><h2>list</h2></a>
+jd'list ...'
+ version     - Jd version 
+ open        - open databases
+
 <hr><a name="loadcustom"><h2>loadcustom</h2></a>
 jd'loadcustom'
 
@@ -418,7 +439,7 @@ load <a href="#custom.ijs">custom.ijs</a> from db folder db locale
 <hr><a name="from"><h2>from</h2></a>
 from clause - jd'reads ... from ...'
 
-tutorial from.ijs
+tutorial from
 
 from Table (, Table)*
 Table:     Root | Child
@@ -490,20 +511,22 @@ option space 0 to not record (reported as _1)
 jd'info last' report last cmd, time, space
 
 <hr><a name="read"><h2>read</h2></a>
-jd'read [select] from [where]' NB. labeled rows
+jd'read [/e] [select] from [where]' NB. labeled rows
 
-same as reads with /lr option - labeled rows
+same as reads with /lr option
 
 <hr><a name="reads"><h2>reads</h2></a>
-jd'reads [/lr] [<a href="#select">select</a>]  <a href="#from">from</a>  [<a href="#where">where</a>]' NB. labeled cols
+jd'reads [/lr] [/e] [<a href="#select">select</a>]  <a href="#from">from</a>  [<a href="#where">where</a>]' NB. labeled cols
 
-/lr- labeled rows instead of labeled cols 
+/lr - labeled rows instead of labeled cols 
+/e  - edate... cols as epochdt rather than iso 8601
 
 <a href="#join">join</a> adds additional tables to the from root table
+
 returns select col(s) from table(s) with rows that satisfy where
 alias:col
 alias:table
-agregation [by key1[,key2]]
+aggregation [by key1[,key2]]
 
 NB. example reads
 jdadminx'example'[olddan=:jdaccess''
@@ -520,11 +543,12 @@ jd'reads sum adata by aref from a'
 jdaccess olddan
 
 <hr><a name="readtc"><h2>readtc</h2></a>
-jd'readtc [/lr] :::...::: [<a href="#select">select</a>]  <a href="#from">from</a>  [<a href="#where">where</a>]' NB. labeled cols
+jd'readtc [/lr] [/e] :::...::: [<a href="#select">select</a>]  <a href="#from">from</a>  [<a href="#where">where</a>]'
 
-same as reads except J sentence bracketed by ::: is executed first to create temp cols
+same as reads except J sentence bracketed by :::
+is executed first to create temp cols
 
-tutorial tempcol_tut
+tutorial tempcol
 
 <hr><a name="reference"><h2>reference</h2></a>
 reference t1 cols... t2 cols...

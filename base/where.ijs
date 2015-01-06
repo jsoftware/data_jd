@@ -181,13 +181,18 @@ end.
 fixstring =: [:($~1-.~$) [:fix1string&.> a.-.~ (<;._1~ =&' ' *. -.@wherequoted_jd_)@,~&' '
 fix1string =: 3 : 0
   if. 0 e. }:@:wherequoted_jd_ y do.
-    throw 'String improperly quoted: ',>}.e#y
+   throw 'String improperly quoted'
   end.
   cescape_jd_}.}: y
 )
 fixnum =: 3 : 0
-  if. #y-.' _-.', {.@":"0 i.10 do.
-    throw 'Improper numeric data: ',y
-  end.
-  0 ". y
+if. ('edate'-:5{.typ) *. '"'={.y do.
+ efs }.}:y
+ return.
+end.
+
+if. #y-.' _-.', {.@":"0 i.10 do.
+  throw 'Improper numeric data: ',y
+end.
+0 ". y
 )

@@ -12,7 +12,7 @@ t=. ' ',debq_jd_ =&LF`(,:&' ')} y -. CR
 from;sel;by;where;order
 )
 
-Read =: 3 : 0
+Read=: 3 : 0
 'from sel by where order'=. sel_parse y
 From from
 SelBy sel;by
@@ -25,15 +25,21 @@ if. MAXROWCOUNT < #indices do.
 end.
 Query ''
 Order order
+
+for_i. i.#cnms do.
+ c=. i{cloc
+ if. (-.OPTION_e) *. 'edate'-:5{.typ__c do.
+  t=. sep__c,utc__c,'dtmn'{~(;:'edate edatetime edatetimem edatetimen')i.<typ__c  
+  read=: (<t sfe>i{read) i}read
+ end.
+end.
+
 cnms,.read
 )
 
-
-NB. =========================================================
 ACCESSED=: 0 2$a: NB. List of table name, column name pairs accessed
 access =: 3 : 'ACCESSED=: ~.ACCESSED,NAME__PARENT__y;NAME__y'
 
-NB. =========================================================
 NB. y is a boxed list of column locales, x is the rows
 readselect=: 4 : 0 "1 0
 ind =. _1 I.@:= x
@@ -43,8 +49,6 @@ access y
 < sel
 )
 
-
-NB. =========================================================
 NB. ***** FROM *****
 NB. y is from.
 NB. Build table data:

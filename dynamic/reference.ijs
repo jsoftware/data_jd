@@ -32,13 +32,14 @@ assert. R-:x
 assert. *./ Rc -:&(3 :'typ__y'"0) Tc
 assert. *./ Rc -:&(3 :'shape__y'"0) Tc
 )
+
 dynamicinit =: 3 : 0
 'hashl hashr' =: <@MakeHashed__PARENT__PARENT"_1 subscriptions
 'S T' =. ([:getloc '^.^.'&,)&.> {."1 subscriptions
 SUBSCR__S =: (/: LOCALE=getloc__S ::(a:"_)@>@:({."1)) SUBSCR__S
 SUBSCR__T =: (/: LOCALE=getloc__T ::(a:"_)@>@:({."1)) SUBSCR__T
-               ('index';$0) makecolfile 'datl'
-erase 'Tlen' [ ('index';$0) makecolfile 'datr' [ Tlen=:Tlen__T
+('index';$0) makecolfile 'datl'
+makecolfile_datr T  NB. datr has Tlen etc from the referenced table
 dynamicreset''
 )
 

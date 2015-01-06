@@ -23,7 +23,7 @@ error processing adds all the names in jde to jdlast as name: value
 preferred error usage:
 
 'messed up'                                 assert condition
-('insert table * col * not unique'erf tab;col) assert condition 
+('insert table * col * bad'erf tab;col) assert condition 
 )
 
 decho_z_=: echo_z_
@@ -45,7 +45,7 @@ not supported in csvwr/csvrd
 *** bulk merge (update and insert)
 )
 
-NB. 'insert table * col * not unique'erf table;col
+NB. 'insert table * col * bad'erf table;col
 erf=: 4 : 0
 y=. ')',~each'(',each boxopen y
 i=. ('*'=x)#i.#x
@@ -186,8 +186,8 @@ if. 0=L.y do.
 else.
  dltb each y 
 end.
-
 )
+
 
 jd_createtable=: 3 : 0
 erase<'DATACOL_jd_'
@@ -195,9 +195,29 @@ y=. bd2 y
 ECOUNT assert 2<:#y
 d=. getdb''
 t=. >0{y NB. table
-c=. <;(1}.y),each LF
+c=. ;(1}.y),each LF
+c=. dlb c
+alloc=. ROWSMIN_jdtable_,ROWSMULT_jdtable_,ROWSXTRA_jdtable_
+if. ({.c)e.'0123456789' do.
+ e=. 'bad file allocation'
+ i=. <./ c i. LF,' '
+ alloc=. _1 ". i{.c
+ 'ROWSMIN must be >: 4'assert alloc>:4
+ c=. dlb }.i}.c
+ e assert ({.c)e.'0123456789'
+ i=. <./c i. LF,' '
+ alloc=. alloc, _1 ". i{.c
+ c=. dlb }.i}.c
+ e assert ({.c)e.'0123456789'
+ i=. <./c i. LF,' '
+ alloc=. alloc, _1 ". i{.c
+ c=. dlb }.i}.c
+end. 
 NB. should validate names types shapes
-Create__d t;c
+
+
+
+Create__d t;c;'';alloc   NB. cols;data;alloc
 JDOK
 )
 
@@ -271,31 +291,34 @@ end.
 JDOK
 )
 
-jd_read=: 3 : 0
-if. 0~:L.y do. y=. ;y[ECOUNT assert 1=#y end. 
+readstart=: 3 : 0
 tempcolclear''
+if. 0~:L.y do. y=. ;y[ECOUNT assert 1=#y end.
+OPTION_e=: OPTION_lr=: 0
+while. '/'={.y do.
+ if. '/lr '-:4{.y do.
+  y=. dlb 4}.y
+  OPTION_lr=: 1
+ elseif. '/e ' do.
+  y=. dlb 3}.y
+  OPTION_e=: 1
+ elseif. 1 do.
+  'unknown option'assert 0
+ end.
+end.
+y
+)
+
+jd_read=: 3 : 0
+y=. readstart y
 d=. getdb''
 Read__d y
 )
 
 jd_reads=: 3 : 0
-if. 0~:L.y do. y=. ;y[ECOUNT assert 1=#y end.
-tempcolclear''
-
-lr=. 0
-if. '/'={.y do.
- if. '/lr '-:4{.y do.
-  y=. 4}.y
-  lr=. 1
- else.
-  'reads bad option'assert 0
- end.
-end. 
-
-
+y=. readstart y
 d=. getdb''
-
-if. lr do.
+if. OPTION_lr do.
  Read__d y
 else. 
  Reads__d y
@@ -352,7 +375,7 @@ d=. getdb''
 validtc__d y
 try.
  MakeUnique__d ({.y),<}.y
-catch.
+catchd.
  DeleteCols__d ({.y),<'jdunique', ;'_',each }.y
  'not unique'assert 0
 end.
@@ -379,7 +402,7 @@ JDOK
 
 NB. all join types (slow and complicated)
 jd_reference=: 3 : 0
-jd_close'' NB. required so map as required will map all
+NB. map as required!
 y=. bdnames y
 ECOUNT assert (4<:#y)*.0=2|#y
 d=. getdb''
@@ -388,14 +411,6 @@ validtc__d {.t
 validtc__d {:t
 t=. ({."1 t),.<"1 (}."1 t)
 MakeRef__d t
-JDOK
-)
-
-NB. left1 only join (fast and simple)
-jd_ref=: 3 : 0
-echo 'ref done as reference - ref deprecated as it no longer has advantages'
-OP=: 'reference' NB. required so map as required will map all
-jd_reference y
 JDOK
 )
 
@@ -427,8 +442,8 @@ ECOUNT assert 2 3 e.~#y
 'snkt srct srcdb'=. y
 'srcdb same as snkdb' assert -.DB-:srcdb
 d=. getdb''
-t=. getloc__d snkt
-assert 0=#SUBSCR__t['dynamic dependencies - use tableinsert or dropdynamic+dynamic'
+snktloc=. getloc__d snkt
+assert 0=#SUBSCR__snktloc['dynamic dependencies - use tableinsert or dropdynamic+dynamic'
 snkcs=. {:"1 jdcols snkt
 snkns=. {."1 jdcols snkt
 db=. DB
@@ -436,7 +451,7 @@ try.
  jdaccess srcdb NB.! possible security implication
  d=. getdb''
  srccs=. {:"1 jdcols srct
- srcns=. {."1 jdcols  srct
+ srcns=. {."1 jdcols srct
  srctloc=. getloc__d srct
  new=. Tlen__srctloc
 catchd.
@@ -454,6 +469,7 @@ for_i. i.#snkns do.
  assert shape__a-:shape__b
  assert (}.$dat__a)-:}.$dat__b
 end.
+
 for_i. i.#snkns do.
  a=. i{snkcs
  b=. i{srccs
@@ -701,7 +717,6 @@ gentwo=: 3 : 0
  jd_createcol btab;'b2';'int';'_' ;i.brows
 )
 
-
 genone=: 3 : 0
 'atab arows acols'=. y
 jd_createtable atab
@@ -773,11 +788,6 @@ try.
     if. len~:#dat__c do.
      r=. r,'bad count: ',NAME__t,' ',NAME__c,' ',(":#dat__c),' (Tlen is ',(":len),')',LF
     end.
-    
-    if. unique__c do.
-     if. (#dat__c)~:#~.dat__c do. r=. r,'not unique: ',NAME__t,' ',NAME__c,LF end.
-    end. 
-  
     if. typ__c-:'varbyte' do.
      assert (len,2)-:$dat__c
      assert shape__c-:''
@@ -900,19 +910,7 @@ NB. jdaccess t
 )
 
 jd_readtc=: 3 : 0
-tempcolclear''
-if. 0~:L.y do. y=. ;y[ECOUNT assert 1=#y end.
-y=. dlb y
-
-lr=. 0
-if. '/'={.y do.
- if. '/lr '-:4{.y do.
-  y=. 4}.y
-  lr=. 1
- else.
-  'readtc bad option'assert 0
- end.
-end. 
+y=. readstart y
 
 'readtc requires :::exp:::' assert ':::'-:3{.y
 y=. 3}.y
@@ -921,9 +919,9 @@ i=. 1 i.~':::' E. y
 s=. i{.y
 tempcol s
 y=. (3+i)}.y
-d=. getdb''
 
-if. lr do.
+d=. getdb''
+if. OPTION_lr do.
  r=. Read__d y
 else. 
  r=. Reads__d y
@@ -938,7 +936,7 @@ tempcol=: 3 : 0
  for_i. i.#t do.
   a=. i{t
   
-  if. _2~:nc a do.
+  if. (_2~:nc a)*.-.'_jd_'-:_4{.;a do.
    a=. ;a
    j=. a i.'_'
    tab=. j{.a
@@ -971,13 +969,10 @@ tempcol=: 3 : 0
     r=. r,<'dat_',(;c),'_'
   else.
    'readtc ". not allowed'assert -.(<'".')-:a
-
    r=. r,a
   end. 
  end. 
-  
  ".;r,each' '
-
  for_i. i.#TEMPCOLS do.
   c=. {:i{TEMPCOLS
   shape__c=: }:$dat__c

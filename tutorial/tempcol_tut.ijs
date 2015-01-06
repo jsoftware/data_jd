@@ -7,7 +7,11 @@ in particular a temp col can be used in select/by/where
 
 a temp col is the result of a J expression that can use data from any other database col
 
-one use of a temp col is to allow aggregations with a by expressioin
+one use of a temp col is to allow aggregations with a by expression
+
+columns are referenced as table_column
+foo_jd_ references are allowed
+". is not allowed
 )
 
 jdadminx'test'

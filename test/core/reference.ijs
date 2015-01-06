@@ -3,7 +3,7 @@ NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 f =: Open_jd_ jpath '~temp/jd'
 d =: (Create__f [ Drop__f) 'btest'
 
-A=: Create__d 'A' ; ((,', '&,)&:>/@:((,' '&,)&.>);<@(,.".@('r_',,&' 1000')&.>)) TYPES
+A=: Create__d 'A' ; ((,', '&,)&:>/@:((,' '&,)&.>);<@(,.".@('r_',,&' 1000')&.>)) TYPES_CORE
 B=: Create__d 'B' ; 'boolean boolean,int int'
 
 empty MakeRef__d 'A B' ,.&;: 'boolean boolean'

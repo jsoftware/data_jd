@@ -79,19 +79,8 @@ if. (ind=#NAMES) do.
  throw 'Not found: ',(2}.>CHILD),' ',,":y
 end.
 
-c=. ind{CHILDREN
-
-NB. map as required
-if. APIRULES do.
- if. 'jdcolumn'-:;CLASS__c do.
-  if. (-.OP-:'reference')*. _1=nc {.MAP__c,each <'__c' do. NB. OP reference creates multiple cols/mappings and is special
-   mapcolfile__c"0 MAP__c
-   opentyp__c ''
-  end.
- end.
-end.
-
-c
+NB. map as required!
+ind{CHILDREN
 )
 
 NB. y is a name.
@@ -224,3 +213,15 @@ if. #STATE do. pdef (3!:2) 1!:1 <PATH,'jdstate' end.
 writestate=: 3 : 0
 if. #STATE do. (3!:1 pack STATE) 1!:2 <PATH,'jdstate' end.
 )
+
+readstate=: 3 : 0
+if. fexist PATH,'jdstate' do.
+ pdef d=. (3!:2) fread PATH,'jdstate'
+end. 
+)
+
+writestate=: 3 : 0
+(3!:1 pack STATE) fwrite PATH,'jdstate'
+)
+
+

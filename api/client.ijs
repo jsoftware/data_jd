@@ -94,6 +94,8 @@ elseif. 1                   do. jdlast
 end.
 )
 
+NODBOPS=: 'close';'createdb';'list';'option' NB. ops without DB
+
 NB. jdx always returns a boxed result - jd asserts it is not an error
 jdx=: 3 : 0
 if. IFJHS do. assert (<URL_jhs_) e.'jijx';'jijs' end.
@@ -119,7 +121,7 @@ if. 'intask'-:SERVER do.
  end.
  'op'trace <OP
  opx=. ;('x'-:{.OP){OP;'x'
- if. -. (<OP) e. 'close';'createdb';'option' do. NB. ops without DB
+ if. -. (<OP) e. NODBOPS do. 
   DBL=: getdb'' NB. DBL global and test for damage
   t=. JDE1000
   NB. DB in DBPATHS

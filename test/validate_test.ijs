@@ -2,6 +2,7 @@ NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 NB. jd'validate'
 
 unexpected=: 'unexpected error'
+badcount=:   'bad count'
 
 reget=: 3 : 0
 d=: getdb_jd_''
@@ -30,9 +31,9 @@ assert 1=+/LF=r
 
 reget''
 dat__c=: q
-dat__c=: i.Tlen__t,2
+dat__c=: 23
 [r=. jd'validate'
-assert unexpected-:(#unexpected){.r
+assert badcount-:(#badcount){.r
 
 reget''
 dat__c=: q

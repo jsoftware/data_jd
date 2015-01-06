@@ -286,6 +286,8 @@ NB. '' runs all - 0 just sets ALLTESTS
 jdtests=: 3 : 0
 cocurrent'base' NB. defined in jd, but must run in base
 jdtrace_jd_ 1
+ALLOC=: ROWSMIN_jdtable_,ROWSMULT_jdtable_,ROWSXTRA_jdtable_
+'ROWSMIN_jdtable_ ROWSMULT_jdtable_ ROWSXTRA_jdtable_'=: 4 1 0 NB. lots of resize
 jd'option sort 1' NB. required for tests for now
 NB. assert -.(<'jjd')e. conl 0['jdtests must be run in task that is not acting as a server'
 jdserverstop_jd_''
@@ -347,7 +349,8 @@ if. #conl 1 do.
  echo LF,'check for orphan locals in conl 1'  
 end.
 echo LF,(":#t),' tests run',LF,(":#failed),' failed'
-jd'option sort 0' NB. required for tests for now
+jd'option sort 0' NB. restore
+'ROWSMIN_jdtable_ ROWSMULT_jdtable_ ROWSXTRA_jdtable_'=: ALLOC NB. restore
 jdtrace_jd_ 0
 i.0 0
 )
@@ -572,7 +575,7 @@ ta=. (<pa),each {."1[1!:0 jpath pa,'*.ijs'
 aa=. _4}.each(>:;ta i: each '/')}.each ta
 aa=. (_4*;(_4{.each aa)=<'_tut')}.each aa 
 TUTSDEMO=: _4}.each(>:;demos i:each'/')}.each demos
-TUTSBASIC=: 'intro';'reads';'from';'admin';'csv';'join'
+TUTSBASIC=: 'intro';'reads';'from';'admin';'csv';'join';'epochdt'
 TUTSADVANCED=: aa-.TUTSBASIC
 TUTS=: (aa,TUTSDEMO),.ta,,demos_jd_
 y=., dltb y

@@ -3,13 +3,22 @@ NB. api extension (keep apl.ijs core smaller
 
 coclass'jd'
 
-jd_info=: 3 : 0
-jd_close'' NB. close so we get fresh data
+jd_list=: 3 : 0
 t=. bdnames y
-if. t-:,<'version' do. ,.'version';'1.0' return. end.
-if. t-:,<'open'    do. ,.'open';<>opened'' return. end.
+ECOUNT assert 1=#t
+select. ;t
+case. 'version' do. ,.'version';'2.1'
+case. 'open'    do. ,.'open';<>opened''
+case.           do. assert 0['unsupported list command'
+end. 
+)
+
+NB. state and schema report state from file
+NB. which is out of date if writestate was not done after a change
+NB. maybe should report from locales rather than file
+jd_info=: 3 : 0
+t=. bdnames y
 if. ({.t)=<'state' do.
- jd_close'' NB. insist close so current state flushed to file
  'table prefix'=. 2{.}.t
  p=. dbpath_jd_ DB_jd_
  p=. p,'/',table,'/'
@@ -30,7 +39,7 @@ infox=: 3 : 0
 'type tab col'=. 3{.y
 NB. type=. >{.y
 NB. tables=. }.y
-p=. jpath dbpath DB
+p=. '/',~jpath dbpath DB
 maps=. mappings_jmf_
 maps=. maps /:1{"1 maps
 d=. 1{"1 maps

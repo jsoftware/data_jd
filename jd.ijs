@@ -1,8 +1,19 @@
 NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 
+NB. production Jd library is ~addons/data/jd (installed/updated by JAL)
+NB.   load'data/jd' NB. set JDP_z_ as path to production Jd library
+
+NB. developer Jd library is ~Jddev (~config/folders.cfg)
+NB.   load'~Jddev/jd.ijs' NB. set JDP_z_ as developer Jd library
+NB. ~Jddev copied (based on manifest.ijs) to svn repo that
+NB. is pushed to Jsoftware for building JAL data/jd package
+
+NB. all use of the Jd library is through JDP_z_
+
 NB. asserts for platorm and environment
 'Jd requires J64'assert IF64=1
 ('Jd not supported on UNAME: ',UNAME) assert (<UNAME)e.'Win';'Linux';'Darwin' 
+'Contact Jsoftware for Darwin support' assert -.UNAME-:'Darwin'
 
 3 : 0''
 if. IFWIN do.
@@ -11,21 +22,17 @@ if. IFWIN do.
  t=. 'Jd requires msvcr110.dll',LF,'http://www.microsoft.com/en-ca/download/details.aspx?id=30679',LF,'download vcredist_x64.exe and run to install msvcr110.dll'
  t assert 2 0=cder''
 end.
+
+NB. ensure different (production vs development) Jd libraries are not both loaded
+n=. '/jd.ijs'
+d=. jpath each 4!:3''
+f=. (;(<n)-:each (-#n){.each d)#d
+'can not mix different Jd libraries' assert 1=#f
+JDP_z_=: _6}.;f
 )
 
-NB. production Jd library is ~addons/data/jd and it is installed/updated by JAL
-NB.   load'data/jd' NB. sets JDP_z_ as path to production Jd library
-
-NB. developer Jd library is repo at ~Jddev
-NB.   load'~Jddev/jd.ijs' NB. sets JDP_z_ as developer Jd library
-NB. driven by manifest.ijs - developer repo files are copied to an svn repo that
-NB. is pushed to Jsoftware for building JAL data/jd packages
-
-NB. all use of the Jd library is through JDP_z_
-
-JDP_z_=: ;((<jpath'~addons/data/jd/jd.ijs')e. jpath each 4!:3''){'~Jddev/';'~addons/data/jd/'
-
 load@:(JDP&,);._2 ]0 :0
+base/util_epoch.ijs
 base/util.ijs
 base/zutil.ijs
 base/common.ijs
@@ -78,7 +85,7 @@ Commercial users must have a Jd License from Jsoftware.
 Keep addons (base, JHS, jmf, etc) up to date.
 
 There is a slight bias for JHS as the front end.
-JHS is the base technology for Jd clent/server.
+JHS is the base technology for Jd client/server.
 
 Get started:
    jdtests_jd_'' NB. validate - after install or update - takes minutes
@@ -104,6 +111,21 @@ Run jdtests as the ~temp/jd folder does not exist!
    jdtests_jd_'' NB. validate install - takes minutes
 )
 
+nokey=: 0 : 0
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+Jd key: missing or invalid
+email: jdinfo@jsoftware.com
+to provide basic info and request a key
+
+non-commercial or evaluation key is free
+and does not require a license agreement
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+)
+
 3 : 0''
 if. -.UNAME-:'Win' do.
  n=. ".}:2!:0'ulimit -n'
@@ -111,4 +133,5 @@ if. -.UNAME-:'Win' do.
   echo LF,(":n),' for "ulimit -n" is low. See Technotes "file handles" for details.'
  end.
 end.
+if. K_jd_ do. coerase <'jd'[echo nokey end.
 )

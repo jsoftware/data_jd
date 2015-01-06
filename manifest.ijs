@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '1.0.48'
+VERSION=: '1.0.1'
 
 FILES=: 0 : 0
 jd.ijs
@@ -47,6 +47,7 @@ base/jmfx.ijs
 base/read.ijs
 base/table.ijs
 base/util.ijs
+base/util_epoch.ijs
 base/where.ijs
 base/zutil.ijs
 cd/jd.dll
@@ -118,6 +119,7 @@ pm/pm.ijs
 pm/pma.ijs
 pm/pmb.ijs
 pm/pmc.ijs
+test/alloc_test.ijs
 test/append_test.ijs
 test/basic_test.ijs
 test/cd_query_test.ijs
@@ -134,6 +136,7 @@ test/join_test.ijs
 test/northwind_test.ijs
 test/orderby_test.ijs
 test/query_test.ijs
+test/readx_test.ijs
 test/ref_test.ijs
 test/sandp_test.ijs
 test/sed_test.ijs
@@ -159,6 +162,7 @@ tutorial/csv_details_tut.ijs
 tutorial/csv_tut.ijs
 tutorial/custom_tut.ijs
 tutorial/datatune_tut.ijs
+tutorial/epochdt.ijs
 tutorial/from_tut.ijs
 tutorial/intro_tut.ijs
 tutorial/join_tut.ijs
@@ -175,9 +179,9 @@ types/base.ijs
 types/byte.ijs
 types/datetimes.ijs
 types/enum.ijs
+types/epoch.ijs
 types/numeric.ijs
 types/varbyte.ijs
 )
 
-PLATFORMS=: 'linux win darwin'
-RELEASE=: 'j701 j801 j802 j803'
+RELEASE=: 'j701 j801 j802'

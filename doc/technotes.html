@@ -59,23 +59,17 @@ See Admin jdlinkmove, jdlinkset, and jdlinktargets for details.
 <p>Folder pm has scripts for performance measurement.</p>
 
 <h2>developer</h2>
-<p>Jd is distributed with JAL (Package Manager) and the Jd library is at ~addons/data/jd.
-The data/jd package is built from the Jsoftware addon svn repo. This Jd library is
-accessed with one of the following 3 equivalent lines:<br>
+<p>Jd is distributed with JAL (Package Manager) and the Jd library is at ~addons/data/jd and is
+accessed with the following equivalent lines:<br>
 <code>   load'data/jd'</code><br>
 <code>   load'~addons/data/jd/jd.ijs'</code><br>
-<code>   load'~Jd/jd.ijs' NB. assumes Jd is in ~config/folders.cfg</code></p>
 
-<p>A developer works with a different repo and their local data/jd source is in
-its own folder. A developer should set ~config/folders.cfg to have line:<br>
-<code>Jddev ~home/dev/addons/data/jd</code><br>
-to allow easy use of the development library. Access the development library with:<br>
-<code>   load'~Jddev/jd.ijs'</code><br>
+<p>A developer works with a local repo. Use the development library with something like:<br>
+<code>   load'~/dev/addons/data/jd/jd.ijs'</code><br>
 
 
-<p>Loading jd.ijs sets JDP_jd_ as the path to the Jd library
-(~addons/data/jd/ or ~Jddev)
-and this is used for all library references.</p>
+
+<p>Loading jd.ijs sets JDP_z_ as the path to the Jd library and this is used for all library references.</p>
 
 <p>An automated process copies the developer repo to the addon svn repo to build a new Jd release.</p>
 

@@ -13,11 +13,6 @@ jdunmap_jd_ 'snk_jdcsv_'
 
 csvjdx=: 3 : 0
 (ROWS#1) csvjdxsub y,'/jdactive/dat'   NB. active
-t=. 3!:2 fread y,'/jdstate'
-i=. ({."1 t)i.<'Tlen'
-t=. (<ROWS) (<i,1)}t
-(3!:1 t)fwrite y,'/jdstate'
-i.0 0
 )
 
 csvjd=: 3 : 0
