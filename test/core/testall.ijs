@@ -8,7 +8,7 @@ jdadminx'testall'
 
 test =. 0!:3@:<@:(PATH,,&'.ijs')
 
-TESTS=. ;:'datatype hash key joins reference unique summary query'
+TESTS=. ;:'datatype hash key joins reference unique query'
 bad =. -. test@> TESTS
 
 echo (+./bad){::'';'failed testall.ijs tests:'

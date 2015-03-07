@@ -48,6 +48,9 @@ dynamicreset =: 3 : 0
 'dynamicreset hash'trace''
 len =: Tlen
 
+
+writestate'' NB.! avoid unique bug - clean up when readstate/writestate cleanedup
+
 t=. 8*gethashlen''
 if. t>getmsize_jmf_ 'hash',Cloc do.
  resizemap 'hash';t

@@ -33,7 +33,9 @@ dat =: y{.dat
 nub =: (>: >./ dat) {. nub
 )
 
-select =: 3 : 'nub {~ y{dat'
+NB. needs code for empty joins - similar to base and varbyte select
+select=: 3 : 'nub {~ y{dat'
+
 modify =: modifyfilled=: 4 : 'throw ''Modifying enum columns not yet supported: '',NAME'
 
 NB. =========================================================

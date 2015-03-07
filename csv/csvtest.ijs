@@ -84,9 +84,10 @@ jd'close'
 r
 )
 
+NB. note float leading $ and leading .
 csv0=: 0 : 0
-23,chevrolet,red,1.1,23,1024,1234,2001-03-07 10:58:12
-24,toyota,blue,22.22,24,1025,12345,2001-03-07 10:58:13
+23,chevrolet,red,.1,23,1024,1234,2001-03-07 10:58:12
+24,toyota,blue,$22.22,24,1025,12345,2001-03-07 10:58:13
 25,rambler,pink,33.33,25,1026,123456,2001-03-07 10:58:14
 )
 
@@ -107,7 +108,7 @@ assert c_vin__csv-:23 24 25
 assert vic c_make__csv
 assert v_make__csv-:'chevrolettoyotarambler'
 assert c_color__csv-: ($c_color__csv)$'red  blue pink '
-assert c_double__csv-:1.1 22.22 33.33
+assert c_double__csv-:0.1 22.22 33.33
 assert c_i1__csv-:3 1$23 24 25{a.
 assert c_datetime__csv-:20010307105812 20010307105813 20010307105814
 )

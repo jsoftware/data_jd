@@ -4,7 +4,7 @@ coinsert 'jd'
 
 CLASS=: <'jdfolder'
 CHILD=: <'jddatabase'
-STATE=: 0$a:
+STATE=: ''
 
 testcreate =: ]
 open =: create =: 3 : 0

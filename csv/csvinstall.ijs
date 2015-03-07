@@ -69,7 +69,7 @@ t=. <;.2 jd,'/'
 table=. }:>_1{t
 db=. }:>_2{t
 path=. }:;_2}.t
-'CSVCOLS CSVTYPS JDTYPS CSVTSHAPE COLDEFS ROWS'=: 3!:2 fread csv,'/info'
+'CSVCOLS CSVTYPS JDTYPS CSVTSHAPE COLDEFS ROWS'=: 3!:2 jdfread_jd_ csv,'/info'
 
 b=. CSVTYPS~:<'CNOT'
 CSVCOLS=: b#CSVCOLS

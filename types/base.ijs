@@ -42,7 +42,15 @@ shape $ s {.!.DATAFILL d
 )
 fixtext =: fixtype_num&.,:@:fixnum
 
-select =: 3 : 'y{dat'
+NB. note special code for join with empty table
+select=: 3 : 0
+if. (0=#dat)*.0~:#y do.
+ y{(1,shape)$DATAFILL
+else.
+ y{dat
+end.
+) 
+
 modify =: 4 : 'dat=: (fixinsert y) x} dat'
 modifyfilled =: 4 : 'MAP replacemap&> fixtype y x} DATAFILL$~Tlen,shape'
 

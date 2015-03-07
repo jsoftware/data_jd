@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '2.1.2'
+VERSION=: '2.1.1'
 
 FILES=: 0 : 0
 jd.ijs
@@ -106,21 +106,24 @@ doc/jblue.png
 doc/jda.css
 doc/license.html
 doc/overview.html
+doc/release.html
 doc/support.html
-doc/technotes.html
+doc/technical.html
 doc/toc.html
 doc/user.html
 dynamic/base.ijs
 dynamic/hash.ijs
+dynamic/ref.ijs
 dynamic/reference.ijs
-dynamic/summary.ijs
 dynamic/unique.ijs
 pm/pm.ijs
 pm/pma.ijs
 pm/pmb.ijs
 pm/pmc.ijs
+pm/pm_disk.ijs
 test/alloc_test.ijs
 test/append_test.ijs
+test/asrequired_test.ijs
 test/basic_test.ijs
 test/cd_query_test.ijs
 test/createcol_test.ijs
@@ -130,6 +133,7 @@ test/float_test.ijs
 test/hashx_test.ijs
 test/hash_insert_test.ijs
 test/hash_test.ijs
+test/info_test.ijs
 test/insert_test.ijs
 test/joinorder_test.ijs
 test/join_test.ijs
@@ -137,6 +141,7 @@ test/northwind_test.ijs
 test/orderby_test.ijs
 test/query_test.ijs
 test/readx_test.ijs
+test/reference_test.ijs
 test/ref_test.ijs
 test/sandp_test.ijs
 test/sed_test.ijs
@@ -151,7 +156,6 @@ test/core/joins.ijs
 test/core/key.ijs
 test/core/query.ijs
 test/core/reference.ijs
-test/core/summary.ijs
 test/core/testall.ijs
 test/core/unique.ijs
 test/core/util.ijs

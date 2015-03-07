@@ -40,3 +40,12 @@ jd'tableappend snkt srct srcdb2'
 z=. jd'read * from snkt order by sid'
 z=. s /:{."1 z
 assert s-:z
+
+NB. test map as required
+jdadminx'testf'
+jd'gen test f 3'
+jdadminx'testg'
+jd'gen test g 3'
+jd'close'
+jd'tableappend g f testf'
+assert 0 1 2 0 1 2-:,;{:jd'reads x from g'

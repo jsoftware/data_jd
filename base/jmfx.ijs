@@ -25,6 +25,7 @@ end.
 jdmap=: 3 : 0
 0 jdmap y
 :
+cnts_map_jd_=: >:cnts_map_jd_
 'map'trace y
 ('map name invalid: ',;{.y)assert _1=nc {.y
 ('map file does not exist: ',;1{y)assert fexist 1{y

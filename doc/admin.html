@@ -29,17 +29,20 @@ See tutorial admin_tut.</p>
 <a href="#admin.ijs">admin.ijs</a> <a href="#custom.ijs">custom.ijs</a>
 <a href="#datatune">datatune</a></p> 
 <hr><p>jd... utility verbs in jd locale:<br>
-<!-- jdindex a --><a href="#jdcols">jdcols</a>
+<!-- jdutilindex a --><a href="#jdclocs">jdclocs</a>
+<a href="#jdcols">jdcols</a>
 <a href="#jdcreatefolder">jdcreatefolder</a>
 <a href="#jddamage">jddamage</a>
 <a href="#jddeletefolder">jddeletefolder</a>
 <a href="#jddeletefolderok">jddeletefolderok</a>
 <a href="#jdex">jdex</a>
 <a href="#jdflush">jdflush</a>
+<a href="#jdfread">jdfread</a>
 <a href="#jdfrom">jdfrom</a>
 <a href="#jdfroms">jdfroms</a>
-<a href="#jdglc">jdglc</a>
-<a href="#jdglt">jdglt</a>
+<a href="#jdfwrite">jdfwrite</a>
+<a href="#jdgl">jdgl</a>
+<a href="#jdgs">jdgs</a>
 <a href="#jdlinkmove">jdlinkmove</a>
 <a href="#jdlinkset">jdlinkset</a>
 <a href="#jdlinktargets">jdlinktargets</a>
@@ -52,7 +55,7 @@ See tutorial admin_tut.</p>
 <a href="#jdtesterrors">jdtesterrors</a>
 <a href="#jdtests">jdtests</a>
 <a href="#jdtrace">jdtrace</a>
-<!-- jdindex z --></p></codenopre><code><hr><a name="jdaccess"><h2>jdaccess</h2></a>
+<!-- jdutilindex z --></p></codenopre><code><hr><a name="jdaccess"><h2>jdaccess</h2></a>
 set DAN (db access name), user/pswd, and server for jd ops
 
 server intask      - op runs in current J task
@@ -158,6 +161,12 @@ set user/pswds allowed with DAN
 
 'test' jdadminup_jd_ 'fred/secret sam/birthday'
        jdadminup_jd_ '' NB. report
+<hr><a name="jdclocs"><h2>jdclocs</h2></a>
+jdclocs t;c NB. return col locales
+t is '' for all tables  or 'tab' for just that table
+c is '' for all cols    or 'col' for just that col
+result is sorted by table names
+col names int a table are in created order followed by jd... names
 <hr><a name="jdcols"><h2>jdcols</h2></a>
 jdcols'tab' NB. return col names,.locales sorted by name
 <hr><a name="jdcreatefolder"><h2>jdcreatefolder</h2></a>
@@ -195,19 +204,27 @@ sudo blockdev --flushbuf /dev/sda
 sudo blockdev --flushbuf /dev/sdb
 sudo sysctl vm/drop_caches=3
 ***
+
+<hr><a name="jdfread"><h2>jdfread</h2></a>
+fread with handle limit error assert
+
 <hr><a name="jdfrom"><h2>jdfrom</h2></a>
 'col' jdfrom_jd_ jd'read from f' NB. col data from raed
 
 <hr><a name="jdfroms"><h2>jdfroms</h2></a>
 'col' jdfroms_jd_ jd'reads from f' NB. col data from reads
-<hr><a name="jdglc"><h2>jdglc</h2></a>
-jdglc_jd_'tab col'
 
-get tab/col locale
-<hr><a name="jdglt"><h2>jdglt</h2></a>
-jdglt_jd_'tab'
+<hr><a name="jdfwrite"><h2>jdfwrite</h2></a>
+fwrite with handle limit error assert
 
-get tab locale
+<hr><a name="jdgl"><h2>jdgl</h2></a>
+jdgl_jd_'tab'     NB. get locale for tab
+jdgl_jd_'tab col' NB. get locale for tab col
+
+<hr><a name="jdgs"><h2>jdgs</h2></a>
+jdgs_jd_'tab'     NB. get state for tab
+jdgs_jd_'tab col' NB. get state for tab col
+
 <hr><a name="jdlinkmove"><h2>jdlinkmove</h2></a>
 jdlinkmove_jd_ 'tab/col ~temp/linker'
 

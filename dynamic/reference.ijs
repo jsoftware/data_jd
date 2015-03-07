@@ -34,14 +34,17 @@ assert. *./ Rc -:&(3 :'shape__y'"0) Tc
 )
 
 dynamicinit =: 3 : 0
-'hashl hashr' =: <@MakeHashed__PARENT__PARENT"_1 subscriptions
 'S T' =. ([:getloc '^.^.'&,)&.> {."1 subscriptions
-SUBSCR__S =: (/: LOCALE=getloc__S ::(a:"_)@>@:({."1)) SUBSCR__S
-SUBSCR__T =: (/: LOCALE=getloc__T ::(a:"_)@>@:({."1)) SUBSCR__T
 ('index';$0) makecolfile 'datl'
 makecolfile_datr T  NB. datr has Tlen etc from the referenced table
+'hashl hashr' =: <@MakeHashed__PARENT__PARENT"_1 subscriptions
+SUBSCR__S =: (/: LOCALE=getloc__S ::(a:"_)@>@:({."1)) SUBSCR__S
+SUBSCR__T =: (/: LOCALE=getloc__T ::(a:"_)@>@:({."1)) SUBSCR__T
+writestate__S''
+writestate__T''
 dynamicreset''
 )
+
 
 dynamicreset =: 3 : 0
 'dynamicreset reference'trace''
@@ -117,11 +120,22 @@ end.
 'Tl Tr' =. ([:getloc '^.^.'&,)&.> {."1 subscriptions
 if. 0=#l do. j =. _1 ,. (I.dat__active__Tl) ,: dat__active__Tl # datl
 else. j =. l ,: (_1~:l) (-.@[-~*) l{datl [ l=.(#~{&dat__active__Tl)l end.
-(#"1~ e.&r@:{:)^:(*@#r) ({. ,: ({&dat__active__Tr (-.@[-~*) ])@:{:) j
+
+NB. kludge to handle empty table in join
+if. 0=#dat__active__Tr do.
+ t=. 0
+else.
+ t=. dat__active__Tr
+end. 
+
+(#"1~ e.&r@:{:)^:(*@#r) ({. ,: ({&t(-.@[-~*) ])@:{:) j
 )
 
 getcjoin=: 4 : 0 NB. y is the type of join
 definehash''
+
+'unique not supported for this reference' assert -.unique__hashr
+
 flip =. >/ (+_*0&=)@:#@> 'rl rr' =. x
 'Tl Tr' =. ([:getloc '^.^.'&,)&.> {."1 subscriptions
 args =. , (|.^:flip'l r') ,~&.>/&;: 'dat__active__T r dat link__hash'

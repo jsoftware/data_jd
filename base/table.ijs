@@ -32,19 +32,18 @@ getallvisible=: HIDCOL -.~ [: getvisible ".@:('NAMES'"_)
 
 getdefaultselection=: 3 : 0
 f=. PATH,'column_create_order.txt'
-n=. getallvisible y
+n=. NAMES
+n=. (-.(<'jd')=2{.each n)#n
 if. optionsort +. -.fexist f do.
  /:~n
 else. 
- con=. ~.n,~;:fread f
+ con=. ~.n,~;:jdfread f
  (con e. n)#con
 end.
 )
 
 open=: 3 : 0
-openallchildren ''
-3 :'(2}.y)=:getloc y'@> HIDCOL
-Tlen=: #dat__active
+Tlen=: __ NB. tables open cols as required
 )
 
 testcreate=: 4 : 0
@@ -223,7 +222,7 @@ torow =. LF _1} (TAB,~deb)&.>(;@:)
 fmt =. [ ` (, '_jdstitch' , [: =&' '`(,:&'_')} ":) @. (0<+/@])
 h1 =. ;nms (<@fmt"_ 1 ,/^:(0>.2-~#@$)@:(#:i.))&.> sh1
 h2 =. (*/@> sh1) # typ ,&.> byte ((*. *@#) # ' ',":@{:@])&.> shape
-(; <@torow"1 headers {. h1 ,: h2) 1!:2 <f =. jpath file
+(; <@torow"1 headers {. h1 ,: h2) jdfwrite f =. jpath file
 
 t =. 3|>: (;:'varbyte enum') i. typ
 ind =. +/\ 0,}:t{1 2 2
@@ -273,7 +272,7 @@ for_subs. SUBSCR do.
   else.
    w=. getloc c
   end.
-  if. typ__w-:'refleft1' do. Update__w'' end.
+  if. typ__w-:'ref' do. Update__w'' end.
  end.
 end.
 )
@@ -360,7 +359,7 @@ MakeRef__PARENT (NAME;y),:x
 
 NB. y is a referenced table name. Find the reference columns to it.
 FindRef =: 3 : 0
-s =. (;:'reference refleft1') filterbytype getloc@> {."1 SUBSCR
+s =. (;:'reference ref') filterbytype getloc@> {."1 SUBSCR
 (#~ ({.boxopen y) = 3 : '{.{:subscriptions__y'"0) s
 )
 

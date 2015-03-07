@@ -4,7 +4,7 @@ NB. tests for mapped file allocatoins
 getms=: 3 : 0
 'dat'getms y
 :
-a=. jdglc_jd_ y
+a=. jdgl_jd_ y
 getmsize_jmf_ x,Cloc__a
 )
 
@@ -41,13 +41,13 @@ assert 'domain error'-:jd etx 'createtable f 1 a int'[jd'droptable f'
 assert 'domain error'-:jd etx 'createtable f 1 2 -3 a int'[jd'droptable f'
 
 jd'createtable f'[jd'droptable f'
-t=. jdglt_jd_'f'
+t=. jdgl_jd_'f'
 assert ROWSMIN_jdtable_=ROWSMIN__t
 assert ROWSMULT_jdtable_=ROWSMULT__t
 assert ROWSXTRA_jdtable_=ROWSXTRA__t
 
 jd'createtable f 100 1.5 50'[jd'droptable f'
-t=. jdglt_jd_'f'
+t=. jdgl_jd_'f'
 assert 100=getms'f jdactive'
 assert 100=ROWSMIN__t
 assert 1.5=ROWSMULT__t

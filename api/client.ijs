@@ -101,6 +101,7 @@ jdx=: 3 : 0
 if. IFJHS do. assert (<URL_jhs_) e.'jijx';'jijs' end.
 DBX jdx y
 :
+PMA''
 APIRULES=: 1
 'DB UP SERVER'=: bdnames x
 USER=: (UP i.'/'){.UP
@@ -150,6 +151,7 @@ if. 'intask'-:SERVER do.
  NB. helps a little bit in windows, but is disatrous in linux
  NB. pm/pma.ijs result
  NB. jd_close'' 
+ 'end'PM''
  r
  return.
 end.
@@ -295,7 +297,7 @@ ip=. >2{sdgethostbyname_jsocket_ ip
 data fwrite filepost
 g=. wget,' --timeout=5 --save-headers --output-document="',fileresult,'" --post-file="',filepost,'" ',server,'/',url
 gr=. shell g
-r=. fread fileresult
+r=. jdfread fileresult
 ferase filepost
 ferase fileresult
 i=. 4+(r E.~ CRLF,CRLF)i.1 NB. headers CRLF delimited with CRLF at end

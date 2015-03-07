@@ -74,5 +74,5 @@ empty Insert__d"1 }. NAMES ,. ('id';'data') <@,."_ _1 ,:&.> new
 NB. test restore from filesystem
 NB. =========================================================
 
-d =: Open__f 'btest' [ BadClose__f d
+d =: Open__f 'btest' [ Close__f d NB. was BadClose without writestate
 d =: Open__f 'btest' [ Close__f d

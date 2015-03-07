@@ -46,12 +46,13 @@ NAMES=: ".'NAMES'
 NB. =========================================================
 NB. utilities
 NB. y is the name of this locale
-Init =: 3 : 0
-PATH =: termSEP PATH__PARENT, NAME =: >y
-LOCALE =: coname''
-CHILDREN =: NAMES =: ''
-NB. writestate''
+Init=: 3 : 0
+PATH=: termSEP PATH__PARENT, NAME =: >y
+LOCALE=: coname''
+CHILDREN=: NAMES=: ''
+NB. writestate'' NB.!
 )
+
 NewChild =: 3 : 0
 loc =. cocreate ''
 coinsert__loc CHILD
@@ -65,6 +66,7 @@ CHILDREN =: CHILDREN-.y
 NAMES =: NAMES-.<NAME__y
 )
 
+NB. get locale and open table children and map column files - note internal use of getloc
 getloc=: 3 : 0
 if. -.'/'e.,>y do.
  if. '.' e. y=.,>y do. 4 :'getloc__y x'/ LOCALE ,~ |.<;._1'.',y return. end.
@@ -78,14 +80,30 @@ if. (ind=#NAMES) do.
  end.
  throw 'Not found: ',(2}.>CHILD),' ',,":y
 end.
-
-NB. map as required!
-ind{CHILDREN
+c=. ind{CHILDREN
+if. 'jdtable'-:;CLASS__c do. NB. tables open cols as required
+ if. Tlen__c=__ do.
+  openallchildren__c ''
+  active__c=: getloc__c 'jdactive'
+  index__c=: getloc__c 'jdindex'
+  
+  a=. active__c
+  Tlen__c=: #dat__a
+ end. 
+elseif. 'jdcolumn'-:;CLASS__c do. NB. cols map as required
+ if. _1=nc {.MAP__c,each <'__c' do.
+   mapcolfile__c"0 MAP__c
+   opentyp__c ''
+ end.
+end.
+c
 )
 
-NB. y is a name.
-ischildfolder =: 3 : 0
-CHILD -: <'jd', LF-.~1!:1 :: ('folder'"_) <PATH,(>y),'/jdclass'
+NB. y is name
+ischildfolder=: 3 : 0
+f=. PATH,(;y),'/jdclass'
+if. fexist f do. t=. 'jd',LF-.~jdfread f else. t=. 'jdfolder' end.
+t-:;CHILD
 )
 
 openallchildren =: 3 : 0
@@ -95,14 +113,14 @@ end.
 )
 
 NB. unmap everything in path
-unmappath =: 3 : 0
+unmappath=: 3 : 0
 msk=. PATH ([ -: #@[ {. ])&.> 1 {"1 mappings_jmf_
 jdunmap &> msk # {."1 mappings_jmf_
 )
 
 NB. =========================================================
 NB. y is a name, which extends PATH.
-Open =: 3 : 0
+Open=: 3 : 0
 y=.,>y
 if. NAMES e.~ <y do. getloc y return. end.
 if. -.ischildfolder y do.
@@ -128,7 +146,7 @@ dcreate PATH,name=.,name
 
 NB. folder links locate cols on particular paths
 if. 'column'-:2}.>CHILD do.
- links=. fread 'links.txt',~jdpath''
+ links=. jdfread 'links.txt',~jdpath''
  if. -.links-:_1 do.
   links=. >bd2 each <;._2 links
   link=. jpath PATH,name
@@ -155,43 +173,42 @@ if. 'column'-:2}.>CHILD do.
  end.
 end.
 
-(2}.>CHILD) 1!:2 <PATH,name,'/jdclass'
+(2}.>CHILD) jdfwrite PATH,name,'/jdclass'
 loc =. NewChild name
 Init__loc name
 create__loc dat
 loc
 )
 
-NB. =========================================================
+NB. STATE is written when changed  - it should not need to be written on close
+validate_close_state=: 3 : 0
+if. #STATE__y do.
+ L__=: y
+ if. -.(3!:2 jdfread PATH__y,'jdstate')-:pack__y STATE__y do.
+  echo 'close writestate bad: ',(;CLASS__y),' ',NAME__y
+  echo 3!:2 jdfread PATH__y,'jdstate'
+  echo STATE__y
+  echo pack__y STATE__y
+ end.
+end.
+)
+
 NB. y is a locale, or an unboxed name.
-Close =: 3 : 0
+Close=: 3 : 0
 y =. getloc^:(0=L.) y
 if. y -.@e. CHILDREN do.
   throw 'Close: ',NAME__y,' is not a child of ',NAME
 end.
 for_loc. CHILDREN__y do. Close__y loc end.
 RemoveChild y
-writestate__y ''
+NB. validate_close_state y
 close__y ''
 codestroy__y ''
 EMPTY
 )
-NB. =========================================================
-NB. For testing purposes only
-BadClose =: 3 : 0
-y =. getloc^:(0=L.) y
-if. y -.@e. CHILDREN do.
-  throw 'Close: ',NAME__y,' is not a child of ',NAME
-end.
-for_loc. CHILDREN__y do. BadClose__y loc end.
-RemoveChild y
-close__y ''
-codestroy__y ''
-EMPTY
-)
-NB. =========================================================
+
 NB. same arguments as Close
-Drop =: 3 : 0
+Drop=: 3 : 0
 if. 0=L.y do.
   if. (<y=.,y)-.@e.NAMES do.
     if. ischildfolder y do. jddeletefolder PATH,y end.
@@ -205,23 +222,16 @@ jddeletefolder path
 EMPTY
 )
 
-NB. =========================================================
-NB. state
 readstate=: 3 : 0
-if. #STATE do. pdef (3!:2) 1!:1 <PATH,'jdstate' end.
-)
-writestate=: 3 : 0
-if. #STATE do. (3!:1 pack STATE) 1!:2 <PATH,'jdstate' end.
-)
-
-readstate=: 3 : 0
-if. fexist PATH,'jdstate' do.
- pdef d=. (3!:2) fread PATH,'jdstate'
-end. 
+if. #STATE do.
+ cnts_readstate_jd_=: >:cnts_readstate_jd_
+ pdef (3!:2) jdfread PATH,'jdstate'
+end.
 )
 
 writestate=: 3 : 0
-(3!:1 pack STATE) fwrite PATH,'jdstate'
+if. #STATE do.
+ cnts_writestate_jd_=: >:cnts_writestate_jd_
+ (3!:1 pack STATE) jdfwrite PATH,'jdstate'
+end.
 )
-
-

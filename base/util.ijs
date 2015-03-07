@@ -315,6 +315,22 @@ end.
 i.0 0
 )
 
+jdfread=: 3 : 0
+t=. fread y
+if. (_1-:t)*.10=13!:11'' do.
+ ('file read limit error (Technotes|file handles): ',;y)assert 0
+end.
+t
+)
+ 
+jdfwrite=: 4 : 0
+t=. x fwrite y
+if. (_1-:t)*.10=13!:11'' do.
+ ('file write limit error (Technotes|file handles): ',;y)assert 0
+end.
+t
+)
+
 NB. jdsuffle 'table col'
 NB. (100<.#rows) random rows are deleted/inserted one row at a time
 NB. (100<.#rows) random rows are deleted/insertt in bulk
@@ -342,4 +358,12 @@ jd ('insert ',tab);,t
 z=. /:~|:><"1 each ,.each {:QZ__=: jd'reads from ',tab
 'shuffle failed' assert d-:z
 y
+)
+
+cnts=: ;:'writestate readstate map resize'
+
+cntsclear=: 3 : 0
+cntslast=: ;".each (<'cnts_'),each cnts,each <'_jd_'
+".each (<'cnts_'),each cnts,each <'_jd_=:0'
+cntslast
 )

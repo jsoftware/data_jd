@@ -18,6 +18,39 @@ a=. CHILDREN__d
 (/:n){n,.a
 )
 
+NB. y is t;c
+NB. t is '' for all tables  or 'tab' for just that table
+NB. c is '' for all cols    or 'col' for just that col
+jdclocs=: 3 : 0
+'t c'=. ,each y
+d=. getdb''
+r=. ''
+tables=.  NAMES__d
+if. #t do.
+ 'not a table' assert NAMES__d e.~ <t
+ tables=. <t
+end. 
+tablelocs=. ''
+
+NB. table children may not be open - getloc forces open
+for_n. tables do.
+ tablelocs=. tablelocs,getloc__d n
+end. 
+
+for_i. i.#tables do.
+ t=. i{tablelocs
+ if. #c do.
+  'not a column' assert NAMES__t e.~ <c
+  cols=. <c
+ else. 
+  cols=. getdefaultselection__t''
+  n=. NAMES__t
+  cols=. cols,((<'jd')=2{.each n)#NAMES__t
+ end.
+ r=. r,(NAMES__t i. cols){CHILDREN__t
+end. 
+)
+
 NB. non-system col names,.locales sorted by name
 jdcols=: 3 : 0
 d=. getdb''
@@ -64,7 +97,7 @@ case. 0 do.
  i.0 0
 case. do.
  y=. adminp y
- 'not a database'assert 'database'-:fread y,'/jdclass'
+ 'not a database'assert 'database'-:jdfread y,'/jdclass'
  d=. }.(y i:'/')}.y
  'w'jdadminlk y
  
@@ -95,7 +128,7 @@ end.
 jdadminx=: 3 : 0
 if. ''-:y do. throw 'y must not be empty' end.
 y=. adminp y
-if. -.'database'-:fread y,'/jdclass' do.
+if. -.'database'-:jdfread y,'/jdclass' do.
  if. 0~:#fdir y,'/*' do.
   m=. y,' must be empty to be made into a new database'
   throw m
@@ -315,6 +348,7 @@ builddemo'sed'
 
 for_n. i.#t do.
   a=. n{t
+  NB. echo 'loadd''','''',~;a
   'test'trace_jd_ a
   try.
     load a
@@ -416,7 +450,7 @@ t=. t-.'testerrors';'ref';,'x'
 d=. (<'<a href="#'),each t,each <'">'
 d=. d,each t,each <'</a>'
 d=. ;d,each LF
-r=. fread JDP,'jd/doc/user.html'
+r=. jdfread JDP,'jd/doc/user.html'
 a=. '<!-- opindex a -->'
 z=. '<!-- opindex z -->'
 i=. (#a)+1 i.~ a  E. r
@@ -440,9 +474,9 @@ t=. t-.'jdcreatejmf';'jdmap';'jdunmap';'jdx'
 d=. (<'<a href="#'),each t,each <'">'
 d=. d,each t,each <'</a>'
 d=. ;d,each LF
-r=. fread JDP,'doc/admin.html'
-a=. '<!-- jdindex a -->'
-z=. '<!-- jdindex z -->'
+r=. jdfread JDP,'doc/admin.html'
+a=. '<!-- jdutilindex a -->'
+z=. '<!-- jdutilindex z -->'
 i=. (#a)+1 i.~ a  E. r
 j=. 1 i.~ z E. r
 r=. (i{.r),d,j}.r
@@ -464,7 +498,7 @@ a=. 5!:1 t,each<'_z_'
 )
 
 NB. y is tab/col path
-NB. fread/fwrite col folder files to new location (probably on another drive)
+NB. jdfread/jdfwrite col folder files to new location (probably on another drive)
 NB. and make symbolic link
 jdlinkmove=: 3 : 0
 'tc newp'=. bd2 y
@@ -475,7 +509,7 @@ newp=. jpath newp,i}.p
 jdcreatefolder newp
 ('folder * is not empty'erf newp)assert 0=#fdir newp,'/*'
 a=. {."1 [1!:0 <p,'/*'
-for_f. a do. (fread p,'/',;f) fwrite newp,'/',;f end.
+for_f. a do. (jdfread p,'/',;f) fwrite newp,'/',;f end.
 jd'close' NB. necessary so remap is done with new stuff
 if. IFWIN do.
  t=. '"',p,'" "',newp,'"'
@@ -513,7 +547,7 @@ if. y-:0 do.
  return.
 end.
 if. y-:'' do.
- if. _1=r=.fread f do. r=. '' end.
+ if. _1=r=.jdfread f do. r=. '' end.
  r
  return.
 end.
@@ -531,20 +565,24 @@ r fwrite 'links.txt',~jdpath''
 r
 )
 
-NB. return locale of table column - debug util
-jdglc=: 3 : 0
-'t c'=. bdnames y
+NB. get locale for table or table column 
+jdgl=: 3 : 0
 d=. getdb''
-t=. getloc__d t
-getloc__t c
+a=. bdnames y
+if. 1=#a do.
+ getloc__d ;a
+else.
+ t=. getloc__d ;{.a
+ getloc__t ;{:a
+end.
 )
 
-NB. return locale of table - debug util
-jdglt=: 3 : 0
-d=. getdb''
-t=. getloc__d y-.' '
+NB. get state for table or table column
+jdgs=: 3 : 0
+c=. jdgl y
+3!:2 fread PATH__c,'jdstate'
 )
-
+ 
 jdfrom=:  4 : '>{:(({."1 y)i.<,x){y'
 
 jdfroms=: 4 : '>(({.y)i.<,x){"1{:y'

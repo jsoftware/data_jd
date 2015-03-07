@@ -42,10 +42,48 @@ sfe_jd_ e NB. convert epochdt to iso 8601
 [eo=: eofs_jd_ a NB. convert iso 8061 to epochdt and also get utc offset in minutes
 (":|:>eo),.' ',.a NB. epochdt , utc offset , original 8601
 
-assert eo-:466364594123456789 466362794123456789 466344794123456789 466344794123456789 466344794123000000 466344794000000000 466344780000000000 466344780000000000 466362000000000000 466344000000000000 466300800000000000 441849600000000000;330 300 0 0 0 0 0 0 300 0 0 0
+assert eo-:466324994123456789 466326794123456789 466344794123456789 466344794123456789 466344794123000000 466344794000000000 466344780000000000 466344780000000000 466326000000000000 466344000000000000 466300800000000000 441849600000000000;330 300 0 0 0 0 0 0 300 0 0 0
 
 '. n'sfe_jd_ e NB. . instead of , elide Z and nano
 '. m'sfe_jd_ e NB. milli
+
+[t=. ', d' sfe_jd_ efs_jd_ '2015-01-22T00:00:00+02:00' NB. 2 hours subtracted to give utc
+assert '2015-01-21'-:t
+
+[t=. ', d' sfe_jd_ efs_jd_ '2015-01-22T00:00:00-02:00' NB. 2 hours added to give utc
+assert '2015-01-22'-:t
+
+NB. efs left arg: allow errors, ignore offset, return offset
+NB. 0 0 0 efs y - signal error, adjust for offset, do not return offset
+
+NB. 1 0 0 efs y - same as efsx - allow error
+assert 'assertion failure'-:efs_jd_ etx '1970a'
+1 0 0 efs_jd_  etx '1970a' NB. 1 0 0 same as efsx
+assert (efsx_jd_ '1970a')-:1 0 0 efs_jd_  etx '1970b'
+
+NB. 0 1 0 efs y - ignore offset
+0 1 0 efs_jd_ '2014-10-11T12:13:14+05'
+assert '2014-10-11T12:13:14'-:', t'sfe_jd_ 0 1 0 efs_jd_ '2014-10-11T12:13:14+05'
+
+NB. 0 1 1 efs y - ignore offset and return offset
+[t=. 0 1 1 efs_jd_ '2014-10-11T12:13:14+05'
+assert t-:466344794000000000;300
+
+NB. verity some edge conditions
+t=. efs_jd_ '1800-01-01'
+assert '1800-01-01T00:00:00,000000000Z'-:sfe_jd_ t
+assert '?'={.sfe_jd_ t-1
+assert '1800-01-01T00:00:00,000000001Z'-: sfe_jd_ t+1
+
+t=. efs_jd_ '2200-12-31T23:59:59,999999999'
+assert '2200-12-31T23:59:59,999999999Z'-:sfe_jd_ t
+assert '2200-12-31T23:59:59,999999998Z'-:sfe_jd_ t-1
+assert '?'={.sfe_jd_ t+1
+
+
+NB. T or blank allowed as delimiter of time fields
+assert (efs_jd_'2015-01-22T00:00:00+02:00')=efs_jd_'2015-01-22 00:00:00+02:00'
+assert (efs_jd_'2015-01-22  ')=efs_jd_'2015-01-22'
 
 NB. there are 4 epochdt col types - epochdt values are ints
 NB. edatetimen yyyy-mm-ddThh:mm:ss,nnnnnnnnn
@@ -65,12 +103,23 @@ jd'insert f a';efs_jd_'2016'   NB. conversion done in client
 jd'insert f a';'2017'
 jd'reads from f'
 jd'reads from f where a="2014"'
-jd'reads from f where a in ("2014","2017")'
+[a=: jd'reads from f where a in ("2014","2017")'
 d=. (":efs_jd_ '2014',:'2017')rplc ' ',','
-jd'reads from f where a in (',d,')'
-jd'reads from f where a>"2014-10-11T12:13:14"'
+b=: jd'reads from f where a in (',d,')'
+assert a-:b
+[a=: jd'reads from f where a>"2014-10-11T12:13:14"' 
+b=: jd'reads from f where a>466344794000000000' 
+assert a-:b
+
+assert 'domain error'-:jd etx 'reads from f where a>2014-10-11T12:13:14' NB. string not in quotes
+assert 'domain error'-:jd etx 'reads from f where a=2014-09-30' NB. string not in quotes
+
 [efs_jd_ '2014-10-11T12:13:14'
 jd'reads from f where a>466344794000000000'
+jd'reads max a from f'
+assert (1 30$'2017-01-01T00:00:00,000000000Z')-:;{:jd'reads max a from f'
+
+
 jd'reads /e from f' NB. epoch int rather than formatted to iso 8601
 jd'get f a'         NB. raw column data
 

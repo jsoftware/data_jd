@@ -11,7 +11,7 @@ NB.       e(ename,secnum)
 NB.       |
 NB. t(tno,enum,tname,tsize)
 
-'run jdtests_jd_ to create demos' assert 'database'-:fread'~temp/jd/sed/jdclass'
+'run jdtests_jd_ to create demos' assert 'database'-:jdfread_jd_'~temp/jd/sed/jdclass'
 jdadmin'sed'
 jd'reads from r'
 jd'reads from s'

@@ -3,7 +3,7 @@ coclass 'jd'
 
 NB. datetime epoch
 
-NB. e unix style epoch but in nanoseconds
+NB. e unix style epoch but in nanoseconds with 2000-01-01 base
 NB. s iso 8601 (relaxed/stricter rules)
 
 NB. conversion utils preserve rank
@@ -16,37 +16,24 @@ NB. efs '2014-06-07T08:09:10+05'
 NB. efs '2014-06-07'
 NB. delimiter (-T:+-Z or blank) ends field, but is not validated
 NB. 7:8:9 treated same as 07:08:09
+NB. x is allow errors, ignore offset, return offset
 efs=: 3 : 0
+0 0 0 efs y
+:
 s=. $y
 p=. }:s
 rows=. */p
 cols=. {:s
 y=. (rows,cols) ($,) y
-r=. (LIBJD_jd_,' efs x x x *c *x *x')cd rows;cols;y;(rows$-1);<<0
-'invalid iso 8601 datetime' assert 0=>{.r
-p$>4{r
+if. 1=2{x do.  off=. rows$-1 else. off=. <0 end.
+r=. (LIBJD_jd_,' efs x x x *c *x *x x')cd rows;cols;y;(rows$-1);off;1{x
+if. 1~:{.x do. 'invalid iso 8601 datetime' assert 0=>{.r end.
+if. 1={:x do. (p$>4{r);p$>5{r else. p$>4{r end.
 )
 
-NB. same ase efs but ignore errors
-efsx=: 3 : 0
-s=. $y
-p=. }:s
-rows=. */p
-cols=. {:s
-y=. (rows,cols) ($,) y
-r=. (LIBJD_jd_,' efs x x x *c *x *x')cd rows;cols;y;(rows$-1);<<0
-p$>4{r
-)
+efsx=: 1 0 0&efs NB. allow errors, do not ignore offset, do not return offset
 
-eofs=: 3 : 0
-s=. $y
-p=. }:s
-rows=. */p
-cols=. {:s
-y=. (rows,cols) ($,) y
-r=. (LIBJD_jd_,' efs x x x *c *x *x')cd rows;cols;y;(rows$-1);rows$-1
-(p$>4{r);p$>5{r
-)
+eofs=: 0 0 1&efs NB. do not allow errors, do not ignore offset, return offset
 
 NB. s from e - efs invers
 NB. 0{x is ',' or '.' for hh:mm:ss,nnnnnnnnn

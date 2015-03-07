@@ -25,8 +25,8 @@ cols=.,&.>,boxxopen cols  [  'tab cols' =. ,&.> y
 t =. getloc '^.^.',tab
 np=.NAME__PARENT
 relpath =. ((tab-.@-:np) # '^.',np,'.'),NAME  NB. path from t
-writestate__t SUBSCR__t =: SUBSCR__t , relpath;(#subscriptions),&<cols
-subscriptions =: subscriptions , tab,&<cols
+writestate__t SUBSCR__t=: SUBSCR__t , relpath;(#subscriptions),&<cols
+subscriptions=: subscriptions , tab,&<cols
 )
 
 NB. shape is secretly the subscriptions

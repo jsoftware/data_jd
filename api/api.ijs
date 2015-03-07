@@ -400,9 +400,23 @@ load__d f
 JDOK
 )
 
-NB. all join types (slow and complicated)
+NB. left1 only join (fast and simple)
+jd_ref=: 3 : 0
+y=. bdnames y
+ECOUNT assert 4=#y
+d=. getdb''
+t=. (2,(#y)%2)$y
+validtc__d"1 t
+t=. ({."1 t),.<"1 (}."1 t)
+NB. MakeRef__d t
+n=. 'jdref', ;'_'&,&.> ; boxopen&.> }.,t
+loc=. getloc__d {.{.t
+t=. Create__loc n;'ref';<t
+JDOK
+)
+
+NB. all join types
 jd_reference=: 3 : 0
-NB. map as required!
 y=. bdnames y
 ECOUNT assert (4<:#y)*.0=2|#y
 d=. getdb''
@@ -444,14 +458,16 @@ ECOUNT assert 2 3 e.~#y
 d=. getdb''
 snktloc=. getloc__d snkt
 assert 0=#SUBSCR__snktloc['dynamic dependencies - use tableinsert or dropdynamic+dynamic'
-snkcs=. {:"1 jdcols snkt
-snkns=. {."1 jdcols snkt
+a=. jdcols snkt
+snkcs=. {:"1 a
+snkns=. {."1 a
 db=. DB
 try.
  jdaccess srcdb NB.! possible security implication
  d=. getdb''
- srccs=. {:"1 jdcols srct
- srcns=. {."1 jdcols srct
+ a=. jdcols srct
+ srccs=. {:"1 a
+ srcns=. {."1 a
  srctloc=. getloc__d srct
  new=. Tlen__srctloc
 catchd.
@@ -467,6 +483,10 @@ for_i. i.#snkns do.
  assert NAME__a-:NAME__b
  assert typ__a-:typ__b
  assert shape__a-:shape__b
+ 
+ getloc__snktloc NAME__a NB. make sure col is mapped
+ getloc__srctloc NAME__b  NB. make sure col is mapped
+ 
  assert (}.$dat__a)-:}.$dat__b
 end.
 
@@ -502,7 +522,7 @@ db=. DB
 try.
  jdaccess srcdb NB.! possible security implication
  srcpath=. jpath(dbpath DB),'/',src
- assert 'table'-:fread srcpath,'/jdclass'
+ assert 'table'-:jdfread srcpath,'/jdclass'
 catchd.
  jdaccess db
  'invalid srcdb'assert 0 
@@ -536,7 +556,7 @@ db=. DB
 try.
  jdaccess srcdb NB.! possible security implication
  srcpath=. jpath(dbpath DB),'/',src
- assert 'table'-:fread srcpath,'/jdclass'
+ assert 'table'-:jdfread srcpath,'/jdclass'
 catchd.
  jdaccess db
  'invalid srcdb'assert 0 
@@ -605,7 +625,7 @@ p=. dbpath DB
 d=. 1!:0 <jpath p,'/*'
 d=. (<p,'/'),each {."1 ('d'=;4{each 4{"1 d)#d
 d=. (fexist d,each <'/jdclass')#d
-d=. ((<'table')=fread each d,each <'/jdclass')#d
+d=. ((<'table')=jdfread each d,each <'/jdclass')#d
 for_n. d do.
  dd=. {."1[1!:0 <jpath'/*',~;n
  b=. (<'jdhash_')=7{.each dd
@@ -614,7 +634,7 @@ for_n. d do.
  dd=. b#dd
  jddeletefolder each n,each,'/',each dd
  f=. '/jdstate',~;n
- s=. 3!:2 fread f
+ s=. 3!:2 jdfread f
  i=. ({."1 s)i.<'SUBSCR'
  s=. (<0 3$a:) (<i,1)}s
  (3!:1 s) fwrite f
@@ -720,7 +740,11 @@ gentwo=: 3 : 0
 genone=: 3 : 0
 'atab arows acols'=. y
 jd_createtable atab
-for_i. i. ".acols do. jd_createcol atab;('a',":i);'int';'_';i.0".arows end. 
+d=. i.0".arows
+for_i. i.0".acols do. 
+ NB. jd_close''
+ jd_createcol atab;('a',":i);'int';'_';d
+end. 
 )
 
 NB. insert of 1st col sets Tlen
@@ -748,9 +772,11 @@ jd_set tab;'byte';n$AlphaNum_j_
 jd_createcol tab,' byte4 byte 4'
 jd_set tab;'byte4';(n,4)$AlphaNum_j_
 jd_createcol tab,' varbyte varbyte'
-t=. n$?.100000$10
-t=. (0,}:+/\t),.t
-jd_set tab;'varbyte';t;(+/{:"1 t)$AlphaNum_j_
+if. 0~:n do.
+ t=. n$?.100000$10
+ t=. (0,}:+/\t),.t
+ jd_set tab;'varbyte';t;(+/{:"1 t)$AlphaNum_j_
+end. 
 JDOK
 )
 
@@ -761,7 +787,6 @@ NB. assert for completely unexpected errors
 NB. formatted report for more likely errors
 jd_validate=: 3 : 0
 d=. getdb''
-m=. mappings_jmf_
 r=. ''
 try.
  assert (#NAMES__d)=#CHILDREN__d
@@ -770,7 +795,9 @@ try.
   len=. Tlen__t
   for_j. i.#NAMES__t do.
    n=. >j{NAMES__t
-   c=. j{CHILDREN__t
+   c=. getloc__t n NB. map as required
+   'bad child locale' assert c=j{CHILDREN__t
+
    if. 'jdindex'-:n do.
    
    elseif. 'jdunique'-:8{.n do.
@@ -778,8 +805,8 @@ try.
    elseif. 'jdhash'-:6{.n do.
     NB. assert len=#link__c
    elseif. 'jdreference_'-:12{.n do.
-    if. typ__c-:'refleft1' do.
-     if. (-.dirty__c)*.len~:#datl__c do. r=. 'bad refleft1 datl count: ',NAME__t,' ',NAME__c,LF end.
+    if. typ__c-:'ref' do.
+     if. (-.dirty__c)*.len~:#datl__c do. r=. 'bad ref datl count: ',NAME__t,' ',NAME__c,LF end.
     else.
      NB. validate datl datr hashl hashr
     end.
@@ -794,8 +821,8 @@ try.
     else.
      assert shape__c-:}.$dat__c 
     end. 
-    k=. ({."1 m)i.<'dat_',(;c),'_'
-    mr=. k{m
+    k=. ({."1 mappings_jmf_)i.<'dat_',(;c),'_'
+    mr=. k{mappings_jmf_
     ms=. msize_jmf_ >6{mr
     fs=. fsize 1{mr
     assert fs=ms+HS_jmf_
@@ -818,7 +845,7 @@ i=. p i:'/'
 getdb=: 3 : 0
 db=. dbpath DB
 'db damaged'assert -.fexist db,'/jddamage'
-if. -.'database'-:fread db,'/jdclass' do. throw JDE1000 end.
+if. -.'database'-:jdfread db,'/jdclass' do. throw JDE1000 end.
 i=. db i:'/'
 floc_z_=: f=. Open_jd_ jpath i{.db
 dloc_z_=: Open__f (>:i)}.db
@@ -883,7 +910,7 @@ r;a
 
 jdex=: 3 : 0
 y=. dltb y
-d=. toJ fread JDP,'doc/user.html'
+d=. toJ jdfread JDP,'doc/user.html'
 d=. dltb each<;._2 d,LF
 if. ''-:y do.
  s=. 'NB. example '
@@ -943,7 +970,7 @@ tempcol=: 3 : 0
    col=. }.j}.a
    d=. getdb''
    ('readtc X not a table'rplc'X';a) assert (<tab)e. NAMES__d
-   g=. jdglt tab
+   g=. jdgl tab
   
    if. (>:i)<#t do.
     if. (<'=:')=(i+1){t do.

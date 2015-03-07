@@ -12,6 +12,6 @@ Insert__d 'B';<('boolean';'int'),.(2&|;])i.100
 
 empty MakeRef__d 'A B' ,.&;: 'int int'
 
-d =: (Open__f [ BadClose__f) 'btest'
+d =: (Open__f [ Close__f) 'btest' NB. was BadClose without writestate
 
 Insert__d 'B';<('boolean';'int'),.(2&|;])100+i.100

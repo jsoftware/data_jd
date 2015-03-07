@@ -44,6 +44,7 @@
 <a href="#read">read</a>
 <a href="#reads">reads</a>
 <a href="#readtc">readtc</a>
+<a href="#ref">ref</a>
 <a href="#reference">reference</a>
 <a href="#set">set</a>
 <a href="#tableappend">tableappend</a>
@@ -55,7 +56,9 @@
 <!-- opindex z -->
 </codenopre><code><hr><a href="#use">use</a>      - <a href="#delete">delete</a> <a href="#info">info</a> <a href="#insert">insert</a> <a href="#list">list</a> <a href="#read">read</a> <a href="#reads">reads</a> <a href="#readtc">readtc</a> <a href="#update">update</a><br>
 <a href="#manage">manage</a>   - <a href="#createcol">createcol</a> <a href="#createdb">createdb</a> <a href="#createtable">createtable</a><br>           <a href="#dropcol">dropcol</a> <a href="#dropdb">dropdb</a> <a href="#dropfilesize">dropfilesize</a> <a href="#droptable">droptable</a><br>
-<a href="#dynamic">dynamic</a>  - <a href="#createdynamic">createdynamic</a> <a href="#createhash">createhash</a> <a href="#createunique">createunique</a><br>           <a href="#dropdynamic">dropdynamic</a> <a href="#reference">reference</a></a><br>
+<a href="#dynamic">dynamic</a>  - <a href="#createdynamic">createdynamic</a> <a href="#createhash">createhash</a> <a href="#createunique">createunique</a><br>           <a href="#dropdynamic">dropdynamic</a> <a
+
+href="#ref">ref</a> <a href="#reference">reference</a></a><br>
 <a href="#csv">csv...</a>   - <a href="#csvcdefs">csvcdefs</a> <a href="#csvdump">csvdump</a> <a href="#csvrd">csvrd</a> <a href="#csvreport">csvreport</a> <a href="#csvrestore">csvrestore</a> <a href="#csvwr">csvwr</a> <br>
 <a href="#table">table...</a> - <a href="#tableappend">tableappend</a> <a href="#tablecopy">tablecopy</a> <a href="#tableinsert">tableinsert</a> <a href="#tablemove">tablemove</a><br>
 <a href="#misc">misc</a>     - <a href="#close">close</a> <a href="#gen">gen</a> <a href="#get">get</a> <a href="#loadcustom">loadcustom</a> <a href="#option">option</a> <a href="#set">set</a> <a href="#validate">validate</a>
@@ -66,7 +69,7 @@
 <a href="#insert">insert</a>  table     col    data     ...
 <a href="#update">update</a>  table     <a href="#where">where</a>  col      data  ...
 <a href="#delete">delete</a>  table     <a href="#where">where</a>
-<a href="#info">info</a>    type
+<a href="#info">info</a>    type      [...]
 
 <hr><a name="manage"><h2>manage</h2></a>
 <a href="#close">close</a>
@@ -86,6 +89,8 @@ dynamic cols are updated when the underlying data cols change
 <a href="#createhash">createhash</a>   tab cols...
 <a href="#createunique">createunique</a> tab cols...
 <a href="#dropdynamic">dropdynamic</a>
+
+<a href="#ref">ref</a>
 <a href="#reference">reference</a>    tab1      cols...  tab2  cols...
 
 <hr><a name="csv"><h2>csv...</h2></a>
@@ -393,11 +398,11 @@ can be used with set to efficiently adjust col data
 <hr><a name="info"><h2>info</h2></a>
 jd'info ...' NB. info about current DB
  agg                        - select aggregators
+ hash      [table]          - hash cols
  last                       - cmd time space
- map       [table [column]]
- reference [table]
+ ref       [table]          - ref cols
+ reference [table]          - reference cols
  schema    [table [column]]
- state     [table [column]] - jdstate
  summary   [table]
  table
  varbyte   [table [column]]
@@ -479,7 +484,7 @@ exact keyword indicates to use the order as given.
 See 'help join' for a description of the types of joins.
 
 <hr><a name="join"><h2>join</h2></a>
-joins: inner -  outer=   left &gt;  right &lt;  left1 ,
+joins: outer = inner -  left &gt;  right &lt;  left1 .
 
 outer join A,A=B
  all possible rows
@@ -550,8 +555,31 @@ is executed first to create temp cols
 
 tutorial tempcol
 
+<a name="ref"><h2>ref</h2></a>
+ref tab1 col1 tab2 col2
+
+ref is simpler than reference and is prefered if it does the job
+
+ref has restrictions:
+ only default left1 <a href="#join">join</a>
+ only single col
+ signals error if deleted rows (update deletes)
+
+ref takes much less disk space than reference
+ does not have left/right hash/link cols
+ creates single dynamic int col
+ 
+insert to either table sets dirty flag
+ ref col recalculated (leftcols i. rightcols) when required
+
+delete/update to either table sets dirty flag
+ ref col recalculate signals error
+
+see <a href="technical.html#ref">Technical|ref</a> for details<br>
 <hr><a name="reference"><h2>reference</h2></a>
 reference t1 cols... t2 cols...
+
+if possible ref should be used and reference avoided
 
 allows outer/inner/left/right/left1 <a href="#join">join</a>
 does createhash if required

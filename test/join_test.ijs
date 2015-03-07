@@ -185,8 +185,55 @@ jdshuffle_jd_^:3 't2'
 assert a-: scd jd'reads from t1'
 assert b-: scd jd'reads from t2'
 assert c-: scd jd'reads from t1,t1.t2'
+jd'close'
 
 NB. tutorial should be extended to cover
 NB.  A join B, B join C
 NB.  A join B, A join C
 
+
+NB. join with empty tables
+
+jdadminx'test'
+aa=.2 1;2 1;2 4;2 1;2 1;2 1;2 6;2 1;2 1;2 1;2 4;2 1;2 1;2 1;2 0;2 1
+
+jd'gen test two 2'
+jd'gen test zero 0'
+
+NB. empty table as target
+jd'dropdynamic'
+jd'reference two int zero int'
+
+r=. jd'reads from two,two=zero'
+assert aa=$each {:scd r
+
+r=. jd'reads from two,two-zero'
+assert 0=;#each {:scd r
+
+r=. jd'reads from two,two<zero'
+assert 0=;#each {:scd r
+
+r=. jd'reads from two,two>zero'
+assert aa=$each {:scd r
+
+r=. jd'reads from two,two.zero'
+assert aa=$each {:scd r
+
+NB. empty table as root
+jd'dropdynamic'
+jd'reference zero int two int'
+
+r=. jd'reads from zero,zero=two'
+assert aa=each {:scd r
+
+r=. jd'reads from zero,zero-two'
+assert 0=;#each {:scd r
+
+r=. jd'reads from zero,zero<two'
+assert aa=each {:scd r
+
+r=. jd'reads from zero,zero>two'
+assert 0=;#each {:scd r
+
+r=. jd'reads from zero,zero.two'
+assert 0=;#each {:scd r

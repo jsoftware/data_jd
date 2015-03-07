@@ -3,7 +3,7 @@ NB. Jd server overview
 
 assert IFJHS['must run in JHS'
 
-assert 'database'-:fread'~temp/jd/sandp/jdclass'['sandp does not exist - run jdtests'''''
+assert 'database'-:jdfread_jd_'~temp/jd/sandp/jdclass'['sandp does not exist - run jdtests'''''
 
 jdadmin 0 NB. clear previous
 jdadmin 'sandp'

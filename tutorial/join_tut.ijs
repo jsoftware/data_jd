@@ -24,25 +24,43 @@ a=: 12{."1>;:'Sales Engineering Clerical Marketing'
 b=: 31 33 34 35
 jd'createtable';'dt';dtc
 jd'insert';'dt';'depid';b;'dname';a
-
-jd'reference et depid dt depid'
-
 [et=: jd'reads from et'
 [dt=: jd'reads from dt'
 
+NB. ref and reference commands allow joins between tables
+NB. see doc Technical|ref for info on ref vs reference
+NB. ref can only be used if 1 col linking tables and no deletes (updates cause deletes)
+NB. ref:
+NB.  takes far less space (no hash or link cols)
+NB.  much simpler implementation
+NB.  can be faster in some use cases
+
+jd'ref et depid dt depid'
+jd'reads from et,et.dt'
+jd'insert dt';'depid';36;'dname';1 2$'HR'
+
+NB. insert has invalidated the ref and it will be rebuilt when needed
+jd'reads from et,et.dt'
+
+jd'delete dt';'depid=36'
+'domain error'-:jd etx'reads from et,et.dt' NB. error - can not build ref with deletes
+jdlast
+
+NB. drop the ref dynamic col and build reference
+jd'dropdynamic'
+jd'reference et depid dt depid'
+jd'reads from et,et.dt' NB. left1
 jd'reads from et,et-dt' NB. innner
 jd'reads from et,et>dt' NB. left
 jd'reads from et,et<dt' NB. right
 jd'reads from et,et=dt' NB. outer
-jd'reads from et,et.dt' NB. left1
 
 jd'reference dt depid et depid'
-
+jd'reads from dt,dt.et' NB. left1
 jd'reads from dt,dt-et' NB. innnr
 jd'reads from dt,dt>et' NB. left
 jd'reads from dt,dt<et' NB. right
 jd'reads from dt,dt=et' NB. outer
-jd'reads from dt,dt.et' NB. left1
 
 NB. multiple reference columns
 ext=: 0 : 0

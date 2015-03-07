@@ -1,4 +1,3 @@
-NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 NB. test insert/delete/update vs ref/reference
 NB. test left1 join so same tests work for ref/reference
 
@@ -52,7 +51,7 @@ ti''
 tref''
 jd'insert';'f';'a';4+i.5
 jd'insert';'g';'a';|.4+i.5
-assert(;~>:i.8)-:tdata''
+(;~>:i.8)-:tdata''
 )
 
 NB. insert records to trigger dat resize
@@ -63,7 +62,7 @@ ti''
 tref''
 jd'insert';'f';'a';4+i.1000
 jd'insert';'g';'a';|.4+i.1000
-assert(;~>:i.1003)-:tdata''
+(;~>:i.1003)-:tdata''
 )
 
 NB. insert f
@@ -207,6 +206,27 @@ assert (2 3 5;0 3 0;0 0 0) -: {:"1 jd 'read from f,f.g,g.h'
 testjoins 'fgh'
 )
 
+NB. ref dirty tests
+ct1=: 3 : 0
+if. REF -: 'reference' do. return. end.
+ti''
+'f'tc 1 2 3
+'g'tc 3 2 1
+tref''
+r=. jdgl_jd_'f jdreference_a_g_a'
+assert 1=dirty__r NB. starts dirty
+tdata''
+assert 0=dirty__r NB. use cleans
+jd'update';'f';'a=1';'a';1
+assert 1=dirty__r NB. update dirties
+jd'close'
+jd'reads from f'
+r=. jdgl_jd_'f jdreference_a_g_a'
+assert 1=dirty__r NB. dirty over close/open
+tdata''
+assert 0=dirty__r NB. use cleans
+)
+
 NB. test multiple cols of different types
 mt1=: 3 : 0
 ti''
@@ -225,7 +245,28 @@ assert 0 2-:'f.x'jdfrom_jd_ d
 assert 0 0-:'g.x'jdfrom_jd_ d
 )
 
+NB. ref tests fail because update/delete not supported
+0 : 0
+REF=: 'ref'
+ct1''
+it1''
+it2''
+it3''
+it4''
+it5''
+ut1''
+ut2''
+ut3''
+dt1''
+dt2''
+dt3''
+dt4''
+mt1''
+Mt1''
+)
+
 REF=: 'reference'
+ct1''
 it1''
 it2''
 it3''

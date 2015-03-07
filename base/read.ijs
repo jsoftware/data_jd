@@ -14,9 +14,13 @@ from;sel;by;where;order
 
 Read=: 3 : 0
 'from sel by where order'=. sel_parse y
+
 From from
+'From'PM''
 SelBy sel;by
+'Selby'PM''
 Where where
+'Where'PM''
 if. MAXROWCOUNT < #indices do.
   msg =. 'Asked for ',(":#indices),' rows; returning first '
   msg =. msg,(":MAXROWCOUNT),' (MAXROWCOUNT_jd_) rows.'
@@ -24,16 +28,16 @@ if. MAXROWCOUNT < #indices do.
   indices =: MAXROWCOUNT {. indices
 end.
 Query ''
+'Query'PM''
 Order order
-
+'Order'PM''
 for_i. i.#cnms do.
  c=. i{cloc
  if. (-.OPTION_e) *. 'edate'-:5{.typ__c do.
-  t=. sep__c,utc__c,'dtmn'{~(;:'edate edatetime edatetimem edatetimen')i.<typ__c  
-  read=: (<t sfe>i{read) i}read
+  t=. sep__c,utc__c,'dtmn'{~(;:'edate edatetime edatetimem edatetimen')i.<typ__c
+  read=: (<t sfe,>i{read) i}read
  end.
 end.
-
 cnms,.read
 )
 
@@ -156,16 +160,14 @@ cloc =: tl  4 :'getloc__x y'"0  c
 EMPTY
 )
 
-NB. =========================================================
-NB. ***** WHERE *****
 NB. Build indices, a shape (#tloc),len matrix of indices for each table.
-Where =: 3 : 0
-indices =: /:~@:~.&.|: > ,.&.>/ andqueries&.> toSoP fixwhere_jdtable_ y
+Where=: 3 : 0
+indices=: /:~@:~.&.|: > ,.&.>/ andqueries&.> toSoP fixwhere_jdtable_ y
 )
 
 NB. Take a list of queries, each on an individual table.
 NB. Return a set of indices for which they are all true.
-andqueries =: 3 : 0
+andqueries=: 3 : 0
 'e y' =. ((#~ ,&< (#~-.)) ((<'exists')={.@>@{:)@>) y
 e =. tnms ((<'qnot') <:@+:@~: {.@>@])`(i. {:@>@{:@>)`(0"0@[)} e
 
@@ -177,18 +179,17 @@ inds =. ({."1 inds) #~ mask =. (=/"1 +. _1={:"1) inds
 NB. Group queries by table and evaluate
 tabqueries =. inds ((,~i.@#) <@({&(mask#y))@}./. ,~&(i.@#)) tloc
 q =. (<"0 tloc) eval_q&.> tabqueries
-
 indices =. q  getindices~  getorder`((i.#tnms)"_)@.exact  q
-
 if. 1 0-:$indices do. indices =. ,: _1,I.dat__active__t [ t=.{.tloc end.
 if. (-:_1$~$) {."1 indices do. indices=.}."1 indices end.
 if. +./|e do. indices =. (#"1~ e *./@:(2~:3|+) =&_1) indices end.
 for_q. (-.mask)#y do. indices =. indices mgetwherex2 >q end.
 indices
 )
+
 NB. x is the order to use
 NB. y is a list of query results, one for each table
-getindices =: 4 : 0
+getindices=: 4 : 0
 order=.x [ q=.y
 if. -. order -: i.#tnms do.
   edges =. (i.@# (~: *"1 ,:) (i. {&tparent)) order
@@ -202,7 +203,7 @@ indices =. order /:~ ts  addtableindices~ reduce  i.0 0
 )
 
 NB. Sum-of-products utilities
-simplifySoP =: [: (#~ 1>: [:+/ *./@:e.&>/~) [: ~. ~.&.>
+simplifySoP=: [: (#~ 1>: [:+/ *./@:e.&>/~) [: ~. ~.&.>
 toSoP =: 3 : 0
 if. 0=#y do. <'' return. end.
 y =. ({. , toSoP&.>^:(*@#)@}.) y
@@ -216,7 +217,7 @@ end.
 )
 
 NB. Evaluate query y on table x
-eval_q =: ($0)"_ ` (4 : 0) @. (*@#@])
+eval_q=: ($0)"_ ` (4 : 0) @. (*@#@])
 t=.x [ q=.y
 striptab =. ([}.~[:(+*)#@[|i:)&'.'
 'not q' =. <@:>"_1 |: (((<'qnot')-:{.) ,&< (striptab&.>@{.,}.)&.>@{:)@> q

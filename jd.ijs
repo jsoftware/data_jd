@@ -69,6 +69,7 @@ NB. initial values
 APIRULES_jd_=: 1
 OP_jd_=: 'none'
 ALLOW_FVE_jd_=:  0 NB. 1 allows hash float - see test/api_float.ijs
+cntsclear_jd_''
 if. _1=nc<'TRACE_jd_' do. jdtrace_jd_ 0 end.
 if. _1=nc<'TEMPCOLS_jd_' do. TEMPCOLS_jd_=: i.0 2 end.
 if. -.IFJHS do. require'~addons/ide/jhs/sp.ijs' end.
@@ -122,6 +123,9 @@ to provide basic info and request a key
 non-commercial or evaluation key is free
 and does not require a license agreement
 
+See Jd documentation at:
+TOC.HTML
+
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 )
@@ -129,9 +133,9 @@ and does not require a license agreement
 3 : 0''
 if. -.UNAME-:'Win' do.
  n=. ".}:2!:0'ulimit -n'
- if. n<4096 do.
-  echo LF,(":n),' for "ulimit -n" is low. See Technotes "file handles" for details.'
+ if. n<200000 do.
+  echo LF,'Warning: ',(":n),' for "ulimit -n" is low. See Technotes|file handles.'
  end.
 end.
-if. K_jd_ do. coerase <'jd'[echo nokey end.
+if. K_jd_ do. coerase <'jd'[echo nokey rplc 'TOC.HTML';jpath '~addons/data/jd/doc/toc.html' end.
 )

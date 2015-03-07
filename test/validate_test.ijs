@@ -38,7 +38,7 @@ assert badcount-:(#badcount){.r
 reget''
 dat__c=: q
 
-jd'reads from a,a.b' NB. force refleft1 dat;
+jd'reads from a,a.b' NB. force ref setdata
 reget''
 c=: getloc__t'jdreference_aref_b_bref'
 NB. assert 0=dirty__c

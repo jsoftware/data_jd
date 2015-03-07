@@ -58,9 +58,9 @@ for. i.loop do.
  bdi''
  assert basedata-:sortit''
 end. 
-c=. jdglc_jd_'a jdactive'
+c=. jdgl_jd_'a jdactive'
 assert (#dat__c)-:arows+rows*loop
-c=. jdglc_jd_'b jdactive'
+c=. jdgl_jd_'b jdactive'
 assert (#dat__c)-:brows+rows*loop
 assert (i.arows)-: /:~,;{:jd'reads akey from a'
 assert (i.brows)-: /:~,;{:jd'reads bref from b'

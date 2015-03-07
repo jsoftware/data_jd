@@ -38,7 +38,15 @@ val =: ({.@, y{dat) {. val
 dat =: y{.dat
 )
 
-select =: 3 : '<@:({&val)@:(+i.)/"1 y{dat'
+NB. note special code for join with empty table
+select=: 3 : 0
+if. (0=#dat)*.0~:#y do.
+ <@:({&val)@:(+i.)/"1 y{(1,2)$0
+else.
+ <@:({&val)@:(+i.)/"1 y{dat
+end.
+)
+
 modify =: 4 : 'throw ''Modifying varbyte columns not yet supported: '',NAME'
 modifyfilled =: 4 : 0 
 (MAP)=: (0$~0,shape,2);0$0

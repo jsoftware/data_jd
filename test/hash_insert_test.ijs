@@ -11,7 +11,7 @@ jd'insert f';'a';DA;'b';DA;'c';DA;'d';DA;'e';DA
 )
 
 ins=: 3 : 0
-NB. IT=: jdglc'f jdhash_a'
+NB. IT=: jdgl'f jdhash_a'
 NB. IQ=: #hash__IT
 for. i.y do.
  jd'insert f';'a';NXT;'b';NXT;'c';NXT;'d';NXT;'e';NXT

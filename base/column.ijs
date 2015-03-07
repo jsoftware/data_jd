@@ -15,15 +15,18 @@ shape
 
 NB. =========================================================
 init=: 3 : 0
-Cloc =: '_',(>LOCALE),'_'
+Cloc=: '_',(>LOCALE),'_'
 coinserttofront 'jdt',typ
+NB. writestate''
 )
 
+NB. map as required - except for a few cases where all are mapped up front
 open=: 3 : 0
 init ''
-NB. map as required!
-mapcolfile"0 MAP
-opentyp ''
+if. -.APIRULES do.
+ mapcolfile"0 MAP
+ opentyp ''
+end.
 )
 
 close=: 3 : 'unmapcolfile"0 MAP'
