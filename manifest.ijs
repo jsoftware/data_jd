@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '2.2.0'
+VERSION=: '2.1.1'
 
 FILES=: 0 : 0
 jd.ijs
@@ -128,6 +128,7 @@ test/basic_test.ijs
 test/cd_query_test.ijs
 test/createcol_test.ijs
 test/csvout_test.ijs
+test/dropdynamic_test.ijs
 test/dynamic_test.ijs
 test/float_test.ijs
 test/hashx_test.ijs
@@ -188,4 +189,4 @@ types/numeric.ijs
 types/varbyte.ijs
 )
 
-RELEASE=: 'j801 j802 j803'
+RELEASE=: 'j701 j801 j802 j803'

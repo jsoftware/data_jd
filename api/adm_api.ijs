@@ -479,7 +479,7 @@ a=. '<!-- jdutilindex a -->'
 z=. '<!-- jdutilindex z -->'
 i=. (#a)+1 i.~ a  E. r
 j=. 1 i.~ z E. r
-r=. (i{.r),d,j}.r
+r=. toCRLF (i{.r),d,j}.r
 r fwrite JDP,'doc/admin.html'
 f=. ''
 for_n. t do.

@@ -70,6 +70,7 @@ jd_... verbs typically start with getdb'' that sets:
 jd_z_=: jd_jd_
 
 ECOUNT=: 'incorrect arg count'
+EDNONE=: 'dropdynamic does not exist'
 
 demos=: (<JDP,'demo/'),each 'sandp/sandp.ijs';'northwind/northwind.ijs';'sed/sed.ijs';'vr/vr.ijs'
 
@@ -619,8 +620,57 @@ createdynamic__ ''
 JDOK
 )
 
+dropdynsub=: 3 : 0
+d=. getdb''
+typ=. ;{.y
+y=. }.y
+select. typ
+
+fcase. 'ref' do.
+ ECOUNT assert 4=#y
+
+case.'reference' do.
+ ECOUNT assert (4<:#y)*.0=2|#y
+ t=. (2,(#y)%2)$y
+ validtc__d {.t
+ validtc__d {:t
+ t=. ({."1 t),.<"1 (}."1 t)
+ fn=. 'jd',typ,,;'_'&,&.> ; boxopen&.> }.,y
+ f=. jdgl ;{.{.t
+ fb=. ({."1 SUBSCR__f)=<fn
+ EDNONE assert 1=+/fb
+ gn=. '^.',(;{.y),'.jd',typ,,;'_'&,&.> ; boxopen&.> }.,y
+ g=. jdgl ;{.{:t
+ gb=. ({."1 SUBSCR__g)=<gn
+ EDNONE assert 1=+/gb
+ jddeletefolder PATH__f,fn
+ SUBSCR__f=: (-.fb)#SUBSCR__f
+ writestate__f''
+ SUBSCR__g=: (-.gb)#SUBSCR__g
+ writestate__g''
+case.'hash';'unique' do.
+ ECOUNT assert 2<:#y
+ validtc__d y
+ fn=. 'jd',typ,,;'_'&,&.> ; boxopen&.> }.,y
+ f=. jdgl ;{.y
+ fb=. ({."1 SUBSCR__f)=<fn
+ EDNONE assert 1=+/fb
+ a=. {:{:fb#SUBSCR__f
+ 'dropdynamic hash/unique is used by reference' assert 1=+/a={:"1 SUBSCR__f
+ jddeletefolder PATH__f,fn
+ SUBSCR__f=: (-.fb)#SUBSCR__f
+ writestate__f''
+case.do.
+ 'dropdynamic unknown type'assert 0
+end.
+jd'close'
+JDOK
+)
+
 jd_dropdynamic=: 3 : 0
 jd_close''
+y=. bdnames y
+if. #y do. dropdynsub y return. end.
 p=. dbpath DB
 d=. 1!:0 <jpath p,'/*'
 d=. (<p,'/'),each {."1 ('d'=;4{each 4{"1 d)#d

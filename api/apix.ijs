@@ -7,7 +7,7 @@ jd_list=: 3 : 0
 t=. bdnames y
 ECOUNT assert 1=#t
 select. ;t
-case. 'version' do. ,.'version';'2.2'
+case. 'version' do. ,.'version';'2.2.1'
 case. 'open'    do. ,.'open';<>opened''
 case.           do. assert 0['unsupported list command'
 end. 
@@ -27,6 +27,8 @@ case. 'varbyte' do.
  infovarbyte a
 case. 'summary' do.
  infosummary a
+case. 'unique' do.
+ 'unique' infox a
 case. 'hash' do.
  'hash' infox a
 case. 'ref' do.

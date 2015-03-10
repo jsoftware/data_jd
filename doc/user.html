@@ -242,6 +242,9 @@ jdaccess olddan
 <hr><a name="createunique"><h2>createunique</h2></a>
 createunique t1 cols...
 
+same as <a href="#createhash">createhash</a> except no link file
+and name is jdunique_... instead of jdhash_...
+
 tutorial unique
 
 <hr><a name="csvcdefs"><h2>csvcdefs</h2></a>
@@ -341,9 +344,20 @@ releases lock
 deletes filefolder
 
 <hr><a name="dropdynamic"><h2>dropdynamic</h2></a>
-dropdynamic
+dropdynamic [type spec]
 
-drop all dynamic cols
+dropdynamic with no argument drops all dynamic cols
+dropdynamic with argument drops specified dynamic col
+
+spec is the argument used to create the dynamic col
+
+dropdynamic ref       tab1 cols    tab2 cols
+dropdynamic reference tab1 cols... tab2 cols...
+dropdynamic hash      tab1 cols...
+dropdynamic reference tab1 cols...
+
+<a href="#info">info</a> returns dynamic col info
+
 some ops are simpler and run faster without dynamics to update
 
 <hr><a name="dropfilesize"><h2>dropfilesize</h2></a>
@@ -398,15 +412,17 @@ can be used with set to efficiently adjust col data
 <hr><a name="info"><h2>info</h2></a>
 jd'info ...' NB. info about current DB
  agg                        - select aggregators
- hash      [table]          - hash cols
  last                       - cmd time space
- ref       [table]          - ref cols
- reference [table]          - reference cols
  schema    [table [column]]
  summary   [table]
  table
  varbyte   [table [column]]
- 
+
+ hash      [table]          - hash cols
+ ref       [table]          - ref cols
+ reference [table]          - reference cols
+ unique    [table]          - unique cols
+
  NB. example info
  jdadminx'example'[olddan=:jdaccess''
  jd'gen ref2 a 3 0 b 2'
