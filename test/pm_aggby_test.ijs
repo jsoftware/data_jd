@@ -31,5 +31,5 @@ assert jresult-:{:jdresult
 
 assert tbc>td    NB. b,c vs d
 assert td>tj     NB. d   vs j
-assert td<1.2*tj NB. withing 20% of j time
+assert td<1.4*tj NB. not too much worse than j time
 
