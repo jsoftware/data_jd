@@ -46,3 +46,21 @@ t=. +'a'=/d
 unmap_jmf_ 'd'
 <.0.5+b%~PMT''
 )
+
+cu=: 3 : 0
+jdadminx'test'
+jd'gen one f ',(":y),' 1'
+r=. PMT''
+jd'createunique f a0'
+r,PMT''
+)
+
+
+
+
+
+
+
+
+
+

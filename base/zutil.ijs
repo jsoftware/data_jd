@@ -1,42 +1,6 @@
 NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 coclass'z'
 
-NB. record section time and space
-PM=: 4 : 0
-PMD__=: PMD__,x;(6!:9'');7!:0''
-y
-)
-
-PMA=: 3 : 0
-'start'PM''[PMD__=: ''
-)
-
-NB. report jd operation performance
-PMR=: 3 : 0
-t=. (3,~3%~#PMD)$PMD
-n=. ;1{"1 t     NB. time
-n=. n-{.n       NB. units
-total=. {:n
-n=. }:(n,0)-0,n NB. difference
-pcnt=. '% ',":,.<.0.5+100*n%+/n
-space=. ;2{"1 t NB. space
-space=. space-{.space
-space=. 'MB',":,.<.0.5+space%1e6
-txt=.  'section',>{."1 t
-r=. pcnt,.' ',.txt,.' ',.space
-t=. <.0.5+1000*total%6!:8''
-r,' ',:(":PMT''),' milliseconds'
-)
-
-PMT=: 3 : 0
-t=. (3,~3%~#PMD)$PMD
-n=. ;1{"1 t     NB. time
-n=. n-{.n       NB. units
-total=. {:n
-<.0.5+1000*total%6!:8''
-)
-
-
 forcecopy_z_=: a: { ]
 
 NB. from test suite tsu.ijs - return expected error

@@ -134,12 +134,17 @@ jd_csvrd=: 3 : 0
 csvset''
 a=. ca y
 d=. getdb''
-rows=. 10 NB. default rows to read is 10
+rows=. 10    NB. default rows to read is 10
+flagcdefs=. 0 NB. cdefs from CSVFOLDER
 while. '/'={.option=. >{.a do.
  select. option
  case. '/rows' do.
   rows=. _1".>1{a
   a=. }.a
+ case. '/cdefs' do.
+  'CDEFSFILE not defined' assert 0=nc<'CDEFSFILE__'
+  'CDEFSFILE does not exist' assert fexist CDEFSFILE__
+  flagcdefs=. 1 NB. cdefs from CDEFSFILE
  case. do.
   assert 0['bad option'
  end. 
@@ -151,7 +156,11 @@ cdefs=. (_3}.csv),'cdefs'
 assert fexist csv
 assert fexist cdefs['missing cdef file'
 assert -.(<table)e.{."1 jdtables''['table already exists'
-cdefs=. fread (_3}.csv),'cdefs'
+if. flagcdefs do.
+ cdefs=. fread CDEFSFILE
+else.
+ cdefs=. fread (_3}.csv),'cdefs'
+end. 
 csvdefs_jdcsv_ cdefs
 csvreportclear_jdcsv_''                        NB. clear log file of old reports
 jdfolder=.  (PATH__d),table

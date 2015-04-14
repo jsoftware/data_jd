@@ -18,7 +18,8 @@
 <div contenteditable="false">
 
 
-<a href="#backup">backup</a> - 
+<a href="#backup">backup</a> -
+<a href="#centos">centos</a> -
 <a href="#crash">crash recovery</a> - 
 <a href="#developer">developer</a> - 
 <a href="#handles">file handles</a> - 
@@ -40,9 +41,33 @@ With large databases and suitable hardware it might be worthwhile to use multipl
 <p>With update as delete/insert an incremental backup tool could be easily built that dumps just jdactive and
 and the rows after Tlen in the full backup.</p>
 
+<h2><a name="centos">centos</h2>
+
+Jd linux shared library built on recent distributions fails on some releases of CentOS
+(and presumably similar Red Hat releases). Loading Jd will get:<code>
+
+'Jd shared library failure' assert ...
+   cderx''
+'... GLIBC_2.14 not found ...'
+
+</code>
+Workaround is to use libjd_centos.so that was built on CentOS.
+To use it do something like the following:
+<code>
+
+...$ cd ~/addons/data/jd/cd
+...$ mv libjd.so libjd_not_centos.so
+...$ mv libjd_centos.so libjd.so
+...$ chmod +x libjd.so
+</code>
+
+
+
+
+
 <h2><a name="crash">crash recovery</h2>
 
-<p>Bugs and hardware failures can damage a db and there is more that could be done to make Jd more resilent.</p>
+<p>Bugs and hardware failures can damage a db and there is more that could be done to make Jd more resilient.</p>
 
 <p><tt>jd'validate'</tt> should be extended to report more problems and should have an option to correct problems.<p>
 
@@ -131,6 +156,9 @@ with the data.<p>
 </code>
 
 <h2><a name="performance">performance measurement</h2>
+
+See pmhelp_jd_ for info.
+
 <p>Folder pm has scripts for performance measurement.</p>
 
 <h2><a name="ref">ref</h2>

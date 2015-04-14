@@ -33,6 +33,19 @@ jd'droptable k'
 jd'csvrd /rows 0 f.csv k' NB. /rows 0 reads all rows
 jd'reads from k'
 
+NB. csvrd /cdefs option reads cdefs from CDEFSFILE
+jd'droptable k'
+erase 'CDEFSFILE'
+assert 'domain error'-:jd etx'csvrd /cdefs f.csv k'
+;1{jdlast
+CDEFSFILE=: '~temp/jnk.cdefs'
+ferase CDEFSFILE
+assert 'domain error'-:jd etx'csvrd /cdefs f.csv k'
+;1{jdlast
+(fread CSVFOLDER,'f.cdefs')fwrite CDEFSFILE
+jd'csvrd /cdefs f.csv k'
+jd'reads from k'
+
 jdadminx'test'
 jddeletefolder_jd_ F NB. delete .csv and .cdefs files
 jd'gen test f 3'

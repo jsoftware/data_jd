@@ -81,12 +81,11 @@ if. (ind=#NAMES) do.
  throw 'Not found: ',(2}.>CHILD),' ',,":y
 end.
 c=. ind{CHILDREN
-if. 'jdtable'-:;CLASS__c do. NB. tables open cols as required
+if. 'jdtable'-:;CLASS__c do.
  if. Tlen__c=__ do.
   openallchildren__c ''
   active__c=: getloc__c 'jdactive'
   index__c=: getloc__c 'jdindex'
-  
   a=. active__c
   Tlen__c=: #dat__a
  end. 
@@ -235,3 +234,4 @@ if. #STATE do.
  (3!:1 pack STATE) jdfwrite PATH,'jdstate'
 end.
 )
+

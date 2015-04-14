@@ -4,7 +4,6 @@ coclass 'jdtable'
 NB. =========================================================
 fixwhere=: 3 : 0
 if. ' ' *./@:= y do. '' return. end.
-
 quoted =. wherequoted_jd_
 parenl =. [: +/\ '()' -/@:(=/) ]
 
@@ -14,7 +13,6 @@ if. {:parenl y do. throw 'Unmatched parenthesis in where clause' end.
 txt =. debq_jd_ y
 if. 'not ' -: 4{.txt do. 'qnot' ; <fixwhere 4}.txt return. end.
 if. '!' -: {.txt do. 'qnot' ; <fixwhere }.txt return. end.
-
 if. '(' = {. txt do.
   ndx=. 0 i.~ parenl txt
   bal=. dlb (ndx + 1) }. txt
@@ -173,7 +171,12 @@ select. x
     if. y<0 do. throw 'Negative argument to sample: ',":y end.
     y
   case. 'qin';'qnotin' do.
-    fixtype_where@:stripsp;._1 ',', y-.'()'
+    if. 0=#y-.'( )' do. NB. kludge for ( )
+     ''
+    else. 
+     fixtype_where@:stripsp;._1 ',', y-.'()'
+    end.
+    
   case. do.
     fixtype_where y
 end.

@@ -16,11 +16,11 @@ Read=: 3 : 0
 'from sel by where order'=. sel_parse y
 
 From from
-'From'PM''
+NB. 'From'PM''
 SelBy sel;by
-'Selby'PM''
+NB. 'Selby'PM''
 Where where
-'Where'PM''
+NB. 'Where'PM''
 if. MAXROWCOUNT < #indices do.
   msg =. 'Asked for ',(":#indices),' rows; returning first '
   msg =. msg,(":MAXROWCOUNT),' (MAXROWCOUNT_jd_) rows.'
@@ -28,9 +28,9 @@ if. MAXROWCOUNT < #indices do.
   indices =: MAXROWCOUNT {. indices
 end.
 Query ''
-'Query'PM''
+NB. 'Query'PM''
 Order order
-'Order'PM''
+NB. 'Order'PM''
 for_i. i.#cnms do.
  c=. i{cloc
  if. (-.OPTION_e) *. 'edate'-:5{.typ__c do.
@@ -65,6 +65,11 @@ from =. sortfrom ':'&(_2 {. strsplit)@> ',' strsplit y
 tnms =: $0 for_f. from do. addtablepathnoind f end.
 )
 
+NB. Marshall email to change
+NB.  paths=. {~^:(<@<:@#) (,#) parents
+NB.   to
+NB.  paths=. {~^:(<@<:@#@])~ (,#) parents
+
 NB. Sort y (list of alias,table pairs) to fix dependencies.
 sortfrom=: 3 : 0
 getname =. [: (}.~ '.-><=' >:@(1 i:~ e.~) ]) '.'&,
@@ -78,7 +83,7 @@ parents =. (i. getroot&.>)/ |:y
 if. 1 ~: n=.(+/@:=#)parents do.
   throw 'Expected exactly one root table and received ',":n
 end.
-paths=. {~^:(<@<:@#) (,#) parents
+paths=. {~^:(<@<:@#@])~ (,#) parents
 if. -. (#parents) +./@:= {:paths do.
   throw 'Tables are not connected by references'
 end.
@@ -347,11 +352,11 @@ end.
 )
 
 NB. nby (agg aggregate) res
-aggregate =: 1 : 0
+NB. Marshall improved version for Bogner example
+aggregate=: 1 : 0
 :
 c=. i.~|: i.~@> x{.y       NB. indices used to group columns
-u=. (x$<'first'),u         NB. aggregs with {. for by-cols
-u (c 1 :(':';'u (x getagg)/. y'))&.> y
+((~.c)&{&.> x{.y) , u (c 1 :(':';'u (x getagg)/. y'))&.> x}.y
 )
 
 NB. Sort by order

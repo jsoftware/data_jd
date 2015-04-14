@@ -6,6 +6,25 @@ NB. using a table creates locales for all tables and does readstate for each
 NB. using a col creates locales for all cols and does a readstate for each
 NB. col files are mapped as required
 
+
+jdadminx'test'
+n=. i.3
+jd'createtable f'
+jd'createcol f a int'
+jd'createcol f b int'
+jd'createcol f c int'
+jd'createcol f d int'
+jd'insert f';'a';n;'b';n;'c';n;'d';n
+jd'createhash f a'
+jd'createunique f b'
+jdadmin 0
+jdadmin'test'
+assert 0=#mappings_jmf_
+jd'reads a from f'
+NB. hash/link/unique and dynamic referenced cols are mapped
+NB. c and d are not mapped as they are not required
+assert 6=#mappings_jmf_
+
 jd'close'
 jdadmin 0
 cntsclear_jd_''
@@ -58,8 +77,10 @@ assert 0 0 0 0-:4{.cntsclear_jd_''
 assert 0=#mappings_jmf_
 
 jd'reads a from f'
-assert 0 9 2 0-:4{.cntsclear_jd_'' NB. readstate each table and each col in f
-assert 2=#mappings_jmf_            NB. only jdactive and a mapped
+
+NB. hash/link mapped
+assert 0 9 4 0-:4{.cntsclear_jd_'' NB. readstate each table and each col in f
+assert 4=#mappings_jmf_            NB. only jdactive and a mapped
 
 jd'close'
 jd'reads c from h'

@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '2.2.2'
+VERSION=: '2.2.3'
 
 FILES=: 0 : 0
 jd.ijs
@@ -44,6 +44,7 @@ base/common.ijs
 base/database.ijs
 base/folder.ijs
 base/jmfx.ijs
+base/pm.ijs
 base/read.ijs
 base/table.ijs
 base/util.ijs
@@ -53,6 +54,7 @@ base/zutil.ijs
 cd/jd.dll
 cd/libjd.dylib
 cd/libjd.so
+cd/libjd_centos.so
 config/server_default.ijs
 csv/csv.ijs
 csv/csvinstall.ijs
@@ -121,6 +123,8 @@ pm/pma.ijs
 pm/pmb.ijs
 pm/pmc.ijs
 pm/pm_disk.ijs
+pm/pm_hash.ijs
+pm/pm_reference.ijs
 test/alloc_test.ijs
 test/append_test.ijs
 test/asrequired_test.ijs
@@ -129,6 +133,7 @@ test/cd_query_test.ijs
 test/createcol_test.ijs
 test/csvout_test.ijs
 test/dropdynamic_test.ijs
+test/drop_rename_test.ijs
 test/dynamic_test.ijs
 test/float_test.ijs
 test/hashx_test.ijs
@@ -138,14 +143,18 @@ test/info_test.ijs
 test/insert_test.ijs
 test/joinorder_test.ijs
 test/join_test.ijs
+test/modify_test.ijs
 test/northwind_test.ijs
 test/orderby_test.ijs
+test/pm_aggby_test.ijs
+test/pm_hash_test.ijs
 test/query_test.ijs
 test/readx_test.ijs
 test/reference_test.ijs
 test/ref_test.ijs
 test/sandp_test.ijs
 test/sed_test.ijs
+test/shape_test.ijs
 test/stress_test.ijs
 test/update_test.ijs
 test/validate_test.ijs

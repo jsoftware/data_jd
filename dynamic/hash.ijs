@@ -27,7 +27,8 @@ MAPCOL =: ; 3 :'ExportMap__y $0'&.> <"0 COLS
 )
 
 gethashlen=: 3 : 0
-4 p: +:getmsize_jmf_ 'dat_','_',~;active
+11>.4 p: +:#dat__active
+NB. 4 p: +:getmsize_jmf_ 'dat_','_',~;active
 NB. 4 p: +:getmsize_jmf_ 'dat_','_',~;active__PARENT
 )
 
@@ -190,5 +191,5 @@ _1
 )
 NB. analogous to I.@:=
 lookup=: 3 : 0
-  |. }: {&link^:(>&_1)^:a: index y
+|. }: {&link^:(>&_1)^:a: index y
 )

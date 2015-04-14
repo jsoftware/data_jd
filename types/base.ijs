@@ -51,7 +51,13 @@ else.
 end.
 ) 
 
-modify =: 4 : 'dat=: (fixinsert y) x} dat'
+modify =: 4 : 0
+if. (-.''-:shape)*.({:$y)~:{:(#x),shape do.
+ y=. ({:(#x),shape){."1 y
+end. 
+dat=: (fixinsert y) x} dat
+)
+
 modifyfilled =: 4 : 'MAP replacemap&> fixtype y x} DATAFILL$~Tlen,shape'
 
 NB. =========================================================

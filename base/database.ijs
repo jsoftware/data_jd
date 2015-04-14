@@ -135,6 +135,7 @@ MakeHashed
 MakeUnique
 Readr
 Update
+Modify
 Updatebyindices
 )
 

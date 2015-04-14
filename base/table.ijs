@@ -170,6 +170,24 @@ end.
 EMPTY
 )
 
+Modify=: 3 : 0
+w=. getwhere ;{.y
+nv=. >{:y
+ns=. {."1 nv
+vs=. {:"1 nv
+
+for_i. i.#ns do. NB. validate
+ c=. getloc {.i{ns
+ (#w) modify_validate_data__c >i{vs 
+end.
+
+for_i. i.#ns do.
+ c=. getloc {.i{ns
+ w modify__c >i{vs
+end. 
+EMPTY
+)
+
 remove_jd=: 3 : 0
 y#~-.;(<'jd')-:each 2{.each y
 )

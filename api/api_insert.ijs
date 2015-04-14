@@ -2,7 +2,6 @@ NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 
 coclass'jd'
 
-NB.!
 fsub=: 3 : 0
 if. 1=$$y do.
  ,.<"0 y 
@@ -19,7 +18,7 @@ NB. date/time must be integer
 NB. date/time not allowed trailing shape
 jd_insert=: 3 : 0
 d=. getdb''
-ETAB=: >{.y
+ETAB=: ;{.y
 t=. getloc__d {.y
 nv=. >vsub 1}.y
 
@@ -41,71 +40,58 @@ for_i. i.#ns do.
  v=. >i{vs
  'ECOL ETYP ESHAPE'=: NAME__c;typ__c;":shape__c
   
- if. 'edate'-:5{.ETYP do.
-  e=. ECOL,' ',ETYP
+ if. 'edate'-:5{.typ__c do.
   if. JCHAR=3!:0 v do.
-   if. 0=#$v do. v=. ,v  end.
-   if. 1=#$v do. v=. ,:v end.
-   (e,' invalid data')assert 2=#$v
    v=. efs v
-   vs=. (<v) i}vs
+   vs=. (<v) i}vs NB. required because insert fixtype does not handle efs
    nv=. ns,.vs
   end. 
-  e=. e,' data has extra precision'  
-  select. ETYP
+  select. typ__c
   case. 'edate' do.
-   e assert *./0=86400|<.v%1e9
+   EEPRECISION assert *./0=86400|<.v%1e9
   case. 'edatetime' do.
-   e assert *./0=1e9|v
+   EEPRECISION assert *./0=1e9|v
   case. 'edatetimem' do.
-   e assert *./0=1e6|v
+   EEPRECISION assert *./0=1e6|v
   end.
  end.  
  
- m=. 'jde: insert bad shape'
  select. #shape__c
  case. 0 do.
-  if. 1<#$v do. throw m end.
+  EESHAPE assert -.1<#$v
   cnt=. ,#v
  case. 1 do.
-  if. (<typ__c)e.;:'datetime date time' do. throw m end.
+  EESHAPE assert -. (<typ__c)e.;:'datetime date time'
   if. typ__c-:'byte' do.
-   if. (2~:#$v)+.shape__c<{:$v do. throw m end.
+   EESHAPE assert -.(2~:#$v)+.shape__c<{:$v
   else. 
-   if. (2~:#$v)+.shape__c~:{:$v do. throw m end.
+   EESHAPE -.(2~:#$v)+.shape__c~:{:$v
   end. 
   cnt=. {.$v
  case.   do.
-  throw m
+  EESHAPE assert 0
  end.
 
  if. i=0 do.
   cnt1=. cnt
  else.
-  if. cnt1~:cnt do. throw 'jde: insert bad count' end.
+  EESHAPE assert cnt1=cnt
  end. 
 
  m=. 'jde: insert bad data'
  vt=. 3!:0 v
  select. typ__c
  case. 'boolean' do.
-  if. vt~:JB01 do. throw m end.
+  EETYPE assert vt=JB01
  case. 'float'   do.
-  if. -.vt e. JFL,JINT,JB01 do. throw m end.
+  EETYPE assert vt e. JFL,JINT,JB01
  case. ;:'byte enum' do.
-  if. vt~:JCHAR do. throw m end.
+  EETYPE assert vt=JCHAR
  case. 'varbyte' do.
-  if. (vt~:JBOXED)+.-.*/JCHAR =;3!:0 each v do. throw m end.
+  EETYPE assert (vt=JBOXED)+.*/JCHAR=;3!:0 each v
  case.           do.
-  if. -.vt e. JINT,JB01 do. throw m end.
+  EETYPE assert vt e. JINT,JB01
  end.
- 
- NB.! kill off - data cols are not unique - jduniqque_... is unique
- NB. if. unique__c do.
- NB.  a=. getloc__t 'jdactive'
- NB.  ('insert table * col * not unique'erf NAME__t;NAME__c) assert 0=+/(;i{vs)e.dat__a#dat__c
- NB. end.
-
 end.
 
 active=. (NAMES__t i. <'jdactive'){CHILDREN__t
@@ -116,7 +102,7 @@ for_n. CHILDREN__t do.
   names=. {."1 ,.nv
   data=.  {:"1 ,.nv
   
-  qfs__=: fs=.  |:>,each fsub each data
+  fs=.  |:>,each fsub each data
   if. 0 e. ~:fs do.
    ('not unique - (',(}:;names,each','),') new data row ',(":0 i.~ ~:fs),' with new data')assert 0
   end. 
@@ -142,7 +128,22 @@ for_n. CHILDREN__t do.
   end. 
 end. 
 
-
 Insert__d  ({.y),<nv
+JDOK
+)
+
+jd_update=: 3 : 0
+ETAB=: ;{.y
+ECOUNT assert 2<:#y
+d=. getdb''
+Update__d ({.y),<(1{y),vsub 2}.y
+JDOK
+)
+
+jd_modify=: 3 : 0
+ETAB=: ;{.y
+ECOUNT assert 2<:#y
+d=. getdb''
+Modify__d ({.y),<(1{y),vsub 2}.y
 JDOK
 )

@@ -12,6 +12,10 @@ utc=: 'Z'
 ADDRANK=: 1
 DATAFILL=: _9223372036854775808 NB. ''$efsx_jd_'1700' NB. invalid
 
+fixinsert=: 3 : 'if. JCHAR=3!:0 y do. efs y else. y end.'
+
+NB. fixtype should be defined to do efs
+
 coclass deftype 'edate'
 eformat=: ',Zd'
 
@@ -23,3 +27,4 @@ eformat=: ',Zm'
 
 coclass deftype 'edatetimen'
 eformat=: ',Zn'
+

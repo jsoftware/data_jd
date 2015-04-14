@@ -315,8 +315,16 @@ LIBC=: unxlib'c'
 
 
 NB. assume headers are non-numeric and end at first number in any column
-NB. '' runs all - 0 just sets ALLTESTS
+NB. y ''              runs all tests
+NB. y 'testa'         runs all tests except testa
+NB. y 'testa';'testb' runs all tests except
+NB. y 0               just sets ALLTESTS
+NB. x 0 or elided     do not echo test scripts as they are run
+NB. x 1               echo test scripts as they are run
 jdtests=: 3 : 0
+0 jdtests y
+:
+start=. 6!:1''
 cocurrent'base' NB. defined in jd, but must run in base
 jdtrace_jd_ 1
 ALLOC=: ROWSMIN_jdtable_,ROWSMULT_jdtable_,ROWSXTRA_jdtable_
@@ -336,6 +344,14 @@ tuts=. {."1[ 1!:0 <jpath JDP,'tutorial/*.ijs'
 tuts=. (<JDP,'tutorial/'),each tuts
 tuts=. tuts,demos_jd_
 t=. ALLTESTS=:  /:~tuts,tsts NB. sorted so they run in same order on windows and linux
+
+NB. remove tests listed in y
+n=. >:>t i:each '/'
+n=. n}.each t
+n=. _4}.each n
+b=. -.n e. boxopen y
+t=. b#t
+
 if. -.IFJHS do. t=. t-.<JDP,'tutorial/server.ijs' end.
 
 failed=: ''
@@ -348,7 +364,7 @@ builddemo'sed'
 
 for_n. i.#t do.
   a=. n{t
-  NB. echo 'loadd''','''',~;a
+  if. x do. echo 'loadd''','''',~;a end.
   'test'trace_jd_ a
   try.
     load a
@@ -386,6 +402,7 @@ echo LF,(":#t),' tests run',LF,(":#failed),' failed'
 jd'option sort 0' NB. restore
 'ROWSMIN_jdtable_ ROWSMULT_jdtable_ ROWSXTRA_jdtable_'=: ALLOC NB. restore
 jdtrace_jd_ 0
+echo LF,(":start-~6!:1''),' seconds to run tests'
 i.0 0
 )
 
@@ -450,7 +467,7 @@ t=. t-.'testerrors';'ref';,'x'
 d=. (<'<a href="#'),each t,each <'">'
 d=. d,each t,each <'</a>'
 d=. ;d,each LF
-r=. jdfread JDP,'jd/doc/user.html'
+r=. jdfread JDP,'doc/user.html'
 a=. '<!-- opindex a -->'
 z=. '<!-- opindex z -->'
 i=. (#a)+1 i.~ a  E. r

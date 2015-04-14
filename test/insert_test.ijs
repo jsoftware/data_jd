@@ -39,10 +39,10 @@ N=: ;:'a b c d e'
 
 
 N=: ;:'a b c d'
-'count' insx 0 1 ; 4 5 6 ; 4.2 4.3       ; 2 2$33
+'shape' insx 0 1 ; 4 5 6 ; 4.2 4.3       ; 2 2$33
 'shape' insx 0 1 ; 4 5   ; 4.2 4.3       ; 2 3$2
 'shape' insx 0 1 ; 4 5   ; (2 1$4.2 4.3) ; 2 2$2
-'data'  insx 0   ; 2.5   ; 2.2           ; 1 2$23 24
+'type'  insx 0   ; 2.5   ; 2.2           ; 1 2$23 24
 
 d =: 201212010
 t =: 101010
@@ -83,7 +83,7 @@ ins 'ab' ; (2 2$'ab') ; <'abd';'qwert'
 jd'reads from ch'
 3=;{:,jd'reads count a from ch'
 
-'count' insx 'ab'  ; (1 2$'ab') ; <<'abd'
-'count' insx 'a'   ; (2 2$'ab') ; <<'abd'
-'count' insx 'ab'  ; (1 2$'ab') ; <'abd';'qewt'
+'shape' insx 'ab'  ; (1 2$'ab') ; <<'abd'
+'shape' insx 'a'   ; (2 2$'ab') ; <<'abd'
+'shape' insx 'ab'  ; (1 2$'ab') ; <'abd';'qewt'
 'shape' insx 'ab' ;  (2 3$'ab') ; <'abd';'qwert'

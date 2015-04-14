@@ -26,8 +26,6 @@ preferred error usage:
 ('insert table * col * bad'erf tab;col) assert condition 
 )
 
-decho_z_=: echo_z_
-
 coclass'jd'
 
 todo=: 0 : 0
@@ -69,8 +67,12 @@ jd_... verbs typically start with getdb'' that sets:
 
 jd_z_=: jd_jd_
 
-ECOUNT=: 'incorrect arg count'
-EDNONE=: 'dropdynamic does not exist'
+NB. ugh - multiply defined because _jd_ definitions are not in all paths
+ECOUNT=:      'incorrect arg count'
+EDNONE=:      'dropdynamic does not exist'
+EEPRECISION=: 'extra precision'
+EESHAPE=:     'bad shape'
+EETYPE=:      'bad type'
 
 demos=: (<JDP,'demo/'),each 'sandp/sandp.ijs';'northwind/northwind.ijs';'sed/sed.ijs';'vr/vr.ijs'
 
@@ -215,9 +217,6 @@ if. ({.c)e.'0123456789' do.
  c=. dlb }.i}.c
 end. 
 NB. should validate names types shapes
-
-
-
 Create__d t;c;'';alloc   NB. cols;data;alloc
 JDOK
 )
@@ -226,14 +225,14 @@ jd_createcol=: 3 : 0
 erase<'DATACOL_jd_'
 d=. getdb''
 if. (1=L.y)*.5=$y do.
-('createcol invalid name: ',;1{y)assert _2~:nc 1{y
-NB. should validate shape
  NB. have column values
+ ('createcol invalid name: ',;1{y)assert _2~:nc 1{y
  dat=. ;{:y
  y=. }:y
  'tab nam type shape'=. y
  shape=. _".shape
  if. shape=_ do. shape=. i.0 end.
+ 'invalid trailing shape'assert 1>:#shape
  assert (<type) e. TYPES['bad col type'
  assert -.(<type) e. 'enum';'varbyte'['enum and varbyte not allowed'
  t=. getloc__d tab
@@ -251,7 +250,9 @@ end.
 y=. bdnames y
 ECOUNT assert 3 4 e.~#y
 ('createcol invalid name: ',;1{y)assert _2~:nc 1{y
-NB. should validate shape
+if. 4=#y do.
+  'invalid trailing shape'assert 1>:#_".;{:y
+end.  
 InsertCols__d ({.y),< ;' ',~each}.":each y
 JDOK
 )
@@ -261,10 +262,11 @@ y=. bdnames y
 ECOUNT assert 2=#y
 d=. getdb''
 t=. getloc__d ;{.y
-assert ({:y)e.{."1 jdcols {.y['not a col'
-assert  -.({:y)e.;{:"1 SUBSCR__t['col has dynamics'
-DeleteCols__d y
-'dropcol jddeletefolder failed'assert -.fexist PATH__t,;{:y
+if. ({:y)e.{."1 jdcols {.y do.
+ assertnodynamic y
+ DeleteCols__d y
+ 'dropcol jddeletefolder failed'assert -.fexist PATH__t,;{:y
+end. 
 JDOK
 )
 
@@ -284,8 +286,7 @@ jd_droptable=: 3 : 0
 if. 0~:L.y do. y=. ;y[ECOUNT assert 1=#y end.
 d=. getdb''
 if. (<y)e. NAMES__d do.
- t=. getloc__d y
- assert 0=#SUBSCR__t['table has dynamics'
+ assertnoreference y
  Drop__d y
 end.
 'droptable jddeletefolder failed'assert -.fexist PATH__d,y
@@ -326,20 +327,17 @@ else.
 end.
 )
 
-NB.!
-fsub=: 3 : 0
-if. 1=$$y do.
- ,.<"0 y 
-else.
- ,.<"1 y 
-end.
-)
-
 jd_update=: 3 : 0
 ECOUNT assert 2<:#y
 d=. getdb''
-validchange__d {.y
 Update__d ({.y),<(1{y),vsub 2}.y
+JDOK
+)
+
+jd_modify=: 3 : 0
+ECOUNT assert 2<:#y
+d=. getdb''
+Modify__d ({.y),<(1{y),vsub 2}.y
 JDOK
 )
 
@@ -347,7 +345,6 @@ jd_delete=: 3 : 0
 y=. bdnames y
 ECOUNT assert 2=#y
 d=. getdb''
-validchange__d {.y
 Delete__d y
 JDOK
 )
@@ -657,9 +654,11 @@ case.'hash';'unique' do.
  EDNONE assert 1=+/fb
  a=. {:{:fb#SUBSCR__f
  'dropdynamic hash/unique is used by reference' assert 1=+/a={:"1 SUBSCR__f
- jddeletefolder PATH__f,fn
  SUBSCR__f=: (-.fb)#SUBSCR__f
  writestate__f''
+ p=. PATH__f,fn
+ jd_close'' NB. reopened and must be closed to delete
+ jddeletefolder p
 case.do.
  'dropdynamic unknown type'assert 0
 end.
@@ -920,15 +919,6 @@ for_c. }.y do.
 end. 
 )
 
-NB. prevent delete/update to table with reference col
-validchange=: 3 : 0
-t=. getloc {.y
-s=. {."1 SUBSCR__t
-for_sx. s do.
- w=. getloc__t sx
-end.
-)
-
 NB. get blank delimited (possibly in "s) arg from string
 getarg=: 3 : 0
 a=. dlb y
@@ -1062,5 +1052,40 @@ tempcol=: 3 : 0
 tempcolclear=: 3 : 0
 coerase{:"1 TEMPCOLS
 TEMPCOLS=: i.0 2
+)
+
+assertnoreference=: 3 : 0
+t=. jdgl y
+s=. ;(<'jdref')=5{.each {."1 SUBSCR__t
+'table has reference' assert 0=+/s
+)
+
+assertnodynamic=: 3 : 0
+t=. jdgl ;{.y
+'col has dynamic' assert  -.({:y)e.;{:"1 SUBSCR__t
+)
+
+jd_renametable=: 3 : 0
+a=. bdnames y
+ECOUNT assert 2=#a
+assertnoreference ;{.a
+t=. jdgl {.a
+new=. ((->:#NAME__t)}.PATH__t),;{:a 
+old=. }:PATH__t
+jd'close'
+new frename old
+JDOK
+)
+
+jd_renamecol=: 3 : 0
+a=. bdnames y
+ECOUNT assert 3=#a
+assertnodynamic 2{.a
+t=. jdgl 2{.a
+new=. ((->:#NAME__t)}.PATH__t),;{:a 
+old=. }:PATH__t
+jd'close'
+new frename old
+JDOK
 )
 

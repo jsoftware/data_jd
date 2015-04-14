@@ -40,12 +40,14 @@
 <a href="#insert">insert</a>
 <a href="#list">list</a>
 <a href="#loadcustom">loadcustom</a>
+<a href="#modify">modify</a>
 <a href="#option">option</a>
 <a href="#read">read</a>
 <a href="#reads">reads</a>
 <a href="#readtc">readtc</a>
-<a href="#ref">ref</a>
 <a href="#reference">reference</a>
+<a href="#renamecol">renamecol</a>
+<a href="#renametable">renametable</a>
 <a href="#set">set</a>
 <a href="#tableappend">tableappend</a>
 <a href="#tablecopy">tablecopy</a>
@@ -54,8 +56,11 @@
 <a href="#update">update</a>
 <a href="#validate">validate</a>
 <!-- opindex z -->
-</codenopre><code><hr><a href="#use">use</a>      - <a href="#delete">delete</a> <a href="#info">info</a> <a href="#insert">insert</a> <a href="#list">list</a> <a href="#read">read</a> <a href="#reads">reads</a> <a href="#readtc">readtc</a> <a href="#update">update</a><br>
-<a href="#manage">manage</a>   - <a href="#createcol">createcol</a> <a href="#createdb">createdb</a> <a href="#createtable">createtable</a><br>           <a href="#dropcol">dropcol</a> <a href="#dropdb">dropdb</a> <a href="#dropfilesize">dropfilesize</a> <a href="#droptable">droptable</a><br>
+</codenopre><code><hr><a href="#use">use</a>      - <a href="#read">read</a> <a href="#reads">reads</a> <a href="#readtc">readtc</a>
+           <a href="#delete">delete</a> <a href="#insert">insert</a> <a href="#modify">modify</a> <a href="#update">update</a>
+           <a href="#info">info</a> <a href="#list">list</a><br>
+<a href="#manage">manage</a>   - <a href="#createcol">createcol</a> <a href="#createdb">createdb</a> <a href="#createtable">createtable</a><br>           <a href="#dropcol">dropcol</a> <a href="#dropdb">dropdb</a> <a href="#dropfilesize">dropfilesize</a> <a href="#droptable">droptable</a>
+           <a href="#renamecol">renamecol</a> <a href="#renametable">renametable</a><br>
 <a href="#dynamic">dynamic</a>  - <a href="#createdynamic">createdynamic</a> <a href="#createhash">createhash</a> <a href="#createunique">createunique</a><br>           <a href="#dropdynamic">dropdynamic</a> <a
 
 href="#ref">ref</a> <a href="#reference">reference</a></a><br>
@@ -102,7 +107,7 @@ dynamic cols are updated when the underlying data cols change
 <a href="#csvcdefs">csvcdefs</a>   [options] csvfile - create x.cdefs from x.csv
 
 CSVFOLDER__ - implicit arg - path for csv and related files
-csv files can be on a different drvie than Jd tables
+csv files can be on a different drive than Jd tables
 csv intermediate files are on the same drive as Jd tables
 f.csv metadata in f.cdefs
  tutorial csv
@@ -113,7 +118,7 @@ f.csv metadata in f.cdefs
 <a href="#tablecopy">tablecopy</a>   snktable  srctable srcdan
 <a href="#tablemove">tablemove</a>   snktable  srctable srcdan
 
-tutorial table_table_table
+tutorial table_table
 
 <hr><a name="misc"><h2>misc</h2></a>
 <a href="#gen">gen</a>     type      ...                  - create test table(s)
@@ -160,10 +165,12 @@ less important in Jd than in most other systems
 byte 200 that held the data is probably better
   
 <hr><a name="close"><h2>close</h2></a>
-umnaps all files and closes all locales
+unmap all files and close all locales
 does not affect admin or locks
 
-jd ops map files and create locales as required
+using a table creates all locales
+files are mapped only as required
+except hash/link files are mapped when a table is used
 
 mapping and creating locales takes time so close only when necessary
 
@@ -249,7 +256,7 @@ tutorial unique
 
 <hr><a name="csvcdefs"><h2>csvcdefs</h2></a>
 csvcdefs   [options] csvfile
- /replace - replace exisiting cdefs file
+ /replace - replace existing cdefs file
  /c       - .cnames file used for column names
  /h n     - n headers
  /u m     - m default col names
@@ -297,6 +304,7 @@ csvdump
 <hr><a name="csvrd"><h2>csvrd</h2></a>
 csvrd [options] csvfile table
  /rows n - read n rows - default 10 - 0 for all
+ /cdefs  - read cdefs from implicit arg CDEFSFILE
 
 <hr><a name="csvreport"><h2>csvreport</h2></a>
 csvreport [options] [0 or more tables]
@@ -334,9 +342,8 @@ jdaccess olddan
 
 <hr><a name="dropcol"><h2>dropcol</h2></a>
 dropcol table col
-drops the col
-error if col does not exist
-fails if there are related dynamic cols (ref,...)
+OK if col does not exist
+error if col is used in hash or reference
 
 <hr><a name="dropdb"><h2>dropdb</h2></a>
 drops each col of each table
@@ -356,6 +363,8 @@ dropdynamic reference tab1 cols... tab2 cols...
 dropdynamic hash      tab1 cols...
 dropdynamic reference tab1 cols...
 
+A dropdynamic of a reference does not drop the associated hash dynamic cols.
+
 <a href="#info">info</a> returns dynamic col info
 
 some ops are simpler and run faster without dynamics to update
@@ -372,9 +381,8 @@ dropfilesize returns filenames, old size, new size
 
 <hr><a name="droptable"><h2>droptable</h2></a>
 droptable table
-ok if table does not exist
-drops each col and the table
-fails if there are related dynamic cols (ref,...)
+OK if table does not exist
+error if table has reference
 
 <hr><a name="gen"><h2>gen</h2></a>
 gen test table rows
@@ -523,6 +531,25 @@ left1 join A,A.B
  not a normal join, but is fast
  same as inner join if 1 and only 1 B row matches 
 
+<hr><a name="modify"><h2>modify</h2></a>
+modify table <a href="#where">where</a> col data  ...'
+
+updates selected row cols in place
+data items are scalar extended
+can not modify col if it has dynamics
+col data pairs
+
+NB. example modify
+jdadminx'example'[olddan=:jdaccess''
+jd 'createtable f a int,b int,c byte 4'
+jd 'insert f';'a';24 25 26;'b';100 101 102;'c';3 4$'aaaabbbbcccc'
+jd'reads from f'
+jd 'modify f';'a=24';'b';200
+jd'reads from f'
+jd 'modify f';'a<26';'b';300;'c';2 4$'xxxxzzzz' NB. 300 scalar extends
+jd'reads from f'
+jdaccess olddan
+
 <hr><a name="option"><h2>option</h2></a>
 jd'option space ...'
 
@@ -602,6 +629,14 @@ does createhash if required
 uses previous createunique
 inserts/deletes/updates update dynamic cols as required
 
+<hr><a name="renamecol"><h2>renamecol</h2></a>
+renamecol table col newname
+error if col is used in hash or reference
+
+<hr><a name="renametable"><h2>renametable</h2></a>
+renametable table newname
+error if the table is used in reference
+
 <hr><a name="select""><h2>select</h2></a>
 select clause - jd'reads SELECT from ...'
 
@@ -658,7 +693,7 @@ Each aggregator is called on the rows of its column in each group.
 default aggs: avg count countunique first last max min sum
    jd'info agg' NB. database agg fns (may include custom functions)
    
-Result column label does not include agg, so an alias is desireable.
+Result column label does not include agg, so an alias is desirable.
 
 <hr><a name="set"><h2>set</h2></a>
 jd'set table col';data
@@ -746,10 +781,11 @@ jd'reads from new' NB. table f in dan example2 no longer exists
 jdaccess olddan
 
 <hr><a name="update"><h2>update</h2></a>
-jd'update table <a href="#where">where</a> col data  ...'
+update table <a href="#where">where</a> col data  ...'
 
+deletes selected records and inserts new updated records
+count of data items and updated rows must be the same
 col data pairs
-count of data items and updated rows must be the same.
 
 NB. example update
 jdadminx'example'[olddan=:jdaccess''

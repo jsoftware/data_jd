@@ -1,4 +1,4 @@
-NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
+NB. Copyright 2015, Jsoftware Inc.  All rights reserved.
 coclass 'jdcolumn'
 
 throw=: 13!:8&101 NB. jd not in our path
@@ -20,10 +20,10 @@ coinserttofront 'jdt',typ
 NB. writestate''
 )
 
-NB. map as required - except for a few cases where all are mapped up front
+NB. map as required - hash and unique always map so they are available for col qequal
 open=: 3 : 0
 init ''
-if. -.APIRULES do.
+if. (-.APIRULES)+.(<typ)e.'hash';'unique' do.
  mapcolfile"0 MAP
  opentyp ''
 end.
@@ -211,4 +211,53 @@ NB. Return a list of (child,parent) pairs
 getalldeps =: 3 : 0
 if. 0=#deps=.getdeps'' do. 0 2$a: return. end.
 (LOCALE&,"0 , 3 :'getalldeps__y $0'(<@)"0(;@:))^:(*@#) deps
+)
+
+NB. ugh - multiply defined because _jd_ definitions are not in all paths
+EEPRECISION=: 'extra precision'
+EESHAPE=:     'bad shape'
+EETYPE=:      'bad type'
+
+NB. x is rows
+NB. y is data
+NB. should eventually be merged with insert validate
+modify_validate_data=: 4 : 0
+v=. y
+'ECOL_jd_ ETYP_jd_ ESHAPE_jd_'=: NAME;typ;":shape
+assertnodynamic NAME__PARENT;NAME
+if. 'edate'-:5{.typ do.
+ if. JCHAR=3!:0 v do. v=. efs v end. 
+ select. typ
+ case. 'edate' do.
+  EEPRECISION assert *./0=86400|<.v%1e9
+ case. 'edatetime' do.
+  EEPRECISION assert *./0=1e9|v
+ case. 'edatetimem' do.
+  EEPRECISION assert *./0=1e6|v
+ end.
+end.  
+
+tsv=. #sv=. $v
+if. tsv<#1,shape do. tsv=. #sv=. x,sv end.
+EESHAPE assert (1={.sv)+.x={.sv
+
+if. -.sv-:x,shape do. NB. not exact - see if {. for byte would fix
+ EESHAPE assert (JCHAR=3!:0 v)*.(}:sv)-:}:x,shape
+end. 
+
+NB. EESHAPE assert (($v)-:shape)+.((}.$v)-:shape)*.x={.$v
+
+vt=. 3!:0 v
+select. typ
+case. 'boolean' do.
+ EETYPE assert vt=JB01
+case. 'float'   do.
+ EETYPE assert vt e. JFL,JINT,JB01
+case. ;:'byte enum' do.
+ EETYPE assert vt=JCHAR
+case. 'varbyte' do.
+ EETYPE assert 0
+case.           do.
+ EETYPE assert vt e. JINT,JB01
+end.
 )

@@ -19,11 +19,11 @@ JDE1000=: 'jde: not a database'
 JDE1001=: 'jde: not an op'
 
 fmtx=: 4 : 0
->(0<#y){' ';' ',x,':',y
+if. 0=#y do. '' else. x,':',y,' ' end.
 )
 
 fmtoper=: 3 : 0
-'user:',USER,' db:',DB,' op:',OP,' tab:',ETAB,('col'fmtx ECOL),('typ'fmtx ETYP),('shape'fmtx ESHAPE)
+('op'fmtx OP),('tab'fmtx ETAB),('col'fmtx ECOL),('typ'fmtx ETYP),('shape'fmtx ESHAPE),('db'fmtx DB),('user'fmtx USER)
 )
 
 NB. clean args
@@ -101,7 +101,6 @@ jdx=: 3 : 0
 if. IFJHS do. assert (<URL_jhs_) e.'jijx';'jijs' end.
 DBX jdx y
 :
-PMA''
 APIRULES=: 1
 'DB UP SERVER'=: bdnames x
 USER=: (UP i.'/'){.UP
@@ -109,7 +108,6 @@ USER=: (UP i.'/'){.UP
 try.
 if. 'intask'-:SERVER do.
  'jde: jd not loaded'assert 0=nc<'DBPATHS'
- 
  if. 0=L.y do.
   y=. dlb y
   i=. y i.' '
@@ -120,6 +118,7 @@ if. 'intask'-:SERVER do.
   OP=: dltb ;{.y
   a=. }.y
  end.
+ pm OP
  'op'trace <OP
  opx=. ;('x'-:{.OP){OP;'x'
  if. -. (<OP) e. NODBOPS do. 
@@ -151,7 +150,7 @@ if. 'intask'-:SERVER do.
  NB. helps a little bit in windows, but is disatrous in linux
  NB. pm/pma.ijs result
  NB. jd_close'' 
- 'end'PM''
+ pmz''
  r
  return.
 end.
