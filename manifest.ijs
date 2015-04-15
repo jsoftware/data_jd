@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '2.2.5'
+VERSION=: '2.2.6'
 
 FILES=: 0 : 0
 jd.ijs
