@@ -213,51 +213,54 @@ if. 0=#deps=.getdeps'' do. 0 2$a: return. end.
 (LOCALE&,"0 , 3 :'getalldeps__y $0'(<@)"0(;@:))^:(*@#) deps
 )
 
-NB. ugh - multiply defined because _jd_ definitions are not in all paths
-EEPRECISION=: 'extra precision'
-EESHAPE=:     'bad shape'
-EETYPE=:      'bad type'
-
-NB. x is rows
+NB. x is flag,rows - flag 1 for modify
 NB. y is data
-NB. should eventually be merged with insert validate
-modify_validate_data=: 4 : 0
+NB. returns rows (used by insert_
+validate_data=: 4 : 0
+'modify rows'=. x
 v=. y
-'ECOL_jd_ ETYP_jd_ ESHAPE_jd_'=: NAME;typ;":shape
-assertnodynamic NAME__PARENT;NAME
+'FECOL_jd_ FETYP_jd_ FESHAPE_jd_'=: NAME;typ;":shape
 if. 'edate'-:5{.typ do.
  if. JCHAR=3!:0 v do. v=. efs v end. 
  select. typ
  case. 'edate' do.
-  EEPRECISION assert *./0=86400|<.v%1e9
+  EPRECISION assert *./0=86400|<.v%1e9
  case. 'edatetime' do.
-  EEPRECISION assert *./0=1e9|v
+  EPRECISION assert *./0=1e9|v
  case. 'edatetimem' do.
-  EEPRECISION assert *./0=1e6|v
+  EPRECISION assert *./0=1e6|v
  end.
 end.  
 
-tsv=. #sv=. $v
-if. tsv<#1,shape do. tsv=. #sv=. x,sv end.
-EESHAPE assert (1={.sv)+.x={.sv
-
-if. -.sv-:x,shape do. NB. not exact - see if {. for byte would fix
- EESHAPE assert (JCHAR=3!:0 v)*.(}:sv)-:}:x,shape
+if. -.modify do.
+ if. rows=_1 do. rows=. #v end.
+ ETALLY assert rows=#v
 end. 
 
-NB. EESHAPE assert (($v)-:shape)+.((}.$v)-:shape)*.x={.$v
+tsv=. #sv=. $v
+if. tsv<#1,shape do. tsv=. #sv=. rows,sv end.
+ETALLY assert (1={.sv)+.rows={.sv
+if. -.sv-:rows,shape do. NB. not exact - see if {. for byte would fix
+ ESHAPE assert (JCHAR=3!:0 v)*.(}:sv)-:}:rows,shape
+end.
 
 vt=. 3!:0 v
 select. typ
 case. 'boolean' do.
- EETYPE assert vt=JB01
+ ETYPE assert vt=JB01
 case. 'float'   do.
- EETYPE assert vt e. JFL,JINT,JB01
+ ETYPE assert vt e. JFL,JINT,JB01
 case. ;:'byte enum' do.
- EETYPE assert vt=JCHAR
+ ETYPE assert vt=JCHAR
 case. 'varbyte' do.
- EETYPE assert 0
+ if. modify do.
+  ETYPE assert 0
+ else.
+  ETYPE assert (vt=JBOXED)+.*/JCHAR=;3!:0 each v
+ end.
 case.           do.
- EETYPE assert vt e. JINT,JB01
+ ETYPE assert vt e. JINT,JB01
 end.
+
+rows NB. result used by insert
 )

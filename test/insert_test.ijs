@@ -39,7 +39,7 @@ N=: ;:'a b c d e'
 
 
 N=: ;:'a b c d'
-'shape' insx 0 1 ; 4 5 6 ; 4.2 4.3       ; 2 2$33
+'count' insx 0 1 ; 4 5 6 ; 4.2 4.3       ; 2 2$33
 'shape' insx 0 1 ; 4 5   ; 4.2 4.3       ; 2 3$2
 'shape' insx 0 1 ; 4 5   ; (2 1$4.2 4.3) ; 2 2$2
 'type'  insx 0   ; 2.5   ; 2.2           ; 1 2$23 24
@@ -68,7 +68,7 @@ jd'createtable';'dt2';'a datetime,b datetime 2'
 N=: ;:'a b'
 T=: 'dt2'
 blddt2''
-'shape' insx 2;1 2$2
+ins 2;1 2$2
 
 N=: ;:'a b c'
 T=: 'ch'
@@ -81,9 +81,30 @@ ins 'a'  ; (1 2$'ab') ; <<'abd'
 ins 'ab' ; (2 2$'ab') ; <'abd';'qwert'
 
 jd'reads from ch'
-3=;{:,jd'reads count a from ch'
+assert 5=;{:,jd'reads count a from ch'
 
-'shape' insx 'ab'  ; (1 2$'ab') ; <<'abd'
-'shape' insx 'a'   ; (2 2$'ab') ; <<'abd'
-'shape' insx 'ab'  ; (1 2$'ab') ; <'abd';'qewt'
+'count' insx 'ab'  ; (1 2$'ab') ; <<'abd'
+'count' insx 'a'   ; (2 2$'ab') ; <<'abd'
 'shape' insx 'ab' ;  (2 3$'ab') ; <'abd';'qwert'
+
+N=: ;:'a b'
+T=: 'chx'
+bldchx=: 3 : 0
+jdadminx'test'
+jd'createtable';T;'a byte,b byte 2'
+)
+bldchx''
+ins 'a'  ; (1 2$'ab') 
+ins 'ab' ; (2 2$'ab')
+
+jd'reads from chx'
+3=;{:,jd'reads count a from chx'
+
+'count' insx 'ab'  ; 1 2$'ab'
+'count' insx 'a'   ; 2 2$'ab'
+'count' insx 'ab'  ; 1 2$'ab'
+'shape' insx 'ab' ;  2 3$'ab'
+
+
+
+

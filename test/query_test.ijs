@@ -58,12 +58,16 @@ testqueries =: 1 : 0
 old=. 9!:10''
 9!:11[18 NB. kludge because toq assumes this for float
 x=.#dat [ 'y dat' =. y
+toq_m =. [: ([,',',])&:>/ y&toq(<@)"_1
 assert ((#~ (-:"_1 _{.)) dat) -: u '=',y toq {.dat
 assert ((#~ (-.@-:"_1 _{.)) dat) -: u '<>',y toq {.dat
-assert ((#~ (e.3&{.)) dat) -: u ' in ',([,',',])&:>/ y&toq(<@)"_1 ]3{.dat
-assert ((#~ (-.@e.5&{.)) dat) -: u ' notin ',([,',',])&:>/ y&toq(<@)"_1 ]5{.dat
+assert ((#~ (e.3&{.)) dat) -: u ' in ', toq_m 3{.dat
+assert ((#~ (-.@e.5&{.)) dat) -: u ' notin ', toq_m 5{.dat
 assert (<.@-: x) = # u ' sample ',":<.@-:x
 assert (u-:u) ' sample. ',":<.@-:x
+if. y -.@e. 'varbyte enum' do.
+  assert ((#~ ] (-:/:~)@:({.@],[,}.@])"_1 _ [:/:~3 5&{) dat) -: u ' range ',toq_m /:~3 5{dat
+end.
 if. NUMERIC e.~ <y do.
   assert ((#~ (< {.)) dat) -: u '< ',y toq {.dat
   assert ((#~ (> {.)) dat) -: u '> ',y toq {.dat
@@ -80,7 +84,7 @@ testtype@> ,&' 5'&.> TYPES_CORE -. ;:'varbyte date datetime time enum'
 ALLOW_FVE_jd_ =: af
 
 
-NB. bug - reference join where clause emtpy returns all rows
+NB. bug - reference join where clause empty returns all rows
 jdadminx'test'
 jd'gen ref2 a 10 0 b 5'
 a=. jd'read from a,a.b where b.bref=2'
@@ -92,4 +96,3 @@ jd'reference a aref b bref'
 assert a-:jd'read from a,a.b where b.bref=2'
 assert b-:jd'read from a,a.b where a.aref=22'
 assert b-:jd'read from a,a.b where b.bref=22' NB. bug - all rows instead of 0 rows
-

@@ -7,7 +7,7 @@ jd_list=: 3 : 0
 t=. bdnames y
 ECOUNT assert 1=#t
 select. ;t
-case. 'version' do. ,.'version';'2.2.6'
+case. 'version' do. ,.'version';'2.2.7'
 case. 'open'    do. ,.'open';<>opened''
 case.           do. assert 0['unsupported list command'
 end. 
@@ -44,8 +44,8 @@ end.
 )
 
 infotable=: 3 : 0
- d=. getdb''
- ,.'table';>/:~ NAMES__d
+d=. getdb''
+,.'table';>/:~ NAMES__d
 )
 
 fromclocs=: 4 : 0"1 0

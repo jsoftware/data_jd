@@ -33,3 +33,5 @@ qless =: i.@>.
 qlessequal =: i.@>:@<.
 qgreater =: ".@:('Tlen'"_) (] + i.@-)`(0$0:)@.< >:@<.
 qgreaterequal =: ".@:('Tlen'"_) (] + i.@-)`(0$0:)@.< >.
+
+qrange=: 3 : 'I.(i.Tlen)(e. +. 2 | I.~)y'

@@ -10,8 +10,9 @@
 <img src="./jblue.png" width="50px" height="50px"/>
 <span class=md>d</span>
 <span class=mt>&nbsp;User</span>
-<span class=ms>J-integrated<br>columnar<br>analytics</span>
+<span class=ms><a href="http://www.jsoftware.com" target="_blank">www.jsoftware.com</a><br>J database - J language<br>columnar analytics</span>
 </div>
+
 <div contenteditable="false">
 <codenopre)<p>User ops are executed by jd (<code>jd'...'</code>) and can run in the user Jd task or on a server Jd task.</p>
 <!-- opindex a --><a href="#close">close</a>
@@ -67,7 +68,7 @@ href="#ref">ref</a> <a href="#reference">reference</a></a><br>
 <a href="#csv">csv...</a>   - <a href="#csvcdefs">csvcdefs</a> <a href="#csvdump">csvdump</a> <a href="#csvrd">csvrd</a> <a href="#csvreport">csvreport</a> <a href="#csvrestore">csvrestore</a> <a href="#csvwr">csvwr</a> <br>
 <a href="#table">table...</a> - <a href="#tableappend">tableappend</a> <a href="#tablecopy">tablecopy</a> <a href="#tableinsert">tableinsert</a> <a href="#tablemove">tablemove</a><br>
 <a href="#misc">misc</a>     - <a href="#close">close</a> <a href="#gen">gen</a> <a href="#get">get</a> <a href="#loadcustom">loadcustom</a> <a href="#option">option</a> <a href="#set">set</a> <a href="#validate">validate</a>
-<hr><a href="#args">args</a> <a href="#demos">demos</a> <a href="#types">types</a>
+
 <hr><a name="use"><h2>use</h2></a>
 <a href="#read">read</a>    [<a href="#select">select</a>]  <a href="#from">from</a>   table   [<a href="#where">where</a>]
 <a href="#read">reads</a>   [<a href="#select">select</a>]  <a href="#from">from</a>   table   [<a href="#where">where</a>]
@@ -127,43 +128,6 @@ tutorial table_table
 <a href="#option">option</a>  space     0 or 1               - 1 to report info last space
 <a href="#set">set</a>     table     col      dat  [; varbyte val]
 
-<hr><a name="args"><h2>args</h2></a>
-jd args parse to a list of boxes
-string treated as list of blank delimited boxes
-first box treated as a string of blank delimited boxes
-
-jd'reference a b c d' === jd'reference';'a';'b';'c';'d'
-jd'insert f a';23     === jd'insert';'f';'a';23
-
-<hr><a name="demos"><h2>demos</h2></a>
-sandp, northwind, sed, vr
-jdrt_jd_''
-
-<hr><a name="types"><h2>types</h2></a>
-standard types: boolean, int, float, byte
-all standard types can have trailing shape
-jd'createtable f a int 2,b byte 4' NB. n,2 int and n,4 byte
-
-edate (epochdt) types:
-iso 8601 format - stored as int - converted on read and write
-epochdt int is nanoseconds before/after 2000-01-01
-
-edate      - 2014-01-02
-edatetime  - 2014-01-02T03:04:05
-edatetimem - 2014-01-02T03:04:05,123
-edatetimen - 2014-01-02T03:04:05,123456789
-
-tutorial epochdt
-
-date types:
-date     - int with digits yyyymmdd
-datetime - int with digits yyyymmddhmmss
-csv loader supports yyyy/mm/dd vs dd/mm/yyyy
-
-varbyte:
-less important in Jd than in most other systems
-byte 200 that held the data is probably better
-  
 <hr><a name="close"><h2>close</h2></a>
 unmap all files and close all locales
 does not affect admin or locks
@@ -175,13 +139,14 @@ except hash/link files are mapped when a table is used
 mapping and creating locales takes time so close only when necessary
 
 <hr><a name="createcol"><h2>createcol</h2></a>
-jd'createcol table col type [trailing-shape]'
-
+createcol table col type [trailing-shape] [data]
+ 
 creates new col with type and trailing-shape
+col has default data or the arg data
 
-createcol table col type trailing-shape data
-creates new col with data values
-trailing-shape must be provided and _ indicates empty
+data requires trailing-shape and _ indicates empty
+
+data includes deleted rows (similar to get/set)
 
 NB. example createcol
 jdadminx'example'[olddan=:jdaccess''
@@ -218,7 +183,7 @@ hash col has 2 mapped nouns hash and link
 #link is same as #col and links rows with the same values
 
 <hr><a name="createtable"><h2>createtable</h2></a>
-createtable table [alloc] [coldefs]
+createtable [/a MIN MULT XTRA] table [coldefs]
 
 createtable with 0 or more cols
 each col defined by: col type [trailing-shape]
@@ -226,12 +191,11 @@ each col defined by: col type [trailing-shape]
 string arg coldefs separated by , or LF
 boxed arg coldefs in separate boxes
 
-alloc is 3 values - elided default is 2000 1.5 0
-ROWMIN  minimum rows
-ROMMULT multiplier
-ROWXTRA extra rows
+/a parameters are: MIN-minimum rows, MULT-multiplier, XTRA-extra rows
 when insert requires mapped col file resize, new size is:
-   ROWMIN>.>.ROWMULT*ROWXTRA+current_rows+new_rows
+   MIN>.>.MULT*XTRA+current_rows+new_rows
+
+default alloc is 2000 1.5 0
 
 NB. example createtable
 jdadminx'example'[olddan=:jdaccess''
@@ -816,11 +780,19 @@ where clause - jd'reads ... from ... where'
  b lt 23 && a eq "abc"
  a like "ab*" 
  f.a=23 && g.b="def"
+ a range (1000,2000)
+ a=100 and b=200
+ a,b = 100,200 - same as above but uses a,b hash if available
+ a in (1,2,3) and b in (4,4)
+ a,b in (1,2,3),(4,5) - same as above but uses a,b hash if available
 
 relationals:
- &gt;= &lt;= &lt;&gt; =  &gt;   &lt;
- ge le ne eq gt lt
+ &gt;= &lt;= &lt;&gt; =  &gt;  &lt;
+ ge le ne eq gt lt range
  in notin like unlike sample sample.
+ 
+ sample n returns n random rows
+ sample. users ?. instead of ?
 
  non-symbol must be blank delimited
 
@@ -856,11 +828,6 @@ Q:  col relational dat  |  col relational col  |  tab
 
 col is col name as in select and tab is table name
 
-relationals:
- &gt;= &lt;= &lt;&gt; =  &gt;   &lt;
- ge le ne eq gt lt
- in notin like unlike sample sample.
-
 Q expressions are in implicit parens, which must not be present.
 
 dat represents a J noun; typically this must have the same type as the
@@ -873,7 +840,7 @@ Strings are in "s and C escapes (\", \n, etc.) can be used.
 Logicals (! $$ || not and or) are grouped from right to left as in J,
 with parentheses allowed for grouping.
 
-The three types of simple query work as follows:
+The three types of simple query:
 - For an operation on a col and data, the data is fixed so
   that it has the appropriate type and shape.
   For most operations, this is the same type and shape as an
@@ -890,12 +857,14 @@ The three types of simple query work as follows:
   Null rows are created by some joins and do not correspond to a
   row in the table. They are indicated with fills.
 
-The relationals are as follows:
-- &gt;=, &lt;=, &gt;, &lt; are only available for numeric columns.
-- in and notin test whether col value is an element of the list.
-- like and unlike take a regex and test if the col data matches.
-- sample and sample. require a data argument that is a single number.
-  They select that many elements from the column to satisfy the query.
+The relationals:
+- (&gt;= &lt;= &gt; &lt; range) are for numeric cols
+- range arg is list of numbers, which is split into pairs
+  if an odd number, the last range extends to _
+  matches are in the range(s) (inclusive)
+- in and notin test whether col value is an element of the list
+- like and unlike take a regex and test if the col data matches
+- sample and sample. require a data argument that is a single number
 
 Data can be converted either to string (or byte) or numbers.
 Numbers must include only the characters -_. and digits.
@@ -928,4 +897,11 @@ larger, an error is signalled.
 
 For in and notin, data is given in a comma-separated list,
 optionally enclosed by parens.
+
+In Q expression of the form "col relational dat", col can  be a
+comma-separated list of cols and dat is a comma-separated list of the
+same length and the relational must be = or in. Each column is compared
+with the relational to the corresponding data item. If there is a hash
+column on the columns then it will be used for the query. If the relational
+is "in", each item in dat must be parenthesized.
 </code></div></div></body></html>

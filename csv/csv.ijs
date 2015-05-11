@@ -402,8 +402,9 @@ log LF,'!',y,' ',TABLE
 log 'snk: ',PATHCSVFOLDER
 log 'src: ',PATHCSVFILE
 log 'start: ',(":<.6!:0''),LF,}:CDEFS
+probe=. 5000 <. fsize PATHCSVFILE
 if. COLSEP-:,{.a. do.
- t=. fread PATHCSVFILE;0,5000 <. fsize PATHCSVFILE
+ t=. fread PATHCSVFILE;0,probe
  i=. <./t i. TAB,',','|'
  'COLSEP AUTO: TAB,COMMA, or STILE not found' assert i<#t
  COLSEP=: i{t
@@ -426,7 +427,7 @@ JCHAR jdmap_jd_ 'csvin_jdcsv_';(jpath PATHCSVFILE);'';1 NB. map csv readonly
 ina=. 15!:14<'csvin_jdcsv_'
 inz=. ina+#csvin_jdcsv_
 if. 0~:HEADERS do.
- t=. >:(<:HEADERS){((5000{.csvin)={:ROWSEP)#i.5000
+ t=. >:(<:HEADERS){((probe{.csvin)={:ROWSEP)#i.probe
  assert t<#csvin
  ina=. ina+t
 end.

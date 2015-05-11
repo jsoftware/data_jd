@@ -79,7 +79,7 @@ if. IFQT do. labs_run_jqtide_=: 3 : 'spx''''' end.
 i.0 0
 )
 
-echo 0 : 0 rplc 'BOOKMARK';jpath JDP,'doc/toc.html'
+echo 0 : 0 rplc 'BOOKMARK';jpath JDP,'doc/index.html'
 Jd is Copyright 2014 by Jsoftware Inc. All Rights Reserved.
 Jd is provided "AS IS" without warranty or liability of any kind.
 
@@ -90,18 +90,22 @@ Keep addons (base, JHS, jmf, etc) up to date.
 There is a slight bias for JHS as the front end.
 JHS is the base technology for Jd client/server.
 
+JAL does not lock against other tasks using the same Jd folder.
+Update with tasks using the same Jd folder will cause problems.
+
+Different J installs should be used for production systems and
+development systems.
+
+Bookmark documentation in your browser:
+   file:///BOOKMARK
+
 Get started:
-   jdtests_jd_'' NB. validate - after install or update - takes minutes
-
-   bookmark documentation in your browser:
-     file:///BOOKMARK
-
-   jdex_jd_''       NB. list examples from user.html
-   jdex_jd_'insert' NB. run insert example
-   jdrt_jd_''       NB. list tutorials
-   jdrt_jd_'intro'  NB. run intro
+   jdtests_jd_''   NB. validate install/update - takes minutes
+   jdex_jd_''      NB. list examples from user.html
+   jdex_jd_'reads' NB. run reads
+   jdrt_jd_''      NB. list tutorials
+   jdrt_jd_'intro' NB. run intro
 )
-
 
 echo IFQT#0 : 0
 ctrl+j hijacked for managed execution of tutorials
@@ -126,7 +130,7 @@ non-commercial or evaluation key is free
 and does not require a license agreement
 
 See Jd documentation at:
-TOC.HTML
+INDEX.HTML
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -139,5 +143,5 @@ if. -.UNAME-:'Win' do.
   echo LF,'Warning: ',(":n),' for "ulimit -n" is low. See Technotes|file handles.'
  end.
 end.
-if. K_jd_ do. coerase <'jd'[echo nokey rplc 'TOC.HTML';jpath '~addons/data/jd/doc/toc.html' end.
+if. K_jd_ do. coerase <'jd'[echo nokey rplc 'INDEX.HTML';jpath '~addons/data/jd/doc/index.html' end.
 )

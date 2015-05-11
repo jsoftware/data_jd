@@ -9,11 +9,8 @@ NB. =========================================================
 NB. x is an example string like 'yyyymmdd.hhmmss' .
 fixdatetime =: 4 :0
 
-NB. APIRULES allows integers - avoid complicated conversions
-if. APIRULES do.
- if. JINT=3!:0 y do. ,boxopen,y   return. end.
- if. JB01=3!:0 y do. ,boxopen,y+0 return. end.
-end. 
+NB. APIRULES insist on integers - avoid complicated conversions
+if. APIRULES do. fixtype_jdtint_ y return. end. 
 
 len =. #x-.'.'  NB. maximum length of input (and length of output)
 min =. x i. '.' NB. minimum length of input

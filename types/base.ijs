@@ -76,6 +76,7 @@ y 4 :'(x) =: y{.".x'~^:(<#@".) >{.MAP
 NB. =========================================================
 NB. fix a value for insertion
 fixvalue=: 3 : 0
+if. (''-:shape)*.1={:$y do. y=. ,y end. 
 'Invalid data rank' throwif (#$y) > ADDRANK + >:#shape
 if. shape =&# $y do. y=.,:y end.
 'Invalid data shape' throwif shape ([ -.@-: #@[ {. ]) }.$y

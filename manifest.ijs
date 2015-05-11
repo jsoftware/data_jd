@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '2.2.6'
+VERSION=: '2.2.4'
 
 FILES=: 0 : 0
 jd.ijs
@@ -103,7 +103,10 @@ demo/sed/csv/t.cdefs
 demo/sed/csv/t.csv
 demo/vr/vr.ijs
 doc/admin.html
+doc/favicon.ico
+doc/general.html
 doc/guide.html
+doc/index.html
 doc/jblue.png
 doc/jda.css
 doc/license.html
@@ -111,7 +114,6 @@ doc/overview.html
 doc/release.html
 doc/support.html
 doc/technical.html
-doc/toc.html
 doc/user.html
 dynamic/base.ijs
 dynamic/hash.ijs
@@ -135,6 +137,7 @@ test/csvout_test.ijs
 test/dropdynamic_test.ijs
 test/drop_rename_test.ijs
 test/dynamic_test.ijs
+test/error_test.ijs
 test/float_test.ijs
 test/hashx_test.ijs
 test/hash_insert_test.ijs
@@ -144,6 +147,7 @@ test/insert_test.ijs
 test/joinorder_test.ijs
 test/join_test.ijs
 test/modify_test.ijs
+test/multicol_test.ijs
 test/northwind_test.ijs
 test/orderby_test.ijs
 test/pm_aggby_test.ijs
@@ -184,10 +188,12 @@ tutorial/link_tut.ijs
 tutorial/reads_tut.ijs
 tutorial/server_tut.ijs
 tutorial/setget_tut.ijs
+tutorial/table_from_array_tut.ijs
 tutorial/table_table_tut.ijs
 tutorial/tempcol_tut.ijs
 tutorial/unique_tut.ijs
 tutorial/update_bulk_tut.ijs
+tutorial/where_tut.ijs
 types/autoindex.ijs
 types/base.ijs
 types/byte.ijs

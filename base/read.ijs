@@ -176,7 +176,7 @@ andqueries=: 3 : 0
 'e y' =. ((#~ ,&< (#~-.)) ((<'exists')={.@>@{:)@>) y
 e =. tnms ((<'qnot') <:@+:@~: {.@>@])`(i. {:@>@{:@>)`(0"0@[)} e
 
-getind =. (access@:(0&{::) ] 1&{::)@lookupcol@>  NB. Index of table
+getind =. (access"0@:(0&{::) ] 1&{::)@lookupcol@>  NB. Index of table
 if. #y do. inds =. (getind@{. , getind :: _1:@{:)@>@{:@> y
 else. inds=.0 2$0 end.
 NB. Filter out multi-table queries
@@ -300,7 +300,7 @@ else.
   if. a:=tab do. tab=.{.tnms end.
   if. -.tab e. tnms do. throw 'Not found: table ',>tab end.
   tab =. tloc {~  ind=.tnms i. tab
-  ind ;~ getloc__tab col
+  ind ;~ getloc__tab@> {.^:(1=#) cutcommas >col
 end.
 )
 lookupcolind =: 3 : 0

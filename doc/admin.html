@@ -10,8 +10,9 @@
 <img src="./jblue.png" width="50px" height="50px"/>
 <span class=md>d</span>
 <span class=mt>&nbsp;Admin</span>
-<span class=ms>J-integrated<br>columnar<br>analytics</span>
+<span class=ms><a href="http://www.jsoftware.com" target="_blank">www.jsoftware.com</a><br>J database - J language<br>columnar analytics</span>
 </div>
+
 <div contenteditable="false">
 <codenopre><p>Admin is done in the Jd task.
 Admin names have jd prefix and are defined in jd locale.
@@ -29,13 +30,15 @@ See tutorial admin_tut.</p>
 <a href="#admin.ijs">admin.ijs</a> <a href="#custom.ijs">custom.ijs</a>
 <a href="#datatune">datatune</a></p> 
 <hr><p>jd... utility verbs in jd locale:<br>
-<!-- jdutilindex a --><a href="#jdclocs">jdclocs</a>
+<!-- jdutilindex a --><a href="#jdcdef">jdcdef</a>
+<a href="#jdclocs">jdclocs</a>
 <a href="#jdcols">jdcols</a>
 <a href="#jdcreatefolder">jdcreatefolder</a>
 <a href="#jddamage">jddamage</a>
 <a href="#jddeletefolder">jddeletefolder</a>
 <a href="#jddeletefolderok">jddeletefolderok</a>
 <a href="#jdex">jdex</a>
+<a href="#jdfixcolnames">jdfixcolnames</a>
 <a href="#jdflush">jdflush</a>
 <a href="#jdfread">jdfread</a>
 <a href="#jdfrom">jdfrom</a>
@@ -161,6 +164,12 @@ set user/pswds allowed with DAN
 
 'test' jdadminup_jd_ 'fred/secret sam/birthday'
        jdadminup_jd_ '' NB. report
+       
+<hr><a name="jdcdef"><h2>jdcdef</h2></a>
+jdcdef d NB. col defs for createtable from labeled row data
+see tutorial table_from_array
+      
+       
 <hr><a name="jdclocs"><h2>jdclocs</h2></a>
 jdclocs t;c NB. return col locales
 t is '' for all tables  or 'tab' for just that table
@@ -187,6 +196,13 @@ jddeletefolderok_jd_ '~temp/jd'           NB. default path
 jddeletefolderok_jd_ '/database/testarea' NB. allow one time delete in this path
 <hr><a name="jdex"><h2>jdex</h2></a>
 jdex'insert' NB. run insert example from User
+
+<hr><a name="jdfixcolnames"><h2>jdfixcolnames</h2></a>
+
+jdfixcolnames d NB. make col names valid in labeled row data
+table.col -> table-col
+blank     -> _
+
 <hr><a name="jdflush"><h2>jdflush</h2></a>
 jdflush_jd_''
 

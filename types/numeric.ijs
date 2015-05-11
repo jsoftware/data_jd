@@ -7,6 +7,7 @@ qless         <
 qlessequal    <:
 qgreater      >
 qgreaterequal >:
+qrange        (e. +. 2 | I.~)
 )
 fixtype =: [: ,@boxopen fixtype_num
 

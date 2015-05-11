@@ -67,13 +67,6 @@ jd_... verbs typically start with getdb'' that sets:
 
 jd_z_=: jd_jd_
 
-NB. ugh - multiply defined because _jd_ definitions are not in all paths
-ECOUNT=:      'incorrect arg count'
-EDNONE=:      'dropdynamic does not exist'
-EEPRECISION=: 'extra precision'
-EESHAPE=:     'bad shape'
-EETYPE=:      'bad type'
-
 demos=: (<JDP,'demo/'),each 'sandp/sandp.ijs';'northwind/northwind.ijs';'sed/sed.ijs';'vr/vr.ijs'
 
 NB. jdget 'tab col'
@@ -150,7 +143,7 @@ init_jhs_''
 vsub=: 3 : 0
 'bad arg: pairs of names;values' assert (2<:#y)*.0=2|#y
 t=. (((#y)%2),2)$y
-<(,each{."1 t),.{:"1 t NB. ugly make scalar col names lists
+(,each{."1 t),.{:"1 t NB. ugly make scalar col names lists
 )
 
 dbpath=: 3 : 0
@@ -191,34 +184,98 @@ else.
 end.
 )
 
-
 jd_createtable=: 3 : 0
 erase<'DATACOL_jd_'
-y=. bd2 y
-ECOUNT assert 2<:#y
-d=. getdb''
-t=. >0{y NB. table
-c=. ;(1}.y),each LF
-c=. dlb c
-alloc=. ROWSMIN_jdtable_,ROWSMULT_jdtable_,ROWSXTRA_jdtable_
-if. ({.c)e.'0123456789' do.
- e=. 'bad file allocation'
- i=. <./ c i. LF,' '
- alloc=. _1 ". i{.c
- 'ROWSMIN must be >: 4'assert alloc>:4
- c=. dlb }.i}.c
- e assert ({.c)e.'0123456789'
- i=. <./c i. LF,' '
- alloc=. alloc, _1 ". i{.c
- c=. dlb }.i}.c
- e assert ({.c)e.'0123456789'
- i=. <./c i. LF,' '
- alloc=. alloc, _1 ". i{.c
- c=. dlb }.i}.c
+if. 0=L.y do. NB. string parse has blanks in col defs
+ a=. bdnames y
+ y=. ''
+ if. '/a'-:;{.a do.
+  y=. 4{.a
+  a=. 4}.a
+ end.
+ y=. y,{.a NB. table name
+ a=. }.a
+ y=. y,<;' ',each a
 end. 
-NB. should validate names types shapes
-Create__d t;c;'';alloc   NB. cols;data;alloc
+a=. y
+if. '/a'-:;{.a do.
+ alloc=. ;_1".each 3{.}.a
+ EALLOC assert 0<alloc
+ alloc=. 4 1 1>.alloc
+ a=. 4}.a
+else. 
+ alloc=. ROWSMIN_jdtable_,ROWSMULT_jdtable_,ROWSXTRA_jdtable_
+end.
+
+if. '/d'-:;{.a do.
+ createfromarray }.a
+ return.
+end. 
+vtcname t=. >0{a NB. table
+a=. }.a
+a=. ;cutcoldefs each a
+if. #a do.
+ b=. ><;._2 each a,each' '
+ n=. {."1 b
+ vtcname each n
+ duplicate_assert n
+ ETYPE assert (1{"1 b)e.TYPES
+ q=. _1".each 2}."1 b
+ s=. -.+./"1 >_1-:each q
+ p=. -.+./"1 >1-:each 0>each q
+ 'bad trailing shape' assert s,p
+end.
+a=. }:;a,each','
+d=. getdb''
+Create__d t;a;'';alloc   NB. cols;data;alloc
 JDOK
+)
+
+jdcdef=: 3 : 0
+v=. vsub ,y
+ns=. {."1 v
+vs=. {:"1 v
+vtcname each ns
+duplicate_assert ns
+typ=. ;3!:0 each vs
+ETYPE assert 8>:ts
+typ=. typ{'';'boolean';'byte';'';'int';'';'';'';'float'
+ts=. ":each }.each $each vs
+ETALLY assert c={.c=. ;#each vs
+deb _3}.' ',;ns,each' ',each typ,each' ',each ts,each<' , '
+)
+
+jdfixcolnames=: 3 : 0
+v=. vsub ,y
+ns=. {."1 v
+vs=. {:"1 v
+ns=. ns rplc each <'.';'-';' ';'_'
+,ns,.vs
+)
+createfromarray=: 3 : 0
+vtcname t=. ;0{y NB. table
+v=. vsub }.y
+ns=. {."1 v
+vs=. {:"1 v
+ns=. ns rplc each <'.';'--' NB. table.col -> table--col
+
+a=. t,' ',jdtdeffromarray }.y
+
+jd_createtable a
+jd_insert t;,ns,.vs NB. names changed (. -. --)
+JDOK
+)
+
+NB. validate dan name -same as table/col except jd prefix is allowed
+vdname=: 3 : 0
+('invalid name ',y)assert (0~:#y) *.(2=3!:0 y) *. (2>$$y) *. *./-.'/\*. ' e. y
+)
+
+NB. validate table/col name - used as a file folder
+NB. must be non-empty string without /\*. or blank
+NB. must not start with jd...
+vtcname=: 3 : 0
+('invalid name ',y)assert (-.'jd'-:2{.y) *. (0~:#y) *.(2=3!:0 y) *. (2>$$y) *. *./-.'/\*. ' e. y
 )
 
 jd_createcol=: 3 : 0
@@ -226,32 +283,34 @@ erase<'DATACOL_jd_'
 d=. getdb''
 if. (1=L.y)*.5=$y do.
  NB. have column values
- ('createcol invalid name: ',;1{y)assert _2~:nc 1{y
  dat=. ;{:y
  y=. }:y
  'tab nam type shape'=. y
+ ETAB=: tab
+ ECOL=: nam
  shape=. _".shape
  if. shape=_ do. shape=. i.0 end.
- 'invalid trailing shape'assert 1>:#shape
- assert (<type) e. TYPES['bad col type'
- assert -.(<type) e. 'enum';'varbyte'['enum and varbyte not allowed'
+ ETSHAPE assert 1>:#shape
+ ETYPE assert (<type) e. TYPES -. 'enum';'varbyte'
  t=. getloc__d tab
  if. 0=Tlen__t do. 
   a=. getloc__t'jdactive'
   'dat' appendmap__a (#dat)$1
   Tlen__t=: #dat
  end. 
- assert (Tlen__t,shape)-:$dat['data has wrong shape'
+ ESHAPE assert (Tlen__t,shape)-:$dat
  t=. (TYPES i. <type){TYPESj
- assert t=3!:0 dat['bad data type'
+ ETYPE assert t=3!:0 dat
  y=. tab;nam;type;":shape 
  DATACOL_jd_=: dat
 end.
 y=. bdnames y
+ETAB=: ;0{y
+ECOL=: ;1{y
+vtcname ECOL
 ECOUNT assert 3 4 e.~#y
-('createcol invalid name: ',;1{y)assert _2~:nc 1{y
 if. 4=#y do.
-  'invalid trailing shape'assert 1>:#_".;{:y
+  ETSHAPE assert 1>:#_".;{:y
 end.  
 InsertCols__d ({.y),< ;' ',~each}.":each y
 JDOK
@@ -301,7 +360,7 @@ while. '/'={.y do.
  if. '/lr '-:4{.y do.
   y=. dlb 4}.y
   OPTION_lr=: 1
- elseif. '/e ' do.
+ elseif. '/e '-:3{.y do.
   y=. dlb 3}.y
   OPTION_e=: 1
  elseif. 1 do.
@@ -330,14 +389,7 @@ end.
 jd_update=: 3 : 0
 ECOUNT assert 2<:#y
 d=. getdb''
-Update__d ({.y),<(1{y),vsub 2}.y
-JDOK
-)
-
-jd_modify=: 3 : 0
-ECOUNT assert 2<:#y
-d=. getdb''
-Modify__d ({.y),<(1{y),vsub 2}.y
+Update__d ({.y),<(1{y),<vsub 2}.y
 JDOK
 )
 
@@ -355,7 +407,7 @@ d=. getdb''
 t=. getloc__d {.y
 jdn=. NAMES__t
 jdn=. (-.(<'jd')=2{.each jdn)#jdn
-(NAME__t;<jdn)jddatatune__d >vsub}.y
+(NAME__t;<jdn)jddatatune__d vsub}.y
 )
 
 NB. run custom db jd_x... op in db locale if it exists
@@ -1088,4 +1140,3 @@ jd'close'
 new frename old
 JDOK
 )
-

@@ -12,6 +12,7 @@ lastspace_jd_  =: _1
 
 jdaccess_z_=: jdaccess_jd_
 jd_z_  =: jd_jd_
+jdae_z_=: jdae_jd_
 
 coclass'jd'
 
@@ -19,11 +20,11 @@ JDE1000=: 'jde: not a database'
 JDE1001=: 'jde: not an op'
 
 fmtx=: 4 : 0
-if. 0=#y do. '' else. x,':',y,' ' end.
+if. 0=#y do. '' else. x,':',(":y),' ' end.
 )
 
 fmtoper=: 3 : 0
-('op'fmtx OP),('tab'fmtx ETAB),('col'fmtx ECOL),('typ'fmtx ETYP),('shape'fmtx ESHAPE),('db'fmtx DB),('user'fmtx USER)
+('op'fmtx OP),('tab'fmtx FETAB),('col'fmtx FECOL),('typ'fmtx FETYP),('shape'fmtx FESHAPE),('db'fmtx DB),('user'fmtx USER)
 )
 
 NB. clean args
@@ -94,6 +95,16 @@ elseif. 1                   do. jdlast
 end.
 )
 
+NB. assert error that was expected
+jdae=: 4 : 0
+try. 
+ jd y
+ 'did not get expected error'assert 0
+catch.
+ 'did not get expected error text'assert (<x)e.;:;1{jdlast
+end.
+)
+
 NODBOPS=: 'close';'createdb';'list';'option' NB. ops without DB
 
 NB. jdx always returns a boxed result - jd asserts it is not an error
@@ -104,7 +115,7 @@ DBX jdx y
 APIRULES=: 1
 'DB UP SERVER'=: bdnames x
 USER=: (UP i.'/'){.UP
-'OP ETAB ECOL ETYP ESHAPE'=: 5$<''
+'OP FETAB FECOL FETYP FESHAPE'=: 5$<''
 try.
 if. 'intask'-:SERVER do.
  'jde: jd not loaded'assert 0=nc<'DBPATHS'

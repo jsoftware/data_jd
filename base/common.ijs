@@ -36,6 +36,20 @@ NB. getloc       get a locale from a name
 
 NB. jd is special because it cannot be instantiated.
 NB. Thus it only contains a few of the globals.
+
+ECOUNT=:     'incorrect arg count'
+EDNONE=:     'dropdynamic does not exist'
+EPRECISION=: 'extra precision'
+ESHAPE=:     'bad shape'
+ETSHAPE=:    'bad trailing shape'
+ETALLY=:     'bad count'
+ETYPE=:      'bad type'
+EALLOC=:     'bad alloc'
+EOPTION=:    'bad option'
+EDUPLICATE=: 'duplicate col'
+EUNKNOWN=:   'unknown col'
+EMISSING=:   'missing col'
+
 LOCALE =: CLASS =: <'jd'
 CHILD =: <'jdfolder'
 
@@ -233,5 +247,20 @@ if. #STATE do.
  cnts_writestate_jd_=: >:cnts_writestate_jd_
  (3!:1 pack STATE) jdfwrite PATH,'jdstate'
 end.
+)
+
+cutcoldefs=: a: -.~ [: (<@deb;._2~ e.&(',',LF)) ,&LF
+cutsp=: i.&' ' ({.;dlb@}.) ]
+
+duplicate_assert=: 3 : 0
+EDUPLICATE assert 0=#FECOL_jd_=: ;{.(1<+/y =/ y)#y
+)
+
+unknown_assert=: 3 : 0
+EUNKNOWN assert 0=#FECOL_jd_=: ;{.y
+)
+
+missing_assert=: 3 : 0
+EMISSING assert 0=#FECOL_jd_=: ;{.y
 )
 

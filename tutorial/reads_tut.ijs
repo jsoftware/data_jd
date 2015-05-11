@@ -31,6 +31,8 @@ jd'reads from p where color = "Red"'
 jd'reads from p where color eq "Red"'
 jd'reads from p where pname like "C"'   NB. regex
 jd'reads from p where pname unlike "C"' NB. regex
+jd'reads from p where weight range (11,14)' NB. In range, inclusive
+jd'reads from p where weight range (11,12,16,18)' NB. Multiple ranges
 
 NB. ORDER is col(s) to order by
 NB.  col order ascending unless followed by "desc"

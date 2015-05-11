@@ -254,7 +254,7 @@ cols=. #cnb
 cn=. >cnb
 
 assert _2~:nc cnb    ['invalid colname'
-assert cnb-:~.cnb     ['colnames not unuique'
+duplicate_assert cnb
 nums=.  >(( #":cols)":each<"0 >:i.cols)rplc each <' ';'0'
 
 c=. ,LF,.~nums,.' ',.cn,"1 ' byte ',":>:varb

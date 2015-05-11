@@ -16,7 +16,7 @@ jd'createunique f c'
 foo 20e6
 
 footm=: 3 : 0
-t=. 5 NB. factor between = and hash
+t=. 2 NB. factor between = and hash - normally higher but 2 avoids false asserts
 a=. timex 'jd''reads a from f where a=100''' NB. J =
 b=. timex 'jd''reads a from f where b=100'''   NB. hash
 c=. timex 'jd''reads a from f where c=100'''   NB. unique

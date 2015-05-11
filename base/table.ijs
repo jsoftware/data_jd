@@ -49,6 +49,9 @@ Tlen=: __ NB. tables open cols as required
 testcreate=: 4 : 0
 'cols data alloc'=. 3{.y,3#a:
 cols =. ({.~ i.&' ')&.> cutcoldefs toJ cols
+
+vtcname_jd_ each cols
+
 if. *@# data do.
   assert. ((2=#@$)*.2={:@$) cols&,.`,:@.((1=#cols)*.2=#)^:(2>#@$) data
 end.
@@ -94,7 +97,6 @@ shape =. ,".shape
 if. (<typ) -.@e. DATATYPES -. APIRULES#'time';'enum' do.
   throw '101 Invalid datatype: ',typ
 end.
-
 Create nam;typ;shape
 if. ifhash do. MakeHashed nam end.
 )
@@ -167,24 +169,6 @@ catchd.
   throw (}.@{.~ i.&':') 13!:12 ''
 end.
 
-EMPTY
-)
-
-Modify=: 3 : 0
-w=. getwhere ;{.y
-nv=. >{:y
-ns=. {."1 nv
-vs=. {:"1 nv
-
-for_i. i.#ns do. NB. validate
- c=. getloc {.i{ns
- (#w) modify_validate_data__c >i{vs 
-end.
-
-for_i. i.#ns do.
- c=. getloc {.i{ns
- w modify__c >i{vs
-end. 
 EMPTY
 )
 

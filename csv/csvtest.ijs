@@ -530,14 +530,14 @@ csv21=: 0 : 0
 )
 
 cdef21=: 0 : 0
-1 jboolean  boolean
-2 jint      int
-3 jfloat    float
-4 jbyte     byte 1
-5 jbyte7    byte 7
-6 jvar      varbyte  10
-7 jdate     date
-8 jdatetime datetime
+1 jboolean   boolean
+2 jint       int
+3 jfloat     float
+4 jbyte      byte 1
+5 jbyte7     byte 7
+6 jvar       varbyte  10
+7 jxdate     date
+8 jxdatetime datetime
 options  AUTO AUTO NO NO 0
 )
 
@@ -548,7 +548,7 @@ assert c_jbyte__csv-:,.'abc'
 assert c_jbyte7__csv-:3 7$'abc1234def    ghi    '
 assert vic c_jvar__csv
 assert v_jvar__csv-:'abcdefhow now brown cowfun'
-assert c_jdate__csv-:19680602 19680604 19680604
+assert c_jxdate__csv-:19680602 19680604 19680604
 )
 
 csv22=: 'first header',LF,'second header',LF,'third header',LF,csv20

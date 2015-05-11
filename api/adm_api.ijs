@@ -126,15 +126,15 @@ end.
 )
 
 jdadminx=: 3 : 0
-if. ''-:y do. throw 'y must not be empty' end.
 y=. adminp y
+d=. }.(y i: '/')}.y
+vdname d
 if. -.'database'-:jdfread y,'/jdclass' do.
  if. 0~:#fdir y,'/*' do.
   m=. y,' must be empty to be made into a new database'
   throw m
  end. 
 end.
-d=. }.(y i: '/')}.y
 'w'jdadminlk y
 p=. jpath y
 i=. p i:'/'
@@ -192,7 +192,7 @@ DBPATHS=: DBPATHS adminm y
 assert ''-:y
 y=. adminfp
 b=. ({."1 DBPATHS)~:<x
-DBPATHS=: (b#DBPATHS),((0~:#y),2)$x;y
+DBPATHS=: (b#DBPATHS),((0~:#y),2)$(,x);y
 i.0 0
 )
 
@@ -460,60 +460,6 @@ t=. IFWIN{9 3
 JDOK
 )
 
-NB. add jd'...' index to user.html
-setuser=: 3 : 0
-t=. 3}.each/:~'jd_'nl_jd_ 3
-t=. t-.'testerrors';'ref';,'x'
-d=. (<'<a href="#'),each t,each <'">'
-d=. d,each t,each <'</a>'
-d=. ;d,each LF
-r=. jdfread JDP,'doc/user.html'
-a=. '<!-- opindex a -->'
-z=. '<!-- opindex z -->'
-i=. (#a)+1 i.~ a  E. r
-j=. 1 i.~ z E. r
-r=. (i{.r),d,j}.r
-r fwrite JDP,'doc/user.html'
-f=. ''
-for_n. t do.
- f=. f,(0=+/('<a name="',(;n),'">') E. r)#n
-end.
-if. 0~:#f do. echo 'ops without targets:',LF,;' ',each f,each LF end.
-i.0 0
-)
-
-NB. add jd names that do not have links from z
-setadmin=: 3 : 0
-t=. ('jd'nl_jd_ 3)-.setztojd''
-t=. t-.'jd_'nl_jd_ 3
-t=. t-.'jdadmin'nl_jd_ 3
-t=. t-.'jdcreatejmf';'jdmap';'jdunmap';'jdx'
-d=. (<'<a href="#'),each t,each <'">'
-d=. d,each t,each <'</a>'
-d=. ;d,each LF
-r=. jdfread JDP,'doc/admin.html'
-a=. '<!-- jdutilindex a -->'
-z=. '<!-- jdutilindex z -->'
-i=. (#a)+1 i.~ a  E. r
-j=. 1 i.~ z E. r
-r=. toCRLF (i{.r),d,j}.r
-r fwrite JDP,'doc/admin.html'
-f=. ''
-for_n. t do.
- f=. f,(0=+/('<a name="',(;n),'">') E. r)#n
-end.
-if. 0~:#f do. echo 'jd... without targets:',LF,;' ',each f,each LF end.
-i.0 0
-)
-
-NB. jd... names in z locale that link to jd locale
-setztojd=: 3 : 0
-t=. 'jd'nl_z_ 3
-t=. (0=;L. each 5!:1 t,each<'_z_')#t
-a=. 5!:1 t,each<'_z_'
-((<'_jd_')=_4{.each a)#t
-)
-
 NB. y is tab/col path
 NB. jdfread/jdfwrite col folder files to new location (probably on another drive)
 NB. and make symbolic link
@@ -630,7 +576,7 @@ ta=. (<pa),each {."1[1!:0 jpath pa,'*.ijs'
 aa=. _4}.each(>:;ta i: each '/')}.each ta
 aa=. (_4*;(_4{.each aa)=<'_tut')}.each aa 
 TUTSDEMO=: _4}.each(>:;demos i:each'/')}.each demos
-TUTSBASIC=: 'intro';'reads';'from';'admin';'csv';'join';'epochdt'
+TUTSBASIC=: 'intro';'reads';'from';'admin';'csv';'join';'epochdt';'table_from_array'
 TUTSADVANCED=: aa-.TUTSBASIC
 TUTS=: (aa,TUTSDEMO),.ta,,demos_jd_
 y=., dltb y
@@ -665,7 +611,3 @@ end.
  
 spxinit f
 )
-
-
-
-

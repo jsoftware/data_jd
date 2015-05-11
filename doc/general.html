@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<title>Jd General</title>
+<link rel="stylesheet" href="jda.css" type="text/css">
+
+<body>
+<div class=masthead>
+<img src="./jblue.png" width="50px" height="50px"/>
+<span class=md>d</span>
+<span class=mt>&nbsp;General</span>
+<span class=ms><a href="http://www.jsoftware.com" target="_blank">www.jsoftware.com</a><br>J database - J language<br>columnar analytics</span>
+</div>
+
+<div contenteditable="false">
+
+<hr><a href="#install">install</a> <a href="#run">run</a> <a href="#args">args</a> <a href="#demos">demos</a> <a href="#names">names</a> <a href="#types">types</a>
+
+<hr><a name="install"><h2>install</h2></a>
+
+<p>Install Jd (addon data/jd) with JAL/Package Manager.
+Jd requires J64 (803 or later) on Windows, Linux, or Mac.</p>
+
+<hr><a name="run"><h2>run</h2></a>
+
+<p>There is a slight preference for JHS as the front end.
+Running Jd tutorials in jconsole is awkward.
+
+Eventually
+your Jd systems are likely deployed in servers (perhaps in a cloud)
+and JHS makes secure remote management and development a natural
+continuation of using Jd on your own local machine.
+If not already familiar with the JHS front end, time spent getting
+familiar is time well spent.</p>
+
+<code>   load'data/jd'
+... welcome message ...</code>
+
+<p>The welcome message tells you if you require a license key
+and how to get one.</p>
+
+<p>Be sure to browse and bookmark the documentation url given in the welcome.</p>
+
+For a new install and after updates it is a good idea to run
+<code> jdtests'' </code> to validate the installation and create demo databases.</p>
+
+<p>The welcome message suggests how to get started.
+In particular how to list and run tutorials and examples.</p>
+
+
+<hr><a name="args"><h2>args</h2></a>
+<code>   jd'...' NB. perform Jd user op</code><br><br>
+
+Arg parses to a list of boxes. A string is treated as list of
+blank delimited boxes. The first box in a list of boxes is
+treated as a list of blank delimited values.
+<code>
+jd'reference a b c d' === jd'reference';'a';'b';'c';'d'
+jd'insert f a';23     === jd'insert';'f';'a';23
+</code><br>
+
+Col definitions have blanks and are delimited by , or LF and have more
+complicated rules. The following are equivalent:
+<code>
+jd'createtable f a int,b byte 4'
+jd'createtable f a int',LF,'byte 4'
+jd'createtable';'f';'a int';'b byte 4'
+jd'createtable f a';'a int';'b byte 4'
+</code><br>
+
+Options follow the command, have a fixed number (0 or more) parameters, and
+should be in the order documented.
+<code>
+jd'reads /lr /e f' === jd'reads';'/lr';'/e';'f'
+jd'createtable /a 1 2 3 f a int' === jd'createtable';'/a';'1';'2';'3';'f';'a int'
+</code>
+
+<hr><a name="names"><h2>names</h2></a>
+column, table, and dan (database) names are used as folder names and have the same validation<br>
+/\ are not allowed to avoid confusion with path separators<br>
+blank is not allowed to simplify parsing<br> 
+. is not allowed as it is used internally in the form table.col<br>
+jd... prefix not allowed for table or col but is allowed for dan
+
+<hr><a name="types"><h2>types</h2></a>
+standard types: boolean, int, float, byte<br>
+all standard types can have trailing shape
+<code>
+jd'createtable f a int 2,b byte 4' NB. n,2 int and n,4 byte
+</code><br>
+edate (epochdt) types:<br>
+iso 8601 format - stored as int - converted on read and write<br>
+epochdt int is nanoseconds before/after 2000-01-01<br>
+tutorial epochdt<br><br>
+
+edate      - 2014-01-02<br>
+edatetime  - 2014-01-02T03:04:05<br>
+edatetimem - 2014-01-02T03:04:05,123<br>
+edatetimen - 2014-01-02T03:04:05,123456789<br><br>
+
+date types:<br>
+date     - int with digits yyyymmdd<br>
+datetime - int with digits yyyymmddhmmss<br>
+csv loader supports yyyy/mm/dd vs dd/mm/yyyy<br><br>
+
+varbyte:<br>
+less important in Jd than in most other systems<br>
+byte 200 that held the data is probably better<br>
+
+</body></html>

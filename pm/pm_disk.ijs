@@ -14,7 +14,6 @@ assert (y>0)*.y<30
 PMA''
 s=. 0
 for. i.y do.
-  decho s
   D 1!:12 fn;s
   s=. s+GBC
 end.
@@ -29,7 +28,6 @@ s=. 0
 t=. 0
 PMA''
 for. i.y do.
- decho s
  t=. +/'a'=1!:11 fn;s,GBC
  s=. s+GBC
 end.

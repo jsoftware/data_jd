@@ -65,7 +65,6 @@ actP=. pointer_to_name_jd_ 'a__'
 off=. 0
 
 lib =. LIBJD_jd_,' hash_insert_fixed1 > x x x x x x x'
-decho off;hashP;linkP;actP;col;col
 r =. lib cd off;hashP;linkP;actP;col;col
 )
 

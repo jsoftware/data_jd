@@ -4,27 +4,27 @@ coclass 'jdtable'
 NB. =========================================================
 fixwhere=: 3 : 0
 if. ' ' *./@:= y do. '' return. end.
-quoted =. wherequoted_jd_
-parenl =. [: +/\ '()' -/@:(=/) ]
-
-if. {:quoted y do. throw 'Open quote in where clause' end.
-if. {:parenl y do. throw 'Unmatched parenthesis in where clause' end.
-
 txt =. debq_jd_ y
+
+quoted =. wherequoted_jd_ txt
+if. {:quoted do. throw 'Open quote in where clause' end.
+parenl =. +/\ (-.quoted) * '()' -/@:(=/) txt
+if. {:parenl do. throw 'Unmatched parenthesis in where clause' end.
+
 if. 'not ' -: 4{.txt do. 'qnot' ; <fixwhere 4}.txt return. end.
 if. '!' -: {.txt do. 'qnot' ; <fixwhere }.txt return. end.
 if. '(' = {. txt do.
-  ndx=. 0 i.~ parenl txt
+  ndx=. 0 i.~ parenl
   bal=. dlb (ndx + 1) }. txt
   sel=. fixwhere }. ndx {. txt
   if. #bal do.
-    ind=. (1 i.~ e.&' ' > quoted) bal
+    ind=. (1 i.~ e.&' ' > wherequoted_jd_) bal
     ('q',ind {. bal) ; sel ; <fixwhere (ind + 1) }. bal
   end.
   return.
 end.
 
-msk=. (-.@:quoted *. 0=parenl) txt
+msk=. (-.quoted) *. 0=parenl
 conj =. <;._1' and && or ||'
 ndx=. 1 i.~ msk *. +./ ((' ',,&' ')&.> conj) E.&> <txt
 if. ndx=#txt do. <fixwhere1 txt return. end.
@@ -65,6 +65,7 @@ qnotequal ne <>
 qequal eq is =
 qgreater gt >
 qless lt <
+qrange range
 qin in
 qnotin notin
 qlike like
@@ -119,6 +120,23 @@ end.
 
 getwheresimp=: 3 : 0
 'col fn val' =. y
+if. ',' e. col do.
+  if. -.(<fn) e. ;:'qequal qin' do.
+    throw 'Multicolumn syntax not allowed for operations other than = and in'
+  end.
+  val =. (<;._1~ ~:&',' +: [:+/\ -.@wherequoted_jd_*'()'-/@:(=/)]) ',',val
+  col =. cutcommas col
+  if. col ~:&# val do. throw 'Number of columns does not match number of values' end.
+  h =. {.hs =. (;:'hash unique') FindProp col
+  cols =. getloc&.> col
+  if. (*#hs) *. *./ 'varbyte'&(4 :'-.x -: typ__y')@> cols do.
+    fixed =. cols  fn 1 :(':';'u fixtype_fn__x y')&.>  val
+    > qor&.>/ , lookup__h&.> <`([: { <"_1&.>)@.(fn-:'qin') fixed
+  else.
+    > qand&.>/ <@getwheresimp"1 col ,. ::_1: (<fn) ,. val
+  end.
+  return.
+end.
 col=.getloc col
 if. (<val) e. NAMES do.
   getwhere2__col fn ,&< getloc val
@@ -170,7 +188,7 @@ select. x
     if. #@$ y =. fixnum y do. throw 'Too many numbers for sample: ',":y end.
     if. y<0 do. throw 'Negative argument to sample: ',":y end.
     y
-  case. 'qin';'qnotin' do.
+  case. 'qin';'qnotin';'qrange' do.
     if. 0=#y-.'( )' do. NB. kludge for ( )
      ''
     else. 
