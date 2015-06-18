@@ -97,12 +97,10 @@ map_jmf_ 'link__';linkfn
 EMPTY
 )
 
-
 NB. Resize hash column
 NB. Assumes link is properly allocated
 NB. In fact, we can ignore link as insert will overwrite it.
 resize=: 3 : 0
-decho '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!resize'
 resizemap 'hash' ; 8*gethashlen''
 hash =: _1 $~ gethashlen ''
 0 insert ".&.> MAPCOL
