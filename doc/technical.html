@@ -20,16 +20,17 @@
 
 
 <a href="#backup">backup</a> -
-<a href="#centos">centos</a> -
 <a href="#crash">crash recovery</a> - 
 <a href="#developer">developer</a> - 
 <a href="#handles">file handles</a> - 
 <a href="#links">links</a> - 
+<a href="#libjd.so">libjd.so</a> -
 <a href="#locales">locales</a> - 
 <a href="#performance">performance measurement</a> - 
 <a href="#ref">ref</a> - 
 <a href="#reference">reference</a> - 
-<a href="#update">update</a> 
+<a href="#update">update</a> - 
+<a href="#search">wss</a> 
 
 <h2><a name="backup">backup</h2>
 
@@ -41,30 +42,6 @@ With large databases and suitable hardware it might be worthwhile to use multipl
 
 <p>With update as delete/insert an incremental backup tool could be easily built that dumps just jdactive and
 and the rows after Tlen in the full backup.</p>
-
-<h2><a name="centos">centos</h2>
-
-Jd linux shared library built on recent distributions fails on some releases of CentOS
-(and presumably similar Red Hat releases). Loading Jd will get:<code>
-
-'Jd shared library failure' assert ...
-   cderx''
-'... GLIBC_2.14 not found ...'
-
-</code>
-Workaround is to use libjd_centos.so that was built on CentOS.
-To use it do something like the following:
-<code>
-
-...$ cd ~/addons/data/jd/cd
-...$ mv libjd.so libjd_not_centos.so
-...$ mv libjd_centos.so libjd.so
-...$ chmod +x libjd.so
-</code>
-
-
-
-
 
 <h2><a name="crash">crash recovery</h2>
 
@@ -133,6 +110,18 @@ different, and the details are left to the reader.</p>
 See Admin jdlinkmove, jdlinkset, and jdlinktargets for details.
 
 <p>See tutorial link_tut.</p>
+
+<h2><a name="libjd.so">libjd.so</h2>
+
+<p>Jd linux libjd.so shared library built on stable release (RH 4/Centos 4) and should run on
+most modern linux systems.</p>
+
+<p>If Jd gets an error loading the linux shared library, please report the following
+to the J database forum:<code>
+...$ cat /proc/version
+...$ cat /etc/issue
+...$ ldd .../libjd.so
+</code></p>
 
 <h2><a name="locales">locales</h2>
 <p>Parts of a database (tables, cols, data) correspond directly with the file structure.
@@ -229,5 +218,17 @@ Consider a large table with 100 cols where a typical update changes the value in
 of 1 row. Update as delete/insert reads 100 different areas of disk to get the old values,
 then writes 100 different new areas of disk. An update in-place would be much faster.</p>
 
+<h2><a name="search">windows search service</h2>
+<p>Windows Search Service (content indexing, ...) can cause lots
+of disk activity and can interfere with Jd file operations
+and if possible should be disabled when using Jd.</p>
 
+<p>Disable Windows Search Service as follow:<code>
+ 1. command prompt ...>services.msc
+ 2. scroll  down and right click Windows Search
+ 3. click Properties
+ 4. click Stop button to stop service if it is running
+ 5. change Startup type: to Disabled
+ 6. click Apply
+</code></p>
 </div></body></html>

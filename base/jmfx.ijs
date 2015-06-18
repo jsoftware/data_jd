@@ -18,7 +18,7 @@ if. -.fexist {.y do.
 end. 
 
 if. (fsize {.y)~:HS_jmf_+;1{y do.
- jddamage'create failed (disk full?): ',;{.y
+ jddamage'create failed (previous jddeletefolder failed?): ',;{.y
 end.
 )
 
@@ -29,7 +29,13 @@ cnts_map_jd_=: >:cnts_map_jd_
 'map'trace y
 ('map name invalid: ',;{.y)assert _1=nc {.y
 ('map file does not exist: ',;1{y)assert fexist 1{y
-x map_jmf_ y
+try.
+ x map_jmf_ y
+catchd.
+ echo 'jdmap failed unexpectedly - will retry'
+ 6!:3[5
+ x map_jmf_ y
+end.
 )
 
 jdunmap=: 3 : 0
@@ -38,7 +44,7 @@ if. 1=L.y do.
  fn=. 1{(({."1 mappings_jmf_)i.{.y){mappings_jmf_
  unmap_jmf_ y NB. resize failure not detected
  if. (fsize fn)~:HS_jmf_+;1{y do.
-  jddamage 'resize failed (disk full?): ',;fn
+  jddamage 'resize failed: ',;fn
  end. 
 else.
  unmap_jmf_ y

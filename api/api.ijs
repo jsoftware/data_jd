@@ -1,4 +1,4 @@
-NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
+NB. Copyright 2015, Jsoftware Inc.  All rights reserved.
 NB. Jd API
 NB. Jd uses locales (Read__d'from table')
 NB. Jd API wraps this for a possibly more convenient interface
@@ -211,7 +211,7 @@ if. '/d'-:;{.a do.
  createfromarray }.a
  return.
 end. 
-vtcname t=. >0{a NB. table
+vtcname FETAB=: t=. >0{a NB. table
 a=. }.a
 a=. ;cutcoldefs each a
 if. #a do.
@@ -286,8 +286,8 @@ if. (1=L.y)*.5=$y do.
  dat=. ;{:y
  y=. }:y
  'tab nam type shape'=. y
- ETAB=: tab
- ECOL=: nam
+ FETAB=: tab
+ FECOL=: nam
  shape=. _".shape
  if. shape=_ do. shape=. i.0 end.
  ETSHAPE assert 1>:#shape
@@ -305,50 +305,14 @@ if. (1=L.y)*.5=$y do.
  DATACOL_jd_=: dat
 end.
 y=. bdnames y
-ETAB=: ;0{y
-ECOL=: ;1{y
-vtcname ECOL
+FETAB=: ;0{y
+FECOL=: ;1{y
+vtcname FECOL
 ECOUNT assert 3 4 e.~#y
 if. 4=#y do.
   ETSHAPE assert 1>:#_".;{:y
 end.  
 InsertCols__d ({.y),< ;' ',~each}.":each y
-JDOK
-)
-
-jd_dropcol=: 3 : 0
-y=. bdnames y
-ECOUNT assert 2=#y
-d=. getdb''
-t=. getloc__d ;{.y
-if. ({:y)e.{."1 jdcols {.y do.
- assertnodynamic y
- DeleteCols__d y
- 'dropcol jddeletefolder failed'assert -.fexist PATH__t,;{:y
-end. 
-JDOK
-)
-
-NB. release lock, jddeletefolder, admin unchanged
-jd_dropdb=: 3 : 0
-ECOUNT assert 0=#y
-'f db'=. getfolder''
-t=. dbpath db
-'x' jdadminlk t NB. should be done after Drop - see similar in jdadmin
-Drop__f db
-jddeletefolder t
-'dropdb jddeletefolder failed'assert -.fexist t
-JDOK
-)
-
-jd_droptable=: 3 : 0
-if. 0~:L.y do. y=. ;y[ECOUNT assert 1=#y end.
-d=. getdb''
-if. (<y)e. NAMES__d do.
- assertnoreference y
- Drop__d y
-end.
-'droptable jddeletefolder failed'assert -.fexist PATH__d,y
 JDOK
 )
 
@@ -420,6 +384,7 @@ JDE1001 assert 3=nc<'jd_',OP,'__d'
 NB. Revert (in case of not unique) does not work on dynamic cols!
 jd_createunique=: 3 : 0
 y=. bdnames y
+FEXTRA=: ;y,each<' '
 ECOUNT assert 2<:#y
 d=. getdb''
 validtc__d y
@@ -434,10 +399,20 @@ JDOK
 
 jd_createhash=: 3 : 0
 y=. bdnames y
+FEXTRA=: ;y,each<' '
 ECOUNT assert 2<:#y
 d=. getdb''
 validtc__d y
 MakeHashed__d ({.y),<}.y
+JDOK
+)
+
+jd_createsmallrange=: 3 : 0
+y=. bdnames y
+ECOUNT assert 2<:#y
+d=. getdb''
+validtc__d y
+'smallrange' AddProp__d ({.y),<}.y
 JDOK
 )
 
@@ -468,6 +443,7 @@ JDOK
 NB. all join types
 jd_reference=: 3 : 0
 y=. bdnames y
+FEXTRA=: ;y,each<' '
 ECOUNT assert (4<:#y)*.0=2|#y
 d=. getdb''
 t=. (2,(#y)%2)$y
@@ -718,64 +694,6 @@ jd'close'
 JDOK
 )
 
-jd_dropdynamic=: 3 : 0
-jd_close''
-y=. bdnames y
-if. #y do. dropdynsub y return. end.
-p=. dbpath DB
-d=. 1!:0 <jpath p,'/*'
-d=. (<p,'/'),each {."1 ('d'=;4{each 4{"1 d)#d
-d=. (fexist d,each <'/jdclass')#d
-d=. ((<'table')=jdfread each d,each <'/jdclass')#d
-for_n. d do.
- dd=. {."1[1!:0 <jpath'/*',~;n
- b=. (<'jdhash_')=7{.each dd
- b=. b+.(<'jdreference_')=12{.each dd
- b=. b+.(<'jdunique_')=9{.each dd
- dd=. b#dd
- jddeletefolder each n,each,'/',each dd
- f=. '/jdstate',~;n
- s=. 3!:2 jdfread f
- i=. ({."1 s)i.<'SUBSCR'
- s=. (<0 3$a:) (<i,1)}s
- (3!:1 s) fwrite f
-end.
-JDOK
-)
-
-jd_dropfilesize=: 3 : 0
-getdb''
-p=. jpath dbpath DB
-maps=. mappings_jmf_
-maps=. maps /:1{"1 maps
-d=. 1{"1 maps
-b=. (;(<p)-:each (#p){.each d)
-d=. b#d
-h=. b#{."1 maps
-rn=. ra=. rz=. ''
-for_i. i.#h do.
- n=. >i{h
- type=. 3!:0 n~
- size=. (JTYPES i.type){JSIZES
- shape=. $n~
- dsize=. size**/shape
- msize=. getmsize_jmf_ n
- assert (fsize i{d)=HS_jmf_+msize
- assert msize>:dsize
- rn=. rn,i{d
- ra=. ra,fsize i{d
- rz=. rz,HS_jmf_+dsize
- if. msize>dsize do.
-  setmsize_jmf_ n;dsize 
-  jdunmap n
-  newsize_jmf_ (;i{d);HS_jmf_+dsize
- else.
-  jdunmap n
- end. 
-end.
-jd_close''
-('file';'old';'new'),:(<>rn),(<,.ra),<,.rz
-)
 
 NB.! needs work
 jd_option=: 3 : 0
@@ -1108,8 +1026,9 @@ TEMPCOLS=: i.0 2
 
 assertnoreference=: 3 : 0
 t=. jdgl y
-s=. ;(<'jdref')=5{.each {."1 SUBSCR__t
-'table has reference' assert 0=+/s
+a=. {."1 SUBSCR__t
+'table has reference' assert 0=+/;(<'jdref')=5{.each a
+'table has reference' assert 0=+/;+/each(<'.jdref')E.each a
 )
 
 assertnodynamic=: 3 : 0

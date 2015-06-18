@@ -40,3 +40,5 @@ dynamicreset =: dynamicinit =: ]
 testcreate =: ]
 TestInsert =: ]
 Revert =: dynamicreset
+
+HASH_TYPES_jd_ =: ;:'hash unique smallrange'

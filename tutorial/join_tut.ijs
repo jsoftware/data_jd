@@ -108,6 +108,9 @@ jd'reference T id U id'
 jd'reference T aid U id'
 jd'reads from T'
 jd'reads from U'
+jd'info schema' NB. normal cols
+jd'info jd'     NB. jd... cols
+jd'info jd U'
 jd'info reference'
 
 NB. reference name is used to select which join to use

@@ -1,7 +1,9 @@
-NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
+NB. Copyright 2015, Jsoftware Inc.  All rights reserved.
 coclass 'jd'
 
 MAXROWCOUNT =: 1e5
+HASHPASSLEN =: 2 <.@^ 29
+HASHCREATE32BIT =: 0
 
 NB. util
 
@@ -61,77 +63,100 @@ c=. ;#each y
 (n=. (0,}:+/\c),.c);;y
 )
 
-deletefolder_z_=: 3 : 0
-echo 'deletefolder deprecated - change to use jddeletefolder_jd_ when convenient'
-rmdir_jd_ y
-)
+EDFAIL=: LF,'Jd info: N delete folder failed - technical.html|wss',LF,'F',LF,'E','trying again',LF,LF
 
+NB. delete folder
+NB. allowed if jddeleteok
+NB.  not allowed if jddropstop
+NB.   not allowed if too few /s (/abc/def ok and /abc bad)
+NB.    allowed if empty or jdclass or in ~temp
 jddeletefolder=: 3 : 0
-p=. jpath y
-if. _1=nc<'rmdirok' do. rmdirok_jd_=: '~temp/jd/' end.
-
-if. 0~:#fdir y,'/*' do. NB. allow delete of empty folder
- t=. jpath rmdirok
- a=. rmdirok
- rmdirok_jd_=: '~temp/jd/'
- ('not in ',a,' (jddeletefolderok sets allowed delete path)')assert t-:(#t){.p,('/'~:{:p)#'/'
-end. 
-rmdir_jd_ y
+y=. (-'/'={:y)}.y NB. drop trailing /
+y=. jpath y
+('folder (F) locked by Jd'rplc 'F';y) assert -.(<y)e.{:"1 jdadminlk_jd_''
+t=. y,'/' NB. ensure trailing /
+if. -.fexist t,'jddeleteok' do.
+ EDROPSTOP assert -.fexist t,'/jddropstop'
+ e=. 'delete ',y,' not allowed'
+ e assert 3<:+/t='/'
+ p=. jpath'~temp/'
+ e assert (0=#fdir t,'*')+.(fexist t,'jdclass')+.p-:(#p){.t 
+end.
+r=. rmsub y
+t=. hostpathsep y
+if. 0~:;{.r do.
+ echo EDFAIL rplc'N';'1st';'F';t;'E';{:r
+ 6!:3[5
+ r=. rmsub y
+ if. 0~:;{.r do.
+  echo EDFAIL rplc'N';'2nd';'F';t;'E';{:r
+  6!:3[10
+  r=. rmsub y
+  if. 0~:;{.r do.
+   echo EDFAIL rplc'N';'3rd';'F';t;'E';{:r
+   6!:3[60
+   r=. rmsub y
+   if. 0~:;{.r do.
+    EDELETE assert 0
+   end. 
+  end.  
+ end.   
+end.
+y
 )
 
-NB. allow 1 time delete of a folder not in ~temp/jd
 jddeletefolderok=: 3 : 0
-t=. jpathsep y
-t=. t,('/'~:{:t)#'/'
-'ignored - to few path seperators'assert 3<+/'/'=jpath t
-rmdirok_jd_=: t
+t=. jpath y
+t=. t,(-.'/'={:t)#'/' NB. ensure trailing /
+''fwrite t,'jddeleteok'
+y
 )
 
-formatdir=: [: jpath }:^:('/'={:)
-
-rmdir=: (rmdirrecursive@[ ^:('d'=4{4{::{.@])^:(1=#@]) 1!:0)@:formatdir
+NB. write (x 1) or erase (x 0) all jddropstop files in path
+NB. x 0 erase - x 1 write
+NB. y is '' or 'table' or 'table col'
+jddropstop=: 3 : 0
+1 jddropstop y
+:
+p=. dirpath(jdpath''),(deb y)rplc' ';'/'
+p=. p,each<'/jddropstop'
+if. x=0 do.
+ ferase each p
+else.
+ a: fwrite each p
+end.
+i.0 0
+)
 
 0 : 0
-Windows Search Service (content indexing, ...) can interfer
-with file operatons (in particular create and delete) and
-should not be run when using Jd.
+Windows Search Service (content indexing, ...) and
+and other windows background tasks (antivirus?)
+can cause rmdir to fail. See technical.html.
 
-Unfortunately stopping/disabling Windows Search Service
-does not help with the unexpected failues in file deletes
-or in jdcreatejmf.
-
-Disable Windows Search Service as follow:
- 1. command prompt ...>serivces.msc
- 2. scroll  down and right click Windows Search
- 3. click Properties
- 4. click Stop button to stop service if it is running
- 5. change Startup type: to Disabled
- 6. click Apply
+This problem is mitigated by doing rmdir several
+times as required with a sleep.
 )
 
-rmdirrecursive=: 3 : 0
-y=.jpath y
-subfiles =. (,&.> [: {."1 (1!:0)@:(,&'*'&.>)) <(, '/'-.{:) y
-rmdirrecursive@>^:(*@#) subfiles
-try.
- 1!:55<y
-catch.
- NB. windows can fail because of transient interference with indexing
- NB. echo 'Jd info: first try delete failed - ',y
- try.
-  6!:3[1
-  1!:55<y
- catch.
-  NB. echo 'Jd info: second try delete failed - ',y
-  try.
-   6!:3[2
-   1!:55<y
-  catch.
-   echo 'Jd info: 3rd try delete failed - ',y
-  end.
- end.
+NB. similar to rmdir_j_
+NB. host facilities delete folder
+rmsub=: 3 : 0
+y=. jpath y
+if. IFWIN do. y=. hostpathsep y end.
+d=. 1!:0 y
+if. 1~:#d do. 0;'' return. end. NB. folder already empty
+if. 'd'~:4{4 pick{.d do. ('not a folder: ',y) assert 0 end.
+if. IFWIN do.
+  r=. shell_jtask_ 'rmdir /S /Q ','"','"',~y
+else.
+  r=. hostcmd_j_ 'rm -rf ','"','"',~y NB. --preserve-root
 end.
-EMPTY
+if. #r do. 1;r return. end.
+6!:3[0.01 NB. sometimes required in windows so next test works
+if. 0=1!:0 y do.
+ 0;''
+else.
+ 1;'delete did not complete'
+end.
 )
 
 cre8folder=: 3 : 0
@@ -139,13 +164,7 @@ t=. jpath y
 for_n. ('/'=t)#i.#t=. t,'/'  do.
   1!:5 :: [ <n{.t
 end.
-EMPTY
-)
-
-NB. createfolder path - ensure path y exists
-createfolder_z_=: 3 : 0
-echo 'createfolder deprecated - change to use jdcreatefolder_jd_ when convenient'
-cre8folder_jd_ y
+y
 )
 
 jdcreatefolder=: cre8folder_jd_

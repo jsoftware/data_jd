@@ -24,7 +24,19 @@ if. 0=#y do. '' else. x,':',(":y),' ' end.
 )
 
 fmtoper=: 3 : 0
-('op'fmtx OP),('tab'fmtx FETAB),('col'fmtx FECOL),('typ'fmtx FETYP),('shape'fmtx FESHAPE),('db'fmtx DB),('user'fmtx USER)
+('op'fmtx OP),('tab'fmtx FETAB),('col'fmtx FECOL),('xtra'fmtx FEXTRA),('db'fmtx DB),('user'fmtx USER)
+)
+
+fmtsummary=: 3 : 0
+if. 0=L.y do.
+ deb y
+else.
+ y=. (<'-') ((2~:;3!:0 each y)#i.#y)}y
+ y=. (<'-') ((1<;$@$each y)#i.#y)}y
+ y=. ;(<' '),~each y
+end.
+if. 120<#y do. y=. '...',~120{.y end.
+deb y
 )
 
 NB. clean args
@@ -84,6 +96,7 @@ i.0 0
 )
 
 jd=: 3 : 0
+jdlasty_z_=: y
 jdlast_z_=: jdx y
 t=. ;{.{.jdlast
 if. 'Jd error'-:t do.
@@ -115,7 +128,7 @@ DBX jdx y
 APIRULES=: 1
 'DB UP SERVER'=: bdnames x
 USER=: (UP i.'/'){.UP
-'OP FETAB FECOL FETYP FESHAPE'=: 5$<''
+'OP FETAB FECOL FEXTRA'=: 4$<''
 try.
 if. 'intask'-:SERVER do.
  'jde: jd not loaded'assert 0=nc<'DBPATHS'

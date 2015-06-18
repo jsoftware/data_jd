@@ -67,10 +67,11 @@ jdserverstop=: 3 : 0
 if. IFJHS do. OKURL_jhs_=: '' end.
 )
 
-NB. simple name treated as ~temp/name
+NB. simple name treated as ~temp/jd/name
 adminp=: 3 : 0
 y=. jpathsep y
 y=. y,~(-.'/'e.y)#'~temp/jd/'
+y=. (-'/'={:y)}.y NB. no trailing /
 )
 
 defaultadmin=: 0 : 0
@@ -126,21 +127,16 @@ end.
 )
 
 jdadminx=: 3 : 0
-y=. adminp y
+y=. jpath adminp y
 d=. }.(y i: '/')}.y
 vdname d
-if. -.'database'-:jdfread y,'/jdclass' do.
- if. 0~:#fdir y,'/*' do.
-  m=. y,' must be empty to be made into a new database'
-  throw m
- end. 
+i=. y i:'/'
+f=. Open_jd_ i{.y
+if. (<y)e.{:"1 jdadminlk_jd_'' do. NB. if locked, assume open, and should be dropped
+ 'x'jdadminlk y NB.! should be done after Drop - but there are problems
+ Drop__f d
 end.
-'w'jdadminlk y
-p=. jpath y
-i=. p i:'/'
-f=. Open_jd_ i{.p
-'x'jdadminlk y NB.! should be done after Drop - but there are problems
-Drop__f d
+jddeletefolder y
 'w'jdadminlk y
 Create__f d
 jdadmin y
@@ -301,7 +297,7 @@ NB. signal error
 jddamage=: 3 : 0
 p=. dbpath DB
 y fwrite p,'/jddamage'
-((y i.':'){.y) assert 0
+y assert 0
 )
 
 3 : 0''
@@ -312,7 +308,7 @@ if. _1=nc<'LOCKED'  do. LOCKED=:  0 2$'' end.
 LIBC=: unxlib'c'
 )
 
-
+JDTIMING=: 1 NB. avoid errors on timing tests - set 0 to check timings
 
 NB. assume headers are non-numeric and end at first number in any column
 NB. y ''              runs all tests
@@ -403,6 +399,7 @@ jd'option sort 0' NB. restore
 'ROWSMIN_jdtable_ ROWSMULT_jdtable_ ROWSXTRA_jdtable_'=: ALLOC NB. restore
 jdtrace_jd_ 0
 echo LF,(":start-~6!:1''),' seconds to run tests'
+(;{:jd'list version')fwrite'~temp/jd/jdversion' NB. avoid welcome
 i.0 0
 )
 
@@ -477,12 +474,12 @@ jd'close' NB. necessary so remap is done with new stuff
 if. IFWIN do.
  t=. '"',p,'" "',newp,'"'
  t=. 'mklink /D /J ',t rplc '/';'\'
- rmdir p
+ jddeletefolder p
  shell t NB. wndows does junction between folders
 else.
  n=. '"',newp,'" "',(_5}.p),'"'
  t=. 'ln -s ',n
- rmdir p
+ jddeletefolder p
  shell t
 end.
 )

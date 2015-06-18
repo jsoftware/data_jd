@@ -56,8 +56,34 @@ jd'reads from t1,t1.t2 where year=2004'
 jd'insert t1';'year';2004 2004;'team';(>'red';'blue');'sales';23 123;'product';>'hats';'shoes'
 jd'reads from t1,t1.t2 where year=2004'
 
+jd'reads from t1,t1.t2 where year=2004 and team="red"'
+jd'reads from t1       where year=2004 and team="red"'
+
+NB. modify changes values in place 
+jd'modify t1';'year=2004 and team="red"';'sales';33
+jd'reads from t1       where year=2004 and team="red"'
+
+NB. jdindex column is the row index
+[a=: jd'read jdindex from t1 where year=2004 and team="red"'
+[i=: ,>{:"1 a
+jd'reads from t1 where jdindex=',":i
+jd'modify t1';i;'sales';44 NB. modify where clause can be indexes
+jd'reads from t1 where jdindex=',,":i
+
+jd'reads from t1 where year=2002'
+[a=: jd'read jdindex,sales from t1 where year=2002'
+['i sales'=: {:"1 a
+jd'modify t1';i;'sales';sales+1
+jd'reads from t1 where year=2002'
+
+[n=: ,>{:"1 jd'read jdindex from t1 where year=2002'
+assert i-:n NB. table rows index has not changed
+
+NB. update deletes old row(s) and inserts new row(s)
+[jd'read jdindex from t1 where year=2004 and team="red"'
 jd'update t1';'year=2004 and team="red"';'sales';99
 jd'reads from t1,t1.t2 where year=2004'
+[jd'read jdindex from t1 where year=2004 and team="red"' NB. new index
 
 jd'reads from t1,t1.t2 order by t1.year'
 jd'delete t1 year=2001'

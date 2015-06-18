@@ -27,11 +27,11 @@ qlessequal    <:
 qgreater      >
 qgreaterequal >:
 )
-qequal =: qin =: #~ (=<.)
+qequal =: qin =: #~ (=<.) *. ((< *. (>:-)) ".bind'Tlen')
 qequalc =: qinc =: 3 : 'i. Tlen <. Tlen__y'
-qless =: i.@>.
-qlessequal =: i.@>:@<.
-qgreater =: ".@:('Tlen'"_) (] + i.@-)`(0$0:)@.< >:@<.
-qgreaterequal =: ".@:('Tlen'"_) (] + i.@-)`(0$0:)@.< >.
+qless =: [: i. ".bind'Tlen' <. 0>.>.
+qlessequal =: qless@:>:
+qgreaterequal =: ".bind'Tlen' (] + [:i.0>.-) 0>.>.
+qgreater =: qgreaterequal@:>:
 
-qrange=: 3 : 'I.(i.Tlen)(e. +. 2 | I.~)y'
+qrange =: _2 <@([+i.@>:@-~)/\(;@:) <:@".bind'Tlen' ([ ,~^:(2|#@]) <.) 0>.>.

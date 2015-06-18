@@ -18,11 +18,11 @@ NB. date/time must be integer
 NB. date/time not allowed trailing shape
 jd_insert=: 3 : 0
 d=. getdb''
-ETAB=: ;{.y
+FETAB=: ;{.y
 t=. getloc__d {.y
 nv=. vsub 1}.y
 
-dtn=. 'datatune_',ETAB,'__d'
+dtn=. 'datatune_',FETAB,'__d'
 if. 3=nc<dtn do.
  jdn=. NAMES__t
  jdn=. (-.(<'jd')=2{.each jdn)#jdn
@@ -77,7 +77,7 @@ JDOK
 )
 
 jd_update=: 3 : 0
-ETAB=: ;{.y
+FETAB=: ;{.y
 ECOUNT assert 2<:#y
 d=. getdb''
 Update__d ({.y),<(1{y),<vsub 2}.y
@@ -85,11 +85,21 @@ JDOK
 )
 
 jd_modify=: 3 : 0
-ETAB=: ;{.y
+FETAB=: ;{.y
 ECOUNT assert 2<:#y
 d=. getdb''
 t=. getloc__d {.y
-w=. getwhere__t ;1{y
+
+w=. ;1{y
+if. 2=3!:0 w do.
+ w=. getwhere__t w
+else.
+ if. 4~:3!:0 w do. NB. see fixtype_num_jdtint_
+  if. 1=3!:0 w do. w=. 0+w else. EINDEX assert 0 end.
+ end.
+ w=. ,w
+ EINDEX assert *./(0<:w),Tlen__t>w
+end.
 nv=.  vsub 2}.y
 ns=. {."1 nv
 vs=. {:"1 nv

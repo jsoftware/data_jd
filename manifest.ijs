@@ -27,14 +27,15 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '2.2.7'
+VERSION=: '2.2.4'
 
 FILES=: 0 : 0
 jd.ijs
 manifest.ijs
 api/adm_api.ijs
 api/api.ijs
-api/apix.ijs
+api/api_drop.ijs
+api/api_info.ijs
 api/api_insert.ijs
 api/client.ijs
 api/csv_api.ijs
@@ -54,7 +55,6 @@ base/zutil.ijs
 cd/jd.dll
 cd/libjd.dylib
 cd/libjd.so
-cd/libjd_centos.so
 config/server_default.ijs
 csv/csv.ijs
 csv/csvinstall.ijs
@@ -117,8 +117,10 @@ doc/technical.html
 doc/user.html
 dynamic/base.ijs
 dynamic/hash.ijs
+dynamic/hash1.ijs
 dynamic/ref.ijs
 dynamic/reference.ijs
+dynamic/smallrange.ijs
 dynamic/unique.ijs
 pm/pm.ijs
 pm/pma.ijs
@@ -135,15 +137,18 @@ test/cd_query_test.ijs
 test/createcol_test.ijs
 test/csvout_test.ijs
 test/dropdynamic_test.ijs
+test/droptable_test.ijs
 test/drop_rename_test.ijs
 test/dynamic_test.ijs
 test/error_test.ijs
 test/float_test.ijs
 test/hashx_test.ijs
 test/hash_insert_test.ijs
+test/hash_pass_test.ijs
 test/hash_test.ijs
 test/info_test.ijs
 test/insert_test.ijs
+test/jdindex_test.ijs
 test/joinorder_test.ijs
 test/join_test.ijs
 test/modify_test.ijs
@@ -156,9 +161,11 @@ test/query_test.ijs
 test/readx_test.ijs
 test/reference_test.ijs
 test/ref_test.ijs
+test/rmdir_test.ijs
 test/sandp_test.ijs
 test/sed_test.ijs
 test/shape_test.ijs
+test/smallrange_test.ijs
 test/stress_test.ijs
 test/update_test.ijs
 test/validate_test.ijs
@@ -180,6 +187,7 @@ tutorial/csv_details_tut.ijs
 tutorial/csv_tut.ijs
 tutorial/custom_tut.ijs
 tutorial/datatune_tut.ijs
+tutorial/dropstop_tut.ijs
 tutorial/epochdt.ijs
 tutorial/from_tut.ijs
 tutorial/intro_tut.ijs

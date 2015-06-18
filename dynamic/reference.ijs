@@ -18,8 +18,8 @@ opentyp =: ]
 
 definehash=: 3 : 0
 'S T' =. ([:getloc '^.^.'&,)&.> {."1 subscriptions
-hashl =: {.('hash';'unique') FindProp__S >{:{.subscriptions
-hashr =: {.('hash';'unique') FindProp__T >{:{:subscriptions
+hashl =: {.HASH_TYPES FindProp__S >{:{.subscriptions
+hashr =: {.HASH_TYPES FindProp__T >{:{:subscriptions
 )
 
 NB. y is subscriptions
@@ -58,49 +58,23 @@ getcols =: (([:getloc '^.^.',[) 4 :'getloc__x@> y' ])&>/"1
 select =: 3 : 'y{datl'
 
 NB. Ignore updates to the other reference column
-InsertSimple =: 3 : 0
-definehash ''
-'i ins'=.y
-len =. # 0{:: 0{:: ins
-
-outP =. pointer_to out=.len$2  NB. out must be integer-typed
-hashP =. pointer_to_name 'hash__hash' [ hash =. i{::hashr;<hashl
-l =. # cols =. getcols i{subscriptions
-t =. 3|>: (;:'varbyte enum') i. 3 : '<typ__y'"0 cols
-ind =. +/\ 0,}:t{1 2 2
-col =. pointer_to_name@>  ; 3 :'ExportMap__y $0'&.> <"0 COLS__hash
-ins =. pointer_to@> ; ins
-
-lib =. LIBJD,' ref_insert > n x x x *x *x *x *x'
-lib cd outP;hashP;l;t;ind;col;<ins
-(i{::;:'datl datr') appendmap out
-)
+InsertSimple =: 0&Insert
 
 Insert=: 3 : 0
+1 Insert y
+:
 definehash ''
 'i ins'=.y
-len =. # 0{:: 0{:: ins
-
-off =. #". datname =. i{::;:'datl datr'
-outP =. pointer_to out=.len$2  NB. out must be integer-typed
-hashP =. pointer_to_name 'hash__hash' [ hash =. i{::hashr;<hashl
-l =. # cols =. getcols i{subscriptions
-t =. 3|>: (;:'varbyte enum') i. 3 : '<typ__y'"0 cols
-ind =. +/\ 0,}:t{1 2 2
-col =. pointer_to_name@>  ; 3 :'ExportMap__y $0'&.> <"0 COLS__hash
-ins =. pointer_to@> ; ins
-
-refP =. pointer_to_name i{::;:'datr datl'
-
-if. unique__hash do.
- linkP=. 0
-else. 
- linkP =. pointer_to_name 'link__hash'
-end. 
-
-lib =. LIBJD,' ref_insert_2 > n x x x x *x *x *x *x x x'
-lib cd off;outP;hashP;l;t;ind;col;ins;refP;<linkP
-datname appendmap out
+hash =. i{::hashr;<hashl
+cols =. getcols i{subscriptions
+datname =. i{::;:'datl datr'
+off =. #".datname
+datname appendmap out =. ref_insert__hash ins;<cols
+if. x do.
+  ref =. ". i{::;:'datr datl'
+  ref_update_ind__hash off;ref;<out
+end.
+EMPTY
 )
 
 getreferenced=: 3 : 0

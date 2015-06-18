@@ -29,7 +29,7 @@ jresult=: ((~.groupidx){dat__bloc);((~.groupidx){dat__cloc);,.(groupidx +//. dat
 tj=: 6!:2'doj 0'
 assert jresult-:{:jdresult
 
-assert tbc>td    NB. b,c vs d
-assert td>tj     NB. d   vs j
-assert td<1.4*tj NB. not too much worse than j time
+assert JDTIMING_jd_+.tbc>td          NB. b,c vs d
+assert JDTIMING_jd_+.(0.2*tj)>|td-tj NB. d   vs j - should be close
+assert JDTIMING_jd_+.td<1.4*tj       NB. not too much worse than j time
 

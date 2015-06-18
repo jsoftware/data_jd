@@ -153,7 +153,7 @@ NB. step 2: reset other dependents (in order)
 step2=. ~.&.|. step1 -.~ {:"1 deps NB. dependent on some dynamic columns (still in order)
 
 NB.! kill off TestInsert (only for unique)
-NB.! step1  4 :'empty TestInsert__x >y'"0  dat1 NB. Test inserts to subscribing columns
+step1  4 :'empty TestInsert__x >y'"0  dat1 NB. Test inserts to subscribing columns
 
 Tlen=: Tlen + len
 try.
@@ -328,7 +328,7 @@ if. #f=.x FindProp y do. {.f return. end.
 x =. >{.x
 Create ('jd',x,;'_'&,&.>y);x;< ,:NAME;<y
 )
-MakeHashed =: 'hash unique'&AddProp
+MakeHashed =: 'hash unique smallrange'&AddProp
 MakeUnique =: 3 : 0
 col =. 'unique hash' AddProp y
 if. 'hash'-:typ__col do.

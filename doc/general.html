@@ -15,7 +15,7 @@
 
 <div contenteditable="false">
 
-<hr><a href="#install">install</a> <a href="#run">run</a> <a href="#args">args</a> <a href="#demos">demos</a> <a href="#names">names</a> <a href="#types">types</a>
+<hr><a href="#install">install</a> <a href="#run">run</a> <a href="#args">args</a> <a href="#demos">demos</a> <a href="#names">names</a> <a href="#types">types</a> <a href="#drop/delete">drop/delete</a>
 
 <hr><a name="install"><h2>install</h2></a>
 
@@ -108,4 +108,27 @@ varbyte:<br>
 less important in Jd than in most other systems<br>
 byte 200 that held the data is probably better<br>
 
+<hr><a name="drop/delete"><h2>drop/delete</h2></a>
+<p>Database structure maps directly to folder structure. A database is a folder,
+a table is a folder in a database, and a column is a folder in a table.</p>
+
+<p>A db/table/col drop can't be undone. It would be unfortunate to inadvertantly
+drop something that was hard to recover.</p>
+
+<p>Restrictions while building a database can be a nuisance,
+but when things are stable it can be nice to disallow drops.
+This can be done with jdaccess but that is perhaps more mechanism than warranted.</p>
+
+<p><a href="admin.html#jddropstop">jddropstop</a> provides an easy way to prevent
+bad drops.</p>
+
+<p>A db/table/col drop uses utility jddeletefolder. This utility is also
+used in other admin activities. For example, deleting folders of csv files
+that have been processed.</p>
+
+<p>A jddeletefolder can't be undone. It would be unfortunate to inadvertantly
+delete something that was hard to recover.</p>
+
+<p><a href="admin.html#jddeletefolder">jddeletefolder</a> allows
+delete only if certain criteria are met and this can prevent an unintended delete.</p>
 </body></html>

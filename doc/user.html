@@ -129,6 +129,8 @@ tutorial table_table
 <a href="#set">set</a>     table     col      dat  [; varbyte val]
 
 <hr><a name="close"><h2>close</h2></a>
+close
+
 unmap all files and close all locales
 does not affect admin or locks
 
@@ -161,6 +163,8 @@ jd'reads from f'
 jdaccess olddan
 
 <hr><a name="createdb"><h2>createdb</h2></a>
+createdb
+
 valid only after a dropdb
 creates filefolder and initial files
 gets lock
@@ -172,7 +176,7 @@ does dropdynamic to drop existing dynamic cols
 runs db dynamic verb (custom.ijs) to create dynamic cols
 
 <hr><a name="createhash"><h2>createhash</h2></a>
-jd'createhash t1 cols...'
+createhash t1 cols...
 
 creates hash col based on 1 or more data cols
 hash on col a has name of jdhash_a
@@ -313,7 +317,6 @@ error if col is used in hash or reference
 drops each col of each table
 releases lock
 deletes filefolder
-
 <hr><a name="dropdynamic"><h2>dropdynamic</h2></a>
 dropdynamic [type spec]
 
@@ -332,9 +335,8 @@ A dropdynamic of a reference does not drop the associated hash dynamic cols.
 <a href="#info">info</a> returns dynamic col info
 
 some ops are simpler and run faster without dynamics to update
-
 <hr><a name="dropfilesize"><h2>dropfilesize</h2></a>
-jd'dropfilesize'
+dropfilesize
 
 files tend to be kept larger than required
 data in the file can grow without having to resize/remap
@@ -342,12 +344,16 @@ data in the file can grow without having to resize/remap
 dropfilesize frees up unused file space - use if a db is static
 
 dropfilesize returns filenames, old size, new size
-
 <hr><a name="droptable"><h2>droptable</h2></a>
-droptable table
-OK if table does not exist
-error if table has reference
+droptable [/reset] table
 
+/reset preserves schema
+ drops rows
+ drops dynamic hash/unique/... cols
+ keeps filesize
+
+OK if table does not exist
+error if table has reference (refers to or referred by)
 <hr><a name="gen"><h2>gen</h2></a>
 gen test table rows
 gen ref2 table1 rows1 cols table2 rows2
@@ -373,19 +379,18 @@ jd'gen two j 6 k 3'
 jd'reads from j'
 jd'reads from k'
 jdaccess olddan
-
 <hr><a name="get"><h2>get</h2></a>
-jd'get table col'
+get table col
 
 return raw col data - includes deleted data
 varbyte - indexes;values
 can be used with set to efficiently adjust col data
- 
 <hr><a name="info"><h2>info</h2></a>
 jd'info ...' NB. info about current DB
  agg                        - select aggregators
+ jd        [table [column]] - jd... cols
  last                       - cmd time space
- schema    [table [column]]
+ schema    [table [column]] - normal cols (non jd...)
  summary   [table]
  table
  varbyte   [table [column]]
@@ -403,9 +408,8 @@ jd'info ...' NB. info about current DB
  jd'info schema a akey'
  jd'info reference'
  jdaccess olddan
-  
 <hr><a name="insert"><h2>insert</h2></a>
-jd'insert table col data ...'
+insert table col data ...
 
 col data pairs
 count of data items must be the same
@@ -418,17 +422,13 @@ jd'reads from f'
 jd'insert';'f';'a';24 25;'b';'bc';'b4';2 4$'aaaabbbb'
 jd'reads from f'
 jdaccess olddan
-
 <hr><a name="list"><h2>list</h2></a>
-jd'list ...'
- version     - Jd version 
- open        - open databases
-
+list version     - Jd version 
+list open        - open databases
 <hr><a name="loadcustom"><h2>loadcustom</h2></a>
-jd'loadcustom'
+loadcustom
 
 load <a href="#custom.ijs">custom.ijs</a> from db folder db locale
-
 <hr><a name="from"><h2>from</h2></a>
 from clause - jd'reads ... from ...'
 
@@ -496,12 +496,15 @@ left1 join A,A.B
  same as inner join if 1 and only 1 B row matches 
 
 <hr><a name="modify"><h2>modify</h2></a>
-modify table <a href="#where">where</a> col data  ...'
+modify table <a href="#where">where</a>   col data  ...
+modify table indexes col data ...
 
 updates selected row cols in place
 data items are scalar extended
 can not modify col if it has dynamics
-col data pairs
+col data pairs (as for insert and update)
+
+indexes are row indexes
 
 NB. example modify
 jdadminx'example'[olddan=:jdaccess''
@@ -512,10 +515,13 @@ jd 'modify f';'a=24';'b';200
 jd'reads from f'
 jd 'modify f';'a<26';'b';300;'c';2 4$'xxxxzzzz' NB. 300 scalar extends
 jd'reads from f'
+'i b'=: {:"1 jd'read jdindex,b from f where a in (24,26)'
+jd'modify f';i;'b';b+1 NB. modify with indexes
+jd'reads from f'
 jdaccess olddan
 
 <hr><a name="option"><h2>option</h2></a>
-jd'option space ...'
+option space ...
 
 option space 1 to record last command space
 option space 0 to not record (reported as _1)
@@ -523,12 +529,12 @@ option space 0 to not record (reported as _1)
 jd'info last' report last cmd, time, space
 
 <hr><a name="read"><h2>read</h2></a>
-jd'read [/e] [select] from [where]' NB. labeled rows
+read [/e] [select] from [where]  - labeled rows
 
 same as reads with /lr option
 
 <hr><a name="reads"><h2>reads</h2></a>
-jd'reads [/lr] [/e] [<a href="#select">select</a>]  <a href="#from">from</a>  [<a href="#where">where</a>]' NB. labeled cols
+reads [/lr] [/e] [<a href="#select">select</a>]  <a href="#from">from</a>  [<a href="#where">where</a>]  - labeled cols
 
 /lr - labeled rows instead of labeled cols 
 /e  - edate... cols as epochdt rather than iso 8601
@@ -555,7 +561,7 @@ jd'reads sum adata by aref from a'
 jdaccess olddan
 
 <hr><a name="readtc"><h2>readtc</h2></a>
-jd'readtc [/lr] [/e] :::...::: [<a href="#select">select</a>]  <a href="#from">from</a>  [<a href="#where">where</a>]'
+readtc [/lr] [/e] :::...::: [<a href="#select">select</a>]  <a href="#from">from</a>  [<a href="#where">where</a>]
 
 same as reads except J sentence bracketed by :::
 is executed first to create temp cols
@@ -660,14 +666,14 @@ default aggs: avg count countunique first last max min sum
 Result column label does not include agg, so an alias is desirable.
 
 <hr><a name="set"><h2>set</h2></a>
-jd'set table col';data
+set table col';data
 
 set raw col data - includes deleted data
 varbyte - indexes;values
 can be used with get to efficiently adjust col data
 
 <hr><a name="tableappend"><h2>tableappend</h2></a>
-jd'tableappend snktable srctable srcdan' NB. implicit jdaccess'srcdan'
+tableappend snktable srctable srcdan  - implicit jdaccess'srcdan'
 
 implemented as a loop over corresponding cols
 reads src col file and appends to snk col file
@@ -690,7 +696,7 @@ jd'reads from f'
 jdaccess olddan
 
 <hr><a name="tablecopy"><h2>tablecopy</h2></a>
-jd'tablecopy snktable srctable srcdan' NB. implicit jdaccess'srcdan'
+tablecopy snktable srctable srcdan  - implicit jdaccess'srcdan'
 
 copies a table from srcdan to the current db
 uses host file copy and runs as fast as hardware allows
@@ -706,7 +712,7 @@ jd'reads from new'
 jdaccess olddan
 
 <hr><a name="tableinsert"><h2>tableinsert</h2></a>
-jd'tableinsert snktable srctable srcdan' NB. implicit jdaccess'srcdan'
+tableinsert snktable srctable srcdan  - implicit jdaccess'srcdan'
 
 implemented as a loop of block read/insert
 read ignores deleted rows in the src table
@@ -727,7 +733,7 @@ jd'reads from f'
 jdaccess olddan
 
 <hr><a name="tablemove"><h2>tablemove</h2></a>
-jd'tablemove snktable srctable srcdan' NB. implicit jdaccess'srcdan'
+tablemove snktable srctable srcdan  - implicit jdaccess'srcdan'
 
 moves a table from srcdan to the current db
 uses host file move and runs fast as it justs updates pointers
@@ -745,7 +751,7 @@ jd'reads from new' NB. table f in dan example2 no longer exists
 jdaccess olddan
 
 <hr><a name="update"><h2>update</h2></a>
-update table <a href="#where">where</a> col data  ...'
+update table <a href="#where">where</a> col data  ...
 
 deletes selected records and inserts new updated records
 count of data items and updated rows must be the same
@@ -763,7 +769,7 @@ jd'reads from f'
 jdaccess olddan
 
 <hr><a name="validate"><h2>validate</h2></a>
-jd'validate'
+validate
 
 validates db and reports any problems
 reports mismatch in table Tlen and column lengths
@@ -781,10 +787,10 @@ where clause - jd'reads ... from ... where'
  a like "ab*" 
  f.a=23 && g.b="def"
  a range (1000,2000)
- a=100 and b=200
- a,b = 100,200 - same as above but uses a,b hash if available
- a in (1,2,3) and b in (4,4)
- a,b in (1,2,3),(4,5) - same as above but uses a,b hash if available
+ a=1 and b=2
+ a,b = 1,2          - same as above but uses a,b hash if available
+ (a=1 and b=2) or (a=3 and b=4)
+ a,b in (1,2),(3,4) - same as above but uses a,b hash if available
 
 relationals:
  &gt;= &lt;= &lt;&gt; =  &gt;  &lt;
@@ -898,10 +904,10 @@ larger, an error is signalled.
 For in and notin, data is given in a comma-separated list,
 optionally enclosed by parens.
 
-In Q expression of the form "col relational dat", col can  be a
-comma-separated list of cols and dat is a comma-separated list of the
-same length and the relational must be = or in. Each column is compared
-with the relational to the corresponding data item. If there is a hash
-column on the columns then it will be used for the query. If the relational
-is "in", each item in dat must be parenthesized.
+In Q expression of the form "col = dat" or "col in dat",
+col can be a comma-separated list of cols. In this case each item
+in dat is a comma-separated list with the same length as the number of
+cols. If the relational is "in", each item in dat must be parenthesized.
+The col values are compared with the items in dat. If there is a hash
+columns it will be used for the query.
 </code></div></div></body></html>

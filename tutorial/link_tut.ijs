@@ -37,7 +37,6 @@ jd'csvrd f.csv f'
 showbox jdlinktargets_jd_'' NB. report link target
 NB. look at the db folder with OS tools to see the link to the target
 
-
 NB. locate f/int and f/varbye in different alternate folders
 jdadminx'test'
 jdlinkset_jd_ 0 : 0
@@ -45,9 +44,7 @@ f/int     ~temp/linker0
 f/varbyte ~temp/linker1
 )
 jd'csvrd f.csv f'
-showbox showbox ,.jdlinktargets_jd_'' NB. report link targets
-
-
+showbox ,.jdlinktargets_jd_'' NB. report link targets
 
 NB. locate f/a0, f/a1, jdactive (system col) in alternate folder
 jdadminx'test'
@@ -57,12 +54,12 @@ f/a1       ~temp/linker0
 f/jdactive ~temp/linker0
 )
 jd'csvrd f.csv f'
-showbox showbox ,.jdlinktargets_jd_'' NB. report link targets
+showbox ,.jdlinktargets_jd_'' NB. report link targets
 
 NB. jdlinkset persists
 jd'droptable f'
 jd'csvrd f.csv f'
-showbox showbox ,.jdlinktargets_jd_'' NB. report link targets
+showbox ,.jdlinktargets_jd_'' NB. report link targets
 
 NB. hash/unique/reference cols can be linked
 jdadminx'test'
@@ -80,7 +77,6 @@ showbox jdlinktargets_jd_''
 NB. it is possible to relocate a column to another location
 NB. note that this is independent from jdlinkset and does not adjust the linkj definitions
 jdadminx'test'
-jddeletefolderok_jd_'~temp/linker'
 jddeletefolder_jd_  '~temp/linker'
 jd'gen one f 3 2'
 jdlinkmove_jd_ 'f/a0 ~temp/linker'

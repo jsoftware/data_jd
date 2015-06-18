@@ -30,6 +30,7 @@ fixtype_num =: 3 : 0
   if. 4 ~: 3!:0 y do.
     throwif y -.@-: int=. <. :: 0: y
     y=. int + -~ 2
+    throwif 4 ~: 3!:0 y
   end. y
 )
 

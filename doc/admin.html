@@ -37,6 +37,7 @@ See tutorial admin_tut.</p>
 <a href="#jddamage">jddamage</a>
 <a href="#jddeletefolder">jddeletefolder</a>
 <a href="#jddeletefolderok">jddeletefolderok</a>
+<a href="#jddropstop">jddropstop</a>
 <a href="#jdex">jdex</a>
 <a href="#jdfixcolnames">jdfixcolnames</a>
 <a href="#jdflush">jdflush</a>
@@ -93,13 +94,22 @@ lock on db folder prevents interference by other tasks
 jdadmin '...' NB. gets lock
 jdadmin 0     NB. releases all locks
 <hr><a name="jdadminx"><h2>jdadminx</h2></a>
+jdadminx'aa'     NB. create new database ~temp/jd/aa
+jdadminx'.../bb' NB. create new database .../bb
+
 delete old folder, create new db folder, do jdadmin
-jddeletefolderok allows delete that is not in ~temp/jd path
 
-jdadminx'ab'     NB. create ~temp/jd/ab
+new database can be created in an empty folder
+new database overwrites old database unless dropstop set
 
-jddeletefolderok_jd_ '...'
-jdadminx'.../ab' NB. create .../ab
+fails if folder:
+ is a jd folder but not class database
+ is a jd folder with dropstop
+ is not a jd folder and is not empty
+
+if jdadminx fails, you can force delete of the folder with:
+'force'jddeletefolder_jd_'...'
+
 <hr><a name="admin.ijs"><h2>admin.ijs</h2></a>
 admin.ijs - in db folder - loaded by jdadmin
 
@@ -131,7 +141,7 @@ defines:
  
 jd'loadcustom' NB. reloads custom.ijs
 
-tutorials custom_tut, datatune_tut, aggregation_tut
+tutorials custom, datatune, aggregation
 <hr><a name="datatune"><h2>datatune</h2></a>
 insert/update calls datatune_tab in the db locale before doing the operation
 datatune_tab defined in custom.ijs
@@ -143,7 +153,7 @@ datatune_tab can be used in many ways:
  modify data      - convert float dollars to cents
  derive new cols  - y m d cols from datetime col
 
-tutorial datatune_tut
+tutorial datatune
 <hr><a name="jdadminfp"><h2>jdadminfp</h2></a>
 set DAN file path
 
@@ -185,20 +195,39 @@ jddamage_jd_'error message'
 
 writes jddamage file to db folder to prevent further access
 <hr><a name="jddeletefolder"><h2>jddeletefolder</h2></a>
-jddeletefolder_jd_   '~temp/jd/test'    NB. OK (jddeletefolderok default)
-jddeletefodler_jd_   '~temp/foo'        NB. error unless empty
-jddeletefolderok_jd_ '/important/stuff' NB. error unless empty
+jddeletefolder_jd_'~/jd/test'
 
-jddeletefolderok_jd_ '/important'       NB. allow one time delete in this path
-jddeletefolder_jd_   '/important/stuff' NB. OK
+used internally by jd drop... ops
+
+see <a href="general.html#drop/delete">drop/delete</a>
+
+allowed if jddeletok exists
+ not allowed if jddropstop exists
+  not allowed if too few /s ('/abc/def' ok - '/abc' fails)
+   allowed if empty or jd folder (jdclass exists) or in ~temp
+    not allowed
+
+jddeletefolderok writes jddeleteok to override tests
 <hr><a name="jddeletefolderok"><h2>jddeletefolderok</h2></a>
-jddeletefolderok_jd_ '~temp/jd'           NB. default path
-jddeletefolderok_jd_ '/database/testarea' NB. allow one time delete in this path
+jddeletefolderrok_jd_'~/jd/test'
+
+writes jddeletok file to folder to allow jddeletefolder
+<hr><a name="jddropstop"><h2>jddropstop</h2></a>
+[1] jddropstop ''        NB. write jddropstop file in folder and subfolders
+[1] jddropstop 'tab'
+[1] jddropstop 'tab col'
+
+ 0 jddropstop ''         NB. erase jddropstop file in folder and subfolders
+ 1 jddropstop 'tab'
+ 1 jddropstop 'tab col'
+ 
+dropdb/droptable/dropcol fail if there is a jdddropstop file in the folder
+
+tutorial dropstop
 <hr><a name="jdex"><h2>jdex</h2></a>
 jdex'insert' NB. run insert example from User
 
 <hr><a name="jdfixcolnames"><h2>jdfixcolnames</h2></a>
-
 jdfixcolnames d NB. make col names valid in labeled row data
 table.col -> table-col
 blank     -> _
@@ -252,7 +281,7 @@ some reasons for relocating cols
  - take advantage of particular drives
    - ssd or slower or faster or high capacity
 
-tutorial link_tut
+tutorial link
 <hr><a name="jdlinkset"><h2>jdlinkset</h2></a>
 jdlinkset_jd_ 0 : 0
 f/int     ~temp/linker0
@@ -264,11 +293,11 @@ jdlinkset_jd_'' NB. report db links.txt
 set (tab/col path) definitions in db folder link.txt file
 create col (including csvrd/csvrestore) use link.txt to do folder links
 
-tutorial link_tut
+tutorial link
 <hr><a name="jdlinktargets"><h2>jdlinktargets</h2></a>
 jdlinktargets_jd_'' NB. report jdlinkmove/jdlinkset folder targets
 
-tutorial link_tut
+tutorial link
 <hr><a name="jdpath"><h2>jdpath</h2></a>
 jdpath_jd_'' NB. path (ending in /) to db folder
 

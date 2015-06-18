@@ -124,17 +124,16 @@ if. ',' e. col do.
   if. -.(<fn) e. ;:'qequal qin' do.
     throw 'Multicolumn syntax not allowed for operations other than = and in'
   end.
-  val =. (<;._1~ ~:&',' +: [:+/\ -.@wherequoted_jd_*'()'-/@:(=/)]) ',',val
-  col =. cutcommas col
-  if. col ~:&# val do. throw 'Number of columns does not match number of values' end.
-  h =. {.hs =. (;:'hash unique') FindProp col
-  cols =. getloc&.> col
+  cols =. getloc&.> col =. cutcommas col
+  cols 4 :'assertfunc__x y'&> <fn
+  val =. (fn;<cols) fixtype_fn_jdcolumn_ val
+  h =. {.hs =. HASH_TYPES FindProp col
   if. (*#hs) *. *./ 'varbyte'&(4 :'-.x -: typ__y')@> cols do.
-    fixed =. cols  fn 1 :(':';'u fixtype_fn__x y')&.>  val
-    > qor&.>/ , lookup__h&.> <`([: { <"_1&.>)@.(fn-:'qin') fixed
+    lookup =. <@lookup__h
   else.
-    > qand&.>/ <@getwheresimp"1 col ,. ::_1: (<fn) ,. val
+    lookup =. [: qand&.>/ cols 4 :'qequal__x y'&.> ]
   end.
+  > qor&.>/ , lookup"1 val
   return.
 end.
 col=.getloc col
@@ -147,6 +146,7 @@ end.
 
 NB. =========================================================
 coclass 'jdcolumn'
+coinsert 'jd'
 
 assertfunc=: 3 : 0
 if. 3 ~: 4!:0 <y do.
@@ -181,6 +181,10 @@ assert. typ=typ__col
 
 NB. Type conversion
 fixtype_fn =: 4 : 0
+if. 1<:L.x do. NB. multicolumn query
+  'x cols' =. x
+  fixtype_where =. cols&fixtype_where_multi
+end.
 select. x
   case. 'qlike';'qunlike' do.
     fix1string y
@@ -189,16 +193,19 @@ select. x
     if. y<0 do. throw 'Negative argument to sample: ',":y end.
     y
   case. 'qin';'qnotin';'qrange' do.
-    if. 0=#y-.'( )' do. NB. kludge for ( )
-     ''
-    else. 
-     fixtype_where@:stripsp;._1 ',', y-.'()'
-    end.
-    
+    parenl =. ([: +/\ -.@wherequoted_jd_ * '()' -/@:(=/) ]) y
+    y =. stripsp@}.@}: ^: (*./*(,#)}:parenl) y
+    if. 0=#y do. DATAFILL $~ 0,shape return. end.
+    allowed =. -.@wherequoted_jd_ ([ *. 0 = +/\@:*) '()' -/@:(=/) ]
+    r =. (fixtype_where@:stripsp;._1~ =&',' *. allowed) ',',y
+    if. x-:'qrange' do. if. -.(-:/:~)r do.
+      throw 'Argument to range is not sorted: ',y
+    end. end.
   case. do.
     fixtype_where y
 end.
 )
+
 fixstring =: [:($~1-.~$) [:fix1string&.> a.-.~ (<;._1~ =&' ' *. -.@wherequoted_jd_)@,~&' '
 fix1string =: 3 : 0
   if. 0 e. }:@:wherequoted_jd_ y do.
@@ -213,6 +220,18 @@ if. ('edate'-:5{.typ) *. '"'={.y do.
 else.
  r=. __ ".y
  'invalid number' assert __~:r
+ NB. Temporary fix for bug in dyad ".
+ if. (4 = 3!:0 r) *. *@# (i =. (2<.@^52) I.@:<: |r) do.
+  r =. (".@> i { a: -.~ <;._1 ' ',y) i} r
+ end.
 end.
 r
+)
+
+fixtype_where_multi =: 4 : 0
+parenl =. ([: +/\ -.@wherequoted_jd_ * '()' -/@:(=/) ]) y
+y =. }.@}: ^: (*./*(,#)}:parenl) y
+y =. (<@stripsp;._1~ ~:&',' +: wherequoted_jd_) ',',y
+'Number of columns does not match number of values' assert x =&# y
+x  4 :(':';'fixtype_where__x y')&.>  y
 )

@@ -1,6 +1,6 @@
 NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 coclass 'jdthash'
-coinsert 'jddbase'
+coinsert 'jddhash1'
 
 NB. A hash column stores a hash table for the referenced column(s).
 NB. This forces lookups to use the hash.
@@ -13,61 +13,10 @@ unique =: 0
 NB. Define hash function
 gethash =: [: to_unsigned_jd_ (LIBJD_jd_,' hash > x x') cd <@pointer_to
 
-opentyp =: 3 : 0
-COLS =: Open__PARENT"0 >{:{. subscriptions
-if. 1=#COLS do.
-  COL=: {.COLS
-  qequal__COL=: ('lookup',Cloc)~
-  qin__COL=: 3 :'> qor&.>/ <@qequal"_1 y'
-  select =: select__COL
-else.
-  select =: 3 :'(4 : ''select__x y'')&y(<@)"0 COLS'
-end.
-MAPCOL =: ; 3 :'ExportMap__y $0'&.> <"0 COLS
-)
-
 gethashlen=: 3 : 0
 11>.4 p: +:#dat__active
 NB. 4 p: +:getmsize_jmf_ 'dat_','_',~;active
 NB. 4 p: +:getmsize_jmf_ 'dat_','_',~;active__PARENT
-)
-
-dynamicinit =: 3 : 0
-assert. 1 = #subscriptions
-assert. NAME__PARENT -: >{.{.subscriptions
-len =: Tlen
-opentyp ''
-jdcreatejmf (PATH,'hash');DATASIZE_jdtint_ * gethashlen''
-jdmap ('hash',Cloc);PATH,'hash'
-if. -.unique do.
-  ('int';$0) makecolfile 'link'
-end.
-dynamicreset''
-)
-
-dynamicreset =: 3 : 0
-'dynamicreset hash'trace''
-len =: Tlen
-
-
-writestate'' NB.! avoid unique bug - clean up when readstate/writestate cleanedup
-
-t=. 8*gethashlen''
-if. t>getmsize_jmf_ 'hash',Cloc do.
- resizemap 'hash';t
-end.
-hash=: _1 $~ gethashlen ''
-
-if. -.unique do.
- t=. 8*getmsize_jmf_ 'dat_','_',~;active__PARENT
- if. t>getmsize_jmf_ 'link',Cloc do.
-  resizemap 'link';t
- end.
- link=: Tlen$_1
-end. 
-
-0 insert ".&.> MAPCOL
-writestate''
 )
 
 Insert=: 3 : 0
@@ -77,25 +26,9 @@ len =: Tlen
 writestate ''
 )
 
-NB. hash/link thrash problems
-NB. original version created hash and link directly in mapped noun
-NB. linux - random updates to mapped files created lots of dirty pages
-NB. which would be written out only to be made dirty again
-NB. this created page thrash
-NB. solution with dirty_ration dirty_writeback_centisecs etc worked well
-NB. but had serious problems with how to manage in a shared environment
-NB. solution - copy mapped hash/link to unmapped, update, then copy back
-NB. linux treats swap differently and thrash is avoided
-
-NB. trash is a problem on linux if there are lots of inserts
-NB. doing it in-memory for a few inserts causes lots of unnecessary writes
-NB. see use of inmem
-
-NB. windows doesn't need this and it works directly with the mapped nouns
-
 NB. x is offset, y is the values passed to insert.
 insert=: 4 : 0
-inmem=. (-.IFWIN)*.10000<{.;#each y
+inmem=. (-.IFWIN)*.(HASHPASSLEN>:#hash)*.10000<{.;#each y
 if. -.unique do.
   NB. Needs to be two lines or jmf throws 'file already mapped'
   len=.Tlen -# link
@@ -115,10 +48,6 @@ ins =. pointer_to@> y
 if. inmem do.
  hashx=. a:{hash
  hashP=. pointer_to_name 'hashx'
- if. -.unique do.
-  linkx=. a:{link
-  linkP=. pointer_to_name 'linkx'
- end.
 end. 
 
 if. unique do.
@@ -128,32 +57,52 @@ else.
  actP=. 0
 end.
 
+LIB =. LIBJD , ' hash_insert'
+if. HASHCREATE32BIT *. 0=off do. LIB =. LIB,'_h' end.
+getlib =. LIB,[,' > x x x x x ',],' x x x'"_
+maxcoll =. (+ 6000 >. >.@%&10) #hash
+ncollP =. pointer_to ncoll =. -~2
+arg =. (off;hashP;linkP;<actP) , ,&(HASHPASSLEN;ncollP;<maxcoll)
+
 if. *./ 0=t do. NB. fixed width column special code
   if. 1=#t do. NB. single fixed-width column special code
-    lib =. LIBJD,' hash_insert_fixed1 > x x x x x x x'
-    r =. lib cd off;hashP;linkP;actP; {.&.>col;<ins
+    r =. ('_fixed1' getlib 'x x') cd arg {.&.>col;<ins
   else.
-    lib =. LIBJD,' hash_insert_fixed > x x x x x x *x *x'
-    r =. lib cd off;hashP;linkP;actP;l;col;<ins
+    r =. ('_fixed' getlib 'x *x *x') cd arg l;col;<ins
   end.
 else.
-  lib =. LIBJD,' hash_insert > x x x x x *x *x *x *x'
-  r =. lib cd off;hashP;linkP;l;t;ind;col;<ins
+  r =. ('' getlib 'x *x *x *x *x') cd arg l;t;ind;col;<ins
 end.
-if. -.r do. assert 0 end. NB. createunigue failed - caught later 
+if. r do. assert 0 end. NB. TODO handle error codes
 
 if. inmem do.
  hash=: hashx
- if. -.unique do. link=: linkx end.
 end. 
 
 EMPTY
 )
 
+hashit1=: 3 : 0
+hlen=. 11>.4 p: +:y
+hashfn=. jpath'~temp/hash.jmf'
+linkfn=. jpath'~temp/link.jmf'
+jdcreatejmf hashfn;DATASIZE_jdtint_*hlen
+jdcreatejmf linkfn;DATASIZE_jdtint_*y
+d__=: i.y
+dp=. pointer_to_name_jd_ 'd__'
+lib=: LIBJD_jd_,' hashit1 > x *c *c x x x'
+r =. lib cd hashfn;linkfn;hlen;0;dp
+map_jmf_ 'hash__';hashfn
+map_jmf_ 'link__';linkfn
+EMPTY
+)
+
+
 NB. Resize hash column
 NB. Assumes link is properly allocated
 NB. In fact, we can ignore link as insert will overwrite it.
 resize=: 3 : 0
+decho '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!resize'
 resizemap 'hash' ; 8*gethashlen''
 hash =: _1 $~ gethashlen ''
 0 insert ".&.> MAPCOL
@@ -189,7 +138,21 @@ while. (_1<ii=.i{hash) do.
 end.
 _1
 )
-NB. analogous to I.@:=
-lookup=: 3 : 0
-|. }: {&link^:(>&_1)^:a: index y
+
+NB. =========================================================
+ref_insert =: 3 : 0
+'ins cols'=.y
+len =. # 0{:: 0{:: ins
+
+outP =. pointer_to out=.len$2  NB. out must be integer-typed
+hashP =. pointer_to_name 'hash'
+l =. #cols
+t =. 3|>: (;:'varbyte enum') i. 3 : '<typ__y'"0 cols
+ind =. +/\ 0,}:t{1 2 2
+col =. pointer_to_name@>  ; 3 :'ExportMap__y $0'&.> <"0 COLS
+ins =. pointer_to@> ; ins
+
+lib =. LIBJD,' ref_insert > n x x x *x *x *x *x'
+lib cd outP;hashP;l;t;ind;col;<ins
+out
 )

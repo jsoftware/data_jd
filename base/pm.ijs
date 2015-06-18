@@ -13,7 +13,7 @@ Non-Jd times can be included.
    pmz_jd_''[doit data[pm_jd_'zxcv'
 )
 
-PMMR=: 20 NB. max records kept
+PMMR=: 60 NB. max records kept
 
 pmclear=: 3 : 0
 PMN=: PMT=: ''
@@ -27,18 +27,29 @@ PMSTART=: 6!:9''
 i.0 0
 )
 
+pmfmt=: 3 : 0
+if. 0=#y do. '' else. ' ',y end.
+)
+
 NB. record section end
 pmz=: 3 : 0
 t=. 0>.(#PMN)-<:PMMR
-PMN=: t}.PMN,<PMNAME
+PMN=: t}.PMN,<(14{.PMNAME),fmtsummary jdlasty
 PMT=: t}.PMT,PMSTART-~6!:9''
+i.0 0
+)
+
+pmnb=: 3 : 0
+t=. 0>.(#PMN)-<:PMMR
+PMN=: t}.PMN,<y
+PMT=: t}.PMT,0
 i.0 0
 )
 
 NB. report jd performance
 pmr=: 3 : 0
 t=. <.0.5+1000*PMT%6!:8''
-(>PMN,<'total'),.8j0":,.t,+/t
+(8j0":,.t,+/t),.' ',.>PMN,<'total'
 )
 
 pmtotal=: 3 : 0

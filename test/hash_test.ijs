@@ -55,7 +55,7 @@ i.0 0
 )
 
 hashint 4e6
-assert 600 > (0~:nc<'DLLDEBUG__')*{:timeit''
+assert 1000 > (0~:nc<'DLLDEBUG__')*{:timeit''
 
 hashbyte 4e6
-assert 600 > (0~:nc<'DLLDEBUG__')*{:timeit''
+assert 1000 > (0~:nc<'DLLDEBUG__')*{:timeit''

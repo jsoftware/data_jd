@@ -46,7 +46,8 @@ base/where.ijs
 base/jmfx.ijs
 api/api.ijs
 api/api_insert.ijs
-api/apix.ijs
+api/api_drop.ijs
+api/api_info.ijs
 api/csv_api.ijs
 api/adm_api.ijs
 api/client.ijs
@@ -62,25 +63,27 @@ load (<y) ,&.> (boxxopen x) ~.@, {."1 ]1!:0 y,'*.ijs'
 load'data/jmf'
 
 (<;._1' base.ijs numeric.ijs') loadall JDP,'types/'
-(<;._1' base.ijs hash.ijs')    loadall JDP,'dynamic/'
+(<;._1' base.ijs hash1.ijs hash.ijs')    loadall JDP,'dynamic/'
 erase'loadall'
 
 NB. initial values
 3 : 0''
-APIRULES_jd_=: 1
-OP_jd_=: 'none'
-ALLOW_FVE_jd_=:  0 NB. 1 allows hash float - see test/api_float.ijs
-cntsclear_jd_''
-pmclear_jd_''
-if. _1=nc<'TRACE_jd_' do. jdtrace_jd_ 0 end.
-if. _1=nc<'TEMPCOLS_jd_' do. TEMPCOLS_jd_=: i.0 2 end.
+APIRULES_jd_=:  1
+ALLOW_FVE_jd_=: 0 NB. 1 allows hash float - see test/api_float.ijs
+if. _1=nc<'OP_jd_' do. NB. one time inits
+ OP_jd_=: 'none'
+ jdtrace_jd_ 0 
+ TEMPCOLS_jd_=: i.0 2 
+ cntsclear_jd_''
+ pmclear_jd_''
+end.
 if. -.IFJHS do. require'~addons/ide/jhs/sp.ijs' end.
 if. IFQT do. labs_run_jqtide_=: 3 : 'spx''''' end.
 i.0 0
 )
 
-echo 0 : 0 rplc 'BOOKMARK';jpath JDP,'doc/index.html'
-Jd is Copyright 2014 by Jsoftware Inc. All Rights Reserved.
+jdwelcome_jd_=: 0 : 0 rplc 'BOOKMARK';jpath JDP,'doc/index.html'
+Jd is Copyright 2015 by Jsoftware Inc. All Rights Reserved.
 Jd is provided "AS IS" without warranty or liability of any kind.
 
 Commercial users must have a Jd License from Jsoftware.
@@ -107,18 +110,23 @@ Get started:
    jdrt_jd_'intro' NB. run intro
 )
 
+3 : 0''
+new=. ;{:jd'list version'
+old=. fread'~temp/jd/jdversion'
+if. new-:old do.
+ echo'   jdwelcome_jd_ NB. Jd welcome message'
+else.
+ echo jdwelcome_jd_
+ echo LF,'new install or new version - run jdtests!'
+end. 
+)
+
 echo IFQT#0 : 0
 ctrl+j hijacked for managed execution of tutorials
 ctrl+j will not work with traditional labs'
 )
 
-echo (0=#fdir'~temp/jd')#0 : 0
-
-Run jdtests as the ~temp/jd folder does not exist!
-   jdtests_jd_'' NB. validate install - takes minutes
-)
-
-nokey=: 0 : 0
+nokey_jd_=: 0 : 0
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -143,5 +151,5 @@ if. -.UNAME-:'Win' do.
   echo LF,'Warning: ',(":n),' for "ulimit -n" is low. See Technotes|file handles.'
  end.
 end.
-if. K_jd_ do. coerase <'jd'[echo nokey rplc 'INDEX.HTML';jpath '~addons/data/jd/doc/index.html' end.
+if. K_jd_ do. coerase <'jd'[echo nokey_jd_ rplc 'INDEX.HTML';jpath '~addons/data/jd/doc/index.html' end.
 )
