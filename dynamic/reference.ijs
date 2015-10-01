@@ -121,6 +121,7 @@ lib =. LIBJD,' join > n', ($~(#args)*$)' x'
 lib cd args
 |.^:flip c
 )
+
 inner_join=: getcjoin&0 0`((#"1~ 0<{:)@:default_join)@.(".@:('unique__hashr'"_)) [ definehash@]
 left_join =: getcjoin&1 0`default_join@.(".@:('unique__hashr'"_)) [ definehash@]
 right_join=: getcjoin&0 1 [ definehash@]

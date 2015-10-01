@@ -13,6 +13,7 @@ lastspace_jd_  =: _1
 jdaccess_z_=: jdaccess_jd_
 jd_z_  =: jd_jd_
 jdae_z_=: jdae_jd_
+jdtx_z_=: jdtx_jd_
 
 coclass'jd'
 
@@ -96,7 +97,9 @@ i.0 0
 )
 
 jd=: 3 : 0
+erase_jd_'option_'nl_jd_'' NB. jd_... options (globals)
 jdlasty_z_=: y
+fmtlasty=: fmtsummary y
 jdlast_z_=: jdx y
 t=. ;{.{.jdlast
 if. 'Jd error'-:t do.
@@ -114,11 +117,17 @@ try.
  jd y
  'did not get expected error'assert 0
 catch.
- 'did not get expected error text'assert (<x)e.;:;1{jdlast
+ 'did not get expected error text'assert +./x E. ;1{jdlast
 end.
 )
 
+NB. timex jd sentence
+jdtx=: 3 : 0
+timex 'jd''',y,''''
+)
+
 NODBOPS=: 'close';'createdb';'list';'option' NB. ops without DB
+FLUSHOPS=: 'createcol';'createhash';'createunique';'reference';'ref';'set'
 
 NB. jdx always returns a boxed result - jd asserts it is not an error
 jdx=: 3 : 0
@@ -170,10 +179,7 @@ if. 'intask'-:SERVER do.
  end.
  lasttime=: start-~6!:1''
  lastcmd=: OP
- NB. assumed clean up and unmap would allow for better host management of ram
- NB. helps a little bit in windows, but is disatrous in linux
- NB. pm/pma.ijs result
- NB. jd_close'' 
+ if. FLUSHAUTO *. (<OP) e. FLUSHOPS do. jd_flush'' end.
  pmz''
  r
  return.

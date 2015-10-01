@@ -123,7 +123,7 @@ csvset''
 assert 0=#dir CSVFOLDER__['CSVFOLDER must be empty'
 tabs=. {."1 jdtables''
 for_t. tabs do.
- jd'csvwr T.csv T'rplc 'T';>t
+ jd_csvwr 'T.csv T'rplc 'T';>t
 end.
 copyscripts CSVFOLDER__;jdpath_jd_''
 i.0 0
@@ -261,7 +261,7 @@ c=. ,LF,.~nums,.' ',.cn,"1 ' byte ',":>:varb
 c=. c,'options ',colsep,' ',rowsep,' ',quoted,' ',escaped,' ',(":headers),LF
 jd'droptable csvprobe'
 c fwrite cdefs
-jd'csvrd /rows 5000 CSVFILE csvprobe'rplc 'CSVFILE';csvfile
+jd_csvrd '/rows 5000 CSVFILE csvprobe'rplc 'CSVFILE';csvfile
 ferase cdefs
 d=. jd'reads from csvprobe'
 jd'droptable csvprobe'
@@ -339,7 +339,7 @@ copyscripts (jdpath_jd_'');CSVFOLDER__
 i=. >:(;{.csv)i:'/'
 tabs=. >_4}.each i}.each csv
 for_t. tabs do.
- jd'csvrd /rows 0 T.csv T'rplc 'T';dtb t
+ jd_csvrd '/rows 0 T.csv T'rplc 'T';dtb t
 end.
 i.0 0
 )

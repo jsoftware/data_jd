@@ -46,6 +46,7 @@ y=. 'datl'
 jdcreatejmf (PATH,y);HS_jmf_
 jdmap (y,Cloc);PATH,y
 (y)=: i.0
+setdatl''
 writestate''
 )
 
@@ -57,27 +58,50 @@ catch.
 end.
 )
 
-NB. f,f.g
+NB. setdat1 perhaps could be made faster with J persistent hash
+NB. f=. x&i:
+NB. could do i: on batches of the right arg and assemble the result
+NB. this could avoid memory trash with 
+NB. bigleft I: bigright
+NB. might need tricks with memory management to avoid sloshing data around
+
+NB. should be possible to make most, if not all, updates to left and right
+NB. dynammic and avoid the use of dirty and the slow recalc
+
+NB. left1 join that refs the last record that matches (not first or random)
 NB. (f.active stitch fcols) i. adjusted-g.active stitch g cols
 NB. g.active adjusted so deleted rows won't match
 setdatl=: 3 : 0
 if. -.dirty do. return. end.
+'setdatl'trace''
 d=. getdb''
+
 NB. insist on no deletes for either left or right
 a=. jdgl (;{.1{subscriptions),' jdactive'
 t=. *./dat__a
 a=. jdgl (;{.0{subscriptions),' jdactive'
 t=. t*.*./dat__a
-'ref can not be built (see Technical|ref)' assert t
-a=. jdgl (;{.1{subscriptions),' ', ;;{:1{subscriptions
-b=. jdgl (;{.0{subscriptions),' ', ;;{:0{subscriptions
-ac=. #dat__a 
-bc=. #dat__b
-if. (bc*8)>getmapsize'datl' do.
- resizemap 'datl' ; Padvar*bc*8
-end.
-datl=: dat__a i. dat__b
-datl=: _1 ((datl=ac)#i.#datl)}datl
+if. t do.
+ a=. jdgl (;{.1{subscriptions),' ', ;;{:1{subscriptions
+ b=. jdgl (;{.0{subscriptions),' ', ;;{:0{subscriptions
+ ac=. #dat__a 
+ bc=. #dat__b
+ if. (bc*8)>getmapsize'datl' do.
+  resizemap 'datl' ; Padvar*bc*8
+ end.
+ datl=: dat__a i: dat__b NB. i:
+ datl=: _1 ((datl=ac)#i.#datl)}datl
+else.
+ a=. 0 stitch__d 1{subscriptions
+ b=. 1 stitch__d 0{subscriptions
+ ac=. #a
+ bc=. #b
+ if. (bc*8)>getmapsize'datl' do.
+  resizemap 'datl' ; Padvar*bc*8
+ end.
+ datl=: a i: b  NB. i:
+ datl=: _1 ((datl=ac)#i.#datl)}datl
+end. 
 setdirty 0
 )
 
@@ -93,6 +117,24 @@ assert 0
 
 Update=: setdirty@1:
 Insert=: setdirty@1:
+
+NB. delete calls for left and right col - y 0 indicates left col
+Update=: 3 : 0
+if. y=1 do.
+ setdirty 1
+else.
+ setdirty 1 NB. not necessary and could be avoided
+end. 
+)
+
+Insert=: 3 : 0
+'t d'=. y 
+if. t=1 do.
+ setdirty 1
+else.
+ setdirty 1 NB. left insert could be done dynamically
+end. 
+)
 
 getreferenced=: 3 : 0
 getloc '^.^.',>{.{:subscriptions

@@ -7,7 +7,7 @@ jd_list=: 3 : 0
 t=. bdnames y
 ECOUNT assert 1=#t
 select. ;t
-case. 'version' do. ,.'version';'2.2.9'
+case. 'version' do. ,.'version';'2.2.10'
 case. 'open'    do. ,.'open';<>opened''
 case.           do. assert 0['unsupported list command'
 end. 
@@ -37,6 +37,13 @@ case. 'ref' do.
  'ref' infox a
 case. 'reference' do.
  'reference' infox a
+case. 'dynamic' do.
+ 'ts cs'=. {:''infox a
+ b=. (({:$cs){.'jdactive')-:"1 cs
+ b=. -.b+.(({:$cs){.'jdindex')-:"1 cs
+ cs=. b#cs
+ ts=. b#ts
+ (;:'table column'),:ts;cs
 case. 'agg' do.
  d=. getdb''
  ,.'aggs';>{."1 AGGFCNS__d 
@@ -69,6 +76,9 @@ for_c. locs do.
   cs=. cs,NAME__c
  end. 
 end.
+s=. /:ts,.cs
+ts=. s{ts
+cs=. s{cs
 (;:'table column'),:ts;cs
 )
 

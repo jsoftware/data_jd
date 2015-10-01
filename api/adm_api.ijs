@@ -2,6 +2,7 @@ NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 
 jdadmin_z_=:   jdadmin_jd_
 jdadminx_z_=:  jdadminx_jd_
+jdoption_z_=:  jdoption_jd_
 
 coclass'jd'
 
@@ -100,6 +101,8 @@ case. do.
  y=. adminp y
  'not a database'assert 'database'-:jdfread y,'/jdclass'
  d=. }.(y i:'/')}.y
+ 
+ 'x'jdadminlk y NB. remove old lock (if any)
  'w'jdadminlk y
  
  NB. remove old admin for this folder
@@ -122,6 +125,7 @@ case. do.
    'load admin.ijs failed'assert 0
  end.
  jdaccess d,' u/p intask' NB. default access
+ getdb :: [''
  i.0 0
 end.
 )
@@ -323,7 +327,9 @@ jdtests=: 3 : 0
 start=. 6!:1''
 cocurrent'base' NB. defined in jd, but must run in base
 jdtrace_jd_ 1
-ALLOC=: ROWSMIN_jdtable_,ROWSMULT_jdtable_,ROWSXTRA_jdtable_
+OLDFLUSHAUTO_jd_=: FLUSHAUTO_jd_
+FLUSHAUTO_jd_=: 0 NB. tests run more than 2 times slower with flush
+OLDALLOC_jd_=: ROWSMIN_jdtable_,ROWSMULT_jdtable_,ROWSXTRA_jdtable_
 'ROWSMIN_jdtable_ ROWSMULT_jdtable_ ROWSXTRA_jdtable_'=: 4 1 0 NB. lots of resize
 jd'option sort 1' NB. required for tests for now
 NB. assert -.(<'jjd')e. conl 0['jdtests must be run in task that is not acting as a server'
@@ -395,8 +401,9 @@ if. #conl 1 do.
  echo LF,'check for orphan locals in conl 1'  
 end.
 echo LF,(":#t),' tests run',LF,(":#failed),' failed'
-jd'option sort 0' NB. restore
-'ROWSMIN_jdtable_ ROWSMULT_jdtable_ ROWSXTRA_jdtable_'=: ALLOC NB. restore
+FLUSHAUTO_jd_=: OLDFLUSHAUTO_jd_ 
+'ROWSMIN_jdtable_ ROWSMULT_jdtable_ ROWSXTRA_jdtable_'=: OLDALLOC_jd_
+jd'option sort 0'
 jdtrace_jd_ 0
 echo LF,(":start-~6!:1''),' seconds to run tests'
 (;{:jd'list version')fwrite'~temp/jd/jdversion' NB. avoid welcome

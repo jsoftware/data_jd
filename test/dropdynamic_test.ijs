@@ -77,15 +77,3 @@ jd'dropdynamic unique f a0'
 jd'dropdynamic unique g a1'
 assert ''-:,;{:{:jd'info reference'
 assert ''-:,;{:{:jd'info hash'
-
-
-foo''
-jd'dropdynamic'
-jd'ref f a0 g a1'
-
-
-
-
-
-
-

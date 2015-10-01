@@ -17,6 +17,7 @@ if. _1 +./@:~: index"0 y do. throw 'Inserted items are not unique' end.
 NB. does not work - i not defined - off not used - never tested
 NB. intended to revert unique col after insert/update fails
 Revert=: 3 : 0
+'unique revert not required and not supported'assert 0
 if. y >: >./hash do. return. end.
 off=.0
 for_h. hash do.

@@ -52,6 +52,7 @@ EMISSING=:   'missing col'
 EDELETE=:    'jddeletefolder failed'
 EINDEX=:     'bad index'
 EDROPSTOP=:  'dropstop'
+EUNIQUE=:    'warning: deleted N rows to stay unique'
 
 LOCALE =: CLASS =: <'jd'
 CHILD =: <'jdfolder'
@@ -199,7 +200,6 @@ loc
 NB. STATE is written when changed  - it should not need to be written on close
 validate_close_state=: 3 : 0
 if. #STATE__y do.
- L__=: y
  if. -.(3!:2 jdfread PATH__y,'jdstate')-:pack__y STATE__y do.
   echo 'close writestate bad: ',(;CLASS__y),' ',NAME__y
   echo 3!:2 jdfread PATH__y,'jdstate'

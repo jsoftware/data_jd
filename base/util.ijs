@@ -1,12 +1,10 @@
 NB. Copyright 2015, Jsoftware Inc.  All rights reserved.
 coclass 'jd'
 
-MAXROWCOUNT =: 1e5
-HASHPASSLEN =: 2 <.@^ 29
-HASHCREATE32BIT =: 0
-
-NB. util
-
+MAXROWCOUNT=: 1e5
+HASHFAST=: 1         NB. use H code
+HASHPASSLEN=: <.2^60 NB. code exists byt not used
+HASHCREATE32BIT=: 0  NB. code exists but not used
 
 reduce =: 1 : ('u/ y';':';'for_z. |.x do. y=.z u y end.')
 
@@ -322,18 +320,6 @@ edatetimen
 NB. 3!:0 TYPES values
 TYPESj=: 1 4 8 2 4 4 4 4 4 4 4 4 4
 
-NB. sudo sync/blockdev flushbuf/drop_caches
-jdflush=: 3 : 0
-if. -.IFWIN do.
- try.
-  2!:0'jdflush'
- catch.
-  echo 'run jdflush shell script failed'
- end.
-end.
-i.0 0
-)
-
 jdfread=: 3 : 0
 t=. fread y
 if. (_1-:t)*.10=13!:11'' do.
@@ -356,10 +342,10 @@ NB. (100<.#rows) random rows are deleted/insertt in bulk
 NB. result is arg which allows: jdshuffle^:3 'foo'
 jdshuffle=: 3 : 0
 'tab'=. y
-d=. /:~|:><"1 each ,.each {:QA__=:jd'reads from ',tab
+d=. /:~|:><"1 each ,.each {:jd'reads from ',tab
 
 NB. shuffle random rows 1 at a time
-v=. ((100<.>.0.25*#v){.?~#v){v=. ,>{:QINDEX__=: jd'reads jdindex from ',tab
+v=. ((100<.>.0.25*#v){.?~#v){v=. ,>{:jd'reads jdindex from ',tab
 
 for_i. v do.
  t=. jd'read from ',tab,' where jdindex=',":i
@@ -374,7 +360,7 @@ t=. jd'read from ',tab,' where ',test
 jd ('delete ',tab);test
 jd ('insert ',tab);,t
 
-z=. /:~|:><"1 each ,.each {:QZ__=: jd'reads from ',tab
+z=. /:~|:><"1 each ,.each {:jd'reads from ',tab
 'shuffle failed' assert d-:z
 y
 )

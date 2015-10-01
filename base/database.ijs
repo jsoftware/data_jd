@@ -5,7 +5,7 @@ coinsert 'jd'
 CLASS =: <'jddatabase'
 CHILD =: <'jdtable'
 
-STATE=: '' NB. used to have AGGFCNS
+STATE=: ''
 
 NB. define aggregation functions
 aggcreate=: 3 : 0
@@ -31,6 +31,7 @@ testcreate=: ]
 
 create=: 3 : 0
 aggcreate''
+writestate''
 )
 
 close =: ]

@@ -1,6 +1,7 @@
-NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
-
+NB. Copyright 2015, Jsoftware Inc.  All rights reserved.
 NB. dynamic tests - hash unique reference
+
+NB. should use jdae
 
 db=: 'unique'
 de=: 'domain error'
@@ -51,52 +52,43 @@ NB. unique int
 jdadminx db
 jd'createtable f a int'
 jd'insert f a';3,i.5
-assert de-:jd etx'createunique f a'
-assert ne-:;1{jdlast
+'warning: deleted 1'jdae'createunique f a'
 
 jdadminx db
 jd'createtable f a int'
 jd'createunique f a'
 jd'insert f a';i.5
 jd'insert f a';23 24 25
-assert de-:jd etx'insert f a';26 27 26
-assert ue-:(#ue){.;1{jdlast
-assert de-:jd etx'insert f a';26 27 3
-assert ue-:(#ue){.;1{jdlast
+'warning: deleted 1'jdae'insert f a';26 27 26
+'warning: deleted 3'jdae'insert f a';26 27 3
 
 NB. unique byte 2
 jdadminx db
 jd'createtable f b byte 2'
 jd'insert f b';'ef',5 2$'abcdefghij'
-assert de-:jd etx'createunique f b'
-assert ne-:;1{jdlast
+'warning: deleted 1'jdae'createunique f b'
 
 jdadminx db
 jd'createtable f b byte 2'
 jd'createunique f b'
 jd'insert f b';5 2$'abcdefghij'
 jd'insert f b';5 2$'bcdefghijk'
-assert de-:jd etx'insert f b';3 2$'zzxxzz'
-assert ue-:(#ue){.;1{jdlast
-assert de-:jd etx'insert f b';3 2$'zzxxcd'
-assert ue-:(#ue){.;1{jdlast
+'warning: deleted 1'jdae'insert f b';3 2$'zzxxzz'
+'warning: deleted 3'jdae'insert f b';3 2$'zzxxcd'
 
 NB. unique int byte2
 jdadminx db
 jd'createtable f a int,b byte 2'
 jd'insert f';'a';(2,i.5);'b';'ef',5 2$'abcdefghij'
-assert de-:jd etx'createunique f b'
-assert ne-:;1{jdlast
+'warning: deleted 1'jdae'createunique f b'
 
 jdadminx db
 jd'createtable f a int,b byte 2'
 jd'createunique f a b'
 jd'insert f';'a';(i.5);'b';5 2$'abcdefghij'
 jd'insert f';'a';(10++i.5);'b';5 2$'abcdefghij'
-assert de-:jd etx'insert f';'a';2 3 2;'b';3 2$'zzxxzz'
-assert ue-:(#ue){.;1{jdlast
-assert de-:jd etx'insert f';'a';2 3 3;'b';3 2$'zzxxgh'
-assert ue-:(#ue){.;1{jdlast
+'warning: deleted 1'jdae'insert f';'a';2 3 2;'b';3 2$'zzxxzz'
+'warning: deleted 3'jdae'insert f';'a';2 3 3;'b';3 2$'zzxxgh'
 
 NB. reference 
 jd'close' NB. no mappings

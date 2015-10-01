@@ -32,7 +32,7 @@ cnts_map_jd_=: >:cnts_map_jd_
 try.
  x map_jmf_ y
 catchd.
- echo 'jdmap failed unexpectedly - will retry'
+ echo 'jdmap failed unexpectedly',LF,'will try again'
  6!:3[5
  x map_jmf_ y
 end.
@@ -91,4 +91,31 @@ else.
  CloseHandleR fh
 end.
 i.0 0
+)
+
+3 : 0''
+if. IFWIN do.
+ NB. BOOL WINAPI FlushViewOfFile(_In_ LPCVOID lpBaseAddress,_In_ SIZE_T  dwNumberOfBytesToFlush);
+ NB. BOOL WINAPI FlushFileBuffers(_In_ HANDLE hFile);
+ NB. jmf.ijs has a bad definition for FlushViewOfFile so we use ....X
+ FlushViewOfFileRX=: 'kernel32 FlushViewOfFile > i x x'&(15!:0)
+ FlushFileBuffersR=: 'kernel32 FlushFileBuffers > i i'&(15!:0)
+else.
+ lib=. ' ',~ unxlib 'c'
+ api=. 1 : ('(''',lib,''',x) & cd')
+ c_fsync=: 'fsync i x'api NB. file descriptor - file handle
+end.
+i.0 0
+)
+
+flush=: 3 : 0
+for_m. mappings_jmf_ do.
+  'fh dad had'=. >3 5 6{m
+  if. IFWIN do.
+   FlushViewOfFileRX dad,HS+msize had
+   FlushFileBuffersR fh
+  else.
+   c_fsync fh
+ end.
+end.
 )

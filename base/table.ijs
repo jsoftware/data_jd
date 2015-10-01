@@ -103,11 +103,12 @@ if. ifhash do. MakeHashed nam end.
 
 NB. delete v delete rows from table
 Delete=: 3 : 0
-delete1 getwhere ,y
-)
-delete1=: 3 : 0
-update_subscr ''
-empty dat__active =: 0 y} dat__active
+r=. getwhere ,y
+if. #r do.
+ update_subscr''
+ dat__active=: 0 r} dat__active
+end.
+i.0 0
 )
 
 NB. argument is (column names),.(new data)
@@ -159,16 +160,21 @@ Tlen=: Tlen + len
 try.
   step0  4 :'Insert__x >y'"0  dat0 NB. step 0: insert static columns
   step1  4 :'Insert__x >y'"0  dat1 NB. step 1: insert subsribers to static columns only
-  for_j. step2 do. dynamicreset__j'' end. NB. step 2: reset other dependents (in order)
+  for_j. step2 do.
+   'dynamicreset in insert - never get here !!!'assert 0 NB. not in jdtests or various experiments
+    dynamicreset__j''
+   end. NB. step 2: reset other dependents (in order)
 catchd.
-
-  echo'!!!!!!!!!!!!!!!!!!!!! Revert !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
-  
-  NB.! kill off revert - buggy - perhaps mark table as damaged
-  NB.!  Revert Tlen-len
-  throw (}.@{.~ i.&':') 13!:12 ''
+  t=. 13!:12''
+  NB. revert table to Tlen-len - buggy and does not work
+  if. -.'createhash /nc'-:14{.}.t do.
+   a=. '!!! insert revert not supported !!!'
+   echo a
+   a assert 0
+  end. 
+  jd_dropdynamic_jd_'' NB. drop damaged dynamics
+  throw (}.@{.~ i.&':') t
 end.
-
 EMPTY
 )
 
@@ -271,10 +277,12 @@ for_subs. SUBSCR do.
    w=. getdb''
    w=. getloc__w t
    w=. getloc__w c
+   a=. 1 NB. right ref
   else.
    w=. getloc c
+   a=. 0 NB. left ref
   end.
-  if. typ__w-:'ref' do. Update__w'' end.
+  if. typ__w-:'ref' do. Update__w a end.
  end.
 end.
 )

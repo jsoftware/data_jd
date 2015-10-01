@@ -40,39 +40,12 @@ for_i. i.#ns do.
  c=. getloc__t i{ns
  cnt=. (0,cnt) validate_data__c >i{vs
 end.
-
-active=. (NAMES__t i. <'jdactive'){CHILDREN__t
-
-for_n. CHILDREN__t do.
- if. 'unique'-:typ__n do.
-  vn=.  >{:{.subscriptions__n
-  names=. {."1 ,.nv
-  data=.  {:"1 ,.nv
-  
-  fs=.  |:>,each fsub each data
-  if. 0 e. ~:fs do.
-   ('not unique - (',(}:;names,each','),') new data row ',(":0 i.~ ~:fs),' with new data')assert 0
-  end. 
-  
-  NB. detect new data not unique 
-  for_i. i.#fs do.
-   if. 1={:$fs do.
-     p=. >(i.0)$i{fs
-   else.  
-    p=. i{fs
-   end.  
-   slot=. index__n p
-   if. slot~:_1 do.
-    if. slot{dat__active do. 
-     ('not unique - (',(}:;names,each','),') new data row ',(":i),' with table row jdindex ',":slot)assert 0
-    end. 
-   end. 
-  end.
-  
-  end. 
-end. 
-
+n=. +/-.dat__active__t
 Insert__d  ({.y),<nv
+n=. n-~+/-.dat__active__t
+if. 0~:n do.
+ 0 assert~EUNIQUE rplc 'N';":n
+end.
 JDOK
 )
 

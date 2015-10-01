@@ -64,13 +64,13 @@ assert (8*>.1.5*101+50)=getms'f a'
 jd'createtable /a 4 1 1 f a int'[jd'droptable f'[jd'dropdynamic'
 jd'createhash f a'
 assert 88='hash'getms'f jdhash_a'
-assert 32='link'getms'f jdhash_a'
+assert 0='link'getms'f jdhash_a'
 
 jd'createtable /a 4 1 1 f a int'[jd'droptable f'[jd'dropdynamic'
 jd'insert f a';i.100
 jd'createhash f a'
 assert (8*4 p: +:101)='hash'getms'f jdhash_a'
-assert 808='link'getms'f jdhash_a'
+assert 800='link'getms'f jdhash_a'
 jd'insert f a';i.10
 assert 111=getms'f jdactive'
 assert (8*4 p: +:101)='hash'getms'f jdhash_a'

@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '2.2.9'
+VERSION=: '2.2.4'
 
 FILES=: 0 : 0
 jd.ijs
@@ -126,8 +126,10 @@ pm/pm.ijs
 pm/pma.ijs
 pm/pmb.ijs
 pm/pmc.ijs
+pm/pmx.ijs
 pm/pm_disk.ijs
 pm/pm_hash.ijs
+pm/pm_hashtimes.ijs
 pm/pm_reference.ijs
 test/alloc_test.ijs
 test/append_test.ijs
@@ -135,6 +137,7 @@ test/asrequired_test.ijs
 test/basic_test.ijs
 test/cd_query_test.ijs
 test/createcol_test.ijs
+test/createhash_unique_test.ijs
 test/csvout_test.ijs
 test/dropdynamic_test.ijs
 test/droptable_test.ijs
@@ -142,6 +145,7 @@ test/drop_rename_test.ijs
 test/dynamic_test.ijs
 test/error_test.ijs
 test/float_test.ijs
+test/flush.ijs
 test/hashx_test.ijs
 test/hash_insert_test.ijs
 test/hash_pass_test.ijs
@@ -160,6 +164,7 @@ test/pm_hash_test.ijs
 test/query_test.ijs
 test/readx_test.ijs
 test/reference_test.ijs
+test/refx_test.ijs
 test/ref_test.ijs
 test/rmdir_test.ijs
 test/sandp_test.ijs
@@ -190,9 +195,11 @@ tutorial/datatune_tut.ijs
 tutorial/dropstop_tut.ijs
 tutorial/epochdt.ijs
 tutorial/from_tut.ijs
+tutorial/hash_tut.ijs
 tutorial/intro_tut.ijs
 tutorial/join_tut.ijs
 tutorial/link_tut.ijs
+tutorial/performance_tut.ijs
 tutorial/reads_tut.ijs
 tutorial/server_tut.ijs
 tutorial/setget_tut.ijs

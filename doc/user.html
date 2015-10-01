@@ -35,6 +35,7 @@
 <a href="#dropdynamic">dropdynamic</a>
 <a href="#dropfilesize">dropfilesize</a>
 <a href="#droptable">droptable</a>
+<a href="#flush">flush</a>
 <a href="#gen">gen</a>
 <a href="#get">get</a>
 <a href="#info">info</a>
@@ -67,7 +68,7 @@
 href="#ref">ref</a> <a href="#reference">reference</a></a><br>
 <a href="#csv">csv...</a>   - <a href="#csvcdefs">csvcdefs</a> <a href="#csvdump">csvdump</a> <a href="#csvrd">csvrd</a> <a href="#csvreport">csvreport</a> <a href="#csvrestore">csvrestore</a> <a href="#csvwr">csvwr</a> <br>
 <a href="#table">table...</a> - <a href="#tableappend">tableappend</a> <a href="#tablecopy">tablecopy</a> <a href="#tableinsert">tableinsert</a> <a href="#tablemove">tablemove</a><br>
-<a href="#misc">misc</a>     - <a href="#close">close</a> <a href="#gen">gen</a> <a href="#get">get</a> <a href="#loadcustom">loadcustom</a> <a href="#option">option</a> <a href="#set">set</a> <a href="#validate">validate</a>
+<a href="#misc">misc</a>     - <a href="#close">close</a> <a href="#flush">flush</a> <a href="#gen">gen</a> <a href="#get">get</a> <a href="#loadcustom">loadcustom</a> <a href="#option">option</a> <a href="#set">set</a> <a href="#validate">validate</a>
 
 <hr><a name="use"><h2>use</h2></a>
 <a href="#read">read</a>    [<a href="#select">select</a>]  <a href="#from">from</a>   table   [<a href="#where">where</a>]
@@ -176,15 +177,28 @@ does dropdynamic to drop existing dynamic cols
 runs db dynamic verb (custom.ijs) to create dynamic cols
 
 <hr><a name="createhash"><h2>createhash</h2></a>
-createhash t1 cols...
+createhash [/nc n] t1 cols...
 
 creates hash col based on 1 or more data cols
-hash on col a has name of jdhash_a
-hash on cols a and b has name of jdhash_a_b
+hash on col a is named jdhash_a
+hash on cols a and b is names jdhash_a_b
 hash col has 2 mapped nouns hash and link
 
-#hash is larger (typically 1.5 times) #col
-#link is same as #col and links rows with the same values
+#hash created as 2*#col (few collisions)
+#hash resized when insert reduces 2 to 1.5 (more collisions)
+
+#link same as #col and links rows with the same values
+
+/nc integer treated as max #nub cols...
+
+if #nub cols... is much less than 0.25*#col
+then building smaller hash with /nc is much faster 
+
+/nc 10000 creates hash with 4*10000 entries
+if #nub cols... is <10000 then hash will have very few collisions
+and will build much faster than hash with 2*#col entries
+
+tutorial hash
 
 <hr><a name="createtable"><h2>createtable</h2></a>
 createtable [/a MIN MULT XTRA] table [coldefs]
@@ -217,8 +231,11 @@ jdaccess olddan
 <hr><a name="createunique"><h2>createunique</h2></a>
 createunique t1 cols...
 
-same as <a href="#createhash">createhash</a> except no link file
-and name is jdunique_... instead of jdhash_...
+same as <a href="#createhash">createhash</a> except no link for dups
+and col name is jdunique_... instead of jdhash_...
+
+if cols... are not unique then earlier dup rows are deleted
+and the op completes with an error warning
 
 tutorial unique
 
@@ -379,6 +396,7 @@ jd'gen two j 6 k 3'
 jd'reads from j'
 jd'reads from k'
 jdaccess olddan
+
 <hr><a name="get"><h2>get</h2></a>
 get table col
 
@@ -388,6 +406,7 @@ can be used with set to efficiently adjust col data
 <hr><a name="info"><h2>info</h2></a>
 jd'info ...' NB. info about current DB
  agg                        - select aggregators
+ dynamic   [table [column]] - dynamic cols
  jd        [table [column]] - jd... cols
  last                       - cmd time space
  schema    [table [column]] - normal cols (non jd...)
@@ -408,12 +427,16 @@ jd'info ...' NB. info about current DB
  jd'info schema a akey'
  jd'info reference'
  jdaccess olddan
+ 
 <hr><a name="insert"><h2>insert</h2></a>
 insert table col data ...
 
 col data pairs
 count of data items must be the same
 
+insert of duplicates (createunique) marks older rows as deleted
+and gives an error warning
+ 
 NB. example insert
 jdadminx'example'[olddan=:jdaccess''
 jd'createtable f a int,b byte,b4 byte 4'
@@ -421,7 +444,14 @@ jd'insert';'f';'a';23;'b';'a';'b4';1 4$'abcd'
 jd'reads from f'
 jd'insert';'f';'a';24 25;'b';'bc';'b4';2 4$'aaaabbbb'
 jd'reads from f'
+jd'createtable g'
+jd'createcol g a int _';i.3
+jd'createunique g a'
+jd etx'insert g a';2
+;1{jdlast
+jd'reads jdindex,a from g'
 jdaccess olddan
+
 <hr><a name="list"><h2>list</h2></a>
 list version     - Jd version 
 list open        - open databases
@@ -429,6 +459,26 @@ list open        - open databases
 loadcustom
 
 load <a href="#custom.ijs">custom.ijs</a> from db folder db locale
+<hr><a name="flush"><h2>flush</h2></a>
+flush - flush mapped file dirty memory pages to disk
+
+close does a flush before it unmaps files
+
+FLUSHOPS_jd_ (createcol createhash createunique reference ref set)
+flush at the end as they potentially create lots of dirty pages
+that might complicate effective host ram management
+
+disk hardware buffers mean flushed data is not guaranteed
+to be on disk in the event of a failure such as loss of power,
+but the chance of corrupted disk data is signficantly reduced
+
+flush can help performance by allowing better host ram management
+
+flush after ops that change lots of data can improve performance
+
+Windows: FlushViewOfFile and FlushFileBuffers
+Unix: fsync
+
 <hr><a name="from"><h2>from</h2></a>
 from clause - jd'reads ... from ...'
 
@@ -573,31 +623,35 @@ ref tab1 col1 tab2 col2
 
 ref is simpler than reference and is prefered if it does the job
 
-ref has restrictions:
- only default left1 <a href="#join">join</a>
- only single col
- signals error if deleted rows (update deletes)
+ref runs much faster than reference
 
 ref takes much less disk space than reference
  does not have left/right hash/link cols
  creates single dynamic int col
- 
-insert to either table sets dirty flag
- ref col recalculated (leftcols i. rightcols) when required
 
-delete/update to either table sets dirty flag
- ref col recalculate signals error
+
+ref restrictions: only single col and only left1 <a href="#join">join</a>
+
+ref left1 refers to last row in the right table that matches (i: not i.)
+
+reference left1 refers to first (or random after changes) row
+in the right table that matches
+
+insert/delete/update to either table sets dirty flag
+ ref col recalculated (leftcols i: rightcols) when required
+ 
+future release might support dynamic update and avoid dirty flag rebuilds
 
 see <a href="technical.html#ref">Technical|ref</a> for details<br>
 <hr><a name="reference"><h2>reference</h2></a>
 reference t1 cols... t2 cols...
 
-if possible ref should be used and reference avoided
-
 allows outer/inner/left/right/left1 <a href="#join">join</a>
 does createhash if required
 uses previous createunique
 inserts/deletes/updates update dynamic cols as required
+
+tutorial reference
 
 <hr><a name="renamecol"><h2>renamecol</h2></a>
 renamecol table col newname

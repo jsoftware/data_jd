@@ -69,6 +69,38 @@ jd_z_=: jd_jd_
 
 demos=: (<JDP,'demo/'),each 'sandp/sandp.ijs';'northwind/northwind.ijs';'sed/sed.ijs';'vr/vr.ijs'
 
+NB. y is jd_... bdnames
+NB. x is list of options and their arg counts
+NB. result is y with options stripped
+NB. option_name_jd_ set as option value
+NB. options not provided are set to 0
+NB. options provided with count 0 set to 1
+NB. option value(s) must be alphanumeric
+NB. '/e 0 /nx 1 /foo 0'getoptions bdnames '/e /nx 23 abc'
+getoptions=: 4 : 0
+t=. bdnames x
+t=. (2,~-:#t)$t
+n=. {."1 t
+c=. ;0".each{:"1 t
+p=. ;(<'_jd_ '),~each (<'option_'),each}.each n
+(p)=: 0 NB. default value for options not provided
+while. '/'={. ;{.y do.
+ i=. n i. {.y
+ 'invalid option' assert i<#n
+ e=. '_jd_',~'option_',}.;{.y
+ a=. i{c NB. number of values for option
+ if. a=0 do.
+  (e)=: 1
+ else.
+  t=. 0+;_".each a{.}.y
+  'option value not integer'assert 4=3!:0 t
+  (e)=: t
+ end.
+ y=. y}.~>:a
+end.
+y
+)
+
 NB. jdget 'tab col'
 jd_get=: 3 : 0
 a=. bdnames y
@@ -198,6 +230,9 @@ if. 0=L.y do. NB. string parse has blanks in col defs
  y=. y,<;' ',each a
 end. 
 a=. y
+
+
+
 if. '/a'-:;{.a do.
  alloc=. ;_1".each 3{.}.a
  EALLOC assert 0<alloc
@@ -207,10 +242,6 @@ else.
  alloc=. ROWSMIN_jdtable_,ROWSMULT_jdtable_,ROWSXTRA_jdtable_
 end.
 
-if. '/d'-:;{.a do.
- createfromarray }.a
- return.
-end. 
 vtcname FETAB=: t=. >0{a NB. table
 a=. }.a
 a=. ;cutcoldefs each a
@@ -251,19 +282,6 @@ ns=. {."1 v
 vs=. {:"1 v
 ns=. ns rplc each <'.';'-';' ';'_'
 ,ns,.vs
-)
-createfromarray=: 3 : 0
-vtcname t=. ;0{y NB. table
-v=. vsub }.y
-ns=. {."1 v
-vs=. {:"1 v
-ns=. ns rplc each <'.';'--' NB. table.col -> table--col
-
-a=. t,' ',jdtdeffromarray }.y
-
-jd_createtable a
-jd_insert t;,ns,.vs NB. names changed (. -. --)
-JDOK
 )
 
 NB. validate dan name -same as table/col except jd prefix is allowed
@@ -382,7 +400,7 @@ JDE1001 assert 3=nc<'jd_',OP,'__d'
 )
 
 NB. Revert (in case of not unique) does not work on dynamic cols!
-jd_createunique=: 3 : 0
+xxxxjd_createunique=: 3 : 0
 y=. bdnames y
 FEXTRA=: ;y,each<' '
 ECOUNT assert 2<:#y
@@ -391,19 +409,46 @@ validtc__d y
 try.
  MakeUnique__d ({.y),<}.y
 catchd.
- DeleteCols__d ({.y),<'jdunique', ;'_',each }.y
+ jd_dropdynamic 'unique',;' ',each y
  'not unique'assert 0
 end.
 JDOK
 )
 
-jd_createhash=: 3 : 0
+
+
+NB. Revert (in case of not unique) does not work on dynamic cols!
+jd_createunique=: 3 : 0
 y=. bdnames y
 FEXTRA=: ;y,each<' '
 ECOUNT assert 2<:#y
 d=. getdb''
 validtc__d y
-MakeHashed__d ({.y),<}.y
+t=. jdgl {.y
+n=. +/-.dat__active__t
+MakeUnique__d ({.y),<}.y
+n=. n-~+/-.dat__active__t
+if. 0~:n do.
+ 0 assert~EUNIQUE rplc 'N';":n
+end.
+JDOK
+)
+
+
+jd_createhash=: 3 : 0
+y=. bdnames y
+y=. '/nc 1' getoptions y
+'invalid nc option' assert (option_nc>:0)*.option_nc<:2^31
+FEXTRA=: ;y,each<' '
+ECOUNT assert 2<:#y
+d=. getdb''
+validtc__d y
+try.
+ MakeHashed__d ({.y),<}.y
+catchd.
+ jd_dropdynamic 'hash',;' ',each y
+ '/nc too small'assert 0
+end.
 JDOK
 )
 
@@ -433,10 +478,14 @@ d=. getdb''
 t=. (2,(#y)%2)$y
 validtc__d"1 t
 t=. ({."1 t),.<"1 (}."1 t)
-NB. MakeRef__d t
 n=. 'jdref', ;'_'&,&.> ; boxopen&.> }.,t
-loc=. getloc__d {.{.t
-t=. Create__loc n;'ref';<t
+h=. jdgl :: 0: (;{.{.t),' ',n
+if. h-:0 do.
+ loc=. getloc__d {.{.t
+ Create__loc n;'ref';<t
+else.
+ setdatl__h''
+end.
 JDOK
 )
 
@@ -609,7 +658,7 @@ r
 
 jd_close=: 3 : 0
 ECOUNT assert 0=#y
-
+if. FLUSHAUTO do. jd_flush'' end.
 NB. read error (tab not found) orphans jdquery local
 NB. coerase jdquery local (copath has number locals) leaves a damaged local
 NB. brute force get rid of all jdquery locales
@@ -644,56 +693,6 @@ createdynamic__=:  (5!:1<'dynamic__d')5!:0
 createdynamic__ ''
 JDOK
 )
-
-dropdynsub=: 3 : 0
-d=. getdb''
-typ=. ;{.y
-y=. }.y
-select. typ
-
-fcase. 'ref' do.
- ECOUNT assert 4=#y
-
-case.'reference' do.
- ECOUNT assert (4<:#y)*.0=2|#y
- t=. (2,(#y)%2)$y
- validtc__d {.t
- validtc__d {:t
- t=. ({."1 t),.<"1 (}."1 t)
- fn=. 'jd',typ,,;'_'&,&.> ; boxopen&.> }.,y
- f=. jdgl ;{.{.t
- fb=. ({."1 SUBSCR__f)=<fn
- EDNONE assert 1=+/fb
- gn=. '^.',(;{.y),'.jd',typ,,;'_'&,&.> ; boxopen&.> }.,y
- g=. jdgl ;{.{:t
- gb=. ({."1 SUBSCR__g)=<gn
- EDNONE assert 1=+/gb
- jddeletefolder PATH__f,fn
- SUBSCR__f=: (-.fb)#SUBSCR__f
- writestate__f''
- SUBSCR__g=: (-.gb)#SUBSCR__g
- writestate__g''
-case.'hash';'unique' do.
- ECOUNT assert 2<:#y
- validtc__d y
- fn=. 'jd',typ,,;'_'&,&.> ; boxopen&.> }.,y
- f=. jdgl ;{.y
- fb=. ({."1 SUBSCR__f)=<fn
- EDNONE assert 1=+/fb
- a=. {:{:fb#SUBSCR__f
- 'dropdynamic hash/unique is used by reference' assert 1=+/a={:"1 SUBSCR__f
- SUBSCR__f=: (-.fb)#SUBSCR__f
- writestate__f''
- p=. PATH__f,fn
- jd_close'' NB. reopened and must be closed to delete
- jddeletefolder p
-case.do.
- 'dropdynamic unknown type'assert 0
-end.
-jd'close'
-JDOK
-)
-
 
 NB.! needs work
 jd_option=: 3 : 0
@@ -1043,7 +1042,7 @@ assertnoreference ;{.a
 t=. jdgl {.a
 new=. ((->:#NAME__t)}.PATH__t),;{:a 
 old=. }:PATH__t
-jd'close'
+jd_close''
 new frename old
 JDOK
 )
@@ -1055,7 +1054,12 @@ assertnodynamic 2{.a
 t=. jdgl 2{.a
 new=. ((->:#NAME__t)}.PATH__t),;{:a 
 old=. }:PATH__t
-jd'close'
+jd_close''
 new frename old
+JDOK
+)
+
+jd_flush=: 3 : 0
+flush_jmf_''
 JDOK
 )

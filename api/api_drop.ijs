@@ -74,6 +74,56 @@ if. ({:y)e.{."1 jdcols {.y do.
 end. 
 JDOK
 )
+
+dropdynsub=: 3 : 0
+d=. getdb''
+typ=. ;{.y
+y=. }.y
+select. typ
+
+fcase. 'ref' do.
+ ECOUNT assert 4=#y
+
+case.'reference' do.
+ ECOUNT assert (4<:#y)*.0=2|#y
+ t=. (2,(#y)%2)$y
+ validtc__d {.t
+ validtc__d {:t
+ t=. ({."1 t),.<"1 (}."1 t)
+ fn=. 'jd',typ,,;'_'&,&.> ; boxopen&.> }.,y
+ f=. jdgl ;{.{.t
+ fb=. ({."1 SUBSCR__f)=<fn
+ EDNONE assert 1=+/fb
+ gn=. '^.',(;{.y),'.jd',typ,,;'_'&,&.> ; boxopen&.> }.,y
+ g=. jdgl ;{.{:t
+ gb=. ({."1 SUBSCR__g)=<gn
+ EDNONE assert 1=+/gb
+ jddeletefolder PATH__f,fn
+ SUBSCR__f=: (-.fb)#SUBSCR__f
+ writestate__f''
+ SUBSCR__g=: (-.gb)#SUBSCR__g
+ writestate__g''
+case.'hash';'unique' do.
+ ECOUNT assert 2<:#y
+ validtc__d y
+ fn=. 'jd',typ,,;'_'&,&.> ; boxopen&.> }.,y
+ f=. jdgl ;{.y
+ fb=. ({."1 SUBSCR__f)=<fn
+ EDNONE assert 1=+/fb
+ a=. {:{:fb#SUBSCR__f
+ 'dropdynamic hash/unique is used by reference' assert 1=+/a={:"1 SUBSCR__f
+ SUBSCR__f=: (-.fb)#SUBSCR__f
+ writestate__f''
+ p=. PATH__f,fn
+ jd_close'' NB. reopened and must be closed to delete
+ jddeletefolder p
+case.do.
+ 'dropdynamic unknown type'assert 0
+end.
+jd_close''
+JDOK
+)
+
 jd_dropdynamic=: 3 : 0
 jd_close''
 y=. bdnames y
@@ -86,8 +136,9 @@ d=. ((<'table')=jdfread each d,each <'/jdclass')#d
 for_n. d do.
  dd=. {."1[1!:0 <jpath'/*',~;n
  b=. (<'jdhash_')=7{.each dd
- b=. b+.(<'jdreference_')=12{.each dd
  b=. b+.(<'jdunique_')=9{.each dd
+ b=. b+.(<'jdreference_')=12{.each dd
+ b=. b+.(<'jdref_')=6{.each dd
  dd=. b#dd
  jddeletefolder each n,each,'/',each dd
  f=. '/jdstate',~;n

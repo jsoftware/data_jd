@@ -67,12 +67,6 @@ jd'modify f';'jdindex=0';'float';23.23
 assert de-:jd etx'modify f';'jdindex=0';'int';1
 
 modifygen''
-jd'gen one g 5 1'
-jd'ref f int g a0'
-jd'modify f';'jdindex=0';'float';23.23
-assert de-:jd etx'modify f';'jdindex=0';'int';1
-
-modifygen''
 jd'modify f';'byte4 = "bbbb"';'int';6 7 8
 a=. jd'reads from f'
 modifygen''

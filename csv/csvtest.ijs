@@ -3,6 +3,7 @@ NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 pathin=:    jpath'~temp/jd/csv/files'
 CSVFOLDER=: '~temp/jd/csv/test/'
 csv_z_=:    <'jdcsv' NB. mappednoun__csv
+erase'csv__' NB. ensure we don't use someone elses
 
 jddeletefolder_jd_ CSVFOLDER
 

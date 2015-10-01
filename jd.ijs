@@ -66,7 +66,7 @@ load'data/jmf'
 (<;._1' base.ijs hash1.ijs hash.ijs')    loadall JDP,'dynamic/'
 erase'loadall'
 
-NB. initial values
+NB. initial globals
 3 : 0''
 APIRULES_jd_=:  1
 ALLOW_FVE_jd_=: 0 NB. 1 allows hash float - see test/api_float.ijs
@@ -76,6 +76,7 @@ if. _1=nc<'OP_jd_' do. NB. one time inits
  TEMPCOLS_jd_=: i.0 2 
  cntsclear_jd_''
  pmclear_jd_''
+ FLUSHAUTO_jd_=: 1 NB. flush done in close and after create... ref reference set
 end.
 if. -.IFJHS do. require'~addons/ide/jhs/sp.ijs' end.
 if. IFQT do. labs_run_jqtide_=: 3 : 'spx''''' end.
