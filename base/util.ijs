@@ -61,8 +61,6 @@ c=. ;#each y
 (n=. (0,}:+/\c),.c);;y
 )
 
-EDFAIL=: LF,'Jd info: N delete folder failed - technical.html|wss',LF,'F',LF,'E','trying again',LF,LF
-
 NB. delete folder
 NB. allowed if jddeleteok
 NB.  not allowed if jddropstop
@@ -83,22 +81,19 @@ end.
 r=. rmsub y
 t=. hostpathsep y
 if. 0~:;{.r do.
- echo EDFAIL rplc'N';'1st';'F';t;'E';{:r
- 6!:3[5
- r=. rmsub y
- if. 0~:;{.r do.
-  echo EDFAIL rplc'N';'2nd';'F';t;'E';{:r
-  6!:3[10
+ echo 'Jd info: jddeletefolder failed: ',y
+ echo IFWIN#' see doc technical|wss'
+ echo ' trying again'
+ for. i.20 do.
+  6!:3[3
   r=. rmsub y
-  if. 0~:;{.r do.
-   echo EDFAIL rplc'N';'3rd';'F';t;'E';{:r
-   6!:3[60
-   r=. rmsub y
-   if. 0~:;{.r do.
-    EDELETE assert 0
-   end. 
-  end.  
- end.   
+  if. 0=;{.r do.
+   echo' succeeded'
+   y return. end.
+ end.
+ echo' failed!'
+ 'jddeletefolder' logtxt y;r
+ 'jddeletefolder failed' assert 0
 end.
 y
 )
@@ -126,14 +121,9 @@ end.
 i.0 0
 )
 
-0 : 0
-Windows Search Service (content indexing, ...) and
-and other windows background tasks (antivirus?)
-can cause rmdir to fail. See technical.html.
-
-This problem is mitigated by doing rmdir several
-times as required with a sleep.
-)
+NB. Windows Search Service (content indexing, ...) and and other windows background tasks
+NB. (antivirus?) can cause rmdir to fail. This problem is mitigated by doing rmdir several
+NB. times as required with a sleep.
 
 NB. similar to rmdir_j_
 NB. host facilities delete folder
@@ -192,7 +182,7 @@ elseif. 1 do.
  if. _1=nc<'DLLDEBUG__' do.
   t=. t,'jd.dll'
  else.
-  t=. '\dev\j\p_dll\x64\debug64\p_dll.dll' NB. ms visual studio debug
+  t=. t,'../cdsrc/makevs/x64/debug64/jddll.dll' NB. ms visual studio debug
  end.
  p=. (p,'jpcre.dll')rplc'/';'\'
 end.

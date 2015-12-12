@@ -20,16 +20,16 @@
 
 
 <a href="#backup">backup</a> -
-<a href="#crash">crash recovery</a> - 
+<a href="#damaged">damaged</a> - 
 <a href="#developer">developer</a> - 
 <a href="#handles">file handles</a> - 
 <a href="#links">links</a> - 
 <a href="#libjd.so">libjd.so</a> -
 <a href="#locales">locales</a> - 
-<a href="#performance">performance measurement</a> - 
+<a href="#performance">performance</a> - 
 <a href="#ref">ref</a> - 
 <a href="#reference">reference</a> - 
-<a href="#update">update</a> - 
+<a href="#update">update</a> -
 <a href="#search">wss</a> 
 
 <h2><a name="backup">backup</h2>
@@ -40,21 +40,34 @@ With large databases and suitable hardware it might be worthwhile to use multipl
 
 </p>CSV dump/restore with rebuild of dynamics also provides complete backup.</p>
 
-<p>With update as delete/insert an incremental backup tool could be easily built that dumps just jdactive and
-and the rows after Tlen in the full backup.</p>
+<h2><a name="damaged">damaged</h2>
 
-<h2><a name="crash">crash recovery</h2>
+<p>See tutorial log.</p>
 
-<p>Bugs and hardware failures can damage a db and there is more that could be done to make Jd more resilient.</p>
+<p>There are many ways a database can be damaged: hardware crashes, OS crashes,
+JD bugs, application bugs...</p>
 
-<p><tt>jd'validate'</tt> should be extended to report more problems and should have an option to correct problems.<p>
+<p>A simple example is a table where different cols have different counts.
+A db with such tables can work in some cases, get unexpected errors,
+result in further damage (that obscure the orignal problem),
+or in the worst case give wrong answers.</p>
 
-<p>It might be worthwhile to have a db jdstate flag maintained for open/changed/closed.
-Complicated by various levels of disk buffering and can only work if there is a reliable flush mechanism.
-Would allow detecting the db did not shutdown cleanly and flag that <tt>jd'validate'</tt> was required.
+<p><code>jd'validate'</code> checks the integrity of the db (all tables, columns, files) and
+if there is a problem, marks the db as damaged and signals an error.</p>
 
-<p>A change log of delete/update/insert operations could be used to rebuild a damaged table from a known Tlen.
-Simply drop Tlen back to the value at the start of the change log, run change log ops, and rebuild dynamic cols.
+<p><code>jdadmin</code> does a validate to ensure the db is ready for use.</p>
+
+<p>A table validation is done before and after insert/update/modify/delete ops. The checks are
+the same as in validate, but are done only on the one table. If there is a problem, marks the db
+as damaged and signals and error.</p>
+
+<p>Validation details can be seen with:
+<code>
+   jd'info validate'     NB. complete info
+   jd'info validatebad'  NB. info about problems
+</code></p>   
+
+The db is marked as damaged and a jdlog record is written if a validation fails.
 
 <h2><a name="developer">developer</h2>
 <p>Jd is distributed with JAL (Package Manager) and the Jd library is at ~addons/data/jd and is
@@ -78,25 +91,31 @@ perhaps in the middle of an operation that will leave the database damaged.</p>
 
 <p>Windows user does not have a limit on file handles.</p>
 
-<p>Linux/Mac user by default has low limit on handles and
+<p>Linux/Mac user often has low soft and hard limits on handles and
 this must be increased for serious use of Jd. 
-On modern systems there is no reason to not raise the limit to 200000.</p>
+There is no reason to not raise the limit to 100000.</p>
+
+<p>See the soft and hard limits with:<br>
+<code>...$ ulimit -n</code></p>
+
+
+<p>If hard limit is high enough, it might be easiest, before starting J, to do:<br>
+<code>...$ ulimit -n 100000</code></p>
 
 <p>To increase file handle limit for Linux Jd user fred:
-<code>
-
-...$ ulimit -n # show current file handle limit
+<code>...$ ulimit -n # show current file handle limit
 run superuser text editor and open /etc/security/limits.conf
 add following 2 lines at the end
 
 fred soft nofile 200000
 fred hard nofile 200000
 
-save the file, restart the system, and verify new ulimit
+save the file, restart system, and verify new ulimit
 </code></p>
 
-<p>To increase file handle limit for Mac Jd user the steps are similar, but of course
-different, and the details are left to the reader.</p>
+<p>To increase file handle limit for Mac the steps are similar, but of course
+different, and details are left to the reader. Yosemite has a low soft limit and
+a high hard limit.<br>
 
 <h2><a name="links">links</h2>
 
@@ -109,7 +128,7 @@ different, and the details are left to the reader.</p>
 
 See Admin jdlinkmove, jdlinkset, and jdlinktargets for details.
 
-<p>See tutorial link_tut.</p>
+<p>See tutorial link.</p>
 
 <h2><a name="libjd.so">libjd.so</h2>
 
@@ -145,7 +164,7 @@ with the data.<p>
    dat__c            NB. mapped file data
 </code>
 
-<h2><a name="performance">performance measurement</h2>
+<h2><a name="performance">performance</h2>
 
 See pmhelp_jd_ for info.
 

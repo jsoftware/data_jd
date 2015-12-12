@@ -463,8 +463,9 @@ r=. >{.xcsv t
 memf cbd
 NB. resize c files to remove unused rows
 log'remove extra c_..._jdcsv_ rows: ',":|r
+ROWS=: oldrows+ROWS+r NB. rows to keep
 if. r<0 do.
- ROWS=: oldrows+ROWS+r NB. rows to keep
+ NB.! ROWS=: oldrows+ROWS+r NB. rows to keep
  ROWS resizec each (a:~:ccfiles)#i.#coldefs
 end.
 NB. resize v files
@@ -508,7 +509,7 @@ p=. 2 NB. callback factor size increase
 if. y~:100e6 do.
  callbackv=: >:callbackv
  g=. (RESIZESTRESS{NEWROWS)*y{cxtra''
- log 'callbackv: add ',(":g),' bytes for ',>y{cvnames
+ NB. log 'callbackv: add ',(":g),' bytes for ',>y{cvnames
  g=. g+(fsize y{cvfiles)-HS_jmf_
  g resizev y
  ((0,g)+15!:14 y{cvnames) memw cbd,0,2,JINT
@@ -519,7 +520,7 @@ else.
  t=. (-.ccfiles=a:)i.1
  r=:  <.(t{getcbytes'')%getcount t NB. rows in file
  g=. RESIZESTRESS{NEWROWS
- log 'callbackc: add ',(":g),' rows to all c files'
+ NB. log 'callbackc: add ',(":g),' rows to all c files'
  ROWS=: ROWS+g
  s=. >HS_jmf_-~each fsize each ccfiles NB. current end
  (r+g) resizec each (a:~:ccfiles)#i.#coldefs

@@ -163,17 +163,18 @@ try.
   for_j. step2 do.
    'dynamicreset in insert - never get here !!!'assert 0 NB. not in jdtests or various experiments
     dynamicreset__j''
-   end. NB. step 2: reset other dependents (in order)
+  end. NB. step 2: reset other dependents (in order)
+  1+FORCEREVERT#'revert'
 catchd.
-  t=. 13!:12''
-  NB. revert table to Tlen-len - buggy and does not work
-  if. -.'createhash /nc'-:14{.}.t do.
-   a=. '!!! insert revert not supported !!!'
-   echo a
-   a assert 0
+  NB. revert table to Tlen-len - buggy and does not work - should not hapend
+  FORCEREVERT_jd_=: 0  NB. one time only
+  FEER_jd_=: 13!:12''
+  if. -.'createhash /nc'-:14{.}.FEER do.
+   3 logijf'revert';''
+   'should never get here' assert 0
   end. 
   jd_dropdynamic_jd_'' NB. drop damaged dynamics
-  throw (}.@{.~ i.&':') t
+  throw (}.@{.~ i.&':') FEER
 end.
 EMPTY
 )

@@ -3,52 +3,39 @@ NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 coclass'jd'
 
 NB. jd jmf operations
-NB. single point for trace
 NB. error checks beyond those provided by jmf
 NB. the error checks should eventually be included in jmf
-
 jdcreatejmf=: 3 : 0
-'createjmf'trace y
 createjmf_jmf_ y
-
-if. -.fexist {.y do.
- 'jd createjmf failed'trace {.y
- 6!:3[5
- createjmf_jmf_ y
-end. 
-
-if. (fsize {.y)~:HS_jmf_+;1{y do.
- jddamage'create failed (previous jddeletefolder failed?): ',;{.y
-end.
+if. -.fexist {.y              do. logijfdamage 'createjmf a';y end. 
+if. (fsize {.y)~:HS_jmf_+;1{y do. logijfdamage 'createjmf b';y end.
 )
 
 jdmap=: 3 : 0
 0 jdmap y
 :
 cnts_map_jd_=: >:cnts_map_jd_
-'map'trace y
 ('map name invalid: ',;{.y)assert _1=nc {.y
 ('map file does not exist: ',;1{y)assert fexist 1{y
 try.
  x map_jmf_ y
 catchd.
- echo 'jdmap failed unexpectedly',LF,'will try again'
- 6!:3[5
- x map_jmf_ y
+ FEER_jd_=: 13!:12''
+ logijfdamage 'map';y
 end.
 )
 
 jdunmap=: 3 : 0
-'unmap'trace y
-if. 1=L.y do.
- fn=. 1{(({."1 mappings_jmf_)i.{.y){mappings_jmf_
- unmap_jmf_ y NB. resize failure not detected
- if. (fsize fn)~:HS_jmf_+;1{y do.
-  jddamage 'resize failed: ',;fn
- end. 
-else.
- unmap_jmf_ y
-end.
+if. 0=L.y do. unmap_jmf_ y return. end.
+fn=. 1{(({."1 mappings_jmf_)i.{.y){mappings_jmf_
+unmap_jmf_ y NB. resize failure not detected
+if. (fsize fn)~:HS_jmf_+;1{y do. logijfdamage 'unmap resize';y end. 
+)
+
+validaterefcounts=: 4 : 0
+if. *./2=t=. ;refcount_jmf_ each 6{"1 mappings_jmf_ do. return. end.
+x logtxt_jd_ showmap_jmf_'' NB. validaterefcounts
+'validaterefcounts failed'assert 0
 )
 
 NB. following should be part of jmf.ijs

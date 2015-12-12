@@ -47,6 +47,7 @@
 <a href="#read">read</a>
 <a href="#reads">reads</a>
 <a href="#readtc">readtc</a>
+<a href="#ref">ref</a>
 <a href="#reference">reference</a>
 <a href="#renamecol">renamecol</a>
 <a href="#renametable">renametable</a>
@@ -405,19 +406,21 @@ varbyte - indexes;values
 can be used with set to efficiently adjust col data
 <hr><a name="info"><h2>info</h2></a>
 jd'info ...' NB. info about current DB
- agg                        - select aggregators
- dynamic   [table [column]] - dynamic cols
- jd        [table [column]] - jd... cols
- last                       - cmd time space
- schema    [table [column]] - normal cols (non jd...)
- summary   [table]
+ agg                          - select aggregators
+ dynamic     [table [column]] - dynamic cols
+ jd          [table [column]] - jd... cols
+ last                         - cmd time space
+ schema      [table [column]] - normal cols (non jd...)
+ summary     [table]
  table
- varbyte   [table [column]]
+ validate    [table][column]]
+ validatebad [table][column]]
+ varbyte     [table [column]]
 
- hash      [table]          - hash cols
- ref       [table]          - ref cols
- reference [table]          - reference cols
- unique    [table]          - unique cols
+ hash        [table]          - hash cols
+ ref         [table]          - ref cols
+ reference   [table]          - reference cols
+ unique      [table]          - unique cols
 
  NB. example info
  jdadminx'example'[olddan=:jdaccess''
@@ -825,11 +828,9 @@ jdaccess olddan
 <hr><a name="validate"><h2>validate</h2></a>
 validate
 
-validates db and reports any problems
-reports mismatch in table Tlen and column lengths
-other tests will be added
-
-needs option to fix Tlen problems by cutting back long cols
+runs info validatebad and marks the db damaged if there are problems
+see <a href="technical.html#damaged">Technical|damaged</a>
+tutorial log
 
 <hr><a name="where"><h2>where</h2></a>
 where clause - jd'reads ... from ... where'

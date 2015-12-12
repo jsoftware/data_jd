@@ -117,7 +117,7 @@ try.
  jd y
  'did not get expected error'assert 0
 catch.
- 'did not get expected error text'assert +./x E. ;1{jdlast
+ t['did not get expected error text'assert +./x E. t=. ;1{jdlast
 end.
 )
 
@@ -137,22 +137,22 @@ DBX jdx y
 APIRULES=: 1
 'DB UP SERVER'=: bdnames x
 USER=: (UP i.'/'){.UP
-'OP FETAB FECOL FEXTRA'=: 4$<''
+'FEOP OP FETAB FECOL FEER FEXTRA'=: <''
 try.
 if. 'intask'-:SERVER do.
  'jde: jd not loaded'assert 0=nc<'DBPATHS'
  if. 0=L.y do.
   y=. dlb y
   i=. y i.' '
-  OP=: i{.y
+  FEOP=: OP=: i{.y
   a=. dltb i}.y
  else.
   y=. (bdnames ;{.y),}.y
-  OP=: dltb ;{.y
+  FEOP=: OP=: dltb ;{.y
   a=. }.y
  end.
  pm OP
- 'op'trace <OP
+ 'op'logtxt FEOP
  opx=. ;('x'-:{.OP){OP;'x'
  if. -. (<OP) e. NODBOPS do. 
   DBL=: getdb'' NB. DBL global and test for damage
@@ -174,7 +174,9 @@ if. 'intask'-:SERVER do.
  if. optionspace do.
   lastspace=: 7!:2'r=. (''jd_'',opx)~a' 
  else.
+  'refs before'validaterefcounts''
   r=. ('jd_',opx)~a
+  'refs after' validaterefcounts''
   lastspace=: _1
  end.
  lasttime=: start-~6!:1''

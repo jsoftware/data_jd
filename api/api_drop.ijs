@@ -69,6 +69,8 @@ t=. getloc__d ;{.y
 'dropstop' assert -.fexist PATH__t,(;{:y),'/jddropstop'
 if. ({:y)e.{."1 jdcols {.y do.
  assertnodynamic y
+ f=. PATH__t,'column_create_order.txt'
+ if. fexist f do. (;' ',~each (;:fread f)-.{:y)fwrite f end.
  DeleteCols__d y
  EDELETE assert -.fexist PATH__t,;{:y
 end. 

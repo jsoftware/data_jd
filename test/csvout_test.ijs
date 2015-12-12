@@ -33,7 +33,13 @@ assert 12=>{:{:jd'reads from a'
 
 NB. Tests for shaped columns
 jd 'droptable t'
-jd 'createtable t'; ; ,&','&.> nms (,' ',,&' 3')&.> types
+
+NB. varbyte shaped not allowed
+nms=. nms-.<'VARBYTE'
+types=. types-.<'varbyte'
+DATA=. }:DATA
+
+jd 'createtable t'; ; ,&','&.> nms (,' ',,&' 3')&.> types NB. shaped varbyte no allowed
 jd 'insert t'; , nms,. ,:&.>DATA
 
 NB.! CSTITCH does not work for boolean or varbyte

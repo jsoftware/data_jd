@@ -73,7 +73,7 @@ NB. (f.active stitch fcols) i. adjusted-g.active stitch g cols
 NB. g.active adjusted so deleted rows won't match
 setdatl=: 3 : 0
 if. -.dirty do. return. end.
-'setdatl'trace''
+'setdatl'logtxt''
 d=. getdb''
 
 NB. insist on no deletes for either left or right

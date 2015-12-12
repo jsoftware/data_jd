@@ -7,7 +7,7 @@ jd_list=: 3 : 0
 t=. bdnames y
 ECOUNT assert 1=#t
 select. ;t
-case. 'version' do. ,.'version';'2.2.10'
+case. 'version' do. ,.'version';'2.2.11'
 case. 'open'    do. ,.'open';<>opened''
 case.           do. assert 0['unsupported list command'
 end. 
@@ -21,6 +21,10 @@ case. 'table' do.
  infotable''
 case. 'schema' do.
  infoschema a
+case. 'validate' do.
+ infovalidate a
+case. 'validatebad' do.
+ infovalidatebad a
 case. 'jd' do.
  ''infox a
 case. 'last' do.
@@ -95,6 +99,16 @@ for_c. locs do.
  end. 
 end.
 (;:'table column type shape'),:ts;cs;typ;shape
+)
+
+infovalidate=: 3 : 0
+''validateclocs jdclocs y
+)
+
+infovalidatebad=: 3 : 0
+d=.''validateclocs jdclocs y
+b=. '1'=,;{:{:d
+({.d),:(<b)#each {:d
 )
 
 infovarbyte=: 3 : 0

@@ -45,6 +45,12 @@ s=. $y
 y=. ,y
 r=. #y
 c=. ('Z'=1{x)+10 19 23 29{~'dtmn'i.2{x
+
+NB. kludge display of min/max aggregation of epchdt cols
+if. (1=#y)*.+./_ __="0 1 y do.
+ y=. ,(_=y){0 6342969599999999999
+end.
+
 s$>3{(LIBJD_jd_,' sfe x x x *c *x *c')cd r;c;((r,c)$' ');y;x
 )
 

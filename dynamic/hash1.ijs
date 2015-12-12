@@ -39,7 +39,7 @@ dynamicresetx''
 )
 
 dynamicresetx=: 3 : 0
-'dynamicreset hash'trace''
+'hashx'logtxt''
 len =: Tlen
 writestate'' NB.! avoid unique bug - clean up when readstate/writestate cleanedup
 
@@ -102,7 +102,6 @@ EMPTY
 NB. never called!
 dynamicreset=: 3 : 0
 'never called!!!!!!!!!!!!!'assert 0
-'dynamicreset hash'trace''
 len =: Tlen
 writestate'' NB.! avoid unique bug - clean up when readstate/writestate cleanedup
 

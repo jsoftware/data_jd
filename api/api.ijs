@@ -149,7 +149,7 @@ if. 'varbyte'-:typ__snk do.
  f=. PATH__snk,'val'
  ferase f
  jdcreatejmf f;#val
- jdmap n;f;f
+ jdmap n;f
  val__snk=. val
 else.
  'jde: val and not varbyte' assert _1=nc<'val'
@@ -307,7 +307,10 @@ if. (1=L.y)*.5=$y do.
  FETAB=: tab
  FECOL=: nam
  shape=. _".shape
- if. shape=_ do. shape=. i.0 end.
+ if. shape=_ do. shape=. i.0
+ else.
+  'shape not allowed'assert (2{y)e.;:'boolean int float byte'
+ end.
  ETSHAPE assert 1>:#shape
  ETYPE assert (<type) e. TYPES -. 'enum';'varbyte'
  t=. getloc__d tab
@@ -328,7 +331,10 @@ FECOL=: ;1{y
 vtcname FECOL
 ECOUNT assert 3 4 e.~#y
 if. 4=#y do.
-  ETSHAPE assert 1>:#_".;{:y
+ if. -.''-:;3{y do.
+  'shape not allowed'assert (2{y)e.;:'boolean int float byte'
+ end. 
+ ETSHAPE assert 1>:#_".;{:y
 end.  
 InsertCols__d ({.y),< ;' ',~each}.":each y
 JDOK
@@ -368,21 +374,6 @@ else.
 end.
 )
 
-jd_update=: 3 : 0
-ECOUNT assert 2<:#y
-d=. getdb''
-Update__d ({.y),<(1{y),<vsub 2}.y
-JDOK
-)
-
-jd_delete=: 3 : 0
-y=. bdnames y
-ECOUNT assert 2=#y
-d=. getdb''
-Delete__d y
-JDOK
-)
-
 jd_datatune=: 3 : 0
 ECOUNT assert 2<:#y
 d=. getdb''
@@ -398,24 +389,6 @@ d=. getdb''
 JDE1001 assert 3=nc<'jd_',OP,'__d' 
 ('jd_',OP,'__d')~y
 )
-
-NB. Revert (in case of not unique) does not work on dynamic cols!
-xxxxjd_createunique=: 3 : 0
-y=. bdnames y
-FEXTRA=: ;y,each<' '
-ECOUNT assert 2<:#y
-d=. getdb''
-validtc__d y
-try.
- MakeUnique__d ({.y),<}.y
-catchd.
- jd_dropdynamic 'unique',;' ',each y
- 'not unique'assert 0
-end.
-JDOK
-)
-
-
 
 NB. Revert (in case of not unique) does not work on dynamic cols!
 jd_createunique=: 3 : 0
@@ -798,75 +771,11 @@ end.
 JDOK
 )
 
-NB.! needs work for ref/reference/hash columns
-NB.! needs option to fix Tlen problems by dropdynamic/cutting back/dynamic
-NB.! needs to validate unique
-NB. assert for completely unexpected errors
-NB. formatted report for more likely errors
-jd_validate=: 3 : 0
-d=. getdb''
-r=. ''
-try.
- assert (#NAMES__d)=#CHILDREN__d
- for_i. i.#NAMES__d do.
-  t=. i{CHILDREN__d    NB. table locale
-  len=. Tlen__t
-  for_j. i.#NAMES__t do.
-   n=. >j{NAMES__t
-   c=. getloc__t n NB. map as required
-   'bad child locale' assert c=j{CHILDREN__t
-
-   if. 'jdindex'-:n do.
-   
-   elseif. 'jdunique'-:8{.n do.
-    NB. assert len<#hash__c
-   elseif. 'jdhash'-:6{.n do.
-    NB. assert len=#link__c
-   elseif. 'jdreference_'-:12{.n do.
-    if. typ__c-:'ref' do.
-     if. (-.dirty__c)*.len~:#datl__c do. r=. 'bad ref datl count: ',NAME__t,' ',NAME__c,LF end.
-    else.
-     NB. validate datl datr hashl hashr
-    end.
-  
-   elseif. 1 do.
-    if. len~:#dat__c do.
-     r=. r,'bad count: ',NAME__t,' ',NAME__c,' ',(":#dat__c),' (Tlen is ',(":len),')',LF
-    end.
-    if. typ__c-:'varbyte' do.
-     assert (len,2)-:$dat__c
-     assert shape__c-:''
-    else.
-     assert shape__c-:}.$dat__c 
-    end. 
-    k=. ({."1 mappings_jmf_)i.<'dat_',(;c),'_'
-    mr=. k{mappings_jmf_
-    ms=. msize_jmf_ >6{mr
-    fs=. fsize 1{mr
-    assert fs=ms+HS_jmf_
-   end.
-  end.
- end.
-catchd.
- r=. r,'unexpected error',LF,13!:12''
-end.
-,.'Jd report validate';r
-)
-
 getfolder=: 3 : 0
 db=. dbpath DB
 p=. jpath db
 i=. p i:'/'
 (Open_jd_ i{.p);(>:i)}.p
-)
-
-getdb=: 3 : 0
-db=. dbpath DB
-'db damaged'assert -.fexist db,'/jddamage'
-if. -.'database'-:jdfread db,'/jdclass' do. throw JDE1000 end.
-i=. db i:'/'
-floc_z_=: f=. Open_jd_ jpath i{.db
-dloc_z_=: Open__f (>:i)}.db
 )
 
 NB. unique/hash/reference/ref

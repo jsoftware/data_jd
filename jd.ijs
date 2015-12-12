@@ -15,8 +15,11 @@ NB. asserts for platorm and environment
 ('Jd not supported on UNAME: ',UNAME) assert (<UNAME)e.'Win';'Linux';'Darwin' 
 NB. 'Contact Jsoftware for Darwin support' assert -.UNAME-:'Darwin'
 
+'Jd requires addon jfiles'assert fexist '~addons/data/jfiles/jfiles.ijs'
+load'jfiles'
+
 3 : 0''
-if. IFWIN do.
+if. 0*.IFWIN do.
  'Jd requires Windows version > XP'assert 5<{:,(8#256)#:;'kernel32.dll GetVersion x' cd ''
  try. 'msvcr110.dll foo x'cd'' catch. end.
  t=. 'Jd requires msvcr110.dll',LF,'http://www.microsoft.com/en-ca/download/details.aspx?id=30679',LF,'download vcredist_x64.exe and run to install msvcr110.dll'
@@ -44,12 +47,15 @@ base/column.ijs
 base/read.ijs
 base/where.ijs
 base/jmfx.ijs
+base/log.ijs
+base/tests.ijs
+base/validate.ijs
 api/api.ijs
-api/api_insert.ijs
+api/api_adm.ijs
+api/api_change.ijs
+api/api_csv.ijs
 api/api_drop.ijs
 api/api_info.ijs
-api/csv_api.ijs
-api/adm_api.ijs
 api/client.ijs
 csv/csv.ijs
 csv/csvinstall.ijs
@@ -71,12 +77,12 @@ NB. initial globals
 APIRULES_jd_=:  1
 ALLOW_FVE_jd_=: 0 NB. 1 allows hash float - see test/api_float.ijs
 if. _1=nc<'OP_jd_' do. NB. one time inits
- OP_jd_=: 'none'
- jdtrace_jd_ 0 
+ FEOP_jd_=: OP_jd_=: 'none'
  TEMPCOLS_jd_=: i.0 2 
  cntsclear_jd_''
  pmclear_jd_''
  FLUSHAUTO_jd_=: 1 NB. flush done in close and after create... ref reference set
+ FORCEVALIDATEAFTER_jd_=: FORCEREVERT_jd_=: 0
 end.
 if. -.IFJHS do. require'~addons/ide/jhs/sp.ijs' end.
 if. IFQT do. labs_run_jqtide_=: 3 : 'spx''''' end.

@@ -74,7 +74,7 @@ dynamicreset''
 )
 
 dynamicreset =: 3 : 0
-'dynamicreset hash'trace''
+'hashx'logtxt''
 len =: Tlen
 writestate''
 

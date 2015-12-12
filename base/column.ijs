@@ -100,7 +100,7 @@ NB. resize single mapped name
 resizemap=: 3 : 0
 'name size' =. y
 t=. (name,Cloc);size
-'resizemap'trace t
+'resizemap'logtxt NAME__PARENT,' ',NAME
 jdunmap (name,Cloc);size
 mapcolfile name
 )

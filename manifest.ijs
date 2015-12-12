@@ -27,29 +27,32 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '2.2.10'
+VERSION=: '2.2.4'
 
 FILES=: 0 : 0
 jd.ijs
 manifest.ijs
-api/adm_api.ijs
 api/api.ijs
+api/api_adm.ijs
+api/api_change.ijs
+api/api_csv.ijs
 api/api_drop.ijs
 api/api_info.ijs
-api/api_insert.ijs
 api/client.ijs
-api/csv_api.ijs
 api/jjd.ijs
 base/column.ijs
 base/common.ijs
 base/database.ijs
 base/folder.ijs
 base/jmfx.ijs
+base/log.ijs
 base/pm.ijs
 base/read.ijs
 base/table.ijs
+base/tests.ijs
 base/util.ijs
 base/util_epoch.ijs
+base/validate.ijs
 base/where.ijs
 base/zutil.ijs
 cd/jd.dll
@@ -122,6 +125,7 @@ dynamic/ref.ijs
 dynamic/reference.ijs
 dynamic/smallrange.ijs
 dynamic/unique.ijs
+pm/csvtest.ijs
 pm/pm.ijs
 pm/pma.ijs
 pm/pmb.ijs
@@ -133,7 +137,6 @@ pm/pm_hashtimes.ijs
 pm/pm_reference.ijs
 test/alloc_test.ijs
 test/append_test.ijs
-test/asrequired_test.ijs
 test/basic_test.ijs
 test/cd_query_test.ijs
 test/createcol_test.ijs
@@ -155,6 +158,7 @@ test/insert_test.ijs
 test/jdindex_test.ijs
 test/joinorder_test.ijs
 test/join_test.ijs
+test/log_test.ijs
 test/modify_test.ijs
 test/multicol_test.ijs
 test/northwind_test.ijs
@@ -199,6 +203,7 @@ tutorial/hash_tut.ijs
 tutorial/intro_tut.ijs
 tutorial/join_tut.ijs
 tutorial/link_tut.ijs
+tutorial/log_tut.ijs
 tutorial/performance_tut.ijs
 tutorial/reads_tut.ijs
 tutorial/server_tut.ijs

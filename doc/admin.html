@@ -40,7 +40,6 @@ See tutorial admin_tut.</p>
 <a href="#jddropstop">jddropstop</a>
 <a href="#jdex">jdex</a>
 <a href="#jdfixcolnames">jdfixcolnames</a>
-<a href="#jdflush">jdflush</a>
 <a href="#jdfread">jdfread</a>
 <a href="#jdfrom">jdfrom</a>
 <a href="#jdfroms">jdfroms</a>
@@ -50,6 +49,8 @@ See tutorial admin_tut.</p>
 <a href="#jdlinkmove">jdlinkmove</a>
 <a href="#jdlinkset">jdlinkset</a>
 <a href="#jdlinktargets">jdlinktargets</a>
+<a href="#jdlogijfshow">jdlogijfshow</a>
+<a href="#jdlogtxtshow">jdlogtxtshow</a>
 <a href="#jdpath">jdpath</a>
 <a href="#jdrt">jdrt</a>
 <a href="#jdserverstop">jdserverstop</a>
@@ -58,7 +59,6 @@ See tutorial admin_tut.</p>
 <a href="#jdtables">jdtables</a>
 <a href="#jdtesterrors">jdtesterrors</a>
 <a href="#jdtests">jdtests</a>
-<a href="#jdtrace">jdtrace</a>
 <!-- jdutilindex z --></p></codenopre><code><hr><a name="jdaccess"><h2>jdaccess</h2></a>
 set DAN (db access name), user/pswd, and server for jd ops
 
@@ -75,20 +75,23 @@ jdaccess 'zz me/xx localhost:65002'
 jdaccess ''                  NB. report
 jdaccess 0                   NB. clear access  
 <hr><a name="jdadmin"><h2>jdadmin</h2></a>
-make db folder available with default jdaccess
+load db admin.ijs to make db available
+jdaccess is done for first dan and user/pswd in admin.ijs
+
+opens all tables/cols and maps all mapped files
+jd'validate' done to validate db
 
 jdadmin 'ab'     NB. make ~temp/jd/ab available
 jdadmin '.../ab' NB. make .../ab available
 jdadmin ''       NB. report 
 jdadmin 0        NB. clear all admin and release all locks
 
-default jdaccess is for: ab u/p intask
-
 DAN (db access name) maps to folder,user/pswds,ops
 different DANs can access the same or different folders
 
 DAN rules set by admin.ijs in db folder
 creates default admin.ijs if it does not exist
+default admin.ijs - dan is last path folder - u/p is user/pswd
 
 lock on db folder prevents interference by other tasks
 jdadmin '...' NB. gets lock
@@ -191,9 +194,8 @@ jdcols'tab' NB. return col names,.locales sorted by name
 <hr><a name="jdcreatefolder"><h2>jdcreatefolder</h2></a>
 jdcreatefolder'~temp/jd/a/b' NB. creates required folders for path
 <hr><a name="jddamage"><h2>jddamage</h2></a>
-jddamage_jd_'error message'
-
-writes jddamage file to db folder to prevent further access
+jddamage_jd_'reason' NB. writes db jddamage file - prevents jd ops
+jddamage_jd_''       NB. erases db jddamage file - allows jd ops
 <hr><a name="jddeletefolder"><h2>jddeletefolder</h2></a>
 jddeletefolder_jd_'~/jd/test'
 
@@ -298,6 +300,14 @@ tutorial link
 jdlinktargets_jd_'' NB. report jdlinkmove/jdlinkset folder targets
 
 tutorial link
+<hr><a name="jdlogijfshow"><h2>jdlogijfshow</h2></a>
+jdlogijfshow_jd_'' NB. log.ijf summary
+jdlogijfshow_jd_ 0 NB. component 0
+
+tutorial log
+<hr><a name="jdlogtxtshow"><h2>jdlogtxtshow</h2></a>
+jdlogtxtshow_jd_ 10 NB. log.txt last 10 lines
+tutorial log
 <hr><a name="jdpath"><h2>jdpath</h2></a>
 jdpath_jd_'' NB. path (ending in /) to db folder
 
@@ -350,10 +360,4 @@ NOTE: tests in core are run with 0!:3 and have implied assert on every line
 ~addons/data/jd/core     original non api tests (not included in ALLTESTS)
 ~addons/data/jd/tutorial tutorials that can run as test scripts
 ~addons/data/jd/demo     scripts that build/test northwind,sandp,sed,vr
-<hr><a name="jdtrace"><h2>jdtrace</h2></a>
-jdtrace_jd_ b NB. toggle trace on/off
-
-if trace on, records written to TRACEFILE_jd (~temp/jd/trace.txt)
- for events such as map, unmap, createjmf, jd'op ...'
-
-</code></div></div></body></html>
+</div></div></body></html>
