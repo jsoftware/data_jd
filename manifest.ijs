@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '2.2.11'
+VERSION=: '2.2.4'
 
 FILES=: 0 : 0
 jd.ijs
@@ -48,6 +48,7 @@ base/jmfx.ijs
 base/log.ijs
 base/pm.ijs
 base/read.ijs
+base/scriptlists.ijs
 base/table.ijs
 base/tests.ijs
 base/util.ijs
@@ -106,6 +107,8 @@ demo/sed/csv/t.cdefs
 demo/sed/csv/t.csv
 demo/vr/vr.ijs
 doc/admin.html
+doc/csv.html
+doc/dynamic.html
 doc/favicon.ico
 doc/general.html
 doc/guide.html
@@ -113,11 +116,15 @@ doc/index.html
 doc/jblue.png
 doc/jda.css
 doc/license.html
+doc/manage.html
+doc/misc.html
+doc/ops.html
 doc/overview.html
 doc/release.html
 doc/support.html
+doc/table-table.html
 doc/technical.html
-doc/user.html
+doc/use.html
 dynamic/base.ijs
 dynamic/hash.ijs
 dynamic/hash1.ijs
@@ -141,7 +148,7 @@ test/basic_test.ijs
 test/cd_query_test.ijs
 test/createcol_test.ijs
 test/createhash_unique_test.ijs
-test/csvout_test.ijs
+test/csv_test.ijs
 test/dropdynamic_test.ijs
 test/droptable_test.ijs
 test/drop_rename_test.ijs
@@ -197,7 +204,7 @@ tutorial/csv_tut.ijs
 tutorial/custom_tut.ijs
 tutorial/datatune_tut.ijs
 tutorial/dropstop_tut.ijs
-tutorial/epochdt.ijs
+tutorial/epochdt_tut.ijs
 tutorial/from_tut.ijs
 tutorial/hash_tut.ijs
 tutorial/intro_tut.ijs

@@ -19,14 +19,6 @@ fixtype=: 3 : ',@boxopen fixtype_num fixinsert y'
 NB. fixtype should be defined to do efs
 
 coclass deftype 'edate'
-eformat=: ',Zd'
-
 coclass deftype 'edatetime'
-eformat=: ',Zt'
-
 coclass deftype 'edatetimem'
-eformat=: ',Zm'
-
 coclass deftype 'edatetimen'
-eformat=: ',Zn'
-

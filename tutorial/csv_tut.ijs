@@ -1,17 +1,50 @@
-NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
+NB. Copyright 2015, Jsoftware Inc.  All rights reserved.
 NB. write/read/dump/restore csv files
 
 jdadminx'test'
-jd'gen test f 15'
-jd'reads from f'
-
+jd'gen test f 3'
+jd'createcol f edt edatetime _';_1e12,0,1e12
+jd'reads from f' NB. edt col iso8601 format
 CSVFOLDER=: F=: '~temp/jd/csv/junk/'
+
+NB. csvwr/csvrd
 jddeletefolder_jd_ F
 jd'csvwr f.csv f'
 dir F
-fread F,'f.csv'
-fread F,'f.cdefs' NB. paramters required to load f.csv 
+fread F,'f.csv'    NB. edt formated as in reads (./, Z/blank)
+fread F,'f.cdefs'  NB. parameters required to load f.csv 
+jd'csvrd f.csv fx' NB. load f.csv to table fx
+jd'reads from fx'
+assert (jd'reads from f')-:jd'reads from fx'
 
+NB. epoch cols by default are iso8601 char, but can be int
+jd'droptable fx'
+jd'csvwr /e f.csv f' NB. /e option - iso6001-int
+fread F,'f.csv'      NB. note edt col is ints
+fread F,'f.cdefs'    NB. note iso8601-int
+jd'csvrd f.csv fx'   NB. load f.csv to table fx
+jd'reads from fx'
+assert (jd'reads from f')-:jd'reads from fx'
+
+NB. csvdump/csvrestore
+jddeletefolder_jd_ F
+jd'csvdump'
+dir F
+jd'dropdb'
+jd'createdb'
+jd'csvrestore' NB. restore db from csv files
+jd'info summary'
+jd'reads from f'
+
+NB. csvdump/csvrestore epoch as int (more efficient)
+jddeletefolder_jd_ F
+jd'csvdump /e'
+jd'dropdb'
+jd'createdb'
+jd'csvrestore' NB. restore db from csv files
+jd'reads from f'
+
+NB. csvwr options
 jd'csvwr /h1 f.csv f' NB. /h1 writes header of col names
 fread F,'f.csv'
 fread F,'f.cdefs' NB. options .... 1 - indicates 1 header
@@ -25,7 +58,7 @@ fread F,'f.csv'
 jd'csvwr f.csv f'
 jd'droptable k'  NB. drop table k if it exists
 jd'csvrd f.csv k'
-jd'reads from k' NB. default is to read 10 rows (or less if file contains less)
+jd'reads from k'
 jd'droptable k'
 jd'csvrd /rows 2 f.csv k' NB. read 2 rows
 jd'reads from k'
@@ -67,14 +100,13 @@ jd'reads from g'
 NB. damage data (byte4 field too long) to see how errors are reported
 ((fread F,'f.csv')rplc 'IJKL';'xxxxyyyy')fwrite F,'f.csv'
 jdadminx'test'  NB. recreate test as empty
-jd'csvrestore' NB. load csv files
-jd'csvreport'    NB.note ECRUNCATE error
+jd'csvrestore'  NB. load csv files
+jd'csvreport'   NB. note ETRUNCATE error
 
 jd'reads from f'
 jd'reads from g'
 
 NB. loading new csv files without defs
-
 jdadminx'test'
 csvtesta=: 0 : 0
 0,23,2.3,a,red,aaaaaaaaaaaaa,2001-03-07 10:58:12,2012-10-10,03-07-2012 10:58:12,10-10-2013
@@ -126,7 +158,7 @@ NB. /h 1      - csv has 1 header to skip
 NB. get colnames from file header
 jd'csvcdefs /replace /h 1 aa.csv'
 fread F,'aa.cdefs'
-assert (_2}.fread F,'a.cdefs')-:_2}.fread F,'aa.cdefs' NB. differ only in trailing header value
+assert (_15}.fread F,'a.cdefs')-:_15}.fread F,'aa.cdefs' NB. differ only in header value
 jd'droptable aa'
 jd'csvrd aa.csv aa'
 jd'reads from aa'

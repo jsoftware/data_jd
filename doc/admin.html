@@ -346,18 +346,14 @@ table names,.locales sorted by names
 <hr><a name="jdtesterrors"><h2>jdtesterrors</h2></a>
 jdtesterrors_jd_'' NB.test error formatting
 <hr><a name="jdtests"><h2>jdtests</h2></a>
-jdtests_jd_''              NB. run all tests/tutorials/demos
-jdtests_jd_'testa';'testb' NB. run all except testa and testb
-jdtests_jd_ 0              NB. set ALLTESTS as list of tests - no tests run
+[0 or 1] jdtests_jd_ y     NB. 1 echos names as tests are run
 
-[0 or 1] jdtests_jd_''     NB. 1 echos names as tests are run
+''     csv-tests, build-demos, and all tests/tutorials
+'fast' skip csv-tests and build-demos
+'csv'  just csv-tests
 
-
-NOTE: tests in core are run with 0!:3 and have implied assert on every line
-      all other tests depend on explicit assert to signal error
-
-~addons/data/jd/test     test scripts
-~addons/data/jd/core     original non api tests (not included in ALLTESTS)
-~addons/data/jd/tutorial tutorials that can run as test scripts
-~addons/data/jd/demo     scripts that build/test northwind,sandp,sed,vr
+~addons/data/jd/test/core original non api tests (0!:3 implied assert on every line)
+~addons/data/jd/test      tests with asserts
+~addons/data/jd/tutorial  tutorials with asserts
+~addons/data/jd/demo      scripts that build/test northwind,sandp,sed,vr
 </div></div></body></html>

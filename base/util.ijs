@@ -169,27 +169,6 @@ pointer_to_name=: 1 { [: memr (0 4,JINT) ,~ symget@boxopen@,
 
 gethad=: 1 { [: memr 0 4 4 ,~ [: symget <
 
-3 : 0''
-t=. jpath JDP,'cd/'
-p=. jpath'~tools/regex/'
-if. UNAME-:'Linux' do.
- t=. t,'libjd.so'
- p=. p,'libjpcre.so'
-elseif. UNAME-:'Darwin' do.
- t=. t,'libjd.dylib'
- p=. p,'libjpcre.dylib'
-elseif. 1 do.
- if. _1=nc<'DLLDEBUG__' do.
-  t=. t,'jd.dll'
- else.
-  t=. t,'../cdsrc/makevs/x64/debug64/jddll.dll' NB. ms visual studio debug
- end.
- p=. (p,'jpcre.dll')rplc'/';'\'
-end.
-LIBJD=: '"',t,'"'
-'Jd shared library failure' assert 0=(LIBJD_jd_,' regexinit >x *c') cd <p
-)
-
 NB. Date and time utils
 toseconds =: (3 ((86400 * [: 3 :0 {."1) + (60 #. }."1)) (0,5#100)&#:) :. todatetime
 y=.{."1 y [ m=.1{"1 y [ d=.{:"1 y

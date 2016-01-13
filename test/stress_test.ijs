@@ -66,7 +66,7 @@ assert (i.arows)-: /:~,;{:jd'reads akey from a'
 assert (i.brows)-: /:~,;{:jd'reads bref from b'
 a=. ,each{:"1 jd'read from a,a.b where akey=0'
 b=. ,each (0;0;0;'abc defabc d';0)
-assert a-:b
+assert a-:_1|.b NB. col sort order
 ) 
 
 test=: 3 : 0

@@ -26,9 +26,7 @@ ROWSXTRA=: 0
 
 NB. =========================================================
 HIDCOL=: (<'jd') ,&.> ;:'active index'
-getvisible=: #~ 3 :'visible__y'@getloc@>^:(*@#)
 getvisiblestatic=: #~ 3 :'visible__y *. static__y'@getloc@>^:(*@#)
-getallvisible=: HIDCOL -.~ [: getvisible ".@:('NAMES'"_)
 
 getdefaultselection=: 3 : 0
 f=. PATH,'column_create_order.txt'
@@ -57,7 +55,9 @@ if. *@# data do.
 end.
 )
 
+NB. only old style testall calls have data
 create=: 3 : 0
+NB. if. 2=#y do. 1+'a' end.
 'cols data alloc'=. 3{.y,3#a:
 Tlen=: 0
 SUBSCR=: 0 3$a: NB. see dynamic/base.ijs
@@ -68,7 +68,8 @@ if. 3~:#alloc do. alloc=. ROWSMIN_jdtable_,ROWSMULT_jdtable_,ROWSXTRA_jdtable_ e
 writestate''
 active=: Create 'jdactive' ;'boolean';$0
 index=: Create 'jdindex' ;'autoindex' ;$0
-cols=.getallvisible'' [ InsertCols^:(*@#) cols
+InsertCols^:(*@#) cols
+cols=. getdefaultselection''
 Insert@:(cols&,.`,:@.((1=#cols)*.2=#)^:(2>#@$))^:(*@#) data
 )
 
@@ -220,11 +221,8 @@ Reads=: ({."1 ,: [:tocolumn{:"1)@:Read
 
 NB. Write table to the given csv file.
 WriteCsv =: 3 : 0
-if. 4<# y=.,boxopen y do. throw 'Too many arguments to WriteCsv' end.
-y =. (4{.y)  {.@:-.&a:@,"0  '';2;(getallvisible'');I.dat__active
-'file headers nms rws' =. y
+'file headers nms rws epoch'=. y
 l =. #cols =. getloc@> nms
-
 byte =. (;:'byte enum') e.~ typ =. 3 :'<typ__y'"0 cols
 sh1 =. byte }:@]^:[&.> shape =. 3 :'<shape__y'"0 cols
 torow =. LF _1} (TAB,~deb)&.>(;@:)
@@ -232,15 +230,20 @@ fmt =. [ ` (, '_jdstitch' , [: =&' '`(,:&'_')} ":) @. (0<+/@])
 h1 =. ;nms (<@fmt"_ 1 ,/^:(0>.2-~#@$)@:(#:i.))&.> sh1
 h2 =. (*/@> sh1) # typ ,&.> byte ((*. *@#) # ' ',":@{:@])&.> shape
 (; <@torow"1 headers {. h1 ,: h2) jdfwrite f =. jpath file
-
 t =. 3|>: (;:'varbyte enum') i. typ
+if. epoch do.
+ et=. (#typ)#0
+ seputc=. (2*#typ)$' '
+else.
+ et=. 5|>: (;:'edate edatetime edatetimem edatetimen')i.typ
+ seputc=. ,3 : 'try.sep__y,utc__y,''''catch.'',Z''end.' "0 cols
+end. 
 ind =. +/\ 0,}:t{1 2 2
 rws =. pointer_to_name 'rws'
 col =. pointer_to_name@> ; 3 :'ExportMap__y $0'&.> <"0 cols
-lib =. LIBJD,' writecsv > n *c x *x *x x *x'
-empty lib cd f;l;t;ind;rws;col
+lib =. LIBJD,' writecsv > n *c x *x *x *c *x x *x'
+empty lib cd f;l;t;et;seputc;ind;rws;col
 )
-
 
 NB. SECTION transaction handling
 
@@ -313,21 +316,6 @@ catchd.
  throw }.(t i.LF){.t  NB. rethrow
 end.
 EMPTY
-)
-
-AddPropX=: do[a.{~,(8$256)#:do,0 :0 rplc LF;' '
-3468981490510611551
-7666357182267148610
-5351507167778122827
-6875418140908920871
-3205206554728680287
-7666357182265110055
-3690481260078709024
-3972231475540010086
-8243101775637922896
-6875418141059933039
-7955161683694609515
-7311926547784673056
 )
 
 NB. x is a dynamic column type, and y is a list of column names.

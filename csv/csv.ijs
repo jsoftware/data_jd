@@ -65,7 +65,11 @@ CDOUBLE=:    16 NB. JFL
 CDOUBLEX=:   17 NB. JFL fast (less general) code 
 CI8X=:       18 NB. JINT with dot shifted
 CSTITCH=:    19 NB. stitched to another col
-CMAX=:       20
+CEDATE=:     20
+CEDATETIME=: 21 
+CEDATETIMEM=:22
+CEDATETIMEN=:23
+CMAX=:       24
 
 CTYPES=: <;._2 [ 0 : 0
 CNOT
@@ -88,14 +92,18 @@ CDOUBLE
 CDOUBLEX
 CI8X
 CSTITCH
+CEDATE
+CEDATETIME
+CEDATETIMEM
+CEDATETIMEN
 )
 
 NB. map JDtypes to csv Ctypes
-JDTYPES=: ;:'int  int  float   byte  varbyte date  datex  datetime  datetimex  boolean unsupported'
-JDTMAP=:  ;:'CI8  CI8X CDOUBLE CCHAR CVAR    CDATE CDATEX CDATETIME CDATETIMEX CBOOLEAN'
+JDTYPES=: ;:'int  int  float   byte  varbyte date  datex  datetime  datetimex  boolean  edate  edatetime  edatetimem  edatetimen unsupported'
+JDTMAP=:  ;:'CI8  CI8X CDOUBLE CCHAR CVAR    CDATE CDATEX CDATETIME CDATETIMEX CBOOLEAN CEDATE CEDATETIME CEDATETIMEM CEDATETIMEN'
 
 types=: i.CMAX
-counts=: 0 16 8 1 1 2 4 8 8 8 8 8 0 0 0 1 8 8 8 0
+counts=: 0 16 8 1 1 2 4 8 8 8 8 8 0 0 0 1 8 8 8 0 8 8 8 8
 
 DBAD=: _1.7976931348623157e308 NB. bad double value
 
@@ -117,7 +125,7 @@ i.0 0
 
 log=: 3 : 0
 if. 1=L. y do.
- t=. ,LF,.~showbox y
+ t=. ,LF,.~sptable y
 else.
  t=. y,LF
 end.
@@ -390,7 +398,8 @@ loadflag=:   y-:'load'
 'no cdef options' assert #COLSEP
 'no cdef size'    assert #ROWS
 jdclean''
-unmapall_jmf_'' 
+unmapall_jmf_''
+erase 'csvin_jdcsv_' NB. might be '' from empty file
 if. -.appendflag do.
  jddeletefolder_jd_ PATHCSVFOLDER
  jdcreatefolder_jd_ PATHCSVFOLDER
@@ -417,15 +426,15 @@ if. ROWSEP-:,{.a. do.
 end.
 log 'rowsep: ',(":a.i.ROWSEP),' ',;((,each CR;LF;CRLF)i.<ROWSEP){'CR';'LF';'CRLF';''
 
-NB. a=. (ctypes''){CTYPES_jdcsv_
-NB. b=. (JDTMAP_jdcsv_ i. a){JDTYPES_jdcsv_
-NB. b=. (-each'x'=each{:each b)}.each b NB. remove x for datex datetimex
-NB. INFO=: colnames;a;b;<coldefs
-NB. (3!:1 INFO,<_1) fwrite PATHCSVFOLDER,'/info'
+if. 0=fsize PATHCSVFILE do.
+ csvin_jdcsv_=: ''  NB. map empty file fails
+ ina=. inz=. 0
+else.
+ JCHAR jdmap_jd_ 'csvin_jdcsv_';(jpath PATHCSVFILE);'';1 NB. map csv readonly
+ ina=. 15!:14<'csvin_jdcsv_'
+ inz=. ina+#csvin_jdcsv_
+end.
 
-JCHAR jdmap_jd_ 'csvin_jdcsv_';(jpath PATHCSVFILE);'';1 NB. map csv readonly
-ina=. 15!:14<'csvin_jdcsv_'
-inz=. ina+#csvin_jdcsv_
 if. 0~:HEADERS do.
  t=. >:(<:HEADERS){((probe{.csvin)={:ROWSEP)#i.probe
  assert t<#csvin
@@ -455,7 +464,7 @@ clearprogress''
 erra=. 15!:14<'csverrors'
 errz=. erra+SZI_jmf_**/$csverrors
 cbd=: mema 8*#coldefs            NB. callback col results
-opts=. COLSEP,(2{.ROWSEP),QUOTED,ESCAPED,(0{a.),(-.GROW){a.
+opts=. COLSEP,(2{.ROWSEP),QUOTED,ESCAPED,(0{a.),((-.GROW){a.),EPOCH
 t=. cdcb1;cbd;opts;ROWS;(#coldefs);erra;errz;ina;inz
 t=. t,(<|:coldefs),ptrs,<15!:14<'var'
 t=. t,<15!:14<'csvprogress'
@@ -484,7 +493,7 @@ log 'rows: ',":ROWS-oldrows
 csverror_z_=: csverrs''
 csverrorcount_z_=: #}.csverror
 if. csverrorcount do.
- log }:,LF,.~'error: ',"1 showbox csverror
+ log }:,LF,.~'error: ',"1 sptable csverror
 end.
 r=. fread PATHLOGFILE
 r fappend PATHLOGLOGFILE
@@ -532,18 +541,20 @@ end.
 
 ECCOLS=: 3 NB. cols in errors for each row (count,p,row)
 
-'ECUNUSED ECTOOMUCH ECTRUNCATE ECBADNUM ECCRLF ECROWSEP EC01 ECEARLY ECESCAPE ECMAX'=: i.10
+'ECUNUSED ECTOOMUCH ECTRUNCATE ECBADNUM ECCRLF ECROWSEP EC01 ECEARLY ECESCAPE ECEPOCHP ECEPOCH ECMAX'=: i.12
 
 ecodes=: <;._2[0 : 0
-ECUNUSED   unused
-ECTOOMUCH  field too long
-ECTRUNCATE truncate
-ECBADNUM   bad number
-ECCRLF     CRLF missing LF
-ECROWSEP   ROWSEP missing
-EC01       CVARX 0 1 mapped
-ECEARLY    unused csv data
-ECESCAPE   escape not 0 n t " or \
+ECUNUSED    unused
+ECTOOMUCH   field too long
+ECTRUNCATE  truncate
+ECBADNUM    bad number
+ECCRLF      CRLF missing LF
+ECROWSEP    ROWSEP missing
+EC01        CVARX 0 1 mapped
+ECEARLY     unused csv data
+ECESCAPE    escape not 0 n t " or \
+ECEPOCHP    extra precision ignored
+ECEPOCH     bad epoch
 )
 
 errors=: 3 : 0
@@ -674,8 +685,9 @@ i.0 0
 
 options=: 3 : 0
 t=. <;._2 ' ',~deb y
-assert 5=#t
-'c r q e h'=: t
+if. 5=#t do. t=. t,<'iso8601-char' end. NB. epoch default
+assert 6=#t
+'c r q e h epoch'=: t
 COLSEP=: c rplc 'BLANK';' ';'TAB';TAB;'AUTO';{.a.
 assert 1=#COLSEP
 ROWSEP=: r rplc 'CR';CR;'LF';LF;'CRLF';CRLF;'AUTO';{.a.
@@ -686,6 +698,8 @@ ESCAPED=: e rplc 'NO';' '
 assert 1=#ESCAPED
 HEADERS=: _1".h
 assert (0<:HEADERS)*.10>:HEADERS
+EPOCH=: ":epoch-:'iso8601-int'
+assert +./(<epoch)='iso8601-char';'iso8601-int'
 )
 
 NB. extend coldefs etc as required

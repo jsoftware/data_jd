@@ -69,7 +69,7 @@ NB. 0 1 1 efs y - ignore offset and return offset
 [t=. 0 1 1 efs_jd_ '2014-10-11T12:13:14+05'
 assert t-:466344794000000000;300
 
-NB. verity some edge conditions
+NB. verify some edge conditions
 t=. efs_jd_ '1800-01-01'
 assert '1800-01-01T00:00:00,000000000Z'-:sfe_jd_ t
 assert '?'={.sfe_jd_ t-1
@@ -119,8 +119,14 @@ jd'reads from f where a>466344794000000000'
 jd'reads max a from f'
 assert (1 30$'2017-01-01T00:00:00,000000000Z')-:;{:jd'reads max a from f'
 
+jd'reads from f where jdindex<3' NB. default is , sep and Z utc
+c=. jdgl_jd_'f a'
+sep__c=: '.' 
+utc__c=: ' '
+NB. sep and utc are persistent column attributes
+jd'reads from f where jdindex<3' NB. . sep and no Z
 
-jd'reads /e from f' NB. epoch int rather than formatted to iso 8601
+jd'reads /e from f where jdindex<3' NB. epoch int rather than iso8601
 jd'get f a'         NB. raw column data
 
 NB. edatetimem milli

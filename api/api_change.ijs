@@ -21,14 +21,7 @@ d=. getdb''
 FETAB=: ;{.y
 if. OP-:'insert' do. 'before'validatetable FETAB end.
 t=. getloc__d {.y
-nv=. vsub 1}.y
-
-dtn=. 'datatune_',FETAB,'__d'
-if. 3=nc<dtn do.
- jdn=. NAMES__t
- jdn=. (-.(<'jd')=2{.each jdn)#jdn
- nv=. jdn,.('jdn';{."1 nv) dtn~ jdn;{:"1 nv
-end. 
+nv=. datatune vsub 1}.y
 ns=. {."1 nv
 vs=. {:"1 nv
 all=. ((<'jd')~:2{.each NAMES__t)#NAMES__t NB. all col names
@@ -88,7 +81,7 @@ else.
  w=. ,w
  EINDEX assert *./(0<:w),Tlen__t>w
 end.
-nv=.  vsub 2}.y
+nv=. datatune vsub 2}.y
 ns=. {."1 nv
 vs=. {:"1 nv
 all=. ((<'jd')~:2{.each NAMES__t)#NAMES__t NB. all col names
@@ -107,4 +100,23 @@ for_i. i.#ns do.
 end. 
 'after'validatetable FETAB
 JDOK
+)
+
+datatune=: 3 : 0
+d=. getdb''
+t=. getloc__d FETAB
+dtn=. 'datatune_',FETAB,'__d'
+if. 3=nc<dtn do.
+ jdn=. NAMES__t
+ jdn=. (-.(<'jd')=2{.each jdn)#jdn
+ y=. jdn,.('jdn';{."1 y) dtn~ jdn;{:"1 y
+end.
+y
+)
+
+jd_datatune=: 3 : 0
+y=. bdnames y
+ECOUNT assert 2<:#y
+FETAB=: ;{.y
+datatune vsub 1}.y
 )

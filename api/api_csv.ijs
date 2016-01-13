@@ -18,7 +18,7 @@ createcdefs=: 3 : 0
 'cols table header'=. y
 d=. getdb''
 t=. getloc__d table
-all=. getallvisible__t''
+all=. getdefaultselection__t''
 if. 0=#cols do.
  cols=. all
 else.
@@ -43,23 +43,17 @@ c=. c,'options TAB LF NO \ ',(":header),LF
 )
 
 jd_csvwr=: 3 : 0
-csvset''
-a=. ca y
-d=. getdb''
-header=. 0
-w=. ''
-while. '/'={.option=. >{.a do.
- select. option
- case. '/h1' do.
-  header=. 1
- case. '/w' do.
-  w=. >{:a
-  a=. }:a
- case. do.
-  assert 0['bad option'
- end. 
- a=. }.a
+a=. '/e 0 /h1 0 /w 0' getoptions ca y
+header=. option_h1
+epoch=. option_e
+if. option_w do.
+ w=. >{:a
+ a=. }:a
+else.
+ w=. ''
 end. 
+csvset''
+d=. getdb''
 csv=. CSVFOLDER__,>0{a
 table=. >1{a
 cols=. 2}.a
@@ -70,7 +64,7 @@ jdcreatefolder p
 assert 0=''fwrite csv['unable to create csv file'
 assert 0=''fwrite cdefs['unable to create cdefs file'
 t=. getloc__d table
-all=. getallvisible__t''
+all=. getdefaultselection__t''
 if. 0=#cols do.
  cols=. all
 else.
@@ -91,7 +85,7 @@ end.
 b=. (":each b),each' '
 b=. (>0{"1 b),.(>1{"1 b),.>2{"1 b
 c=. ,(' ',.~>":each<"0 >:i.#b),.b,.LF
-c=. c,'options TAB LF NO \ ',(":header),LF
+c=. c,'options TAB LF NO \ ',(":header),(;epoch{' iso8601-char ';' iso8601-int '),LF
 c fwrite cdefs
 if. #w do.
  try.
@@ -103,7 +97,7 @@ else.
   active=. getloc__t 'jdactive'
   rows=. I.dat__active 
 end.
-WriteCsv__t csv;header;cols;rows
+WriteCsv__t csv;header;cols;rows;epoch
 i.0 0
 )
 
@@ -119,11 +113,13 @@ end.
 
 NB. write db tables and script to folder y
 jd_csvdump=: 3 : 0
+y=. '/e 0' getoptions bdnames y
+e=. ;option_e_jd_{'';'/e '
 csvset''
 assert 0=#dir CSVFOLDER__['CSVFOLDER must be empty'
 tabs=. {."1 jdtables''
 for_t. tabs do.
- jd_csvwr 'T.csv T'rplc 'T';>t
+ jd_csvwr e,'T.csv T'rplc 'T';>t
 end.
 copyscripts CSVFOLDER__;jdpath_jd_''
 i.0 0
@@ -134,7 +130,7 @@ jd_csvrd=: 3 : 0
 csvset''
 a=. ca y
 d=. getdb''
-rows=. 10    NB. default rows to read is 10
+rows=. 0    NB. default rows to read is all
 flagcdefs=. 0 NB. cdefs from CSVFOLDER
 while. '/'={.option=. >{.a do.
  select. option
@@ -258,7 +254,7 @@ duplicate_assert cnb
 nums=.  >(( #":cols)":each<"0 >:i.cols)rplc each <' ';'0'
 
 c=. ,LF,.~nums,.' ',.cn,"1 ' byte ',":>:varb
-c=. c,'options ',colsep,' ',rowsep,' ',quoted,' ',escaped,' ',(":headers),LF
+c=. c,'options ',colsep,' ',rowsep,' ',quoted,' ',escaped,' ',(":headers),' iso8601-char ',LF
 jd'droptable csvprobe'
 c fwrite cdefs
 jd_csvrd '/rows 5000 CSVFILE csvprobe'rplc 'CSVFILE';csvfile
@@ -284,7 +280,7 @@ a=. a#i.#c
 c=. '1' (<a;_1)}c NB. byte 0 changed to byte 1
 
 c=. ,LF,.~c
-c=. c,'options ',colsep,' ',rowsep,' ',quoted,' ',escaped,' ',(":headers),LF
+c=. c,'options ',colsep,' ',rowsep,' ',quoted,' ',escaped,' ',(":headers),' iso8601-char',LF
 c fwrite cdefs
 JDOK
 )
@@ -300,6 +296,17 @@ end.
 NB. return jd type of char matrix
 gettype=: 4 : 0
 varb=. x
+
+NB. test for is08601
+try.
+ v=. efs y
+ if. *./0=(86400*1e9)|v do.'edate'       return. end.
+ if. *./0=1e9|v         do. 'edatetime'  return. end.
+ if. *./0=1e6|v         do. 'edatetimem' return. end.
+ 'edatetimen' return.
+catch.
+end.
+
 if. 19={:$y do.
  if. 4 7 10 13 16 dtcheck y do. 'datetime'  return. end.
  if. 2 5 10 13 16  dtcheck y do. 'datetimex' return. end.

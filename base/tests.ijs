@@ -3,78 +3,34 @@ coclass'jd'
 
 JDTIMING=: 1 NB. avoid errors on timing tests - set 0 to check timings
 
-NB. assume headers are non-numeric and end at first number in any column
-NB. y ''              runs all tests
-NB. y 'fast'          skip build demos, unique_tut, csv tests
-NB. y 'testa'         runs all tests except testa
-NB. y 'testa';'testb' runs all tests except
-NB. y 0               just sets ALLTESTS
-NB. x 0 or elided     do not echo test scripts as they are run
-NB. x 1               echo test scripts as they are run
+NB. setscriptlists creates/runs script to create tests/tuts script lists
+
+NB. y ''                      run csv-tests, build-demos, and all tests and tutorials
+NB. y 'fast'                  skip csv-tests and build-demos
+NB. y 'csv'                   run just csv-tests
+NB. x 0 or elided             do not echo test scripts as they are run
+NB. x 1                       echo test scripts as they are run
 jdtests=: 3 : 0
 0 jdtests y
 :
-start=. 6!:1''
+NB. assert -.(<'jjd')e. conl 0['jdtests must be run in task that is not acting as a server'
 cocurrent'base' NB. defined in jd, but must run in base
 OLDFLUSHAUTO_jd_=: FLUSHAUTO_jd_
 FLUSHAUTO_jd_=: 0 NB. tests run more than 2 times slower with flush
 OLDALLOC_jd_=: ROWSMIN_jdtable_,ROWSMULT_jdtable_,ROWSXTRA_jdtable_
-'ROWSMIN_jdtable_ ROWSMULT_jdtable_ ROWSXTRA_jdtable_'=: 4 1 0 NB. lots of resize
-jd'option sort 1' NB. required for tests for now
-NB. assert -.(<'jjd')e. conl 0['jdtests must be run in task that is not acting as a server'
-jdserverstop_jd_''
-jd'close'
-jdadmin 0
-RESIZESTRESS_jdcsv_=: 0
-t=. _4}.each 1 dir JDP,'test/*.ijs'
-t=. (>:;t i: each '/')}.each t
-tsts=. 'core/testall';t
-tsts=. (<JDP,'test/'),each tsts,each<'.ijs'
-tuts=. {."1[ 1!:0 <jpath JDP,'tutorial/*.ijs'
-tuts=. (<JDP,'tutorial/'),each tuts
-tuts=. tuts,demos_jd_
-t=. ALLTESTS=:  /:~tuts,tsts NB. sorted so they run in same order on windows and linux
-NB. remove tests listed in y
-n=. >:>t i:each '/'
-n=. n}.each t
-n=. _4}.each n
-b=. -.n e. boxopen y
-t=. b#t
-if. -.IFJHS do. t=. t-.<JDP,'tutorial/server.ijs' end.
-failed=: ''
-if. 0-:y do. i.0 0 return. end.
-jdt=: i.0 2
-load JDP,'demo/common.ijs'
-
+'ROWSMIN_jdtable_ ROWSMULT_jdtable_ ROWSXTRA_jdtable_'=: 4 1 0 NB. lots of resizecsvonly=. 'csv'-:y
 fast=. 'fast'-:y
-if. fast do.
- t=. t-.<JDP,'tutorial/unique_tut.ijs'
-else.
+csvonly=. 'csv'-:y
+t=. ALLTESTS=:  tests_jd_,tuts_jd_,demos_jd_
+if. fast do. t=. t-.'test/dynamic_test.ijs';'tutorial/unique_tut.ijs' end. NB. remove slow tests
+t=. t,~each<JDP
+if. -.IFJHS do. t=. t-.<JDP,'tutorial/server_tut.ijs' end.
+failed=: ''
+jdt=: i.0 2
+if. csvonly+.-.fast do.
+ start=. 6!:1''
+ jd'option sort 1' NB. sort required for now
  jda=. 6!:1''
- builddemo'northwind'
- builddemo'sandp'
- builddemo'sed'
- jdt=: jdt,(jda-~6!:1'');'build demos'
-end.
-
-for_n. i.#t do.
-  a=. n{t
-  jda=. 6!:1''
-  if. x do. echo 'loadd''','''',~;a end.
-  try.
-    load a
-  catch.
-   echo LF,('failed: ',;n{t),LF,13!:12''
-   failed=: failed,a
-  end.
-  jdt=: jdt,(jda-~6!:1'');;a
-end.
-
-jdserverstop_jd_''
-
-if. -.fast do.
- jda=. 6!:1''
- NB. csv tests
  load JDP,'csv/csvtest.ijs'
  RESIZESTRESS_jdcsv_=: 0
  tests''
@@ -82,13 +38,44 @@ if. -.fast do.
  tests''
  RESIZESTRESS_jdcsv_=: 0
  jdt=: jdt,(jda-~6!:1'');'csv tests'
+ jd'option sort 0'
+ echo (":<.start-~6!:1''),' seconds to run csv tests'
 end. 
-
-jdt=: (\:;{."1 jdt){jdt
-
+if. csvonly do.
+ FLUSHAUTO_jd_=: OLDFLUSHAUTO_jd_ 
+ 'ROWSMIN_jdtable_ ROWSMULT_jdtable_ ROWSXTRA_jdtable_'=: OLDALLOC_jd_
+ i.0 0
+ return.
+end.
+load JDP,'demo/common.ijs'
+if. -.fast  do.
+ start=. 6!:1''
+ jda=. 6!:1''
+ builddemo'northwind'
+ builddemo'sandp'
+ builddemo'sed'
+ jdt=: jdt,(jda-~6!:1'');'build demos'
+ echo (":<.start-~6!:1''),' seconds to build demos'
+end. 
+jdserverstop_jd_''
 jd'close'
 jdadmin 0
-
+start=. 6!:1''
+for_n. i.#t do.
+ a=. n{t
+ jda=. 6!:1''
+ if. x do. echo 'loadd''','''',~;a end.
+ try.
+  load a
+ catch.
+  echo LF,('failed: ',;n{t),LF,13!:12''
+  failed=: failed,a
+ end.
+ jdt=: jdt,(jda-~6!:1'');;a
+end.
+jdserverstop_jd_''
+jd'close'
+jdadmin 0
 if. #failed do.
  NB. echo LF,'known problems:'
  echo LF,'following tests failed:'
@@ -98,10 +85,10 @@ if. #conl 1 do.
  echo LF,'check for orphan locals in conl 1'  
 end.
 echo LF,(":#t),' tests run',LF,(":#failed),' failed'
+jdt=: (\:;{."1 jdt){jdt
 FLUSHAUTO_jd_=: OLDFLUSHAUTO_jd_ 
 'ROWSMIN_jdtable_ ROWSMULT_jdtable_ ROWSXTRA_jdtable_'=: OLDALLOC_jd_
-jd'option sort 0'
-echo LF,(":start-~6!:1''),' seconds to run tests'
+echo LF,(":<.start-~6!:1''),' seconds to run tests and tutorials'
 (;{:jd'list version')fwrite'~temp/jd/jdversion' NB. avoid welcome
 i.0 0
 )
@@ -148,4 +135,22 @@ for_n. t do.
   echo r
  end.
 end. 
+)
+
+setscriptlists=: 3 : 0
+p=. jpath'~/gitdev/addons/data/jd/'
+t=. 1 dir p,'test/*_test.ijs'
+t=. /:~(#p)}.each t
+t=. 'test/core/testall.ijs';t
+t=. ;t,each LF
+tsts=. 'tests=: <;._2 [ 0 : 0',LF,t,')'
+
+t=. 1 dir p,'tutorial/*_tut.ijs'
+t=. /:~(#p)}.each t
+t=. ;t,each LF
+tuts=. 'tuts=: <;._2 [ 0 : 0',LF,t,')'
+
+t=. toCRLF 'NB. Copyright 2015, Jsoftware Inc.  All rights reserved.',LF,'coclass''jd''',LF,tsts,LF,tuts
+t fwrite p,'base/scriptlists.ijs'
+load p,'base/scriptlists.ijs'
 )

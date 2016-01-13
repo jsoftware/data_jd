@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<title>Jd Ops misc</title>
+<link rel="stylesheet" href="jda.css" type="text/css">
+
+<body>
+<div class=masthead>
+<img src="./jblue.png" width="50px" height="50px"/>
+<span class=md>d</span>
+<span class=mt>&nbsp;Ops misc</span>
+<span class=ms><a href="http://www.jsoftware.com" target="_blank">www.jsoftware.com</a><br>J database - J language<br>columnar analytics</span>
+</div>
+
+<div contenteditable="false">
+<code>
+<a href="#close">close</a> <a href="#datatune">datetune</a> <a href="#flush">flush</a> <a href="#gen">gen</a> <a href="#get">get</a> <a href="#loadcustom">loadcustom</a> <a href="#option">option</a> <a href="#set">set</a> <a href="#validate">validate</a> 
+
+<hr><a name="close"><h2>close</h2></a>
+close
+
+unmap all files and close all locales
+does not affect admin or locks
+
+using a table creates all locales and maps all files
+
+creating locales and mapping takes time so close only when necessary
+
+<hr><a name="datatune"><h2>datatune</h2></a>
+datatune table ...
+
+applies table datatune verb - shows what would be inserted
+
+tutorial datatune
+
+<hr><a name="flush"><h2>flush</h2></a>
+flush - flush mapped file dirty memory pages to disk
+
+close does a flush before it unmaps files
+
+FLUSHOPS_jd_ (createcol createhash createunique reference ref set)
+flush at the end as they potentially create lots of dirty pages
+that might complicate effective host ram management
+
+disk hardware buffers mean flushed data is not guaranteed
+to be on disk in the event of a failure such as loss of power,
+but the chance of corrupted disk data is signficantly reduced
+
+flush can help performance by allowing better host ram management
+
+flush after ops that change lots of data can improve performance
+
+Windows: FlushViewOfFile and FlushFileBuffers
+Unix: fsync
+
+
+
+<hr><a name="gen"><h2>gen</h2></a>
+gen test table rows
+gen ref2 table1 rows1 cols table2 rows2
+gen one  table rows cols
+gen two  table1 rows1 table2 [rows2]
+
+generate test table(s)
+
+test - table with all col types
+ref2 - reference table1 aref table2 bref - extra cols
+one  - table with extras cols
+two  - default rows2 is <.rows1%10 - suitable for many to one join
+
+NB. example gen
+jdadminx'example'[olddan=:jdaccess''
+jd'gen test f 3'        NB. f with 3 rows
+jd'reads from f'
+jd'gen ref2 g 5 2 h 3' NB. g 5 rows and 2 extra cols, h 3 rows
+jd'reads from g,g.h'
+jd'gen one i 3 2'
+jd'reads from h'
+jd'gen two j 6 k 3'
+jd'reads from j'
+jd'reads from k'
+jdaccess olddan
+
+
+<a href="#info">info</a> returns dynamic col info
+
+some ops are simpler and run faster without dynamics to update
+<hr><a name="get"><h2>get</h2></a>
+get table col
+
+return raw col data - includes deleted data
+varbyte - indexes;values
+can be used with set to efficiently adjust col data
+
+<hr><a name="loadcustom"><h2>loadcustom</h2></a>
+loadcustom
+
+load <a href="#custom.ijs">custom.ijs</a> from db folder db locale
+<hr><a name="option"><h2>option</h2></a>
+option space ...
+
+option space 1 to record last command space
+option space 0 to not record (reported as _1)
+
+jd'info last' report last cmd, time, space
+
+<hr><a name="set"><h2>set</h2></a>
+set table col';data
+
+set raw col data - includes deleted data
+varbyte - indexes;values
+can be used with get to efficiently adjust col data
+
+
+<hr><a name="validate"><h2>validate</h2></a>
+validate
+
+runs info validatebad and marks the db damaged if there are problems
+see <a href="technical.html#damaged">Technical|damaged</a>
+tutorial log
+
+</code></div></div></body></html>

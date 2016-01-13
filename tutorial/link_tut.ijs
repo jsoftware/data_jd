@@ -26,7 +26,7 @@ jdadminx'test'
 NB.jdlinkset set links from tab/col to path
 jdlinkset_jd_ 'f/int ~temp/linker'
 jd'csvrd f.csv f'
-showbox jdlinktargets_jd_'' NB. report link target
+sptable jdlinktargets_jd_'' NB. report link target
 NB. look at the db folder with OS tools to see the link to the target
 
 NB. locate f/varbyte col (dat and val) in alternate folder
@@ -34,7 +34,7 @@ jdadminx'test'
 NB.jdlinkset set links from tab/col to path
 jdlinkset_jd_ 'f/varbyte ~temp/linker'
 jd'csvrd f.csv f'
-showbox jdlinktargets_jd_'' NB. report link target
+sptable jdlinktargets_jd_'' NB. report link target
 NB. look at the db folder with OS tools to see the link to the target
 
 NB. locate f/int and f/varbye in different alternate folders
@@ -44,7 +44,7 @@ f/int     ~temp/linker0
 f/varbyte ~temp/linker1
 )
 jd'csvrd f.csv f'
-showbox ,.jdlinktargets_jd_'' NB. report link targets
+sptable ,.jdlinktargets_jd_'' NB. report link targets
 
 NB. locate f/a0, f/a1, jdactive (system col) in alternate folder
 jdadminx'test'
@@ -54,25 +54,25 @@ f/a1       ~temp/linker0
 f/jdactive ~temp/linker0
 )
 jd'csvrd f.csv f'
-showbox ,.jdlinktargets_jd_'' NB. report link targets
+sptable ,.jdlinktargets_jd_'' NB. report link targets
 
 NB. jdlinkset persists
 jd'droptable f'
 jd'csvrd f.csv f'
-showbox ,.jdlinktargets_jd_'' NB. report link targets
+sptable ,.jdlinktargets_jd_'' NB. report link targets
 
 NB. hash/unique/reference cols can be linked
 jdadminx'test'
 jdlinkset_jd_ 'f/jdreference_a2_g_b2 ~temp/linker'
 jd'gen two f 10 g 5'
 jd'reference f a2 g b2'
-showbox jdlinktargets_jd_''
+sptable jdlinktargets_jd_''
 
 NB. varbyte cols (dat and val) can be linked
 jdadminx'test'
 jdlinkset_jd_ 'f/varbyte ~temp/linker'
 jd'gen test f 3'
-showbox jdlinktargets_jd_''
+sptable jdlinktargets_jd_''
 
 NB. it is possible to relocate a column to another location
 NB. note that this is independent from jdlinkset and does not adjust the linkj definitions

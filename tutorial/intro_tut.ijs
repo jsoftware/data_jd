@@ -1,5 +1,12 @@
 NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
-
+0 : 'spx hr'
+0 : 0
+this tutorial gives an overview of Jd features
+ creates a db, tables, and columns
+  inserts, modifies, and updates data
+   runs queries with where clauses, aggregations, and joins
+    and more
+)
 jdadminx'test' NB. create new db test (~temp/jd/test)
 
 jd'createtable t1 year int, sales int, product byte 5, team byte 4'
@@ -135,5 +142,3 @@ jd 'reads from foo'
 NB. update rows
 jd 'update foo';'color in ("blue","red")'; 'n2';621 778
 jd 'reads from foo'
-
-

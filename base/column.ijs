@@ -224,7 +224,7 @@ if. 'edate'-:5{.typ do.
  if. JCHAR=3!:0 v do. v=. efs v end. 
  select. typ
  case. 'edate' do.
-  EPRECISION assert *./0=86400|<.v%1e9
+  EPRECISION assert *./0=(86400*1e9)|v
  case. 'edatetime' do.
   EPRECISION assert *./0=1e9|v
  case. 'edatetimem' do.

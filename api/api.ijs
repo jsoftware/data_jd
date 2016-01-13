@@ -67,7 +67,7 @@ jd_... verbs typically start with getdb'' that sets:
 
 jd_z_=: jd_jd_
 
-demos=: (<JDP,'demo/'),each 'sandp/sandp.ijs';'northwind/northwind.ijs';'sed/sed.ijs';'vr/vr.ijs'
+demos=: (<'demo/'),each 'sandp/sandp.ijs';'northwind/northwind.ijs';'sed/sed.ijs';'vr/vr.ijs'
 
 NB. y is jd_... bdnames
 NB. x is list of options and their arg counts
@@ -372,15 +372,6 @@ if. OPTION_lr do.
 else. 
  Reads__d y
 end.
-)
-
-jd_datatune=: 3 : 0
-ECOUNT assert 2<:#y
-d=. getdb''
-t=. getloc__d {.y
-jdn=. NAMES__t
-jdn=. (-.(<'jd')=2{.each jdn)#jdn
-(NAME__t;<jdn)jddatatune__d vsub}.y
 )
 
 NB. run custom db jd_x... op in db locale if it exists
@@ -826,9 +817,11 @@ end.
 r;a
 )
 
+ophtmls=: 'use';'manage';'dynamic';'csv';'table-table';'misc'
+
 jdex=: 3 : 0
 y=. dltb y
-d=. toJ jdfread JDP,'doc/user.html'
+d=. toJ ;fread each(<'.html'),~each(<JDP,'doc/'),each ophtmls
 d=. dltb each<;._2 d,LF
 if. ''-:y do.
  s=. 'NB. example '
@@ -838,7 +831,7 @@ if. ''-:y do.
 end.
 if. y-:'read' do. y=. 'reads' end.
 s=. 'NB. example ',y
-i=. >:((-#s){.each d)i.<s
+i=. >:((#s){.each d)i.<s
 d=. i}.d
 assert 0~:#d['example not found'
 i=. 1 i.~ 0=;#each dltb each d

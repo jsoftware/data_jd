@@ -171,7 +171,7 @@ pmrep=: 3 : 0
 d=. 1 dir (gdb y),'/pm*'
 n=. _4}.each}.each(d i: each '/')}.each d
 v=. 8":each 0".each fread each d
-showbox n,.v
+sptable n,.v
 )
 
 

@@ -10,13 +10,30 @@ NB. is pushed to Jsoftware for building JAL data/jd package
 
 NB. all use of the Jd library is through JDP_z_
 
-NB. asserts for platorm and environment
+nokey_jd_=: 0 : 0 rplc 'INDEX.HTML';jpath '~addons/data/jd/doc/index.html'
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+Jd key: missing or invalid
+email: jdinfo@jsoftware.com
+to provide basic info and request a key
+
+non-commercial or evaluation key is free
+and does not require a license agreement
+
+See Jd documentation at:
+INDEX.HTML
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+)
+
 'Jd requires J64'assert IF64=1
 ('Jd not supported on UNAME: ',UNAME) assert (<UNAME)e.'Win';'Linux';'Darwin' 
-NB. 'Contact Jsoftware for Darwin support' assert -.UNAME-:'Darwin'
-
 'Jd requires addon jfiles'assert fexist '~addons/data/jfiles/jfiles.ijs'
-load'jfiles'
+require'jfiles'
+require'data/jmf'
+require'~addons/ide/jhs/sp.ijs'
 
 3 : 0''
 if. 0*.IFWIN do.
@@ -34,6 +51,29 @@ f=. (;(<n)-:each (-#n){.each d)#d
 JDP_z_=: _6}.;f
 )
 
+3 : 0''
+t=. jpath JDP,'cd/'
+p=. jpath'~tools/regex/'
+if. UNAME-:'Linux' do.
+ t=. t,'libjd.so'
+ p=. p,'libjpcre.so'
+elseif. UNAME-:'Darwin' do.
+ t=. t,'libjd.dylib'
+ p=. p,'libjpcre.dylib'
+elseif. 1 do.
+ if. _1=nc<'DLLDEBUG__' do.
+  t=. t,'jd.dll'
+ else.
+  t=. t,'../cdsrc/makevs/x64/debug64/jddll.dll' NB. ms visual studio debug
+ end.
+  p=. (p,'jpcre.dll')rplc'/';'\'
+end.
+LIBJD_jd_=: '"',t,'"'
+if. _1=r=. (LIBJD_jd_,' jdinit >x *c') cd <JDP_jd_ do. assert 0[echo nokey_jd_ end.
+'Jd binary and J code mismatch - bad install'assert r=6
+'Jd regexinit failed'assert 0=(LIBJD_jd_,' regexinit >x *c') cd <p 
+)
+
 load@:(JDP&,);._2 ]0 :0
 base/util_epoch.ijs
 base/util.ijs
@@ -48,6 +88,7 @@ base/read.ijs
 base/where.ijs
 base/jmfx.ijs
 base/log.ijs
+base/scriptlists.ijs
 base/tests.ijs
 base/validate.ijs
 api/api.ijs
@@ -66,8 +107,6 @@ y =. (,'/'-.{:) jpath y
 load (<y) ,&.> (boxxopen x) ~.@, {."1 ]1!:0 y,'*.ijs'
 )
 
-load'data/jmf'
-
 (<;._1' base.ijs numeric.ijs') loadall JDP,'types/'
 (<;._1' base.ijs hash1.ijs hash.ijs')    loadall JDP,'dynamic/'
 erase'loadall'
@@ -84,9 +123,6 @@ if. _1=nc<'OP_jd_' do. NB. one time inits
  FLUSHAUTO_jd_=: 1 NB. flush done in close and after create... ref reference set
  FORCEVALIDATEAFTER_jd_=: FORCEREVERT_jd_=: 0
 end.
-if. -.IFJHS do. require'~addons/ide/jhs/sp.ijs' end.
-if. IFQT do. labs_run_jqtide_=: 3 : 'spx''''' end.
-i.0 0
 )
 
 jdwelcome_jd_=: 0 : 0 rplc 'BOOKMARK';jpath JDP,'doc/index.html'
@@ -128,29 +164,6 @@ else.
 end. 
 )
 
-echo IFQT#0 : 0
-ctrl+j hijacked for managed execution of tutorials
-ctrl+j will not work with traditional labs'
-)
-
-nokey_jd_=: 0 : 0
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-Jd key: missing or invalid
-email: jdinfo@jsoftware.com
-to provide basic info and request a key
-
-non-commercial or evaluation key is free
-and does not require a license agreement
-
-See Jd documentation at:
-INDEX.HTML
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-)
-
 3 : 0''
 if. -.UNAME-:'Win' do.
  n=. ".}:2!:0'ulimit -n'
@@ -158,5 +171,4 @@ if. -.UNAME-:'Win' do.
   echo LF,'Warning: ',(":n),' for "ulimit -n" is low. See Technotes|file handles.'
  end.
 end.
-if. K_jd_ do. coerase <'jd'[echo nokey_jd_ rplc 'INDEX.HTML';jpath '~addons/data/jd/doc/index.html' end.
 )

@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<title>Jd Ops use</title>
+<link rel="stylesheet" href="jda.css" type="text/css">
+
+<body>
+<div class=masthead>
+<img src="./jblue.png" width="50px" height="50px"/>
+<span class=md>d</span>
+<span class=mt>&nbsp;Ops use</span>
+<span class=ms><a href="http://www.jsoftware.com" target="_blank">www.jsoftware.com</a><br>J database - J language<br>columnar analytics</span>
+</div>
+
+<div contenteditable="false">
+<code>
+<a href="#delete">delete</a> <a href="#info">info</a> <a href="#insert">insert</a> <a href="#list">list</a> <a href="#modify">modify</a> <a href="#read">read</a> <a href="#reads">reads</a> <a href="#readtc">readtc</a> <a href="#update">update</a>
+
+clauses:  <a href="#select">select</a> <a href="#from">from</a> <a href="#where">where</a>
+<hr><a name="delete"><h2>delete</h2></a>
+delete table <a href="#where">where</a>
+
+NB. example delete
+jdadminx'example'[olddan=:jdaccess''
+jd'createtable f a int,b byte 4'
+jd'insert f';'a';24 25 26;'b';3 4$'aaaabbbbcccc'
+jd'delete f a=24'
+jd'delete f';'a=26'
+jd'reads from f'
+jdaccess olddan
+
+<hr><a name="info"><h2>info</h2></a>
+info type [...] - info about current DB
+ agg                          - select aggregators
+ dynamic     [table [column]] - dynamic cols
+ jd          [table [column]] - jd... cols
+ last                         - cmd time space
+ schema      [table [column]] - normal cols (non jd...)
+ summary     [table]
+ table
+ validate    [table][column]]
+ validatebad [table][column]]
+ varbyte     [table [column]]
+
+ hash        [table]          - hash cols
+ ref         [table]          - ref cols
+ reference   [table]          - reference cols
+ unique      [table]          - unique cols
+
+ NB. example info
+ jdadminx'example'[olddan=:jdaccess''
+ jd'gen ref2 a 3 0 b 2'
+ jd'info schema'
+ jd'info schema a'
+ jd'info schema a akey'
+ jd'info reference'
+ jdaccess olddan
+ 
+
+<hr><a name="insert"><h2>insert</h2></a>
+insert table col data ...
+
+col data pairs
+count of data items must be the same
+
+insert of duplicates (createunique) marks older rows as deleted
+and gives an error warning
+ 
+NB. example insert
+jdadminx'example'[olddan=:jdaccess''
+jd'createtable f a int,b byte,b4 byte 4'
+jd'insert';'f';'a';23;'b';'a';'b4';1 4$'abcd'
+jd'reads from f'
+jd'insert';'f';'a';24 25;'b';'bc';'b4';2 4$'aaaabbbb'
+jd'reads from f'
+jd'createtable g'
+jd'createcol g a int _';i.3
+jd'createunique g a'
+jd etx'insert g a';2
+;1{jdlast
+jd'reads jdindex,a from g'
+jdaccess olddan
+
+
+<hr><a name="list"><h2>list</h2></a>
+list version     - Jd version 
+list open        - open databases
+
+<hr><a name="modify"><h2>modify</h2></a>
+modify table <a href="#where">where</a> col data  ...
+modify table indexes col data ...
+
+updates selected row cols in place
+data items are scalar extended
+can not modify col if it has dynamics
+col data pairs (as for insert and update)
+
+indexes are row indexes
+
+NB. example modify
+jdadminx'example'[olddan=:jdaccess''
+jd 'createtable f a int,b int,c byte 4'
+jd 'insert f';'a';24 25 26;'b';100 101 102;'c';3 4$'aaaabbbbcccc'
+jd'reads from f'
+jd 'modify f';'a=24';'b';200
+jd'reads from f'
+jd 'modify f';'a<26';'b';300;'c';2 4$'xxxxzzzz' NB. 300 scalar extends
+jd'reads from f'
+'i b'=: {:"1 jd'read jdindex,b from f where a in (24,26)'
+jd'modify f';i;'b';b+1 NB. modify with indexes
+jd'reads from f'
+jdaccess olddan
+
+
+<hr><a name="read"><h2>read</h2></a>
+read [/e] [<a href="#select">select</a>] from <a href="#from">from</a> [where  <a href="#where">where</a>]
+
+same as reads with /lr option
+
+<hr><a name="reads"><h2>reads</h2></a>
+reads [/lr] [/e] [<a href="#select">select</a>] from <a href="#from">from</a> [where  <a href="#where">where</a>]
+
+/lr - labeled rows instead of labeled cols 
+/e  - edate... cols as epochdt rather than iso 8601
+
+returns select col(s) from table(s) with rows that satisfy where
+alias:col
+alias:table
+aggregation [by key1[,key2]]
+
+NB. example reads
+jdadminx'example'[olddan=:jdaccess''
+jd'gen ref2 a 3 1 b 2'
+jd'reads from a'
+jd'reads from b'
+jd'reads akey,adata from a'
+jd'reads from a,a.b'
+jd'reads from a where akey&lt;3'
+jd'reads from a,a.b where akey&lt;3 and b.bref=0'
+jd'reads asdf:b.bb12 from a,a.b where akey&lt;3 and b.bref=0'
+jd'reads sum adata from a where akey&gt;0'
+jd'reads sum adata by aref from a'
+jdaccess olddan
+
+<hr><a name="readtc"><h2>readtc</h2></a>
+readtc [/lr] [/e] :::...::: [<a href="#select">select</a>]  <a href="#from">from</a>  [<a href="#where">where</a>]
+
+same as reads except J sentence bracketed by :::
+is executed first to create temp cols
+
+tutorial tempcol
+
+<hr><a name="update"><h2>update</h2></a>
+update table <a href="#where">where</a> col data  ...
+
+deletes selected records and inserts new updated records
+count of data items and updated rows must be the same
+col data pairs
+
+NB. example update
+jdadminx'example'[olddan=:jdaccess''
+jd 'createtable f a int,b int,c byte 4'
+jd 'insert f';'a';24 25 26;'b';100 101 102;'c';3 4$'aaaabbbbcccc'
+jd'reads from f'
+jd 'update f';'a=24';'b';200
+jd'reads from f'
+jd 'update f';'a<26';'b';300 400;'c';2 4$'xxxxzzzz'
+jd'reads from f'
+jdaccess olddan
+
+
+<hr><a name="select""><h2>select clause</h2></a>
+read SELECT from ...
+
+Select determines which columns are in the result
+
+ cola
+ alias:cola
+ cola,colb
+ *
+ tabf.cola,tabg.colc
+ *.*
+  sum cola
+ sum cola,avg colb
+ sum cola by key1
+ sum cola by key1,key2
+
+   jd'info agg' NB. database agg functions (includes custom functions)
+   
+<h3>select clause details</h3>
+Select: Column(, Column)*
+      | AggCol(, AggCol)*
+      | AggCol(, AggCol)* by Column(, Column)*
+Column: [alias:] [Tab.]Col
+AggCol: [alias:] agg [Tab.]Col
+Tab: table  | "*"
+Col: column | "*"
+
+Tab is name of a table in the from clause
+(alias, name, or the column used to reference it)
+root table is used if there is no TAB
+
+Col is name of a column in the corresponding table
+
+alias is a name
+
+agg is an aggregation function
+
+if not an aggregation then * can be used for Tab and Col
+if Tab is *, then that column will be shown for all tables
+if Col is *, then all columns from the table will be used
+Tab expanded first so  *.* gives all columns from all tables
+If no Columns are given, then *.* is used, or * if only one table
+
+result name for a col is its alias, or how it was identified
+
+by keyword groups rows by the key columns that follow it
+each aggregator is called on the rows of its column in each group
+
+result col label does not include agg, so an alias is desirable
+
+<hr><a name="from"><h2>from clause</h2></a>
+read ... from FROM ...
+
+tutorial from
+
+from Table (, Table)*
+Table:     Root | Child
+Root:      [alias:] table
+Child:     [alias:] [JoinWord] Parent(Reference)(Reference)*
+Parent:    alias | table
+Reference: table | reference column
+JoinWord:  default | inner | left | right | outer
+Join:        .     |   -   |  &lt;   |   &gt;   |   =
+
+The default join is also called left1.
+
+Only one of the Tables can be the Root.
+The name of a table is either its alias or the last element of its
+description (i.e. the table for the Root, and the last Reference for
+Children). A table can only have one name: if an alias is given, the
+other name will not be used.
+Each Parent must be included as the name of some Table in the list.
+No order is enforced on the Tables, in particular, a Child does
+not have to follow its Parent.
+
+example:
+from A.B, A, C:B&lt;jdreference_a_C_a, inner C.D, B&gt;E-F
+
+The join used to join a Reference to the table before it is
+either the one corresponding to the Join symbol used, or,
+if Join is . and JoinWord is given, that given by JoinWord.
+
+By default joins are done in an optimal (not guaranteed)
+order based on a sampling that picks representative rows
+and tests how restrictive the queries are. The algorithm
+should be fairly robust.
+
+exact keyword indicates to use the order as given.
+   jd'read from exact f,f-g,g-h where h.a&lt;100'
+
+<h3>from clause - join</h3>
+joins: outer = inner -  left &gt;  right &lt;  left1 .
+
+outer join A,A=B
+ all possible rows
+ A rows duplicated for each match in B
+ B rows duplicated for each match in A
+ A or B FILLS provided where no match
+
+inner join A,A-B:
+ same as outer except rows with FILLS are excluded
+ 
+left join A,A&gt;B
+ same as outer except B rows that did not match are excluded
+ 
+right join A,A&lt;B
+ same as outer except A rows that did not match are excluded
+
+left1 join A,A.B
+ each A row with 1 matching B row or FILLS
+ if multiple matching B rows, 1 random one of them is used
+ not a normal join, but is fast
+ same as inner join if 1 and only 1 B row matches 
+
+
+<hr><a name="where"><h2>where clause</h2></a>
+read ... from ... where WHERE
+
+ a="abc"
+ b&lt;23
+ b in (23,24,25)
+ b lt 23 && a eq "abc"
+ a like "ab*" 
+ f.a=23 && g.b="def"
+ a range (1000,2000)
+ a=1 and b=2
+ a,b = 1,2          - same as above but uses a,b hash if available
+ (a=1 and b=2) or (a=3 and b=4)
+ a,b in (1,2),(3,4) - same as above but uses a,b hash if available
+
+relationals:
+ &gt;= &lt;= &lt;&gt; =  &gt;  &lt;
+ ge le ne eq gt lt range
+ in notin like unlike sample sample.
+ 
+ sample n returns n random rows
+ sample. users ?. instead of ?
+
+ non-symbol must be blank delimited
+
+ byte data must be in "s and has C escapes (\" \t \n \0 \x09 ...)
+ numeric data must not be in "s
+
+ like/unlike regex applies to all types
+
+ relationals have implied parens (which must not be present)
+ 
+ a=c (c not a number and not in "s) is a relation between 2 cols
+
+ t (no col/relational) selects rows from table t not created by join
+
+logicals:
+ !   &&  ||
+ not and or
+
+ must be blank delimited
+
+ logicals evaluate as J (right to left)
+  not a=23 && b=24 || b=25  ===  not((a=23)&&((b=24)||(b=25)))
+
+ parens can change the order of evaluation
+
+<h3>where clause details</h3>
+W:  ("!" | "not ")* W1
+W1: W2 (" " ("and"|"or"|"&&"|"||") " " W)?
+W2: "(" W ")"  |  Q
+Q:  col relational dat  |  col relational col  |  tab
+
+col is col name as in select and tab is table name
+
+Q expressions are in implicit parens, which must not be present.
+
+dat represents a J noun; typically this must have the same type as the
+items of the column, but its type depends on the operation being used.
+If dat is a string or byte, it must be quoted; otherwise it
+will be interpreted as numeric data, a column name, or an error.
+
+Strings are in "s and C escapes (\", \n, etc.) can be used.
+
+Logicals (! $$ || not and or) are grouped from right to left as in J,
+with parentheses allowed for grouping.
+
+The three types of simple query:
+- For an operation on a col and data, the data is fixed so
+  that it has the appropriate type and shape.
+  For most operations, this is the same type and shape as an
+  item in the column. For in and notin, its items will have
+  that type and shape. For sample and sample., it
+  will be converted to a single number. See the section on data
+  conversion below. After conversion, the operation will be applied
+  to select qualifying rows in the column.
+- For an operation on two columns, the operation will be applied to
+  pairs of rows from the two columns to select qualifying rows. The
+  operations in, notin, like, unlike, sample, and sample. are not
+  available on columns.
+- The single table query selects rows that are not null.
+  Null rows are created by some joins and do not correspond to a
+  row in the table. They are indicated with fills.
+
+The relationals:
+- (&gt;= &lt;= &gt; &lt; range) are for numeric cols
+- range arg is list of numbers, which is split into pairs
+  if an odd number, the last range extends to _
+  matches are in the range(s) (inclusive)
+- in and notin test whether col value is an element of the list
+- like and unlike take a regex and test if the col data matches
+- sample and sample. require a data argument that is a single number
+
+Data can be converted either to string (or byte) or numbers.
+Numbers must include only the characters -_. and digits.
+Strings must be quoted to avoid confusion with keywords and col names.
+
+Following escapes are allowed in quoted strings:
+\"     double quote
+\\     backslash
+\a     alert (BEL)
+\b     backspace
+\e     escape
+\f     form feed
+\n     new line
+\r     carriage return
+\t     horizontal tab
+\v     vertical tab
+\xHH   byte with hexadecimal value HH
+
+Following escapes may be supported but their use is discouraged:
+\NNN   byte with octal value NNN (1 to 3 digits)
+\xHH   byte with hexadecimal value HH (1 to 2 digits)
+\uHHHH Unicode  (ISO/IEC  10646)  character with hex value HHHH (4 digits)
+\UHHHHHHHH  Unicode character with hex value HHHHHHHH (8 digits)
+
+Data is adjusted to the shape of the column. A list of data can
+be provided by separating items with spaces (this works with numbers or
+strings). If the data is smaller than the column shape, it will be
+filled with the fill element corresponding to the column type. If it is
+larger, an error is signalled.
+
+For in and notin, data is given in a comma-separated list,
+optionally enclosed by parens.
+
+In Q expression of the form "col = dat" or "col in dat",
+col can be a comma-separated list of cols. In this case each item
+in dat is a comma-separated list with the same length as the number of
+cols. If the relational is "in", each item in dat must be parenthesized.
+The col values are compared with the items in dat. If there is a hash
+columns it will be used for the query.
+</code></div></div></body></html>

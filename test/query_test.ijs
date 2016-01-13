@@ -88,9 +88,9 @@ NB. bug - reference join where clause empty returns all rows
 jdadminx'test'
 jd'gen ref2 a 10 0 b 5'
 a=. jd'read from a,a.b where b.bref=2'
-assert 2 2-:;{:{:a
+assert 2 7-:;{:{.a
 b=. jd'read from a,a.b where b.bref=22'
-assert ''-:;{:{:b
+assert ''-:;{:{.b
 jd'dropdynamic'
 jd'reference a aref b bref'
 assert a-:jd'read from a,a.b where b.bref=2'

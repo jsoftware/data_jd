@@ -2,8 +2,8 @@ NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 
 pathin=:    jpath'~temp/jd/csv/files'
 CSVFOLDER=: '~temp/jd/csv/test/'
-csv_z_=:    <'jdcsv' NB. mappednoun__csv
 erase'csv__' NB. ensure we don't use someone elses
+csv_z_=:    <'jdcsv' NB. mappednoun__csv
 
 jddeletefolder_jd_ CSVFOLDER
 
@@ -900,7 +900,6 @@ validjd35=: 3 : 0
 a.-:,>{:"1 jd'read from j35'
 )
 
-
 cdef36=: cdef35
 csv36=: csv35 rplc 'a';'\a'
 
@@ -913,12 +912,32 @@ validjd36=: 3 : 0
 assert 63 97-:('?'=,>{:"1 jd'read from j36')#i.256 NB. \a treated as ?
 )
 
+NB. test epoch when it is supported
+csv37=: 0 : 0
+"2006-03-31 00:00:00.000",2006-04-31 00:00:00.000
+"2006-05-31 00:00:00.000",2006-06-31 00:00:00.000
+)
+
+cdef37=: 0 : 0
+1 a byte 23 
+2 b byte 23
+options , LF " \ 0
+)
+
+valid37=: 3 : 0
+assert 1
+)
+
+validjd37=: 3 : 0
+assert 1 NB. 3 5 4 6-:".5 6{"1 ;{:"1 jd'read from j37'
+)
+
 tests=: 3 : 0
 NB. smoutput 'RESIZESTRESS_jdcsv_ is ',":RESIZESTRESS_jdcsv_
 csvop_tests''
 csvreportclear_jdcsv_''
 deleteall''
-for_i. i.37 do.
+for_i. i.38 do.
  try.
   ".'test ',":i
   NB. smoutput 'test ',":i

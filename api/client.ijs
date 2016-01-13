@@ -116,7 +116,7 @@ jdae=: 4 : 0
 try. 
  jd y
  'did not get expected error'assert 0
-catch.
+catchd.
  t['did not get expected error text'assert +./x E. t=. ;1{jdlast
 end.
 )

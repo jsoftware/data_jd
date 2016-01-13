@@ -6,12 +6,6 @@ forcecopy_z_=: a: { ]
 NB. from test suite tsu.ijs - return expected error
 etx_z_=: 1 : 'x :: (<:@(13!:11)@i.@0: >@{ 9!:8@i.@0:)'
 
-showbox_z_=: 3 : 0
-t=. ,d=. ":y
-d=. ($d)$' ' ((t e. 32{.a.)#i.#t)}t
-(-.*./"1 d="1 1[' '#~{:$d)#d
-)
-
 decho_z_=: echo_z_
 
 NB. JHS echo to console - should be in JHS core or even stdlib

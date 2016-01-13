@@ -7,7 +7,7 @@ jd_list=: 3 : 0
 t=. bdnames y
 ECOUNT assert 1=#t
 select. ;t
-case. 'version' do. ,.'version';'2.2.11'
+case. 'version' do. ,.'version';'3.1'
 case. 'open'    do. ,.'open';<>opened''
 case.           do. assert 0['unsupported list command'
 end. 
@@ -144,10 +144,10 @@ end.
 
 statefmt=: 3 : 0
 ({."1 y)=. {:"1 y
-typ,' ',deb ,showbox subscriptions
+typ,' ',deb ,sptable subscriptions
 if. 1=#subscriptions do.
- deb ,showbox subscriptions
+ deb ,sptable subscriptions
 else.
- (deb ,showbox {.subscriptions),' > ',deb ,showbox {:subscriptions
+ (deb ,sptable {.subscriptions),' > ',deb ,sptable {:subscriptions
 end.
 )

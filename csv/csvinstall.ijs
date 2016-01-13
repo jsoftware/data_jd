@@ -52,7 +52,7 @@ csvc=: b#CSVCOLS
 csvs=: b#CSVTSHAPE
 jdt=: b#JDTYPS
 if. (<'unsupported')e. jdt do.
- smoutput showbox(jdt=<'unsupported')#csvc,.csvt
+ smoutput sptable(jdt=<'unsupported')#csvc,.csvt
  assert 0['unsupported type'
 end.
 v=. (jdt=<'byte')*b#2{"1 COLDEFS

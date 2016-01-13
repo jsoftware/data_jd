@@ -12,7 +12,7 @@ t=. jsize_jfiles_ f
 if. -.1 4 e.~ 3!:0 y do.
  c=. ({.t)+i.1{t
  n=. >":each <"0 c
- n,.showbox_jd_ {:"1 [2{."2 >jread_jfiles_ f;c
+ n,.sptable {:"1 [2{."2 >jread_jfiles_ f;c
  return.
 end.
 jread_jfiles_ f;y
@@ -98,7 +98,7 @@ t=. (isotimestamp 6!:0''),' : ',12{.x
 if. 0=L.y do.
  t=. t,y,LF
 else.
- t=. t,LF,,(showbox y),.LF
+ t=. t,LF,,(sptable y),.LF
 end. 
 t fappend f
 )

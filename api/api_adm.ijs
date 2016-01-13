@@ -419,7 +419,7 @@ n=. {."1 links
 'invalid tab or col name' assert _2~:nc bdnames(;n,each' ')rplc '/';' '
 p=. {:"1 links
 jdcreatefolder each p
-r=. ,LF,.~showbox links
+r=. ,LF,.~sptable links
 r fwrite 'links.txt',~jdpath''
 r
 )
@@ -447,43 +447,26 @@ jdfrom=:  4 : '>{:(({."1 y)i.<,x){y'
 jdfroms=: 4 : '>(({.y)i.<,x){"1{:y'
 
 jdrt=: 3 : 0
-pa=. JDP,'tutorial/'
-ta=. (<pa),each {."1[1!:0 jpath pa,'*.ijs'
-aa=. _4}.each(>:;ta i: each '/')}.each ta
-aa=. (_4*;(_4{.each aa)=<'_tut')}.each aa 
-TUTSDEMO=: _4}.each(>:;demos i:each'/')}.each demos
-TUTSBASIC=: 'intro';'reads';'from';'admin';'csv';'join';'epochdt';'table_from_array'
-TUTSADVANCED=: aa-.TUTSBASIC
-TUTS=: (aa,TUTSDEMO),.ta,,demos_jd_
-y=., dltb y
+aa=. 9}.each _8}.each tuts
+demo=. _4}.each(>:;demos i:each'/')}.each demos
+basic=. 'intro';'reads';'from';'admin';'csv';'join';'epochdt';'table_from_array'
+advanced=. aa-.basic
+y=. ,dltb y
 if. y-:'' do.
  t=. <'  '
- r=.   (<'basic:'),t,each TUTSBASIC
- r=. r,(<'demo:'),t,each TUTSDEMO
- r=. r,(<'advanced:'),t,each TUTSADVANCED
+ r=.   (<'basic:'),t,each basic
+ r=. r,(<'demo:'),t,each demo
+ r=. r,(<'advanced:'),t,each advanced
  ;r,each LF
  return.
 end.
-if. y-:'help' do.
- echo'   spx 0   NB. status'
- echo'   spx 4   NB. run line 4'
- echo'   spx 4 8 NB. run line 4 up to 8'
- return.
-end. 
-
-i=. ({."1 TUTS)i.<y
-'invalid tutorial name'assert i<#TUTS
-f=. ;{:i{TUTS
-
-if. IFJHS do.
- echo'ctrl+. to advance - click link to open - jdrt_jd_''help'''
- open f
-elseif.IFQT do.
- echo 'ctrl+j to advance - jdrt''help'''
- open f
-elseif. do.
- echo '   spx'''' NB. to advance'
-end. 
- 
-spxinit f
+t=. 'tutorial/',y,'_tut.ijs'
+d=. 'demo/',y,'/',y,'.ijs'
+if. (#tuts)>tuts i. <t do.
+ spx JDP,t
+elseif. (#demos)>demos i. <d do.
+ spx JDP,d
+elseif. 1 do.
+ 'invalid tutorial name'assert 0
+end.
 )

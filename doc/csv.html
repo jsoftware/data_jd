@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<title>Jd Ops csv</title>
+<link rel="stylesheet" href="jda.css" type="text/css">
+
+<body>
+<div class=masthead>
+<img src="./jblue.png" width="50px" height="50px"/>
+<span class=md>d</span>
+<span class=mt>&nbsp;Ops csv</span>
+<span class=ms><a href="http://www.jsoftware.com" target="_blank">www.jsoftware.com</a><br>J database - J language<br>columnar analytics</span>
+</div>
+
+<div contenteditable="false">
+<code>
+<a href="#csvcdefs">csvcdefs</a> <a href="#csvdump">csvdump</a> <a href="#csvrd">csvrd</a> <a href="#csvreport">csvreport</a> <a href="#csvrestore">csvrestore</a> <a href="#csvwr">csvwr</a>
+
+CSVFOLDER__ - implicit arg - path for csv and related files
+csv files can be on a different drive than Jd tables>
+csv intermediate files are on the same drive as Jd tables
+f.csv metadata in f.cdefs
+tutorial csv
+<hr><a name="csvcdefs"><h2>csvcdefs</h2></a>
+csvcdefs   [options] csvfile - create x.cdefs from x.csv
+ /replace - replace existing cdefs file
+ /c       - x.cnames file used for column names
+ /h n     - n headers
+ /u m     - m default col names
+ /v w     - byte col wider than w treated as varbyte - default 200
+ col types determined by examining probed rows
+ 
+probed rows are the first 5000 rows 
+
+/u m creates default .cname file with m cols
+ cols at end with no data in probed rows are removed
+
+<h3>x.cdefs (csv metadata) format</h3>
+eol delimited column definitions
+ col name type [width]
+  col is 1 origin column number in csv file
+  name is column name (used in file/folder names)
+  type
+   boolean, int, float, byte, varbyte
+   edate      - 2014-01-02
+   edatetime  - 2014-01-02T03:04:05
+   edatetimem - 2014-01-02T03:04:05,123
+   edatetimen - 2014-01-02T03:04:05,123456789
+   date       - yyyy/mm/dd
+   datex      - dd/mm/yyyy
+   datetime   - yyyy/mm/dd hh:mm:ss 
+   datetimex  - dd/mm/yyyy hh:mm:ss
+  width
+   must not be 0
+   byte column width - elided is list 
+   varbyte average (file allocation - elide for default)
+   numeric column width
+    - elided is list - value ignored and set as 1+#CSTITCH
+
+options colsep rowsep quoted escaped headers epoch
+ colsep  - 1 char or BLANK or TAB or AUTO
+ rowsep  - 1 or 2 chars or CR or LF or CRLF or AUTO
+ quoted  - 1 char (usually ") or NO
+ escaped - 1 char (usually \) or NO - \0 \b \t \n \r \" \' \\
+ headers - 0 up to 10 header rows to skip
+ epoch   - iso8601-char or iso8601-int
+
+<hr><a name="csvdump"><h2>csvdump</h2></a>
+csvdump [options]
+ /e - write epoch cols as ints (cdefs option iso8601-int)
+ csvwr all tables
+ db files (admin.ijs) are also written
+
+<hr><a name="csvrd"><h2>csvrd</h2></a>
+csvrd [options] csvfile table
+ /rows n - read n rows - default all
+ /cdefs  - read cdefs from implicit arg CDEFSFILE
+
+<hr><a name="csvreport"><h2>csvreport</h2></a>
+csvreport [options] [0 or more tables]
+ /f does full report rather than summary
+ report results of last csvrd for tables
+
+<hr><a name="csvrestore"><h2>csvrestore</h2></a>
+csvrestore
+ csvrd all tables
+ db files (e.g. admin.ijs) are restored
+
+<hr><a name="csvwr"><h2>csvwr</h2></a>
+csvwr [options] csvfile table [0 or more col names] [where clause]
+ /e - write epoch cols as ints (cdefs option iso8601-int)
+ /h1 - header with col names
+ /w  - final arg is where clause  
+ all cols written if none are named
+ where clause after * to avoid blank/quote problems
+</code></div></div></body></html>
