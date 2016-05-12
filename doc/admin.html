@@ -28,7 +28,6 @@ See tutorial admin_tut.</p>
 <a href="#jdadminup">jdadminup</a></p>
 <p>admin topics:<br>
 <a href="#admin.ijs">admin.ijs</a> <a href="#custom.ijs">custom.ijs</a>
-<a href="#datatune">datatune</a></p> 
 <hr><p>jd... utility verbs in jd locale:<br>
 <!-- jdutilindex a --><a href="#jdcdef">jdcdef</a>
 <a href="#jdclocs">jdclocs</a>
@@ -138,25 +137,12 @@ custom.ijs - in db folder - loaded in db locale when db opened
 
 defines:
  dynamic        - creates ref/reference cols
- datatune_table - adjusts insert/update args
  jd_xxx         - jd op
  ... addagg ... - custom aggregation
  
 jd'loadcustom' NB. reloads custom.ijs
 
-tutorials custom, datatune, aggregation
-<hr><a name="datatune"><h2>datatune</h2></a>
-insert/update calls datatune_tab in the db locale before doing the operation
-datatune_tab defined in custom.ijs
-arg is list of col names and names and values from the user
-result is col values for insert/update
-
-datatune_tab can be used in many ways:
- validate data    - assert v>0
- modify data      - convert float dollars to cents
- derive new cols  - y m d cols from datetime col
-
-tutorial datatune
+tutorials custom and aggregation
 <hr><a name="jdadminfp"><h2>jdadminfp</h2></a>
 set DAN file path
 

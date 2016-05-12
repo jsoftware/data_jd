@@ -1,4 +1,4 @@
-NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
+NB. Copyright 2016, Jsoftware Inc.  All rights reserved.
 coclass 'jd'
 
 NB. Each folder which is handled by JD contains files:
@@ -36,26 +36,6 @@ NB. getloc       get a locale from a name
 
 NB. jd is special because it cannot be instantiated.
 NB. Thus it only contains a few of the globals.
-
-ECOUNT=:     'incorrect arg count'
-EDNONE=:     'dropdynamic does not exist'
-EPRECISION=: 'extra precision'
-ESHAPE=:     'bad shape'
-ETSHAPE=:    'bad trailing shape'
-ETALLY=:     'bad count'
-ETYPE=:      'bad type'
-EALLOC=:     'bad alloc'
-EOPTION=:    'bad option'
-EDUPLICATE=: 'duplicate col'
-EUNKNOWN=:   'unknown col'
-EMISSING=:   'missing col'
-EDELETE=:    'jddeletefolder failed'
-EINDEX=:     'bad index'
-EDROPSTOP=:  'dropstop'
-EUNIQUE=:    'warning: deleted N rows to stay unique'
-
-LOCALE =: CLASS =: <'jd'
-CHILD =: <'jdfolder'
 
 PATH=:NAME=: ''
 CHILDREN=: ".'CHILDREN'
@@ -100,12 +80,14 @@ if. (ind=#NAMES) do.
 end.
 c=. ind{CHILDREN
 if. 'jdtable'-:;CLASS__c do.
- if. Tlen__c=__ do.
+ NB. if. Tlen__c=__ do.
+ if. openflag__c do.
+  openflag__c=: 0
   openallchildren__c ''
   active__c=: getloc__c 'jdactive'
   index__c=: getloc__c 'jdindex'
-  a=. active__c
-  Tlen__c=: #dat__a
+  if. Tlen__c=0 do. setTlen__c #dat__active__c end.
+  if. Tlen__c~:#dat__active__c do. jddamage 'table ',NAME__c,' Tlen does not match #jdactive' end.
  end. 
 elseif. 'jdcolumn'-:;CLASS__c do. NB. cols map as required
  if. _1=nc {.MAP__c,each <'__c' do.
@@ -186,6 +168,8 @@ if. 'column'-:2}.>CHILD do.
     jddeletefolder link
     shell t
    end.
+   6!:3^:(2~:ftypex link) 0.1 NB. sometimes required in windows so next test works
+   'link failed' assert (2=ftypex) link
   end.
  end.
 end.

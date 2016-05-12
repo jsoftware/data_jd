@@ -18,7 +18,10 @@ jd'createcol h b  int _';|.b
 validate=: 3 : 0
 jd'dropdynamic'
 jd'ref f a g a'
+jd'reads from f,f.g where jdindex=0' NB. make dirty ref clean
 jd'ref f b h b'
+jd'reads from f,f.h where jdindex=0' NB. make dirty ref clean
+
 h=. jdgl_jd_'f jdref_a_g_a'
 a=. jdgl_jd_'f jdactive'
 refdatla=: dat__a#datl__h

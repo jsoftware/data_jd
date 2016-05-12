@@ -40,13 +40,13 @@ NB. writestate''
 NB. )
 
 
-NB. create with empty mapped file - setdatl will resize as required
+NB. create with empty mapped file
 dynamicinit=: 3 : 0
 y=. 'datl'
 jdcreatejmf (PATH,y);HS_jmf_
 jdmap (y,Cloc);PATH,y
 (y)=: i.0
-setdatl''
+NB. setdatl'' - start out dirty
 writestate''
 )
 

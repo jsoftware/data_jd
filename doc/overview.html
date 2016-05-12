@@ -25,7 +25,20 @@
 relational database management systems (RDBMS). Although similar in terminology
 and features to MySQL,Oracle,DB2,SQL Server, and others, it is closer
 in spirit and design to Kx's kdb, Vectornova's Vstar, Jsoftware's free JDB, and
-all old APL based financial systems that ran on IBM mainframes in 70s and 80s.</p>
+all old APL based financial systems that ran on IBM mainframes in the 70s and 80s.</p>
+
+<h2>similarity</h2>
+<p>Jd has one or more databases. A database has one or more tables.
+A table is rows (unnamed) and columns (named).  Data in a column is 
+of the same type (integer, float, datetime, fixed length characters,
+variable length characters, etc.). Tables can be joined in various ways with other
+tables to function as if they were that large table. Rows and columns can be retrieved
+by queries on the joined tables. Retrieved data from a query can be aggregated, grouped, and sorted.
+Rows can be deleted, updated, and inserted.</p>
+
+<p>The Jd api is SQL like. Similar enough that if you are a guru in another RDBMS
+you'll pick up the Jd way of thinking without much trouble. And if you're new,
+then Jd with its tutorials and examples will give you a leg up on getting at your data.</p>
 
 <h2>J-integrated</h2>
 
@@ -77,6 +90,29 @@ that is where decades of adding bandages and kludges started.</p>
 
 <p>Row oriented is slavishly tied to the design ideas of filing cabinets and manila folders.  Column oriented embraces computers.</p>
 
+<p>A table column is a mapped file.</p>
+
+<h2>partitioned table</h2>
+
+<p>A partitioned table has column data in multiple files. For the user, a
+partitioned table is the same as any other table, but it can make a signficant
+performance difference. High performance queries/inserts/updates/modifies can be achieved
+on tables with billions of rows on modest hardware if they are partitioned.
+<p>
+
+<h2>allocation across drives</h2>
+
+<p>
+Table column data files can be located, under your control, on different drives.
+For example, table columns critical for query peformance could be on an ssd
+drive and the rest of the columns could be stored on normal drives.</p>
+
+<p>This control over drive allocation also works for partitioned tables. For example,
+column data files for recent dates could be stored on ssd and files for
+the rest of the data could be stored on normal drives.
+</p>
+
+
 <h2>analytics</h2>
 <p>Jd is particularly suited to analytics. It works well with large tables (100s of millions of rows),
 multiple tables connected by complex joins, structured data, numerical data,
@@ -110,20 +146,6 @@ big data (terabytes of unstructured textual data) or for a high-rate transaction
 many 1000s of users.
 </p>
 
-<h2>similarity</h2>
-<p>Jd has one or more databases. A database has one or more tables.
-A table is rows (unnamed) and columns (named).  Data in a column is 
-of the same type (integer, float, datetime, fixed length characters,
-variable length characters, etc.). Tables can be joined in various ways with other
-tables to function as if they were that large table. Rows and columns can be retrieved
-by queries on the joined tables. Retrieved data from a query can be aggregated, grouped, and sorted.
-Rows can be deleted, updated, and inserted.</p>
-
-<p>The Jd api is SQL like. Similar enough that if you are a guru in another RDBMS
-you'll pick up the Jd way of thinking without much trouble. And if you're new,
-then Jd with its tutorials and examples will give you a leg up on getting at your data.</p>
-
-
 <h2>admin/backup</h2>
 
 <p>Databases/tables/columns/metadata/etc are represented directly in the file
@@ -156,10 +178,7 @@ to your existing production Jd tables.</p>
 
 <h2>Jd and JDB</h2>
 <p>JDB was an early effort, primarily by Chris Burke, that proved the
-feasibility of building a database system in J. JDB is a free product
-from Jsoftware and might suit your needs if you don't need the
-high-performance and scalability to much larger databases that Jd
-provides. If you've used and like JDB, you'll love Jd.</p>
+feasibility of building a database system in J.</p>
 
 <h2>open source</h2>
 <p>Jd source is largely J code and that code is open and available to the J community.

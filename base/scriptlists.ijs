@@ -31,6 +31,12 @@ test/northwind_test.ijs
 test/orderby_test.ijs
 test/pm_aggby_test.ijs
 test/pm_hash_test.ijs
+test/ptable_csv_test.ijs
+test/ptable_delete_test.ijs
+test/ptable_insert_test.ijs
+test/ptable_modify_test.ijs
+test/ptable_read_test.ijs
+test/ptable_update_test.ijs
 test/query_test.ijs
 test/readx_test.ijs
 test/ref_test.ijs
@@ -52,7 +58,6 @@ tutorial/aggregation_tut.ijs
 tutorial/csv_details_tut.ijs
 tutorial/csv_tut.ijs
 tutorial/custom_tut.ijs
-tutorial/datatune_tut.ijs
 tutorial/dropstop_tut.ijs
 tutorial/epochdt_tut.ijs
 tutorial/from_tut.ijs
@@ -62,6 +67,7 @@ tutorial/join_tut.ijs
 tutorial/link_tut.ijs
 tutorial/log_tut.ijs
 tutorial/performance_tut.ijs
+tutorial/ptable_tut.ijs
 tutorial/reads_tut.ijs
 tutorial/server_tut.ijs
 tutorial/setget_tut.ijs

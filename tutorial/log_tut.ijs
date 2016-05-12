@@ -1,6 +1,6 @@
 NB. Copyright 2015, Jsoftware Inc.  All rights reserved.
 
-i.0 0[0 : 0
+0 : 0
 events are recorded in log.txt and log.ijf in the db folder
 
 logs are of particular interest when there are problems
@@ -58,6 +58,8 @@ NB. jdadmin of a db with damage that has not been detected
 bld''
 damage''
 jdadmin 0
+jdadmin'test'
+'damaged'jdae'validate' NB. detects damage and marks as damaged
 assert 'assertion failure'-:jdadmin etx'test'
 13!:12''
 'db damaged'jdae'read from f'
@@ -67,13 +69,6 @@ jdadmin 0
 assert 'assertion failure'-:jdadmin etx'test'
 13!:12''
 'db damaged'jdae'read from f'
-
-NB. validate insert
-bld''
-damage''
-'validate failed'jdae'insert f';'a';23;'b';24
-jdlogijfshow_jd_''
->3{.each jdlogijfshow_jd_ 0
 
 NB. validate is run before/after insert/update/modify/delete
 

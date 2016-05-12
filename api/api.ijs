@@ -1,4 +1,4 @@
-NB. Copyright 2015, Jsoftware Inc.  All rights reserved.
+NB. Copyright 2016, Jsoftware Inc.  All rights reserved.
 NB. Jd API
 NB. Jd uses locales (Read__d'from table')
 NB. Jd API wraps this for a possibly more convenient interface
@@ -42,6 +42,7 @@ not supported in csvwr/csvrd
 
 *** bulk merge (update and insert)
 )
+
 
 NB. 'insert table * col * bad'erf table;col
 erf=: 4 : 0
@@ -230,9 +231,6 @@ if. 0=L.y do. NB. string parse has blanks in col defs
  y=. y,<;' ',each a
 end. 
 a=. y
-
-
-
 if. '/a'-:;{.a do.
  alloc=. ;_1".each 3{.}.a
  EALLOC assert 0<alloc
@@ -241,14 +239,13 @@ if. '/a'-:;{.a do.
 else. 
  alloc=. ROWSMIN_jdtable_,ROWSMULT_jdtable_,ROWSXTRA_jdtable_
 end.
-
-vtcname FETAB=: t=. >0{a NB. table
+vtname FETAB=: t=. >0{a NB. table
 a=. }.a
 a=. ;cutcoldefs each a
 if. #a do.
  b=. ><;._2 each a,each' '
  n=. {."1 b
- vtcname each n
+ vcname each n
  duplicate_assert n
  ETYPE assert (1{"1 b)e.TYPES
  q=. _1".each 2}."1 b
@@ -262,11 +259,29 @@ Create__d t;a;'';alloc   NB. cols;data;alloc
 JDOK
 )
 
+jd_createptable=: 3 : 0
+a=. bdnames y
+ECOUNT assert 2=#a
+'tab col'=: a
+d=. getdb''
+'not a table'assert NAMES__d e.~<tab
+t=. jdgl tab
+'not empty'assert 0=Tlen__t
+'already a ptable'assert 0=S_ptable__t
+c=. jdgl tab,' ',col
+'bad col type'assert (<typ__c) e. ;:'int edate edatetime date datetime'
+S_ptable__t=: 1
+writestate__t''
+jd_createtable tab,PTM
+jd_createcol tab,PTM,' ',col,' ',typ__c,' ',":shape__c
+JDOK
+)
+
 jdcdef=: 3 : 0
 v=. vsub ,y
 ns=. {."1 v
 vs=. {:"1 v
-vtcname each ns
+vcname each ns
 duplicate_assert ns
 typ=. ;3!:0 each vs
 ETYPE assert 8>:ts
@@ -276,6 +291,7 @@ ETALLY assert c={.c=. ;#each vs
 deb _3}.' ',;ns,each' ',each typ,each' ',each ts,each<' , '
 )
 
+
 jdfixcolnames=: 3 : 0
 v=. vsub ,y
 ns=. {."1 v
@@ -284,17 +300,19 @@ ns=. ns rplc each <'.';'-';' ';'_'
 ,ns,.vs
 )
 
-NB. validate dan name -same as table/col except jd prefix is allowed
-vdname=: 3 : 0
-('invalid name ',y)assert (0~:#y) *.(2=3!:0 y) *. (2>$$y) *. *./-.'/\*. ' e. y
+RESERVEDCHARS=: '/\ *.,:?<>|"''' NB. illegal chars in dan/table/col names
+RESERVEDWORDS=: ;:'by from where order'
+
+vdname=: 3 : 0 NB. validate dan name
+('invalid name: ',y)assert (0~:#y) *. ('~'~:{.y) *.(2=3!:0 y) *. (2>$$y) *. (*./-.RESERVEDCHARS e. y) *. -.RESERVEDWORDS e.~<y
 )
 
-NB. validate table/col name - used as a file folder
-NB. must be non-empty string without /\*. or blank
-NB. must not start with jd...
-vtcname=: 3 : 0
-('invalid name ',y)assert (-.'jd'-:2{.y) *. (0~:#y) *.(2=3!:0 y) *. (2>$$y) *. *./-.'/\*. ' e. y
+vtname=: 3 : 0 NB. validate table name
+('invalid name: ',y)assert -.'jd'-:2{.y
+vdname y
 )
+
+vcname=: vtname NB. validate column name
 
 jd_createcol=: 3 : 0
 erase<'DATACOL_jd_'
@@ -307,17 +325,19 @@ if. (1=L.y)*.5=$y do.
  FETAB=: tab
  FECOL=: nam
  shape=. _".shape
- if. shape=_ do. shape=. i.0
+ if. shape=_ do.
+  shape=. i.0
  else.
   'shape not allowed'assert (2{y)e.;:'boolean int float byte'
  end.
  ETSHAPE assert 1>:#shape
  ETYPE assert (<type) e. TYPES -. 'enum';'varbyte'
  t=. getloc__d tab
+ 'ptable data not allowed'assert 0=S_ptable__t
  if. 0=Tlen__t do. 
   a=. getloc__t'jdactive'
   'dat' appendmap__a (#dat)$1
-  Tlen__t=: #dat
+  setTlen__t #dat NB. createcol - first col
  end. 
  ESHAPE assert (Tlen__t,shape)-:$dat
  t=. (TYPES i. <type){TYPESj
@@ -328,50 +348,21 @@ end.
 y=. bdnames y
 FETAB=: ;0{y
 FECOL=: ;1{y
-vtcname FECOL
+vcname FECOL
 ECOUNT assert 3 4 e.~#y
 if. 4=#y do.
  if. -.''-:;3{y do.
   'shape not allowed'assert (2{y)e.;:'boolean int float byte'
  end. 
  ETSHAPE assert 1>:#_".;{:y
-end.  
-InsertCols__d ({.y),< ;' ',~each}.":each y
+end.
+
+ns=. getparttables ;{.y
+for_i. i.#ns do.
+ if. i=1 do. continue. end. NB. ignore f~
+ InsertCols__d (i{ns),< ;' ',~each}.":each y
+end.
 JDOK
-)
-
-readstart=: 3 : 0
-tempcolclear''
-if. 0~:L.y do. y=. ;y[ECOUNT assert 1=#y end.
-OPTION_e=: OPTION_lr=: 0
-while. '/'={.y do.
- if. '/lr '-:4{.y do.
-  y=. dlb 4}.y
-  OPTION_lr=: 1
- elseif. '/e '-:3{.y do.
-  y=. dlb 3}.y
-  OPTION_e=: 1
- elseif. 1 do.
-  'unknown option'assert 0
- end.
-end.
-y
-)
-
-jd_read=: 3 : 0
-y=. readstart y
-d=. getdb''
-Read__d y
-)
-
-jd_reads=: 3 : 0
-y=. readstart y
-d=. getdb''
-if. OPTION_lr do.
- Read__d y
-else. 
- Reads__d y
-end.
 )
 
 NB. run custom db jd_x... op in db locale if it exists
@@ -397,7 +388,6 @@ if. 0~:n do.
 end.
 JDOK
 )
-
 
 jd_createhash=: 3 : 0
 y=. bdnames y
@@ -434,21 +424,26 @@ load__d f
 JDOK
 )
 
-NB. left1 only join (fast and simple)
+NB. left1 only join (fast and simple) - ref starts out as dirty
 jd_ref=: 3 : 0
 y=. bdnames y
 ECOUNT assert 4=#y
 d=. getdb''
 t=. (2,(#y)%2)$y
-validtc__d"1 t
+0 validtc__d {.t NB. ptable allowed on left
+validtc__d {:t
 t=. ({."1 t),.<"1 (}."1 t)
+ts=. getparttables ;{.y
+ts=. ts#~PTM~:;{:each ts
 n=. 'jdref', ;'_'&,&.> ; boxopen&.> }.,t
-h=. jdgl :: 0: (;{.{.t),' ',n
-if. h-:0 do.
- loc=. getloc__d {.{.t
- Create__loc n;'ref';<t
-else.
- setdatl__h''
+
+for_t1. ts do.
+ a=. ;t1
+ h=. jdgl :: 0: a,' ',n
+ if. h-:0 do.
+  loc=. getloc__d a
+  Create__loc n;'ref';<($t)$t1,}.,t
+ end.
 end.
 JDOK
 )
@@ -471,7 +466,7 @@ jd_tableinsert=: 3 : 0
 y=. ca y
 ECOUNT assert 3=#y
 'snkt srct srcdb'=. y
-'srcdb same as snkdb' assert -.DB-:srcdb
+'srcdb same as snkdb' assert -.DB-:&filecase_j_ srcdb
 d=. getdb''
 t=. getloc__d snkt
 
@@ -493,7 +488,7 @@ jd_tableappend=: 3 : 0
 y=. ca y
 ECOUNT assert 2 3 e.~#y
 'snkt srct srcdb'=. y
-'srcdb same as snkdb' assert -.DB-:srcdb
+'srcdb same as snkdb' assert -.DB-:&filecase_j_ srcdb
 d=. getdb''
 snktloc=. getloc__d snkt
 assert 0=#SUBSCR__snktloc['dynamic dependencies - use tableinsert or dropdynamic+dynamic'
@@ -545,7 +540,7 @@ t=. getloc__d snkt
 a=. getloc__t'jdactive'
 b=. getloc__srctloc'jdactive'
 'dat' appendmap__a dat__b
-Tlen__t=: new+Tlen__t
+setTlen__t new+Tlen__t NB. tableappend
 JDOK
 )
 
@@ -553,7 +548,7 @@ jd_tablecopy=: 3 : 0
 y=. bdnames y
 ECOUNT assert 3=#y
 'snk src srcdb'=. y
-'srcdb same as snkdb' assert -.DB-:srcdb
+'srcdb same as snkdb' assert -.DB-:&filecase_j_ srcdb
 snkpath=. jpath(dbpath DB),'/',snk
 assert 0=#1!:0<jpath snkpath['snk table already exists'
 
@@ -572,7 +567,7 @@ snkpath=. '"',snkpath,'"'
 srcpath=. '"',srcpath,'"'
 jd_close''
 if. IFWIN do.
- r=. shell 'robocopy ',srcpath,' ',snkpath,' *.* /E'
+ r=. shell 'robocopy ',(hostpathsep srcpath),' ',(hostpathsep snkpath),' *.* /E'
  if. +/'ERROR' E. r do.
   smoutput r 
   assert 0['robocopy failed'
@@ -580,6 +575,7 @@ if. IFWIN do.
 else.
  shell 'cp -r ',srcpath,' ',snkpath
 end.
+assert (2=ftypex) snkpath-.'"'['tablecopy failed'
 JDOK
 )
 
@@ -587,7 +583,7 @@ jd_tablemove=: 3 : 0
 y=. bdnames y
 ECOUNT assert 3=#y
 'snk src srcdb'=. y
-'srcdb same as snkdb' assert -.DB-:srcdb
+'srcdb same as snkdb' assert -.DB-:&filecase_j_ srcdb
 snkpath=. jpath(dbpath DB),'/',snk
 assert 0=#1!:0<jpath snkpath['snk table already exists'
 
@@ -771,11 +767,15 @@ i=. p i:'/'
 
 NB. unique/hash/reference/ref
 NB. valid tab and cols - float/varbyte/enum not allowed unless ALLOW_FVE (for old style tests)
+NB. validate ptable
 validtc=: 3 : 0
+1 validtc y
+:
 b=. (<'jd')=2{.each y
 if. +./b do. throw 'jde: invalid name: name (NAME)' rplc 'NAME';;{.b#y end.
 if. -.({.y)e.NAMES do. throw 'jde: not found: table (TAB)' rplc 'TAB';;{.y end.
-tloc_z_=: t=. getloc {.y
+t=. getloc {.y
+if. x do. 'ptable not allowed'assert 0=S_ptable__t end.
 a=. (}.y)-.NAMES__t
 if. #a do. throw 'jde: not found: table (TAB) column (COL)' rplc 'TAB';(;{.y);'COL';;{.a end.
 for_c. }.y do.
@@ -817,7 +817,7 @@ end.
 r;a
 )
 
-ophtmls=: 'use';'manage';'dynamic';'csv';'table-table';'misc'
+ophtmls=: 'opsinfo';'opsread';'change';'manage';'dynamic';'csv';'table-table';'misc'
 
 jdex=: 3 : 0
 y=. dltb y
@@ -834,7 +834,7 @@ s=. 'NB. example ',y
 i=. >:((#s){.each d)i.<s
 d=. i}.d
 assert 0~:#d['example not found'
-i=. 1 i.~ 0=;#each dltb each d
+i=. 1 i.~ (0=;#each dltb each d)+.(<'<hr>')=4{.each d
 assert 20>i['example too long'
 d=. i{.d
 d=. ;d,each LF
@@ -845,84 +845,6 @@ NB. t=. jdaccess''
 NB. jdadminx'example'
 loadd f
 NB. jdaccess t
-)
-
-jd_readtc=: 3 : 0
-y=. readstart y
-
-'readtc requires :::exp:::' assert ':::'-:3{.y
-y=. 3}.y
-i=. 1 i.~':::' E. y
-'readrc unmatched :::'assert i<#y
-s=. i{.y
-tempcol s
-y=. (3+i)}.y
-
-d=. getdb''
-if. OPTION_lr do.
- r=. Read__d y
-else. 
- r=. Reads__d y
-end. 
-tempcolclear''
-r
-)
-
-tempcol=: 3 : 0
- t=. ;: y
- r=. ''
- for_i. i.#t do.
-  a=. i{t
-  
-  if. (_2~:nc a)*.-.'_jd_'-:_4{.;a do.
-   a=. ;a
-   j=. a i.'_'
-   tab=. j{.a
-   col=. }.j}.a
-   d=. getdb''
-   ('readtc X not a table'rplc'X';a) assert (<tab)e. NAMES__d
-   g=. jdgl tab
-  
-   if. (>:i)<#t do.
-    if. (<'=:')=(i+1){t do.
-     NB. create temp col
-     ('readtc X already exists'rplc'X';a) assert -.(<col)e.NAMES__g
-     c=. cocreate''
-     CHILDREN__c=: ''
-     Cloc__c=: '_',(;c),'_'
-     LOCALE__c=: c
-     j=. a i.'_'
-     NAME__c=: col
-     NAMES__c=: ''
-     PARENT__c=: g
-     cp=. 18!:2 getloc__g 'jdactive'
-     cp 18!:2 c
-     TEMPCOLS=: TEMPCOLS,(<a),c
-     r=. r,<'dat_',(;c),'_'
-     continue.
-    end.
-   end. 
-    ('readtc X does not exist'rplc'X';a) assert (<col)e.NAMES__g
-    c=. getloc__g col
-    r=. r,<'dat_',(;c),'_'
-  else.
-   'readtc ". not allowed'assert -.(<'".')-:a
-   r=. r,a
-  end. 
- end. 
- ".;r,each' '
- for_i. i.#TEMPCOLS do.
-  c=. {:i{TEMPCOLS
-  shape__c=: }:$dat__c
-  typ__c=: ;(1 4 8 2 i. 3!:0 dat__c){'boolean';'int';'float';'byte'
-  p=. PARENT__c
-  ('readtc X has wrong number of rows'rplc'X';;{.i{TEMPCOLS)assert Tlen__p=#dat__c
- end.
-)
-
-tempcolclear=: 3 : 0
-coerase{:"1 TEMPCOLS
-TEMPCOLS=: i.0 2
 )
 
 assertnoreference=: 3 : 0
@@ -941,23 +863,39 @@ jd_renametable=: 3 : 0
 a=. bdnames y
 ECOUNT assert 2=#a
 assertnoreference ;{.a
-t=. jdgl {.a
-new=. ((->:#NAME__t)}.PATH__t),;{:a 
-old=. }:PATH__t
-jd_close''
-new frename old
+
+ns=. getparttables ;{.a
+for_i. i.#ns do.
+ tab=. i{ns
+ t=. jdgl tab
+ old=. }:PATH__t
+ part=. (old i: PTM)}.old
+ new=. ((->:#NAME__t)}.PATH__t),(;{:a),part
+ jd_close''
+ new frename old
+end.
+
 JDOK
 )
 
 jd_renamecol=: 3 : 0
 a=. bdnames y
 ECOUNT assert 3=#a
+t=. jdgl {.a
+'col not found'      assert   (1{a)e.NAMES__t
+'col already exists' assert -.(2{a)e.NAMES__t
+'jd prefix not allowed' assert -.(<'jd')=2{.each }.a
+vcname ;2{a
 assertnodynamic 2{.a
-t=. jdgl 2{.a
-new=. ((->:#NAME__t)}.PATH__t),;{:a 
-old=. }:PATH__t
-jd_close''
-new frename old
+ns=. getparttables ;{.a
+for_i. i.#ns do.
+ if. i=1 do. continue. end. NB. ignore f~
+ t=. jdgl (i{ns),1{a
+ new=. ((->:#NAME__t)}.PATH__t),;{:a 
+ old=. }:PATH__t
+ jd_close''
+ 'file rename failed' assert 1=new frename old
+end. 
 JDOK
 )
 

@@ -23,6 +23,9 @@ b=. {:"1 a
 i.0 0
 )
 
+0 : 0 NB. validate not done so checks are invalid
+
+
 vfb=: 'validate failed before'
 vfa=: 'validate failed after'
 
@@ -70,6 +73,8 @@ FORCEVALIDATEAFTER_jd_=: 1
 vfa jdae'delete f';'a=2'
 chkijf 0
 
+)
+
 vf=:  'validate failed'
 vft=: 'validate table failed'
 
@@ -90,7 +95,7 @@ bld''
 jd'validate'
 
 assert 3=Tlen__t
-Tlen__t=: 2
+setTlen__t 2 NB. damage the table
 vf jdae'validate'
 
 bld''
@@ -112,9 +117,10 @@ vf jdae'validate'
 
 bld''
 e=: getloc__t'jdref_aref_h_href'
-assert 0=dirty__e
-assert 0 1 0-:datl__e
+assert 1=dirty__e NB. ref starts dirty
 jd'reads from f,f.h'
+assert 0=dirty__e NB. made clean
+assert 0 1 0-:datl__e
 jd'insert h href';23
 assert 1=dirty__e
 jd'validate' NB. with dirty 1

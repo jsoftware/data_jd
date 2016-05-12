@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+<title>Jd Ops info</title>
+<link rel="stylesheet" href="jda.css" type="text/css">
+
+<body>
+<div class=masthead>
+<img src="./jblue.png" width="50px" height="50px"/>
+<span class=md>d</span>
+<span class=mt>&nbsp;Ops info</span>
+<span class=ms><a href="http://www.jsoftware.com" target="_blank">www.jsoftware.com</a><br>J database - J language<br>columnar analytics</span>
+</div>
+
+<div contenteditable="false">
+<code>
+<a href="#info">info</a> <a href="#list">list</a>
+<hr><a name="info"><h2>info</h2></a>
+info type [...] - info about current DB
+
+ agg                         - select aggregators
+ dynamic     [table[column]] - dynamic cols
+ jd          [table[column]] - jd... cols
+ last                        - cmd time space parts
+ schema      [table[column]] - normal cols (non jd...)
+ summary     [table]         - active,deleted rows
+ table       [table]
+ validate    [table[column]]
+ validatebad [table[column]]
+ varbyte     [table[column]]
+ hash        [table[column]] - hash cols
+ ref         [table[column]] - ref cols
+ reference   [table[column]] - reference cols
+ unique      [table[column]] - unique cols
+
+tables are sorted and cols are in defaultselection order
+
+schema and similar types treat ptable as a single table
+validate and validatebad list ptable parts
+
+summary     - tables active deleted
+summary f~* - tables that make up the ptable
+
+table       - tables
+table f~*   - tables that make up the ptable
+
+NB. example info
+jdadminx'example'[olddan=:jdaccess''
+jd'gen ref2 a 3 0 b 2'
+jd'info schema'
+jd'info schema a'
+jd'info schema a akey'
+jd'info reference'
+jdaccess olddan
+
+<hr><a name="list"><h2>list</h2></a>
+list version     - Jd version 
+list open        - open databases
+
+</code></div></div></body></html>

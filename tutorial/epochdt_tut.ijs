@@ -166,7 +166,7 @@ jd'reads from f'
 jd'createcol f b int _';>:i.10
 
 NB. readtc creates temp col of year from epochdt to sum by
-jd'readtc :::f_year=: 4{."1 sfe_jd_ f_a::: sum b by year from f'
+jd'readtc sum b by year from f jdtc f_year=: 4{."1 sfe_jd_ f_a'
 
 NB. by year from permanent year col
 jd'createcol f y byte 4';4{."1 sfe_jd_ jd'get f a' NB. column of year

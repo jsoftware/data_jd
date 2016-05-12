@@ -437,7 +437,7 @@ end.
 
 if. 0~:HEADERS do.
  t=. >:(<:HEADERS){((probe{.csvin)={:ROWSEP)#i.probe
- assert t<#csvin
+ assert t<:#csvin
  ina=. ina+t
 end.
 if. -.appendflag do.

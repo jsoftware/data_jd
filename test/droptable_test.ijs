@@ -39,3 +39,12 @@ jd'droptable /reset f'
 assert d0-:jd'read from f'
 
 
+NB. ptable
+jdadminx'test'
+jd'createtable f'
+jd'createcol f set int'
+jd'createcol f a int'
+jd'createptable f set'
+jd'insert f';'set';(6$2012 2013);'a';i.6
+jd'droptable f'
+assert 0=#dir'~temp/jd/test/f*'

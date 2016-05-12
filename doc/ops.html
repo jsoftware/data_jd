@@ -14,19 +14,18 @@
 </div>
 
 <div contenteditable="false">
+<p>Ops are executed by jd (<code>jd'...'</code>) and can run in the user Jd task or on a server Jd task. Ops are documented in the following 10 families.</p>
 
-<p>Ops are executed by jd (<code>jd'...'</code>) and can run in the user Jd task or on a server Jd task. Ops are documented in the following 6 families.</p>
-
-<b><a href="use.html#use">use</a></b> - <a href="use.html#read">read</a> <a href="use.html#reads">reads</a> <a href="use.html#readtc">readtc</a>
-              <a href="use.html#delete">delete</a> <a href="use.html#insert">insert</a> <a href="use.html#modify">modify</a> <a href="use.html#update">update</a>
-              <a href="use.html#info">info</a> <a href="use.html#list">list</a>
-<br><br><b><a href="manage.html">manage</a></b> - <a href="manage.html#createcol">createcol</a> <a href="manage.html#createdb">createdb</a> <a href="manage.html#createtable">createtable</a> <a href="manage.html#dropcol">dropcol</a> <a href="manage.html#dropdb">dropdb</a> <a href="manage.html#dropfilesize">dropfilesize</a> <a href="manage.html#droptable">droptable</a>
+<b><a href="opsinfo.html">info </a></b> - <a href="opsinfo.html#info">info</a> <a href="opsinfo.html#list">list</a>
+<br><br><b><a href="opsread.html">read </a></b> - <a href="opsread.html#read">read</a> <a href="opsread.html#reads">reads</a> <a href="opsread.html#readtc">readtc</a>
+<br><br><b><a href="change.html">change </a></b> - <a href="change.html#delete">delete</a> <a href="change.html#insert">insert</a> <a href="change.html#modify">modify</a> <a href="change.html#update">update</a>
+<br><br><b><a href="manage.html">manage </a></b> - <a href="manage.html#createcol">createcol</a> <a href="manage.html#createdb">createdb</a> <a href="manage.html#createtable">createtable</a> <a href="manage.html#createptable">createptable</a> <a href="manage.html#dropcol">dropcol</a> <a href="manage.html#dropdb">dropdb</a> <a href="manage.html#dropfilesize">dropfilesize</a> <a href="manage.html#droptable">droptable</a>
               <a href="#renamecol">renamecol</a> <a href="#renametable">renametable</a>
-<br><br><b><a href="dynamic.html">dynamic</a></b> - <a href="dynamic.html#createdynamic">createdynamic</a> <a href="dynamic.html#createhash">createhash</a> <a href="dynamic.html#createunique">createunique</a>             <a href="dynamic.html#dropdynamic">dropdynamic</a> 
+<br><br><b><a href="dynamic.html">dynamic </a></b> - <a href="dynamic.html#createdynamic">createdynamic</a> <a href="dynamic.html#createhash">createhash</a> <a href="dynamic.html#createunique">createunique</a>             <a href="dynamic.html#dropdynamic">dropdynamic</a> 
               <a href="dynamic.html#dynamic.html#ref">ref</a> <a href="dynamic.html#reference">reference</a></a>
-<br><br><b><a href="csv.html#csv">csv</a></b> - <a href="csv.html#csvcdefs">csvcdefs</a> <a href="csv.html#csvdump">csvdump</a> <a href="csv.html#csvrd">csvrd</a> <a href="csv.html#csvreport">csvreport</a> <a href="csv.html#csvrestore">csvrestore</a> <a href="csv.html#csvwr">csvwr</a>
-<br><br><b><a href="table-table.html">table-table</a></b> - <a href="table-table.html#tableappend">tableappend</a> <a href="table-table.html#tablecopy">tablecopy</a> <a href="table-table.html#tableinsert">tableinsert</a> <a href="table-table.html#tablemove">tablemove</a>
-<br><br><b><a href="misc.html">misc</a></b> - <a href="misc.html#close">close</a> <a href="misc.html#datatune">datatune</a> <a href="misc.html#flush">flush</a> <a href="misc.html#gen">gen</a> <a href="misc.html#get">get</a> <a href="misc.html#loadcustom">loadcustom</a> <a href="misc.html#option">option</a> <a href="misc.html#set">set</a> <a href="misc.html#validate">validate</a>
+<br><br><b><a href="csv.html#csv">csv </a></b> - <a href="csv.html#csvcdefs">csvcdefs</a> <a href="csv.html#csvdump">csvdump</a> <a href="csv.html#csvrd">csvrd</a> <a href="csv.html#csvreport">csvreport</a> <a href="csv.html#csvrestore">csvrestore</a> <a href="csv.html#csvwr">csvwr</a>
+<br><br><b><a href="table-table.html">table-table </a></b> - <a href="table-table.html#tableappend">tableappend</a> <a href="table-table.html#tablecopy">tablecopy</a> <a href="table-table.html#tableinsert">tableinsert</a> <a href="table-table.html#tablemove">tablemove</a>
+<br><br><b><a href="misc.html">misc </a></b> - <a href="misc.html#close">close</a> <a href="misc.html#flush">flush</a> <a href="misc.html#gen">gen</a> <a href="misc.html#get">get</a> <a href="misc.html#loadcustom">loadcustom</a> <a href="misc.html#option">option</a> <a href="misc.html#set">set</a> <a href="misc.html#validate">validate</a>
 <hr>
 Some ops include an example that can run in your current session (examples save/restore current jdaccess).
 <code>
@@ -50,6 +49,7 @@ Tutorials show Jd in action.
 <a href="manage.html#createdb">createdb</a>
 <a href="dynamic.html#createdynamic">createdynamic</a>
 <a href="dynamic.html#createhash">createhash</a>
+<a href="manage.html#createptable">createptable</a>
 <a href="manage.html#createtable">createtable</a>
 <a href="dynamic.html#createunique">createunique</a>
 <a href="csv.html#csvcdefs">csvcdefs</a>
@@ -58,8 +58,7 @@ Tutorials show Jd in action.
 <a href="csv.html#csvreport">csvreport</a>
 <a href="csv.html#csvrestore">csvrestore</a>
 <a href="csv.html#csvwr">csvwr</a>
-<a href="misc.html#datatune">datatune</a>
-<a href="use.html#delete">delete</a>
+<a href="change.html#delete">delete</a>
 <a href="manage.html#dropcol">dropcol</a>
 <a href="manage.html#dropdb">dropdb</a>
 <a href="dynamic.html#dropdynamic">dropdynamic</a>
@@ -68,15 +67,15 @@ Tutorials show Jd in action.
 <a href="misc.html#flush">flush</a>
 <a href="misc.html#gen">gen</a>
 <a href="misc.html#get">get</a>
-<a href="use.html#info">info</a>
-<a href="use.html#insert">insert</a>
-<a href="use.html#list">list</a>
+<a href="opsinfo.html#info">info</a>
+<a href="change.html#insert">insert</a>
+<a href="opsinfo.html#list">list</a>
 <a href="misc.html#loadcustom">loadcustom</a>
-<a href="use.html#modify">modify</a>
+<a href="change.html#modify">modify</a>
 <a href="misc.html#option">option</a>
-<a href="use.html#read">read</a>
-<a href="use.html#reads">reads</a>
-<a href="use.html#readtc">readtc</a>
+<a href="opsread.html#read">read</a>
+<a href="opsread.html#reads">reads</a>
+<a href="opsread.html#readtc">readtc</a>
 <a href="dynamic.html#ref">ref</a>
 <a href="dynamic.html#reference">reference</a>
 <a href="manage.html#renamecol">renamecol</a>
@@ -86,7 +85,7 @@ Tutorials show Jd in action.
 <a href="table-table.html#tablecopy">tablecopy</a>
 <a href="table-table.html#tableinsert">tableinsert</a>
 <a href="table-table.html#tablemove">tablemove</a>
-<a href="use.html#update">update</a>
+<a href="change.html#update">update</a>
 <a href="misc.html#validate">validate</a>
 <!-- opindex z -->
 </codenopre>

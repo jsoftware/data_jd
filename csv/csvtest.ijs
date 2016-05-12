@@ -349,7 +349,7 @@ valid11=: 3 : 0
 assert c_a__csv-:12000 12100 12210 12312 12412 12512
 )
 
-csv12=: LF,~2000$'a'
+csv12=: LF,~1e6$'a' NB. jorge bug increased data buffer size
 
 cdef12=: 0 : 0
 1 a int

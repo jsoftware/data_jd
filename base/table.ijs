@@ -12,6 +12,9 @@ Padvar=: 1.5     NB. ratio to increase by on resize
 NB. =========================================================
 NB. State
 STATE=: <;._2 ]0 :0
+Tlen
+S_deleted
+S_ptable
 SUBSCR
 SUMMARYTABLE
 SUMMARYMASTER
@@ -20,9 +23,14 @@ ROWSXTRA
 ROWSMULT
 )
 
+Tlen=: 0
+S_deleted=: _1
+S_ptable=: 0
 ROWSMIN=:  2000
 ROWSMULT=: 1.5
 ROWSXTRA=: 0
+
+openflag=: 0 NB. old style tests require this
 
 NB. =========================================================
 HIDCOL=: (<'jd') ,&.> ;:'active index'
@@ -40,16 +48,25 @@ else.
 end.
 )
 
+setTlen=: 3 : 0
+Tlen=: y
+writestate''
+)
+
+NB. increase or decrease count of deleted rows
+setS_deleted=: 3 : 0
+S_deleted=: S_deleted+y
+writestate''
+)
+
 open=: 3 : 0
-Tlen=: __ NB. tables open cols as required
+openflag=: 1
 )
 
 testcreate=: 4 : 0
 'cols data alloc'=. 3{.y,3#a:
 cols =. ({.~ i.&' ')&.> cutcoldefs toJ cols
-
-vtcname_jd_ each cols
-
+vcname_jd_ each cols
 if. *@# data do.
   assert. ((2=#@$)*.2={:@$) cols&,.`,:@.((1=#cols)*.2=#)^:(2>#@$) data
 end.
@@ -60,6 +77,7 @@ create=: 3 : 0
 NB. if. 2=#y do. 1+'a' end.
 'cols data alloc'=. 3{.y,3#a:
 Tlen=: 0
+S_deleted=: 0
 SUBSCR=: 0 3$a: NB. see dynamic/base.ijs
 SUMMARYTABLE=: 0
 SUMMARYMASTER=: ''
@@ -108,6 +126,7 @@ r=. getwhere ,y
 if. #r do.
  update_subscr''
  dat__active=: 0 r} dat__active
+ setS_deleted #r
 end.
 i.0 0
 )
@@ -157,7 +176,7 @@ step2=. ~.&.|. step1 -.~ {:"1 deps NB. dependent on some dynamic columns (still 
 NB.! kill off TestInsert (only for unique)
 step1  4 :'empty TestInsert__x >y'"0  dat1 NB. Test inserts to subscribing columns
 
-Tlen=: Tlen + len
+setTlen Tlen+len NB. insert
 try.
   step0  4 :'Insert__x >y'"0  dat0 NB. step 0: insert static columns
   step1  4 :'Insert__x >y'"0  dat1 NB. step 1: insert subsribers to static columns only
@@ -221,7 +240,7 @@ Reads=: ({."1 ,: [:tocolumn{:"1)@:Read
 
 NB. Write table to the given csv file.
 WriteCsv =: 3 : 0
-'file headers nms rws epoch'=. y
+'file headers nms rws epoch new'=. y
 l =. #cols =. getloc@> nms
 byte =. (;:'byte enum') e.~ typ =. 3 :'<typ__y'"0 cols
 sh1 =. byte }:@]^:[&.> shape =. 3 :'<shape__y'"0 cols
@@ -229,7 +248,8 @@ torow =. LF _1} (TAB,~deb)&.>(;@:)
 fmt =. [ ` (, '_jdstitch' , [: =&' '`(,:&'_')} ":) @. (0<+/@])
 h1 =. ;nms (<@fmt"_ 1 ,/^:(0>.2-~#@$)@:(#:i.))&.> sh1
 h2 =. (*/@> sh1) # typ ,&.> byte ((*. *@#) # ' ',":@{:@])&.> shape
-(; <@torow"1 headers {. h1 ,: h2) jdfwrite f =. jpath file
+f =. jpath file
+if. new do. (; <@torow"1 headers {. h1 ,: h2) jdfwrite f end.
 t =. 3|>: (;:'varbyte enum') i. typ
 if. epoch do.
  et=. (#typ)#0
@@ -251,7 +271,7 @@ NB. =========================================================
 NB. revert database to length y
 Revert=: 3 : 0
 if. y >: Tlen do. return. end.
-Tlen=: y
+setTlen y NB. revert
 NB. Revert is handled in the type classes
 3 :'Revert__y Tlen'"0  CHILDREN
 )
@@ -295,7 +315,6 @@ NB. new update that calls jd_insert
 NB. should be changed to do in-place update
 NB. in-place update needs to do update_subscr
 NB. in-place update should update only changed data
-NB. read of all old data could be avoided if cols required by datatune was known 
 update1=: 3 : 0
 'rws dat'=.y
 if. +.(#rws)~:;#each {:"1 dat do. throw 'jde: update rows and data counts differ' end.
@@ -307,11 +326,13 @@ e=. e-.n
 keep=.getloc&> e
 a=. e,.keep 4 :'ExportRows__x y'"0 _ rws
 active=. getloc'jdactive'
-dat__active =: 0 rws}dat__active NB. delete now - undo if insert error 
+dat__active=: 0 rws}dat__active NB. delete now - undo if insert error 
+setS_deleted #rws
 try.
  jd_insert_jd_ NAME;,dat,a NB. calls update_subscr
 catchd.
- dat__active =: 1 rws}dat__active NB. undo delete as there was an error
+ dat__active=: 1 rws}dat__active NB. undo delete as there was an error
+ setS_deleted -#rws
  t=. 13!:12''
  throw }.(t i.LF){.t  NB. rethrow
 end.
@@ -378,4 +399,11 @@ if. Tlen=0 do.
 else. 
  getmsize_jmf_ 'dat_','_',~;active
 end. 
+)
+
+getpcol=: 3 : 0
+'not pcol table' assert PTM={:NAME
+t=. NAMES#~-.(<'jd')=2{.each NAMES
+'pcol table with more than 1 col' assert 1=#t
+;t
 )

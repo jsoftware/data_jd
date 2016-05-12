@@ -77,11 +77,15 @@ jd'createtable /a 1 2 3 f a int' === jd'createtable';'/a';'1';'2';'3';'f';'a int
 </code>
 
 <hr><a name="names"><h2>names</h2></a>
-column, table, and dan (database) names are used as folder names and have the same validation<br>
-/\ are not allowed to avoid confusion with path separators<br>
-blank is not allowed to simplify parsing<br> 
-. is not allowed as it is used internally in the form table.col<br>
-jd... prefix not allowed for table or col but is allowed for dan
+column, table, and dan names have similar validation<br><br>
+<code>RESERVEDCHARS_jd_ </code>are not allowed in names<br>
+<code>RESERVEDWORDS_jd_ </code>are not allowed<br>
+jd... prefix is not allowed in table or column name<br>
+~... prefix is not allowed<br><br>
++- are allowed in names, but should be avoided in table names because of
+conflicts with parse of the read from clause<br><br>
+
+^ is used by the system in table names for ptable and should be avoided
 
 <hr><a name="types"><h2>types</h2></a>
 standard types: boolean, int, float, byte<br>

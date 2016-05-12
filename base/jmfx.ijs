@@ -20,8 +20,15 @@ cnts_map_jd_=: >:cnts_map_jd_
 try.
  x map_jmf_ y
 catchd.
- FEER_jd_=: 13!:12''
- logijfdamage 'map';y
+ echo 'jdmap failed - will retry : ',y,' : ',LF-.~,13!:12''
+ try.
+  6!:3[3
+  x map_jmf_ y
+ catchd. 
+  echo 'jdmap failed - failed again : ',y,' : ',LF-.~,13!:12''
+  FEER_jd_=: 13!:12''
+  logijfdamage 'map';y
+ end. 
 end.
 )
 
@@ -43,9 +50,7 @@ coclass'jmf'
 
 3 : 0''
 if. IFUNIX do.
-  lib=. >(UNAME-:'Darwin'){'libc.so.6 ';'libc.dylib '
-  api=. 1 : ('(''',lib,''',x) & cd')
-  c_truncate=: ' truncate i *c x' api
+  c_truncate=: ((unxlib 'c'),' truncate i *c x') & cd
 end.
 i.0 0
 )
@@ -86,7 +91,7 @@ if. IFWIN do.
  NB. BOOL WINAPI FlushFileBuffers(_In_ HANDLE hFile);
  NB. jmf.ijs has a bad definition for FlushViewOfFile so we use ....X
  FlushViewOfFileRX=: 'kernel32 FlushViewOfFile > i x x'&(15!:0)
- FlushFileBuffersR=: 'kernel32 FlushFileBuffers > i i'&(15!:0)
+ FlushFileBuffersR=: 'kernel32 FlushFileBuffers > i x'&(15!:0)
 else.
  lib=. ' ',~ unxlib 'c'
  api=. 1 : ('(''',lib,''',x) & cd')

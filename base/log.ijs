@@ -59,6 +59,7 @@ NB. y 'revert';xtra_data
 NB. create .ijf if it does not exist
 NB. append log component
 logijf=: 4 : 0
+if. 0=#DB do. return. end.
 try. f=. dbpath DB catchd. return. end.
 if. -.fexist f,'/jdclass' do. return. end.
 f=. jpath f,'/log.ijf'
@@ -91,6 +92,7 @@ i.0 0
 
 NB. log_jd_ - there is also a log_jdcsv_
 logtxt=: 4 : 0
+if. 0=#DB do. return. end.
 try. f=. dbpath DB catchd. return. end.
 if. -.fexist f,'/jdclass' do. return. end.
 f=. f,'/log.txt'
@@ -101,4 +103,10 @@ else.
  t=. t,LF,,(sptable y),.LF
 end. 
 t fappend f
+)
+
+NB. log to ~temp/jd.txt
+NB. used by jdtests and other important logs (such as jddamage)
+logjd=: 4 : 0
+((isotimestamp 6!:0''),' : ',(12{.x),' : ',y,LF)fappend'~temp/jd.txt'
 )

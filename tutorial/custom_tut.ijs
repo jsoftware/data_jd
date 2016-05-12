@@ -5,7 +5,6 @@ NB. custom ops are of the form jd_x...
 NB. custom ops can call any jd_... op 
 NB. custom ops must NOI call jd'...' - won't work with jjd server
 NB. custom ops are usually patterned after jd_... ops
-NB. custom.ijs can also define datatune (see datatune tutorial)
 
 custom=: 0 : 0 rplc 'RPAREN';')'
 jd_xra=: 3 : 0

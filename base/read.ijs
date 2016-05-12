@@ -2,25 +2,28 @@ NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 coclass 'jdquery'
 coinsert 'jddatabase'
 
-NB. =========================================================
+rdsplit=: 4 : 0
+x=. ' ',x,' '
+y=. ' ',y,' '
+i=. 1 i:~ x E. blankquoted_jd_ y
+a=. (i{.y);(i+#x)}.y
+)
+
 sel_parse=: 3 : 0
-t=. ' ',debq_jd_ =&LF`(,:&' ')} y -. CR
-'t order'=. 2{.' order by ' strsplit t
-'t where'=. 2{.' where ' strsplit t
-'t from'=. 2{.' from ' strsplit t
-'sel by'=. 2{.' by ' strsplit t
-from;sel;by;where;order
+'y order'=.     'order by'  rdsplit y
+'y where'=.     'where'     rdsplit y
+'y from'=.      'from'      rdsplit ' ',y
+'sel by'=.      'by'        rdsplit y
+from=. deb from
+'from clause missing or empty'assert 0~:#from
+(dltb sel);(deb by);from;(dltb where);deb order
 )
 
 Read=: 3 : 0
-'from sel by where order'=. sel_parse y
-
+'sel by from where order'=. sel_parse y
 From from
-NB. 'From'PM''
 SelBy sel;by
-NB. 'Selby'PM''
 Where where
-NB. 'Where'PM''
 if. MAXROWCOUNT < #indices do.
   msg =. 'Asked for ',(":#indices),' rows; returning first '
   msg =. msg,(":MAXROWCOUNT),' (MAXROWCOUNT_jd_) rows.'
@@ -28,12 +31,11 @@ if. MAXROWCOUNT < #indices do.
   indices =: MAXROWCOUNT {. indices
 end.
 Query ''
-NB. 'Query'PM''
 Order order
-NB. 'Order'PM''
+if. _1=nc<'option_e' do. option_e=:0 end. NB. non api access does not do readstart
 for_i. i.#cnms do.
  c=. i{cloc
- if. (-.OPTION_e) *. 'edate'-:5{.typ__c do.
+ if. (-.option_e) *. 'edate'-:5{.typ__c do.
   t=. sep__c,utc__c,'dtmn'{~(;:'edate edatetime edatetimem edatetimen')i.<typ__c
   read=: (<t sfe,>i{read) i}read
  end.
@@ -132,10 +134,18 @@ NB. inds indexes into indices.
 NB. If sel is empty, add all visible columns
 SelBy =: 3 : 0
 'sel by'=.y
+sel=. sel rplc ' ,';',';', ';',' NB. remove blanks aroung ,
 nt =. #tloc
 if. 0=#sel do. sel =. (1<nt){::'*';'*.*' end.
 'a agg1 path' =. ({. , ' 'sel_split>@{:) ':' sel_split ',' strsplit sel
-agg =: agg1
+
+NB. readtset avg must have count - add if necessary
+if. (OP_jd_-:'readptable') *. (-.(<'count')e.agg1) *. (<'avg')e.agg1 do.
+ a=.    a,<'readtsetautocount'
+ agg1=. agg1,<'count'
+ path=. path,{.path
+end.
+AGG_jd_=: agg =: agg1
 NB. Include by columns
 nby=:0 if. #by do.
   nby =: #>{. b=. ':' sel_split ',' strsplit by
@@ -160,7 +170,6 @@ NB. expand * columns
 'c nc' =. (; ,&< #@>) tl ([:< 4 :'getdefaultselection__x y'^:((<,'*')=]))"0 c
 tl =. nc#tl  [  t =. nc#t  [  inds=:nc#inds
 cnms =: {.@:(-.&a:)"1  stripsp&.> (nc#a),. t([,('.'#~*@#@[),])&.>c
-
 cloc =: tl  4 :'getloc__x y'"0  c
 EMPTY
 )
@@ -168,6 +177,7 @@ EMPTY
 NB. Build indices, a shape (#tloc),len matrix of indices for each table.
 Where=: 3 : 0
 indices=: /:~@:~.&.|: > ,.&.>/ andqueries&.> toSoP fixwhere_jdtable_ y
+indices
 )
 
 NB. Take a list of queries, each on an individual table.
@@ -223,6 +233,7 @@ end.
 
 NB. Evaluate query y on table x
 eval_q=: ($0)"_ ` (4 : 0) @. (*@#@])
+
 t=.x [ q=.y
 striptab =. ([}.~[:(+*)#@[|i:)&'.'
 'not q' =. <@:>"_1 |: (((<'qnot')-:{.) ,&< (striptab&.>@{.,}.)&.>@{:)@> q
@@ -360,7 +371,7 @@ c=. i.~|: i.~@> x{.y       NB. indices used to group columns
 )
 
 NB. Sort by order
-Order =: 3 : 0
+Order=: 3 : 0
 if. 0 = #ord=. cutcommas y do. return. end.
 ifdesc=. (<'desc') = _4 {.&.> ord
 ord=. ifdesc (_4 stripsp@}. ])^:[&.> ord

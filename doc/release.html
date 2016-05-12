@@ -16,6 +16,23 @@
 </div>
 <div contenteditable="false">
 
+<h2>2016 May 12 - version 3.2</h2>
+
+<h3>&bull; <b> partitioned table - significant new facility - see tutorial ptable</h3>
+&bull; invalid epoch data passes precision assertions<br>
+&bull; table/column/dan name validation (<a href="general.html#names">General|names</a>)<br>
+&bull; read op parsing reworked and some bugs fixed<br>
+&bull; documentation of ops reorganized and improved<br>
+&bull; readtc requires jdtc clause (:::s::: no longer supported)<br>
+&bull; validate no longer done before/after insert/update/modify/delete<br>
+&bull; Tlen (active+deleted rows) maintained in table state<br>
+&bull; S_deleted (deleted rows) maintained in table state<br>
+&bull; info summary uses Tlen/S_deleted - fast as no read of jdactive<br>
+&bull; info improved and enhanced to handle ptable<br>
+&bull; csv loader bug with fields longer than 1000 fixed<br>
+&bull; where clause not bug fixed<br>
+&bull; datatune support removed<br>
+
 <h2>2016 January 12 - version 3.1</h2>
 &bull; showbox bug fixed for jconsole (non linedraw) box chars<br>
 &bull; showbox replaced by sptable (from simple project)<br>

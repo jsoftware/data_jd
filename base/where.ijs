@@ -74,16 +74,18 @@ qsample sample
 qSample sample.
 )
 
-NB. =========================================================
 NB. function definitions
 NB. Modifiers: take one or two lists of indices
 qand=: [#~e.
 qor=: /:~@~.@,
-qnot=: -.~ I.@".@('dat__active'"_)
 
-NB. SECTION get where
+NB. xxxqnot=: -.~ I.@".@('dat__active'"_) NB. wrong answers - called dyadically - all rows except 1
 
-NB. =========================================================
+NB. before version 3.2 (2016 feb 20) tacit qnot was called dyadically
+qnot=: 4 : 0
+(-.~ I.@".@('dat__active'"_)) y
+)
+
 NB. getwhere v get row index
 getwhere=: 3 : 0
 if. #y do.

@@ -89,9 +89,11 @@ csvrestore
 
 <hr><a name="csvwr"><h2>csvwr</h2></a>
 csvwr [options] csvfile table [0 or more col names] [where clause]
- /e - write epoch cols as ints (cdefs option iso8601-int)
+ /e  - write epoch cols as ints (cdefs option iso8601-int)
  /h1 - header with col names
- /w  - final arg is where clause  
+ /w  - final arg is where clause
+ /combine - ptable parts written as single file
+ 
  all cols written if none are named
  where clause after * to avoid blank/quote problems
 </code></div></div></body></html>

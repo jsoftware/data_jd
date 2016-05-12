@@ -18,7 +18,7 @@ getdb=: 3 : 0
 :
 db=. dbpath DB
 if. x do.
- 'db damaged'assert -.fexist db,'/jddamage'
+ 'db damaged'assert (0=ftypex) db,'/jddamage'
  'not database class'assert 'database'-:jdfread db,'/jdclass'
 end. 
 i=. db i:'/'
@@ -37,11 +37,13 @@ a=. CHILDREN__d
 NB. y is t;c
 NB. t is '' for all tables  or 'tab' for just that table
 NB. c is '' for all cols    or 'col' for just that col
+NB. tables  in sorted order
+NB. cols in defaultselection order
 jdclocs=: 3 : 0
 't c'=. ,each y
 d=. getdb''
 r=. ''
-tables=.  NAMES__d
+tables=. /:~NAMES__d
 if. #t do.
  'not a table' assert NAMES__d e.~ <t
  tables=. <t
@@ -151,8 +153,7 @@ case. do.
  end.
  NB. default access is for the 1st of the new dans
  jdaccess (;{.c{DBPATHS_jd_),' ',(;{:c{DBUPS_jd_),' intask'
- 'db damaged'assert -.fexist y,'/jddamage'
- jd_validate''
+ 'db damaged'assert (0=ftypex) y,'/jddamage'
  i.0 0
 end.
 )
@@ -258,7 +259,7 @@ lockclose=: 3 : 0
 if. IFWIN do.
  1!:22 y
 else.
- (LIBC,' close x x')cd y
+ (LIBC,' close i i')cd y
 end.
 )
 
@@ -275,7 +276,8 @@ NB. x - x (unlock), r (readonly), or w (read/write)
 NB. y - path to jdlock file
 lock=: 4 : 0
 f=. jpath y,'/jdlock'
-if. -.fexist f do.'rw'fwrite f[jdcreatefolder y end.
+'lock not a file' assert (2~:ftypex) f
+if. ('x'~:{.x) *. -.fexist f do.'rw'fwrite f[jdcreatefolder y end.
 lf=. (<f) e. {:"1 LOCKED
 select. x
 
@@ -314,7 +316,7 @@ select. y
 case. '' do.
  (<'[w]'),._7}.each{:"1 LOCKED
 case. 0 do.
- i.0 0['x'jdadminlk each _7}.each LOCKED
+ i.0 0['x'jdadminlk each _7}.each{:"1 LOCKED
 case. do.
  assert 0['invalid argument'
 end.
@@ -327,9 +329,10 @@ NB. serious error (e.g., disk full)
 NB. mark db as damaged - prevent any more ops on db
 NB. signal error
 jddamage=: 3 : 0
-'damage'logtxt y
 p=. '/jddamage',~dbpath DB
 if. #y do.
+ 'damage'logtxt y
+ 'damage'logjd y
  y=. 'db marked as damaged - ',y,' - see doc technical|damaged'
  y fwrite p
  y assert 0
@@ -376,11 +379,14 @@ if. IFWIN do.
  jddeletefolder p
  shell t NB. wndows does junction between folders
 else.
- n=. '"',newp,'" "',(_5}.p),'"'
+NB. !!! n=. '"',newp,'" "',(_5}.p),'"'
+ n=. '"',newp,'" "',p,'"'
  t=. 'ln -s ',n
  jddeletefolder p
  shell t
 end.
+6!:3^:(2~:ftypex p) 0.1 NB. sometimes required in windows so next test works
+'link failed' assert (2=ftypex) p
 )
 
 NB. report db link targets

@@ -62,6 +62,12 @@ jd'renamecol f aaa x'
 jd'renamecol f x aaaa'
 jd'reads aaaa from f'
 
+'jd'jdae'renamecol f jdindex adsf'
+'jd'jdae'renamecol f aaaa    jdadsf'
+'not found'jdae'renamecol f asdf qewr'
+'already exists'jdae'renamecol f aaaa b'
+
+
 test''
 jd'createhash f a'
 assert'domain error'-:jd etx'renamecol f a aaa' NB. fails with hash

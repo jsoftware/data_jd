@@ -16,7 +16,7 @@
 <div contenteditable="false">
 <code>
 <a href="#close">close</a>
-<a href="#createcol">createcol</a> <a href="#createdb">createdb</a> <a href="#createtable">createtable</a>
+<a href="#createcol">createcol</a> <a href="#createdb">createdb</a> <a href="#createtable">createtable</a> <a href="#createptable">createptable</a>
 <a href="#dropcol">dropcol</a> <a href="#dropdb">dropdb</a> <a href="#dropfilesize">dropfilesize</a> <a href="#droptable">droptable</a>
 <a href="#renamecol">renamecol</a> <a href="#renametable">renametable</a>
 
@@ -76,6 +76,12 @@ b int 2
 jd'createtable i ',t
 jd'info schema'
 jdaccess olddan
+
+<hr><a name="createptable"><h2>createptable</h2></a>
+createptable table pcol
+allowed pcol types: int edate edatetime date datetime
+table must have 0 rows
+tutorial ptable
 
 <hr><a name="dropcol"><h2>dropcol</h2></a>
 dropcol table col

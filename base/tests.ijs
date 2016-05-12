@@ -27,6 +27,7 @@ t=. t,~each<JDP
 if. -.IFJHS do. t=. t-.<JDP,'tutorial/server_tut.ijs' end.
 failed=: ''
 jdt=: i.0 2
+'test start'logjd_jd_''
 if. csvonly+.-.fast do.
  start=. 6!:1''
  jd'option sort 1' NB. sort required for now
@@ -63,11 +64,13 @@ jdadmin 0
 start=. 6!:1''
 for_n. i.#t do.
  a=. n{t
+ 'test file'logjd_jd_ (#JDP_jd_)}.;a
  jda=. 6!:1''
  if. x do. echo 'loadd''','''',~;a end.
  try.
   load a
  catch.
+  'failed'logjd_jd_ LF,13!:12''
   echo LF,('failed: ',;n{t),LF,13!:12''
   failed=: failed,a
  end.
@@ -76,10 +79,10 @@ end.
 jdserverstop_jd_''
 jd'close'
 jdadmin 0
+failedx=: >LF,~each(<'loadd'''),each failed,each<''''
 if. #failed do.
- NB. echo LF,'known problems:'
  echo LF,'following tests failed:'
- echo each (<'loadd'''),each failed,each<''''
+ echo failedx
 end.
 if. #conl 1 do.
  echo LF,'check for orphan locals in conl 1'  
@@ -90,6 +93,7 @@ FLUSHAUTO_jd_=: OLDFLUSHAUTO_jd_
 'ROWSMIN_jdtable_ ROWSMULT_jdtable_ ROWSXTRA_jdtable_'=: OLDALLOC_jd_
 echo LF,(":<.start-~6!:1''),' seconds to run tests and tutorials'
 (;{:jd'list version')fwrite'~temp/jd/jdversion' NB. avoid welcome
+'test end'logjd_jd_''
 i.0 0
 )
 

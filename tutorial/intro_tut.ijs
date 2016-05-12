@@ -1,4 +1,4 @@
-NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
+NB. Copyright 2016, Jsoftware Inc.  All rights reserved.
 0 : 'spx hr'
 0 : 0
 this tutorial gives an overview of Jd features
@@ -142,3 +142,9 @@ jd 'reads from foo'
 NB. update rows
 jd 'update foo';'color in ("blue","red")'; 'n2';621 778
 jd 'reads from foo'
+
+0 : 0
+probably worthwhile to at least skim the other basic tutorials
+do advanced tutorials as questions and issues come up
+ptable tutorial is relevant for tables with many rows (200e6 to billions)
+)

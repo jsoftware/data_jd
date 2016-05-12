@@ -2,132 +2,34 @@
 <html>
 <head>
 <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
-<title>Jd Ops use</title>
+<title>Jd Ops read</title>
 <link rel="stylesheet" href="jda.css" type="text/css">
 
 <body>
 <div class=masthead>
 <img src="./jblue.png" width="50px" height="50px"/>
 <span class=md>d</span>
-<span class=mt>&nbsp;Ops use</span>
+<span class=mt>&nbsp;Ops read</span>
 <span class=ms><a href="http://www.jsoftware.com" target="_blank">www.jsoftware.com</a><br>J database - J language<br>columnar analytics</span>
 </div>
 
 <div contenteditable="false">
 <code>
-<a href="#delete">delete</a> <a href="#info">info</a> <a href="#insert">insert</a> <a href="#list">list</a> <a href="#modify">modify</a> <a href="#read">read</a> <a href="#reads">reads</a> <a href="#readtc">readtc</a> <a href="#update">update</a>
+<a href="#read">read</a> <a href="#reads">reads</a> <a href="#readtc">readtc</a>
 
-clauses:  <a href="#select">select</a> <a href="#from">from</a> <a href="#where">where</a>
-<hr><a name="delete"><h2>delete</h2></a>
-delete table <a href="#where">where</a>
-
-NB. example delete
-jdadminx'example'[olddan=:jdaccess''
-jd'createtable f a int,b byte 4'
-jd'insert f';'a';24 25 26;'b';3 4$'aaaabbbbcccc'
-jd'delete f a=24'
-jd'delete f';'a=26'
-jd'reads from f'
-jdaccess olddan
-
-<hr><a name="info"><h2>info</h2></a>
-info type [...] - info about current DB
- agg                          - select aggregators
- dynamic     [table [column]] - dynamic cols
- jd          [table [column]] - jd... cols
- last                         - cmd time space
- schema      [table [column]] - normal cols (non jd...)
- summary     [table]
- table
- validate    [table][column]]
- validatebad [table][column]]
- varbyte     [table [column]]
-
- hash        [table]          - hash cols
- ref         [table]          - ref cols
- reference   [table]          - reference cols
- unique      [table]          - unique cols
-
- NB. example info
- jdadminx'example'[olddan=:jdaccess''
- jd'gen ref2 a 3 0 b 2'
- jd'info schema'
- jd'info schema a'
- jd'info schema a akey'
- jd'info reference'
- jdaccess olddan
- 
-
-<hr><a name="insert"><h2>insert</h2></a>
-insert table col data ...
-
-col data pairs
-count of data items must be the same
-
-insert of duplicates (createunique) marks older rows as deleted
-and gives an error warning
- 
-NB. example insert
-jdadminx'example'[olddan=:jdaccess''
-jd'createtable f a int,b byte,b4 byte 4'
-jd'insert';'f';'a';23;'b';'a';'b4';1 4$'abcd'
-jd'reads from f'
-jd'insert';'f';'a';24 25;'b';'bc';'b4';2 4$'aaaabbbb'
-jd'reads from f'
-jd'createtable g'
-jd'createcol g a int _';i.3
-jd'createunique g a'
-jd etx'insert g a';2
-;1{jdlast
-jd'reads jdindex,a from g'
-jdaccess olddan
-
-
-<hr><a name="list"><h2>list</h2></a>
-list version     - Jd version 
-list open        - open databases
-
-<hr><a name="modify"><h2>modify</h2></a>
-modify table <a href="#where">where</a> col data  ...
-modify table indexes col data ...
-
-updates selected row cols in place
-data items are scalar extended
-can not modify col if it has dynamics
-col data pairs (as for insert and update)
-
-indexes are row indexes
-
-NB. example modify
-jdadminx'example'[olddan=:jdaccess''
-jd 'createtable f a int,b int,c byte 4'
-jd 'insert f';'a';24 25 26;'b';100 101 102;'c';3 4$'aaaabbbbcccc'
-jd'reads from f'
-jd 'modify f';'a=24';'b';200
-jd'reads from f'
-jd 'modify f';'a<26';'b';300;'c';2 4$'xxxxzzzz' NB. 300 scalar extends
-jd'reads from f'
-'i b'=: {:"1 jd'read jdindex,b from f where a in (24,26)'
-jd'modify f';i;'b';b+1 NB. modify with indexes
-jd'reads from f'
-jdaccess olddan
-
-
+<a href="#parse">parsing</a> read ops can be complicated
 <hr><a name="read"><h2>read</h2></a>
-read [/e] [<a href="#select">select</a>] from <a href="#from">from</a> [where  <a href="#where">where</a>]
-
 same as reads with /lr option
 
 <hr><a name="reads"><h2>reads</h2></a>
-reads [/lr] [/e] [<a href="#select">select</a>] from <a href="#from">from</a> [where  <a href="#where">where</a>]
-
-/lr - labeled rows instead of labeled cols 
-/e  - edate... cols as epochdt rather than iso 8601
+reads [<a href="#options">OPTIONS</a>] [<a href="#select">SELECT</a>] from <a href="#from">FROM</a> [where <a href="#where">WHERE</a>] [order by <a href="#oby">ORDER BY</a>]
 
 returns select col(s) from table(s) with rows that satisfy where
 alias:col
 alias:table
 aggregation [by key1[,key2]]
+
+For ideas on working with reads results, see essay <a href="http://code.jsoftware.com/wiki/Essays/Inverted_Table" target="_blank">Inverted Table</a>.
 
 NB. example reads
 jdadminx'example'[olddan=:jdaccess''
@@ -144,33 +46,45 @@ jd'reads sum adata by aref from a'
 jdaccess olddan
 
 <hr><a name="readtc"><h2>readtc</h2></a>
-readtc [/lr] [/e] :::...::: [<a href="#select">select</a>]  <a href="#from">from</a>  [<a href="#where">where</a>]
+readtc ... jdtc sentence
 
-same as reads except J sentence bracketed by :::
-is executed first to create temp cols
+sames as reads except jdtc clause
+
+J sentence is run first to create temp cols
 
 tutorial tempcol
 
-<hr><a name="update"><h2>update</h2></a>
-update table <a href="#where">where</a> col data  ...
+<hr><a name="parse""><h2>parsing</h2></a>
+Parsing read ops can be complicated. There are known issues that
+can cause problems. Keep things simple to avoid unknown problems
 
-deletes selected records and inserts new updated records
-count of data items and updated rows must be the same
-col data pairs
+clauses where,order by,jdset,jdtc are strippd from the end and must
+appear, if present, in that order
 
-NB. example update
-jdadminx'example'[olddan=:jdaccess''
-jd 'createtable f a int,b int,c byte 4'
-jd 'insert f';'a';24 25 26;'b';100 101 102;'c';3 4$'aaaabbbbcccc'
-jd'reads from f'
-jd 'update f';'a=24';'b';200
-jd'reads from f'
-jd 'update f';'a<26';'b';300 400;'c';2 4$'xxxxzzzz'
-jd'reads from f'
-jdaccess olddan
+use blanks before and after keywords
 
+anything can appear in WHERE between "s
+ this is handled and will not cause parse errors
 
-<hr><a name="select""><h2>select clause</h2></a>
+anything can appear in col/table alias
+ / at start of SELECT will be treated as option
+ keywords (e.g, order by) in alias can cause problems
+   
+col alias can include blanks, RESERVEDCHARS, and RESERVEDWORDS 
+and this is useful as they are result col labels
+
+table alias can include blanks, RESERVEDCHARS, and RESERVEDWORDS
+but this is not useful and can cause parse problems
+
+some problems are avoided as:
+ RESERVEDWORDS_jd_ are not allowed as col/table names
+ RESERVEDCHARS_jd_ are not allowed in col/table names
+
+<hr><a name="options""><h2>OPTIONS</h2></a>
+/lr - labeled rows instead of labeled cols 
+/e  - edate... cols as epochdt rather than iso 8601
+
+<hr><a name="select""><h2>SELECT</h2></a>
 read SELECT from ...
 
 Select determines which columns are in the result
@@ -220,7 +134,7 @@ each aggregator is called on the rows of its column in each group
 
 result col label does not include agg, so an alias is desirable
 
-<hr><a name="from"><h2>from clause</h2></a>
+<hr><a name="from"><h2>FROM</h2></a>
 read ... from FROM ...
 
 tutorial from
@@ -285,7 +199,7 @@ left1 join A,A.B
  same as inner join if 1 and only 1 B row matches 
 
 
-<hr><a name="where"><h2>where clause</h2></a>
+<hr><a name="where"><h2>WHERE</h2></a>
 read ... from ... where WHERE
 
  a="abc"
@@ -416,4 +330,8 @@ in dat is a comma-separated list with the same length as the number of
 cols. If the relational is "in", each item in dat must be parenthesized.
 The col values are compared with the items in dat. If there is a hash
 columns it will be used for the query.
+
+<hr><a name="oby"><h2>ORDER BY</h2></a>
+one or more cols separated by commas that are used to sort the final result
+
 </code></div></div></body></html>

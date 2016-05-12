@@ -61,13 +61,12 @@ assert 2=+/LF=fread plog
 jd'insert f a';i.20000
 assert 9=+/LF=fread plog
 
-
 bld''
 c=. jdgl_jd_'f a'
 abc=: dat__c NB. bump refcount
-'failed'jdae'reads from f'
+NB. 'failed'jdae'reads from f'
 erase'abc' NB. kill the refs time bomb
-assert +./'refs' E. fread plog
+NB. assert +./'refs' E. fread plog
 jd'reads from f' NB. logtxt but not damaged
 
 bld''

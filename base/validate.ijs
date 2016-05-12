@@ -12,7 +12,6 @@ assert fs=ms+HS_jmf_
 
 NB. y is table to validate
 NB. x is error text to signal if validation detects problem
-NB. done before/after every insert/update
 validatetable=: 4 : 0
 e=. 'validate failed ',x,' ',OP
 if. FORCEVALIDATEAFTER_jd_*.x-:'after' do. logijfdamage e;''[FORCEVALIDATEAFTER_jd_=: 0 end.
@@ -45,7 +44,7 @@ try.
    case. 'datr' do. s=. #mn~ NB. force to what it is
    case. 'datl' do. s=. Tlen__c  
    case. 'val'  do. s=. #mn~ NB. force to what it is
-   case.         do. s=. Tlen__c,shape__c
+   case.        do. s=. Tlen__c,shape__c
    end.
    if. (typ__c-:'varbyte')*.om-:'dat'     do. s=. Tlen__c,2 end.
    if. (typ__c-:'smallrange')*.om-:'hash' do. s=. $mn~      end. NB. force to what it is

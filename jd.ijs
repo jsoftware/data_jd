@@ -76,6 +76,7 @@ if. _1=r=. (LIBJD_jd_,' jdinit >x *c') cd <JDP_jd_ do. assert 0[echo nokey_jd_ e
 
 load@:(JDP&,);._2 ]0 :0
 base/util_epoch.ijs
+base/util_ptable.ijs
 base/util.ijs
 base/zutil.ijs
 base/pm.ijs
@@ -84,6 +85,7 @@ base/folder.ijs
 base/database.ijs
 base/table.ijs
 base/column.ijs
+base/constants.ijs
 base/read.ijs
 base/where.ijs
 base/jmfx.ijs
@@ -97,6 +99,7 @@ api/api_change.ijs
 api/api_csv.ijs
 api/api_drop.ijs
 api/api_info.ijs
+api/api_read.ijs
 api/client.ijs
 csv/csv.ijs
 csv/csvinstall.ijs
@@ -126,7 +129,7 @@ end.
 )
 
 jdwelcome_jd_=: 0 : 0 rplc 'BOOKMARK';jpath JDP,'doc/index.html'
-Jd is Copyright 2015 by Jsoftware Inc. All Rights Reserved.
+Jd is Copyright 2016 by Jsoftware Inc. All Rights Reserved.
 Jd is provided "AS IS" without warranty or liability of any kind.
 
 Commercial users must have a Jd License from Jsoftware.
@@ -139,15 +142,15 @@ JHS is the base technology for Jd client/server.
 JAL does not lock against other tasks using the same Jd folder.
 Update with tasks using the same Jd folder will cause problems.
 
-Different J installs should be used for production systems and
-development systems.
+Different J installs should be used for production and development.
+
+Run test suite (takes several minutes): jdtests_jd_''
 
 Bookmark documentation in your browser:
    file:///BOOKMARK
 
 Get started:
-   jdtests_jd_''   NB. validate install/update - takes minutes
-   jdex_jd_''      NB. list examples from user.html
+   jdex_jd_''      NB. list examples from docs
    jdex_jd_'reads' NB. run reads
    jdrt_jd_''      NB. list tutorials
    jdrt_jd_'intro' NB. run intro
@@ -160,7 +163,6 @@ if. new-:old do.
  echo'   jdwelcome_jd_ NB. Jd welcome message'
 else.
  echo jdwelcome_jd_
- echo LF,'new install or new version - run jdtests!'
 end. 
 )
 

@@ -7,7 +7,7 @@ jd_dropdb=: 3 : 0
 ECOUNT assert 0=#y
 'f db'=. getfolder''
 t=. dbpath db
-'dropstop' assert -.fexist t,'/jddropstop'
+'dropstop' assert (0=ftypex) t,'/jddropstop'
 'x' jdadminlk t NB. should be done after Drop - see similar in jdadmin
 Drop__f db
 jddeletefolder t
@@ -26,13 +26,24 @@ end.
 ECOUNT assert 1=#y
 y=. ;y
 d=. getdb''
-'dropstop' assert -.fexist PATH__d,y,'/jddropstop'
+'dropstop' assert (0=ftypex) PATH__d,y,'/jddropstop'
 if. -.(<y) e. NAMES__d do. JDOK return. end.
 assertnoreference ;y
+t=. jdgl y
+
+if. S_ptable__t do.
+ p=. (<y,PTM),each ;{.getparts y
+ Drop__d each p
+ EDELETE assert ;(0=ftypex)"0 PATH__d&,each p 
+ Drop__d y,PTM
+ EDELETE assert (0=ftypex) PATH__d,y,PTM
+end.
+
 if. reset do.
- t=. jdgl y
- Tlen__t=: 0
- ns=. NAMES__t
+ S_deleted__t=: 0
+ setTlen__t 0
+ a=. <'jdactive'
+ ns=. a,NAMES__t-.a NB. jdactive must be done first
  for_n. ns do.
   n=. ;n
   t=. jdgl y NB. could have changed
@@ -56,7 +67,7 @@ if. reset do.
  end. 
 else. 
  Drop__d y
- EDELETE assert -.fexist PATH__d,y
+ EDELETE assert (0=ftypex) PATH__d,y
 end. 
 JDOK
 )
@@ -65,15 +76,28 @@ jd_dropcol=: 3 : 0
 y=. bdnames y
 ECOUNT assert 2=#y
 d=. getdb''
-t=. getloc__d ;{.y
-'dropstop' assert -.fexist PATH__t,(;{:y),'/jddropstop'
-if. ({:y)e.{."1 jdcols {.y do.
- assertnodynamic y
+'tab col'=. y
+t=. getloc__d tab
+'dropstop' assert (0=ftypex) PATH__t,col,'/jddropstop'
+assertnodynamic y
+
+t=. jdgl_jd_ :: 0: tab,PTM
+if. 0~:t do.
+ pcol=. getpcol__t''
+ 'drop pcol not allowed'assert -.pcol -: ;{:y
+end.
+
+if. -.({:y)e.{."1 jdcols {.y do. JDOK return. end.
+ns=. getparttables ;{.y
+for_i. i.#ns do.
+ a=. (i{ns),{:y
+ if. i=1 do. continue. end. NB. ignore f~
+ t=. jdgl {.a
  f=. PATH__t,'column_create_order.txt'
  if. fexist f do. (;' ',~each (;:fread f)-.{:y)fwrite f end.
- DeleteCols__d y
- EDELETE assert -.fexist PATH__t,;{:y
-end. 
+ DeleteCols__d a
+ EDELETE assert (0=ftypex) PATH__t,;{:a
+end.
 JDOK
 )
 
@@ -133,7 +157,7 @@ if. #y do. dropdynsub y return. end.
 p=. dbpath DB
 d=. 1!:0 <jpath p,'/*'
 d=. (<p,'/'),each {."1 ('d'=;4{each 4{"1 d)#d
-d=. (fexist d,each <'/jdclass')#d
+d=. (fexist"0 d,each <'/jdclass')#d
 d=. ((<'table')=jdfread each d,each <'/jdclass')#d
 for_n. d do.
  dd=. {."1[1!:0 <jpath'/*',~;n

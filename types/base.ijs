@@ -51,7 +51,7 @@ else.
 end.
 ) 
 
-modify =: 4 : 0
+modify=: 4 : 0
 if. (-.''-:shape)*.({:$y)~:{:(#x),shape do.
  y=. ({:(#x),shape){."1 y
 end. 
@@ -139,4 +139,3 @@ r=. cd_qlike cd 0,(gethad'b'),(gethad'dat'),gethad'y'
 if. 0~:r do. throw 'C qlike failed with code ',":r end.
 I.b
 )
-

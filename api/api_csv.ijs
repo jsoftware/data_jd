@@ -43,7 +43,7 @@ c=. c,'options TAB LF NO \ ',(":header),LF
 )
 
 jd_csvwr=: 3 : 0
-a=. '/e 0 /h1 0 /w 0' getoptions ca y
+a=. '/combine 0 /e 0 /h1 0 /w 0' getoptions ca y
 header=. option_h1
 epoch=. option_e
 if. option_w do.
@@ -51,18 +51,56 @@ if. option_w do.
  a=. }:a
 else.
  w=. ''
-end. 
+end.
+table=. >1{a
+cols=. 2}.a
+d=. getdb''
+n=. ;1{a
+
+ns=. getparttables n
+csvs=. <_4}.>{.a
+csvs=. csvs,each (#n)}.each ns
+t=. (<CSVFOLDER__),each csvs,each<'.csv'
+t=. t,(<CSVFOLDER__),each csvs,each<'.cdefs'
+ferase t
+c=. fexist"0 t
+('unable to erase files:',(;' ',each c#t))assert 0=c 
+
+csvs=. csvs,each<'.csv'
+
+if. 1=#ns do.
+ (w;(<cols),<1) csvwr csvs,ns
+else.
+ new=: 1
+ if. option_combine do.
+  ns=. 2}.ns NB. drop f and f~
+  csvs=. (#ns)${.csvs
+  'create csv file failed' assert 0=''fwrite {.csvs
+  for_i. i.#ns do.
+   (w;(<cols),<new) csvwr (i{csvs),i{ns
+   new=. 0
+  end.
+ else.
+  for_i. i.#ns do.
+   wx=. ;((1=#ns)+.2<:i){'';w NB. no where for f and f~
+   (wx;(<cols),<1) csvwr (i{csvs),i{ns
+  end.
+ end. 
+end.
+JDOK
+)
+
+csvwr=: 4 : 0
+'w cols new'=. x
+a=. y
 csvset''
 d=. getdb''
 csv=. CSVFOLDER__,>0{a
 table=. >1{a
-cols=. 2}.a
 assert '.csv'-:_4{.csv['sink file must be .csv'
 cdefs=. (_3}.csv),'cdefs'
 p=. (csv i:'/'){.csv
 jdcreatefolder p
-assert 0=''fwrite csv['unable to create csv file'
-assert 0=''fwrite cdefs['unable to create cdefs file'
 t=. getloc__d table
 all=. getdefaultselection__t''
 if. 0=#cols do.
@@ -85,20 +123,22 @@ end.
 b=. (":each b),each' '
 b=. (>0{"1 b),.(>1{"1 b),.>2{"1 b
 c=. ,(' ',.~>":each<"0 >:i.#b),.b,.LF
-c=. c,'options TAB LF NO \ ',(":header),(;epoch{' iso8601-char ';' iso8601-int '),LF
-c fwrite cdefs
+c=. c,'options TAB LF NO \ ',(":option_h1),(;option_e{' iso8601-char ';' iso8601-int '),LF
+'create cdefs file failed' assert (#c)=c fwrite cdefs
+
+if. -.option_combine do. ''fwrite csv end.
+
 if. #w do.
  try.
   rows=. ,>{:jd_reads'jdindex from ',table,' where ',w
- catch.
+ catchd.
   assert 0['where clause failed'
  end. 
 else.
-  active=. getloc__t 'jdactive'
+  active=. getloc__t'jdactive'
   rows=. I.dat__active 
 end.
-WriteCsv__t csv;header;cols;rows;epoch
-i.0 0
+WriteCsv__t csv;option_h1;cols;rows;option_e;new
 )
 
 NB. copyscripts snk;src
@@ -119,7 +159,10 @@ csvset''
 assert 0=#dir CSVFOLDER__['CSVFOLDER must be empty'
 tabs=. {."1 jdtables''
 for_t. tabs do.
- jd_csvwr e,'T.csv T'rplc 'T';>t
+ NB. jd_csvwr e,'T.csv T'rplc 'T';>t
+ t=. ;t
+ option_h1=: option_combine=: 0
+ ('';'';1) csvwr (t,'.csv');t 
 end.
 copyscripts CSVFOLDER__;jdpath_jd_''
 i.0 0
@@ -146,8 +189,36 @@ while. '/'={.option=. >{.a do.
  end. 
  a=. }.a
 end.
-csv=.   CSVFOLDER__,>0{a
-table=. >1{a
+
+'csv table'=. a
+csv=. CSVFOLDER__,csv
+'csv file does not exist'assert fexist csv
+fs=. {."1[1!:0 jpath (_4}.csv),PTM,'*.csv'
+
+if. #fs do.
+ fs=. (<csv),fs,~each<CSVFOLDER__
+ '/cdefs not supported'assert -.flagcdefs
+ 'one of more missing cdefs' assert fexist"0 (_4}.each fs),each<'.cdefs'
+
+ ts=. _4}.each fs
+ ts=. (#;{.ts)}.each ts
+ ts=. ts,~each<table
+
+ for_i. i.#fs do.
+  csvrd (i{fs),(i{ts),rows;0
+ end.
+else.
+ csvrd csv;table;rows;flagcdefs
+end. 
+JDOK
+)
+
+NB. make following into csvrd routine
+NB. call csvrd routine for the single file or for each of the partition files
+csvrd=: 3 : 0
+'csv table rows flagcdefs'=: y
+d=. getdb''
+csv=.   csv
 cdefs=. (_3}.csv),'cdefs'
 assert fexist csv
 assert fexist cdefs['missing cdef file'
@@ -158,14 +229,25 @@ else.
  cdefs=. fread (_3}.csv),'cdefs'
 end. 
 csvdefs_jdcsv_ cdefs
-csvreportclear_jdcsv_''                        NB. clear log file of old reports
-jdfolder=.  (PATH__d),table
-csvfolder=. jdfolder,'/jdcsv'           NB. folder for csv intermeidate files and reports
-jd_close''                               NB. clean up jd stuff
-csvload_jdcsv_   csvfolder;csv;rows         NB. csvfolder files <- csvfile
+csvreportclear_jdcsv_''              NB. clear log file of old reports
+path=. PATH__d
+jdfolder=.  path,table
+csvfolder=. jdfolder,'/jdcsv'        NB. folder for csv intermediate files and reports
+jd_close''                           NB. clean up jd stuff
+csvload_jdcsv_   csvfolder;csv;rows  NB. csvfolder files <- csvfile
 jdfromcsv_jdcsv_ jdfolder;csvfolder  NB. JD table <- csvfolder files
-jd_close'' NB. unmap to allow better host management of ram
-i.0 0
+
+NB. mark ptable as ptable  
+if. PTM e.table do.
+   t=. jdgl (table i.PTM){.table
+   if. -.S_ptable__t do.
+    S_ptable__t=: 1
+    writestate__t''
+   end. 
+  end. 
+
+jd_close''                           NB. unmap to allow better host management of ram
+JDOK
 )
 
 NB. [options] csvfile
@@ -216,7 +298,7 @@ else.
 end.
 
 assert fexist csv                      ['csv file must exist'
-if. replace    do. ferase cdefs else. assert -.fexist cdefs['cdefs file already exists (option /replace)' end.
+if. replace    do. ferase cdefs else. assert (0=ftypex) cdefs['cdefs file already exists (option /replace)' end.
 
 NB. determine csv options rowsep colsep quoted escaped headers 
 d=. fread csv;0,100000<.fsize csv
@@ -338,15 +420,16 @@ dtbm=: 3 : '>dtb each<"1 y'
 NB. restore db from dump folder
 jd_csvrestore=: 3 : 0
 csvset''
-csv=. (<CSVFOLDER__),each {."1 [ 1!:0 jpath CSVFOLDER__,'*.csv'
+csv=. (<CSVFOLDER__),each /:~{."1 [ 1!:0 jpath CSVFOLDER__,'*.csv'
 cdefs=. (_4}.each csv),each <'.cdefs'
-assert fexist cdefs
+assert fexist"0 cdefs
 assert 0=#{."1 jdtables''['db already has tables'
 copyscripts (jdpath_jd_'');CSVFOLDER__
 i=. >:(;{.csv)i:'/'
 tabs=. >_4}.each i}.each csv
 for_t. tabs do.
- jd_csvrd '/rows 0 T.csv T'rplc 'T';dtb t
+ t=. dltb,;t
+ csvrd (CSVFOLDER__,t,'.csv');t;0;0
 end.
 i.0 0
 )
@@ -369,13 +452,17 @@ while. '/'={.option=. >{.a do.
  a=. }.a
 end.
 all=. {."1 jdtables''
-if. 0=#a do. a=. all end.
+if. 0=#a do.
+ a=. all
+else.
+ a=.  ;getparttables_jd_ each a
+end. 
 assert 0=#a-.all['table{s} not found'
 r=. ''
 for_i. i.#a do.
  tab=. ;i{a
  b=. fread PATH__d,tab,'/jdcsv/csvlog.txt'
- b=. >(b-:_1){b;''
+ if. _1=b do. continue. end.
  t=. <;.2 b
  if. optf do.
   b=. ''

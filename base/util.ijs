@@ -6,6 +6,13 @@ HASHFAST=: 1         NB. use H code
 HASHPASSLEN=: <.2^60 NB. code exists byt not used
 HASHCREATE32BIT=: 0  NB. code exists but not used
 
+NB. widows bug?
+NB.  fexist seems to 'sync' file ops and prevents ftypex from giving wrong answer 
+ftypex=: 3 : 0
+fexist y
+ftype  y
+)
+
 reduce =: 1 : ('u/ y';':';'for_z. |.x do. y=.z u y end.')
 
 dcreate=: (1!:5 :: 0:) @ (fboxname@:>)
@@ -14,8 +21,6 @@ derase=: (1!:55 :: 0:) @ (fboxname@:>)
 pack=: [: (,. ".&.>) ;: ::]
 pdef=: 3 : '0 0$({."1 y)=: {:"1 y'
 termSEP=: , (0 < #) # '/' -. {:
-tindexof=: i.&>~@[ i.&|: i.&>
-tnubsieve=: ~:@|:@:(i.&>)~
 tocolumn=: ,. @: > each
 strsplit=: #@[ }.each [ (E. <;.1 ]) ,
 
@@ -37,6 +42,12 @@ stripsp=: #~ (+. +./\ *. +./\.)@(' '&~:)
 wherequoted=: ~:/\@:(=&'"' *. 1,'\'~:}:)
 NB. deb, but only where y is not quoted
 debq=: #~ wherequoted +. (+. (1: |. (> </\)))@(' '&~:)
+
+blankquoted_jd_=: 3 : 0
+if. ''-:y do. y return. end. NB. avoid bug in wherequoted
+' ' (I.wherequoted y)}y
+)
+
 
 NB. =========================================================
 coinserttofront =: 3 : 0
@@ -72,7 +83,7 @@ y=. jpath y
 ('folder (F) locked by Jd'rplc 'F';y) assert -.(<y)e.{:"1 jdadminlk_jd_''
 t=. y,'/' NB. ensure trailing /
 if. -.fexist t,'jddeleteok' do.
- EDROPSTOP assert -.fexist t,'/jddropstop'
+ EDROPSTOP assert (0=ftypex) t,'/jddropstop'
  e=. 'delete ',y,' not allowed'
  e assert 3<:+/t='/'
  p=. jpath'~temp/'
@@ -133,14 +144,16 @@ if. IFWIN do. y=. hostpathsep y end.
 d=. 1!:0 y
 if. 1~:#d do. 0;'' return. end. NB. folder already empty
 if. 'd'~:4{4 pick{.d do. ('not a folder: ',y) assert 0 end.
+t=. ,&'/'^:('/'~:{:) jpathsep y
+if. (<filecase_j_ t) e. filecase_j_@:((#t)&{.)&.> 1{"1 }.showmap_jmf_ '' do. ('contains mapped files: ',t) assert 0 end.
 if. IFWIN do.
   r=. shell_jtask_ 'rmdir /S /Q ','"','"',~y
 else.
   r=. hostcmd_j_ 'rm -rf ','"','"',~y NB. --preserve-root
 end.
 if. #r do. 1;r return. end.
-6!:3[0.01 NB. sometimes required in windows so next test works
-if. 0=1!:0 y do.
+6!:3^:(*#1!:0 y) 0.1 NB. sometimes required in windows so next test works
+if. 0=#1!:0 y do.
  0;''
 else.
  1;'delete did not complete'
@@ -152,10 +165,50 @@ t=. jpath y
 for_n. ('/'=t)#i.#t=. t,'/'  do.
   1!:5 :: [ <n{.t
 end.
+'cre8folder failed' assert 2=ftypex y
 y
 )
 
 jdcreatefolder=: cre8folder_jd_
+
+NB. routines for partition tables
+
+NB. return sorted ptable suffixes ; Tlens
+getparts=: 3 : 0
+a=. y,PTM
+d=. getdb''
+n=. NAMES__d
+b=. (<a)=(#a){.each n
+b=. b*.(#a)<;#each n NB. remove f~
+n=. b#n
+c=. b#CHILDREN__d
+n=. (#a)}.each n
+t=. ;(3 : 'Tlen__y')"0 c
+s=. /:n
+n=. s{n
+t=. s{t
+n;t
+)
+
+NB. return sorted ptable suffixes for setting setting tab~ pcol
+getpartsx=: 3 : 0
+n=. (>:#y)}.each 2 }.getparttables y
+)
+
+NB. sorted partition table names (f, f~, f~..., ...)
+NB. returns single table name if not partition table
+NB. returns single table name if y is already a partition name (has a ~)
+getparttables=: 3 : 0
+if. PTM e.y do. <y return. end.
+d=. getdb''
+ns=. NAMES__d
+ns=. /:~ns#~(<,y)=(ns i.each PTM){.each ns
+if. 1<#ns do.
+ t=. jdgl ;{.ns
+ 'table (not a ptable) has partitions' assert S_ptable__t
+end.
+ns
+)
 
 NB. need general mechanism to log progress on long running operations
 NB. this is a crude place holder for what is required
@@ -341,3 +394,32 @@ cntslast=: ;".each (<'cnts_'),each cnts,each <'_jd_'
 ".each (<'cnts_'),each cnts,each <'_jd_=:0'
 cntslast
 )
+
+NB. http://code.jsoftware.com/wiki/Essays/Inverted_Table
+ifa =: <@(>"1)@|:               NB. inverted from atoms
+afi =: |:@:(<"_1@>)             NB. atoms from inverted
+
+tassert=: 3 : 0
+ assert. (1>:#$y) *. 32=3!:0 y  NB. boxed scalar or vector
+ assert. 1=#~.#&>y              NB. same # items in each box (with at least one box)
+ 1
+)
+
+ttally    =: #@>@{.
+tfrom     =: <@[ {&.> ]
+tindexof  =: i.&>~@[ i.&|: i.&>
+tmemberof =: i.&>~ e.&|: i.&>~@]
+tless     =: <@:-.@tmemberof #&.> [
+tnubsieve =: ~:@|:@:(i.&>)~
+tnub      =: <@tnubsieve #&.> ]
+tkey      =: 1 : '<@tindexof~@[ u/.&.> ]'
+tgrade    =: > @ ((] /: {~)&.>/) @ (}: , /:&.>@{:)
+tgradedown=: > @ ((] \: {~)&.>/) @ (}: , \:&.>@{:)
+tsort     =: <@tgrade {&.> ]
+tselfie   =: |:@:(i.~&>)
+
+NB. alternatives
+tmemberof1=: tindexof~ < ttally@]
+tnubsieve1=: tindexof~ = i.@ttally
+ranking   =: i.!.0~ { /:@/:
+tgrade1   =: /: @ |: @: (ranking&>)

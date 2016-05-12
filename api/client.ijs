@@ -9,6 +9,7 @@ optionsort_jd_ =: 0
 lastcmd_jd_    =: 'none'
 lasttime_jd_   =: _1
 lastspace_jd_  =: _1
+lastparts_jd_  =: _1
 
 jdaccess_z_=: jdaccess_jd_
 jd_z_  =: jd_jd_
@@ -97,7 +98,6 @@ i.0 0
 )
 
 jd=: 3 : 0
-erase_jd_'option_'nl_jd_'' NB. jd_... options (globals)
 jdlasty_z_=: y
 fmtlasty=: fmtsummary y
 jdlast_z_=: jdx y
@@ -134,6 +134,7 @@ jdx=: 3 : 0
 if. IFJHS do. assert (<URL_jhs_) e.'jijx';'jijs' end.
 DBX jdx y
 :
+erase'option_'nl_jd_'' NB. jd_... options (globals)
 APIRULES=: 1
 'DB UP SERVER'=: bdnames x
 USER=: (UP i.'/'){.UP
@@ -171,16 +172,18 @@ if. 'intask'-:SERVER do.
   JDE1001 assert 3=nc<'jd_',opx 
  end. 
  start=. 6!:1''
+ parts=: _1
  if. optionspace do.
   lastspace=: 7!:2'r=. (''jd_'',opx)~a' 
  else.
-  'refs before'validaterefcounts''
+  NB. 'refs before'validaterefcounts''
   r=. ('jd_',opx)~a
-  'refs after' validaterefcounts''
+  NB. 'refs after' validaterefcounts''
   lastspace=: _1
  end.
  lasttime=: start-~6!:1''
- lastcmd=: OP
+ lastcmd=: FEOP
+ lastparts=: parts
  if. FLUSHAUTO *. (<OP) e. FLUSHOPS do. jd_flush'' end.
  pmz''
  r

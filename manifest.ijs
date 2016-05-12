@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '2.2.12'
+VERSION=: '2.2.4'
 
 FILES=: 0 : 0
 jd.ijs
@@ -38,10 +38,12 @@ api/api_change.ijs
 api/api_csv.ijs
 api/api_drop.ijs
 api/api_info.ijs
+api/api_read.ijs
 api/client.ijs
 api/jjd.ijs
 base/column.ijs
 base/common.ijs
+base/constants.ijs
 base/database.ijs
 base/folder.ijs
 base/jmfx.ijs
@@ -53,6 +55,7 @@ base/table.ijs
 base/tests.ijs
 base/util.ijs
 base/util_epoch.ijs
+base/util_ptable.ijs
 base/validate.ijs
 base/where.ijs
 base/zutil.ijs
@@ -107,6 +110,7 @@ demo/sed/csv/t.cdefs
 demo/sed/csv/t.csv
 demo/vr/vr.ijs
 doc/admin.html
+doc/change.html
 doc/csv.html
 doc/dynamic.html
 doc/favicon.ico
@@ -119,12 +123,13 @@ doc/license.html
 doc/manage.html
 doc/misc.html
 doc/ops.html
+doc/opsinfo.html
+doc/opsread.html
 doc/overview.html
 doc/release.html
 doc/support.html
 doc/table-table.html
 doc/technical.html
-doc/use.html
 dynamic/base.ijs
 dynamic/hash.ijs
 dynamic/hash1.ijs
@@ -132,6 +137,7 @@ dynamic/ref.ijs
 dynamic/reference.ijs
 dynamic/smallrange.ijs
 dynamic/unique.ijs
+gen/ptable.ijs
 pm/csvtest.ijs
 pm/pm.ijs
 pm/pma.ijs
@@ -172,6 +178,12 @@ test/northwind_test.ijs
 test/orderby_test.ijs
 test/pm_aggby_test.ijs
 test/pm_hash_test.ijs
+test/ptable_csv_test.ijs
+test/ptable_delete_test.ijs
+test/ptable_insert_test.ijs
+test/ptable_modify_test.ijs
+test/ptable_read_test.ijs
+test/ptable_update_test.ijs
 test/query_test.ijs
 test/readx_test.ijs
 test/reference_test.ijs
@@ -202,7 +214,6 @@ tutorial/aggregation_tut.ijs
 tutorial/csv_details_tut.ijs
 tutorial/csv_tut.ijs
 tutorial/custom_tut.ijs
-tutorial/datatune_tut.ijs
 tutorial/dropstop_tut.ijs
 tutorial/epochdt_tut.ijs
 tutorial/from_tut.ijs
@@ -212,6 +223,7 @@ tutorial/join_tut.ijs
 tutorial/link_tut.ijs
 tutorial/log_tut.ijs
 tutorial/performance_tut.ijs
+tutorial/ptable_tut.ijs
 tutorial/reads_tut.ijs
 tutorial/server_tut.ijs
 tutorial/setget_tut.ijs

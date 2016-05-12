@@ -32,12 +32,12 @@ NB.! assume ccfiles and cvfiles from immediately previous csvload/csvappend
 csvdat=: (a:~:ccfiles)#ccfiles
 csvval=: (a:~:ccfiles)#cvfiles
 
-b=. ;fexist csvdat
-assert b-:;fexist jddat['mismatch between csv and jd dat files'
+b=. ;fexist"0 csvdat
+assert b-:;fexist"0 jddat['mismatch between csv and jd dat files'
 jd=: b#jddat
 csv=: b#csvdat
-b=. ;fexist csvval
-assert b-:;fexist jdval['mismatch between csv and jd val files'
+b=. ;fexist"0 csvval
+assert b-:;fexist"0 jdval['mismatch between csv and jd val files'
 jd=: jd,b#jdval
 csv=: csv,b#csvval
 ferase each jd
@@ -77,14 +77,10 @@ CSVTYPS=: b#CSVTYPS
 JDTYPS=: b#JDTYPS
 COLDEFS=: b#COLDEFS
 CSVTSHAPE=: b#CSVTSHAPE
-
 JDTYPS=: (<'byte') ((CSVTYPS=<'CI1')#i.#CSVTYPS)}JDTYPS NB. kludge map CI8 to byte
-
 d=. getdb_jd_''
 Create__d table;<csvjdcoldefs csv
-NB. Close__f db
 jd_close_jd_''
-
 csvjd  jd;csv
 csvjdx jd
 )

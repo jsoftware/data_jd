@@ -27,5 +27,5 @@ assert (2 2$('aa';0 1;'bb';e))-:jd'read /lr /e from f'
 
 NB. readtc options
 
-assert (2 2$'year';'aa';('2014',:'2015');,.0 1)-:jd'readtc :::f_year=: 4{."1 sfe_jd_ f_bb::: sum aa by year from f'
-assert (2 2$'year';('2014',:'2015');'aa';0 1)-:jd'readtc /lr :::f_year=: 4{."1 sfe_jd_ f_bb::: sum aa by year from f'
+assert (2 2$'year';'aa';('2014',:'2015');,.0 1)-:jd'readtc sum aa by year   from f jdtc f_year=: 4{."1 sfe_jd_ f_bb'
+assert (2 2$'year';('2014',:'2015');'aa';0 1)-:jd'readtc /lr sum aa by year from f jdtc f_year=: 4{."1 sfe_jd_ f_bb'
