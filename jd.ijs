@@ -56,7 +56,7 @@ t=. jpath JDP,'cd/'
 p=. jpath'~tools/regex/'
 if. UNAME-:'Linux' do.
  t=. t,'libjd.so'
- p=. p,'libjpcre.so'
+ p=. (1=ftype p,'libjpcre.so'){::(p,'libjpcre.so');~'libjpcre.so'  NB. deb install
 elseif. UNAME-:'Darwin' do.
  t=. t,'libjd.dylib'
  p=. p,'libjpcre.dylib'

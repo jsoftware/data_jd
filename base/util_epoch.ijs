@@ -39,7 +39,7 @@ NB. s from e - efs invers
 NB. 0{x is ',' or '.' for hh:mm:ss,nnnnnnnnn
 NB. 1{x is 'Z' for a final Z
 sfe=: 3 : 0
-',Zn'sfe y
+', n'sfe y
 :
 s=. $y
 y=. ,y

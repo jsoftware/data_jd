@@ -79,7 +79,7 @@ end.
 jdserverstop_jd_''
 jd'close'
 jdadmin 0
-failedx=: >LF,~each(<'loadd'''),each failed,each<''''
+failedx=: >(<'loadd'''),each failed,each<''''
 if. #failed do.
  echo LF,'following tests failed:'
  echo failedx
@@ -118,7 +118,7 @@ for_n. t do.
   jd'testerrors ',n
  catch.
   t=. LASTRAW_jd_
-  t=. dltb each }.each<;._2 t
+  t=. dltb each (}.^:('|'={.))each<;._2 t
   v=. >{.t
   if. 'assertion failure: assert'-:v do.
    r=. >1{t

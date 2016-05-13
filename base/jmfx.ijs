@@ -15,17 +15,18 @@ jdmap=: 3 : 0
 0 jdmap y
 :
 cnts_map_jd_=: >:cnts_map_jd_
-('map name invalid: ',;{.y)assert _1=nc {.y
-('map file does not exist: ',;1{y)assert fexist 1{y
+'jn fn'=. 2{.y
+('map name invalid: ',jn)assert _1=nc <jn
+('map file does not exist: ',fn)assert fexist fn
 try.
  x map_jmf_ y
 catchd.
- echo 'jdmap failed - will retry : ',y,' : ',LF-.~,13!:12''
+ echo 'jdmap failed - will retry : ',fn,' : ',LF-.~,13!:12''
  try.
   6!:3[3
   x map_jmf_ y
  catchd. 
-  echo 'jdmap failed - failed again : ',y,' : ',LF-.~,13!:12''
+  echo 'jdmap failed - failed again : ',fn,' : ',LF-.~,13!:12''
   FEER_jd_=: 13!:12''
   logijfdamage 'map';y
  end. 

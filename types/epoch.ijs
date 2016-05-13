@@ -7,7 +7,7 @@ coclass deftype 'elike'
 STATE=: STATE_jdcolumn_,;:'sep utc'
 
 sep=: ','
-utc=: 'Z'
+utc=: ' '
 
 ADDRANK=: 1
 DATAFILL=: _9223372036854775808 NB. ''$efsx_jd_'1700' NB. invalid

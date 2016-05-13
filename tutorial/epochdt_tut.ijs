@@ -71,13 +71,13 @@ assert t-:466344794000000000;300
 
 NB. verify some edge conditions
 t=. efs_jd_ '1800-01-01'
-assert '1800-01-01T00:00:00,000000000Z'-:sfe_jd_ t
+assert '1800-01-01T00:00:00,000000000'-:sfe_jd_ t
 assert '?'={.sfe_jd_ t-1
-assert '1800-01-01T00:00:00,000000001Z'-: sfe_jd_ t+1
+assert '1800-01-01T00:00:00,000000001'-: sfe_jd_ t+1
 
 t=. efs_jd_ '2200-12-31T23:59:59,999999999'
-assert '2200-12-31T23:59:59,999999999Z'-:sfe_jd_ t
-assert '2200-12-31T23:59:59,999999998Z'-:sfe_jd_ t-1
+assert '2200-12-31T23:59:59,999999999'-:sfe_jd_ t
+assert '2200-12-31T23:59:59,999999998'-:sfe_jd_ t-1
 assert '?'={.sfe_jd_ t+1
 
 
@@ -117,12 +117,12 @@ assert 'domain error'-:jd etx 'reads from f where a=2014-09-30' NB. string not i
 [efs_jd_ '2014-10-11T12:13:14'
 jd'reads from f where a>466344794000000000'
 jd'reads max a from f'
-assert (1 30$'2017-01-01T00:00:00,000000000Z')-:;{:jd'reads max a from f'
+assert ('2017-01-01T00:00:00,000000000')-:,;{:jd'reads max a from f'
 
-jd'reads from f where jdindex<3' NB. default is , sep and Z utc
+jd'reads from f where jdindex<3' NB. default is , sep and no Z mark for utc
 c=. jdgl_jd_'f a'
 sep__c=: '.' 
-utc__c=: ' '
+utc__c=: 'Z'
 NB. sep and utc are persistent column attributes
 jd'reads from f where jdindex<3' NB. . sep and no Z
 

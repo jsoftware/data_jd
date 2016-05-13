@@ -159,7 +159,7 @@ if. 'column'-:2}.>CHILD do.
    jdcreatefolder target
    if. IFWIN do.
     t=. '"',link,'" "',target,'"'
-    t=. 'mklink /D /J ',t rplc '/';'\'
+    t=. 'mklink /D /J ',hostpathsep t
     jddeletefolder link
     shell t NB. wndows does junction between folders
    else.

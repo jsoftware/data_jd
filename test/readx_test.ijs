@@ -2,8 +2,8 @@ NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 NB. tests for read/reads/readtc options
 
 a=: ><;._2 [0 : 0
-2014-01-01Z
-2015-01-01Z
+2014-01-01
+2015-01-01
 )
 
 e=: efs_jd_ a

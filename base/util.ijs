@@ -90,7 +90,6 @@ if. -.fexist t,'jddeleteok' do.
  e assert (0=#fdir t,'*')+.(fexist t,'jdclass')+.p-:(#p){.t 
 end.
 r=. rmsub y
-t=. hostpathsep y
 if. 0~:;{.r do.
  echo 'Jd info: jddeletefolder failed: ',y
  echo IFWIN#' see doc technical|wss'
@@ -140,14 +139,13 @@ NB. similar to rmdir_j_
 NB. host facilities delete folder
 rmsub=: 3 : 0
 y=. jpath y
-if. IFWIN do. y=. hostpathsep y end.
 d=. 1!:0 y
 if. 1~:#d do. 0;'' return. end. NB. folder already empty
 if. 'd'~:4{4 pick{.d do. ('not a folder: ',y) assert 0 end.
 t=. ,&'/'^:('/'~:{:) jpathsep y
 if. (<filecase_j_ t) e. filecase_j_@:((#t)&{.)&.> 1{"1 }.showmap_jmf_ '' do. ('contains mapped files: ',t) assert 0 end.
 if. IFWIN do.
-  r=. shell_jtask_ 'rmdir /S /Q ','"','"',~y
+  r=. shell_jtask_ 'rmdir /S /Q ','"','"',~hostpathsep y
 else.
   r=. hostcmd_j_ 'rm -rf ','"','"',~y NB. --preserve-root
 end.

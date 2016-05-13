@@ -375,7 +375,7 @@ for_f. a do. (jdfread p,'/',;f) fwrite newp,'/',;f end.
 jd'close' NB. necessary so remap is done with new stuff
 if. IFWIN do.
  t=. '"',p,'" "',newp,'"'
- t=. 'mklink /D /J ',t rplc '/';'\'
+ t=. 'mklink /D /J ',hostpathsep t
  jddeletefolder p
  shell t NB. wndows does junction between folders
 else.
@@ -392,7 +392,7 @@ end.
 NB. report db link targets
 jdlinktargets=: 3 : 0
 if. IFWIN do.
- r=. <;._2 toJ shell 'dir /S "P"'rplc 'P';jdpath''
+ r=. <;._2 toJ shell 'dir /S "P"'rplc 'P';hostpathsep jdpath''
  b=. ;+./each(<' <JUNCTION> ')E.each r
  r=. b#r
  }:each(>:;r i.each'[')}.each r

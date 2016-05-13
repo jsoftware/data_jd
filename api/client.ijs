@@ -91,7 +91,7 @@ if. -.'intask'-:a do.
  i=. a i.':'
  p=. a}.~>:i
  assert (0~:#p)*.0=#p-.'0123456789'['bad port number'
- assert -.'255.255.255.255'-:;{:sdgethostbyname_jsocket_ i{.a['bad ip address or hostname'
+ assert (0=#'0123456789.'-.~i{.a)+.-.'255.255.255.255'-:;{:sdgethostbyname_jsocket_ i{.a['bad ip address or hostname'
 end.
 'DB UP SERVER'=: DBX_jd_=: t
 i.0 0
@@ -197,7 +197,7 @@ if. (<'Content-Type: text/plain')e.h do. data assert 0 return. end.
 3!:2 data
 catchd.
   LASTRAW=: t=. 13!:12''
-  t=. dltb each }.each<;._2 t
+  t=. dltb each (}.^:('|'={.))each<;._2 t
   v=. >{.t
   if. 'ECONNREFUSED:'-:13{.v do.
    r=.'jde: jdserver (',SERVER,') not running'
@@ -292,7 +292,7 @@ jwget=: 3 : 0
 i=. server i.':'
 ip=. i{.server
 port=. 0".(>:i)}.server
-ip=. >2{sdgethostbyname_jsocket_ ip
+if. #ip-.'0123456789.' do. ip=. >2{sdgethostbyname_jsocket_ ip end.
 try.
  t=. posttemplate rplc '<URL>';url;'<DATA>';data;'<COUNT>';":#data
  sk=. >0{sdcheck_jsocket_ sdsocket_jsocket_''
@@ -327,7 +327,7 @@ shellwget=: 3 : 0
 i=. server i.':'
 ip=. i{.server
 port=. 0".(>:i)}.server
-ip=. >2{sdgethostbyname_jsocket_ ip
+if. #ip-.'0123456789.' do. ip=. >2{sdgethostbyname_jsocket_ ip end.
 data fwrite filepost
 g=. wget,' --timeout=5 --save-headers --output-document="',fileresult,'" --post-file="',filepost,'" ',server,'/',url
 gr=. shell g
