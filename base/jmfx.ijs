@@ -23,7 +23,7 @@ try.
 catchd.
  echo 'jdmap failed - will retry : ',fn,' : ',LF-.~,13!:12''
  try.
-  6!:3[3
+  6!:3[5
   x map_jmf_ y
  catchd. 
   echo 'jdmap failed - failed again : ',fn,' : ',LF-.~,13!:12''

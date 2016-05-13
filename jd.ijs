@@ -149,11 +149,18 @@ Run test suite (takes several minutes): jdtests_jd_''
 Bookmark documentation in your browser:
    file:///BOOKMARK
 
+   jdxwelcome_jd_'' NB. run this to avoid long welcome message
+
 Get started:
    jdex_jd_''      NB. list examples from docs
    jdex_jd_'reads' NB. run reads
    jdrt_jd_''      NB. list tutorials
    jdrt_jd_'intro' NB. run intro
+)
+
+jdxwelcome_jd_=: 3 : 0
+jdcreatefolder'~temp/jd'
+i.0 0[(;{:jd'list version')fwrite'~temp/jd/jdversion' NB. avoid welcome
 )
 
 3 : 0''
