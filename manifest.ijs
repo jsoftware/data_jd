@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '2.3.2'
+VERSION=: '2.3.3'
 
 FILES=: 0 : 0
 jd.ijs
@@ -243,4 +243,4 @@ types/numeric.ijs
 types/varbyte.ijs
 )
 
-RELEASE=: 'j701 j801 j802 j803 j804 j805'
+RELEASE=: 'j701 j801 j802 j803 j804 j805 j806'
