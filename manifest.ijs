@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '2.2.4'
+VERSION=: '2.3.4'
 
 FILES=: 0 : 0
 manifest.ijs
@@ -243,4 +243,4 @@ test/core/reference.ijs
 test/core/query.ijs
 )
 
-RELEASE=: 'j701 j801 j802 j803 j804'
+RELEASE=: 'j802 j803 j804 j805 j806'
