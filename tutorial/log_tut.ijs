@@ -35,7 +35,7 @@ jd'insert f a';i.10000
 jdlogtxtshow_jd_ 10 NB. show last 10 log.txt lines
 
 damage'' NB. damage db
-'validate failed'jdae'validate' NB. validate to detect damage
+'db marked as damaged'jdae'validate' NB. validate to detect damage
 'db damaged'jdae'read from f'
 jdlogtxtshow_jd_ 5
 jdlogijfshow_jd_''     NB. show log.ijf summary
@@ -60,15 +60,14 @@ damage''
 jdadmin 0
 jdadmin'test'
 'damaged'jdae'validate' NB. detects damage and marks as damaged
+'db damaged'jdae'reads from f'
 assert 'assertion failure'-:jdadmin etx'test'
 13!:12''
-'db damaged'jdae'read from f'
 
 NB. jdadmin of damaged db
 jdadmin 0
 assert 'assertion failure'-:jdadmin etx'test'
 13!:12''
-'db damaged'jdae'read from f'
 
 NB. validate is run before/after insert/update/modify/delete
 

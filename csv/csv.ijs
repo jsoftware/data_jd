@@ -1,20 +1,11 @@
 NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 NB. csv loader
 0 : 0
-
 CVAR type has parameter of expected average size that is used in initial file size calculation (rows*size)
-
-options: COLSEP AUTO looks at first 5000 bytes of csv file
- first of TAB COMMA or STILE set or error
- 
-options: ROWSEP AUTO looks at last 2 bytes of csv file
- CRLF, xLF, xCR set or error
-
 rows: rows grow
 rows is used for initial file allocation
 grow 0 if only load up to rows
 grow 1 is callbacks should increase file allocation to load all rows
-
 )
 
 coclass'jdcsv'
@@ -116,12 +107,26 @@ t=.   ' x      x           x       *c'
 NB.     I rows, I cols, I* erra, I* errz,
 t=. t,' x       x       x        x'
 NB.     char* ina, char* inz, I* colinfo, I* da,
-t=. t,'   x               x              *x             *x'
-NB.     I* va, I* vx, I* vz,  I* var, I* progress)
-t=. t,'  *x      *x      *x       x        x'
+t=. t,'   x               x      *x          *x'
+NB.     I* va, I* vx, I* vz,  I* var, I* progress, I* maxwidths)
+t=. t,'  *x      *x      *x       x      x         *x'
 xcsv=:  (LIBJD_jd_,' xcsv ',t)&cd
 i.0 0
 )
+
+3 : 0''
+NB.     char* options,
+t=.   ' *c'
+NB.     I cols,
+t=. t,' x'
+NB.     char* ina, char* inz
+t=. t,' x          x'
+NB.     I* maxwidths)
+t=. t,' *x'
+xscan=:  (LIBJD_jd_,' xscan x ',t)&cd
+i.0 0
+)
+
 
 log=: 3 : 0
 if. 1=L. y do.
@@ -200,7 +205,7 @@ elseif. t e. CDOUBLE,CDOUBLEX do.
  end.
 elseif. 1 do.
  NB. if. (c=8) do.
- if. (c=8)*.y{elidedx do. NB.!
+ if. (c=8)*.y{elidedx do.
   JINT;x
  else.
   JINT;x,<.c%8
@@ -327,7 +332,7 @@ end.
 t=. (a:~:ccfiles)#ccfiles
 t=. (t i: each '/'){.each t
 jdcreatefolder_jd_ each t NB. ensure path to files exists
-if. loadflag do. ferase each ccfiles,cvfiles end. 
+if. -.appendflag do. ferase each ccfiles,cvfiles end. 
 b=. -.(ctypes'')e. CVAR NB.! CVARX
 cvfiles=: a: (b#i.#coldefs)}cvfiles
 ccnames=: a: ((a:=colnames)#i.#coldefs)}cname each colnames
@@ -374,22 +379,61 @@ csvcommon y
 csvld 'append'
 )
 
-csvcount=: 3 : 0
-assert 0['not supported'
-save=. coldefs;<colnames
-'coldefs colnames'=: (0 4$0);<0$<''
-ROWS=: <.2^62
-r=. csvld 'count'
-'coldefs colnames'=: save
+ECTOOMUCHMSG=: 0 : 0
+
+ECTOOMUCH - serious error
+end-of-file before end-of-field/row
+perhaps a cdefs error:
+ for example, " option required
+ or " option needs \ option
+perhaps bad data
+ see report and examine indicated area in the csv file
+
+)
+
+csvscan=: 3 : 0
+d=. fread csvfpcdefs_jd_
+'cdefs file not found'assert _1~:cdefs
+NB. get options and max col from cdefs
+d=. <;._2 d
+i=. (8{.each d) i: <'options '
+options 8}.;i{d
+opts=. COLSEP,(2{.ROWSEP),QUOTED,ESCAPED
+cols=. >:>./;0".each(d i. each' '){.each d NB. scan an extra col
+PATHCSVFILE=: csvfp_jd_
+'ina inz'=. setinput''
+maxwidths=: cols$_1
+r=. >{.xscan (opts;cols;ina;inz),<maxwidths
+unmapall_jmf_''
 r
+)
+
+setinput=: 3 : 0
+if. 0=fsize PATHCSVFILE do.
+ csvin_jdcsv_=: ''  NB. map empty file fails
+ ina=. inz=. 0
+else.
+ JCHAR jdmap_jd_ 'csvin_jdcsv_';(jpath PATHCSVFILE);'';1 NB. map csv readonly
+ ina=. 15!:14<'csvin_jdcsv_'
+ inz=. ina+#csvin_jdcsv_
+end.
+probe=. 10000
+inaoffset=: 0
+if. (0=HEADERS)*.BOMUTF8_jd_-:3{.csvin_jdcsv_ do. inaoffset=: 3 end.
+if. 0~:HEADERS do.
+ t=. >:(<:HEADERS){((probe{.csvin)={:ROWSEP)#i.probe
+ assert t<:#csvin
+ inaoffset=: t
+end.
+ina=. ina+inaoffset
+ina;inz
 )
 
 NB. f 'load' or 'append'
 csvld=: 3 : 0
 TA=: 6!:1''
-assert (<y) e. ;:'load append count'
+assert (<y) e. ;:'load append'
 appendflag=: y-:'append'
-countflag=:  y-:'count'
 loadflag=:   y-:'load'
 'rows invalid' assert ROWS>:0
 (PATHCSVFILE,' does not exist') assert fexist PATHCSVFILE
@@ -411,35 +455,7 @@ log LF,'!',y,' ',TABLE
 log 'snk: ',PATHCSVFOLDER
 log 'src: ',PATHCSVFILE
 log 'start: ',(":<.6!:0''),LF,}:CDEFS
-probe=. 5000 <. fsize PATHCSVFILE
-if. COLSEP-:,{.a. do.
- t=. fread PATHCSVFILE;0,probe
- i=. <./t i. TAB,',','|'
- 'COLSEP AUTO: TAB,COMMA, or STILE not found' assert i<#t
- COLSEP=: i{t
-end.
-log 'colsep: ',(,":a.i.COLSEP),' ' , ;((9 32{a.)i.COLSEP){'TAB';'SPACE';COLSEP
-if. ROWSEP-:,{.a. do.
- t=. fread PATHCSVFILE;2,~_2+fsize PATHCSVFILE
- ROWSEP=: (-.CR={.t)}.t
- 'ROWSEP AUTO: not CRLF or CR or LF' assert (<ROWSEP) e. ,each CRLF;CR;LF
-end.
-log 'rowsep: ',(":a.i.ROWSEP),' ',;((,each CR;LF;CRLF)i.<ROWSEP){'CR';'LF';'CRLF';''
-
-if. 0=fsize PATHCSVFILE do.
- csvin_jdcsv_=: ''  NB. map empty file fails
- ina=. inz=. 0
-else.
- JCHAR jdmap_jd_ 'csvin_jdcsv_';(jpath PATHCSVFILE);'';1 NB. map csv readonly
- ina=. 15!:14<'csvin_jdcsv_'
- inz=. ina+#csvin_jdcsv_
-end.
-
-if. 0~:HEADERS do.
- t=. >:(<:HEADERS){((probe{.csvin)={:ROWSEP)#i.probe
- assert t<:#csvin
- ina=. ina+t
-end.
+'ina inz'=. setinput''
 if. -.appendflag do.
  oldrows=. 0
  createcols ROWS NB. create and map output files
@@ -461,6 +477,7 @@ else.
 end.
 clearerrors #coldefs
 clearprogress''
+maxwidths=: (#coldefs)$2-2
 erra=. 15!:14<'csverrors'
 errz=. erra+SZI_jmf_**/$csverrors
 cbd=: mema 8*#coldefs            NB. callback col results
@@ -468,10 +485,11 @@ opts=. COLSEP,(2{.ROWSEP),QUOTED,ESCAPED,(0{a.),((-.GROW){a.),EPOCH
 t=. cdcb1;cbd;opts;ROWS;(#coldefs);erra;errz;ina;inz
 t=. t,(<|:coldefs),ptrs,<15!:14<'var'
 t=. t,<15!:14<'csvprogress'
+t=. t,<maxwidths
 r=. >{.xcsv t
 memf cbd
 NB. resize c files to remove unused rows
-log'remove extra c_..._jdcsv_ rows: ',":|r
+NB. log'remove extra c_..._jdcsv_ rows: ',":|r
 ROWS=: oldrows+ROWS+r NB. rows to keep
 if. r<0 do.
  NB.! ROWS=: oldrows+ROWS+r NB. rows to keep
@@ -480,21 +498,28 @@ end.
 NB. resize v files
 for_i. i.#coldefs do.
  if. a:~:i{cvfiles do.
-  log'remove extra ',(>i{cvnames),' bytes: ',":(fsize i{cvfiles)-i{var
+  NB. log'remove extra ',(>i{cvnames),' bytes: ',":(fsize i{cvfiles)-i{var
   (i{var) resizev i
  end.
-end. 
+end.
 TZ=: 6!:1''
-log 'callbackc count: ',":callbackc
-log 'callbackv count: ',":callbackv
+NB. log 'callbackc count: ',":callbackc
+NB. log 'callbackv count: ',":callbackv
 log 'elapsed: ',":<.0.5+TZ-TA
-log 'rows/Sec: ',":<.0.5+ROWS%TZ-TA
+NB. log 'rows/Sec: ',":<.0.5+ROWS%TZ-TA
 log 'rows: ',":ROWS-oldrows
+log ''
 csverror_z_=: csverrs''
 csverrorcount_z_=: #}.csverror
 if. csverrorcount do.
- log }:,LF,.~'error: ',"1 sptable csverror
+ if. 0<+/'ECROWSEP' E. ,;1{"1 csverror do. echo ECROWSEPMSG end.
+ log ,LF,.~'error: ',"1 sptable csverror
 end.
+
+b=. 3={."1 coldefs
+d=. (1{"1 b#coldefs),.b#maxwidths
+names=. b#colnames
+if. MANGLEDNAMES do. names=. (0".each names rplc each <'_';' '){each<a. end.
 r=. fread PATHLOGFILE
 r fappend PATHLOGLOGFILE
 a=. (ctypes''){CTYPES_jdcsv_
@@ -506,6 +531,27 @@ INFO=: colnames;a;b;c;<coldefs
 (3!:1 INFO,<ROWS) fwrite PATHCSVFOLDER,'/info'
 r
 )
+
+0 : 0
+NB. old code no longer used
+NB. prior to csvsca - load kept track of maxwidth
+NB. and that difference was reported here
+trun=. </"1 d
+padd=.  >/"1 d
+pn=. padd#names
+pv=. padd#d
+tn=. trun#names
+tv=. trun#d
+ 
+h=. ;:'col cdefs actual' 
+if. 0~:#tn do. 
+ log ,LF,.~'truncated: ',"1 sptable h,tn,.":each <"0 tv
+end.
+if. 0~:#pn do.
+ log ,LF,.~'padded: ',"1 sptable h,pn,.":each <"0 pv
+end. 
+)
+
 
 cdcb1=: cdcb 1
 
@@ -544,15 +590,15 @@ ECCOLS=: 3 NB. cols in errors for each row (count,p,row)
 'ECUNUSED ECTOOMUCH ECTRUNCATE ECBADNUM ECCRLF ECROWSEP EC01 ECEARLY ECESCAPE ECEPOCHP ECEPOCH ECMAX'=: i.12
 
 ecodes=: <;._2[0 : 0
-ECUNUSED    unused
-ECTOOMUCH   field too long
+ECUNUSED    not used
+ECTOOMUCH   end-of-file before end-of-col
 ECTRUNCATE  truncate
 ECBADNUM    bad number
 ECCRLF      CRLF missing LF
-ECROWSEP    ROWSEP missing
+ECROWSEP    not used
 EC01        CVARX 0 1 mapped
-ECEARLY     unused csv data
-ECESCAPE    escape not 0 n t " or \
+ECEARLY     not used
+ECESCAPE    not used - was escape not 0 n t " or \
 ECEPOCHP    extra precision ignored
 ECEPOCH     bad epoch
 )
@@ -571,8 +617,11 @@ for_i. i.#ccnames do.
  if. +/b do.
   n=. ,.each <"1 |:b#e
   nm=. _7}.each 2}.each i{ccnames
+  
+  if. MANGLEDNAMES do. nm=. (0".each nm rplc each <'_';' '){each<a. end.
+  
   NB. nm=. (<TABLE,' '),each nm
-  t=. t,1 6$nm,(<>b#ecodes),n,<seecsv"0[b#2{"1 e
+  t=. t,1 6$nm,(<>b#ecodes),n,<seecsv"0[b#inaoffset+2{"1 e
  end.
 end.
 t
@@ -688,9 +737,9 @@ t=. <;._2 ' ',~deb y
 if. 5=#t do. t=. t,<'iso8601-char' end. NB. epoch default
 assert 6=#t
 'c r q e h epoch'=: t
-COLSEP=: c rplc 'BLANK';' ';'TAB';TAB;'AUTO';{.a.
+COLSEP=: c rplc 'BLANK';' ';'TAB';TAB
 assert 1=#COLSEP
-ROWSEP=: r rplc 'CR';CR;'LF';LF;'CRLF';CRLF;'AUTO';{.a.
+ROWSEP=: r rplc 'CR';CR;'LF';LF;'CRLF';CRLF
 assert +./1 2=#ROWSEP
 QUOTED=: q rplc 'NO';' '
 assert 1=#QUOTED
@@ -719,6 +768,15 @@ coldefs=: 0 4$0
 colnames=: 0$<''
 elidedx=: i.0
 cdef each <;._2 y
+
+NB. pass through if valid simple names
+d=. colnames#~-.a:=colnames
+MANGLEDNAMES=: (-.*./0=;#each d-.each<AlphaNum_j_)+. -.*./(;{.each d) e. Alpha_j_
+if. MANGLEDNAMES do.
+ colnames=: (":each(<a.)i.each colnames)rplc each <' ','_'
+end.
+
+
 i.0 0
 )
 
@@ -730,15 +788,17 @@ c=. i{.y
 d=. i}.y
 if. c-:'options' do.
  options d
+elseif. '#'={.c do.
 elseif. 1 do.
  'col name type xtra'=. 4{.<;._2 ' elided ',~deb y
  ('csv cdef invalid col number: ',y) assert _1~:_1".col
- ('csv cdef invalid name:',y)assert _2~:nc<name
+ try. vcname_jd_ name catch. ('csv cdef invalid name: ',y)assert 0 end.
+ if. -.type-:'CSTITCH' do. ('csv cdef duplicate name: ',y) assert -.(<name)e.colnames end. 
  if. -.(<type)e.CTYPES do.
   ('csv cdef invalid type: ',y) assert (<type)e.JDTYPES
   type=. >(JDTYPES i.<type){JDTMAP
  end.
- ('csv cdef invalid width: ',y) assert  -.xtra-:,'0' 
+ NB. ('csv cdef invalid width: ',y) assert  -.xtra-:,'0' 
  type=. ".type
  elf=. xtra-:'elided'
  if. type-:CI8X do. elf=. 1 end. NB. kludge for shift vs count

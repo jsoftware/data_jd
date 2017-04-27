@@ -21,5 +21,5 @@ jdadminx'test'
 jdcreatefolder_jd_ F[jddeletefolder_jd_ F
 ('2,3',LF)          fwrite F,'a.csv'
 ('abc',LF,'abc',LF) fwrite F,'a.cnames'
-'missing'jdae'csvrd a.csv a'
+'not found'jdae'csvrd a.csv a'
 'duplicate'jdae'csvcdefs /replace /h 0 /c a.csv'

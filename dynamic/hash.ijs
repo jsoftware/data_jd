@@ -27,7 +27,6 @@ writestate ''
 
 NB. x is offset, y is the values passed to insert.
 insert=: 4 : 0
-
 inmem=. (-.IFWIN)*.(HASHPASSLEN>:#hash)*.10000<{.;#each y
 if. -.unique do.
   NB. Needs to be two lines or jmf throws 'file already mapped'
@@ -77,7 +76,6 @@ if. r do. 'createhash /nc too small - dropdynamic done'assert 0 end. NB. TODO ha
 if. inmem do.
  hash=: hashx
 end. 
-
 EMPTY
 )
 

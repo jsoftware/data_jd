@@ -15,13 +15,14 @@ jdtests=: 3 : 0
 :
 NB. assert -.(<'jjd')e. conl 0['jdtests must be run in task that is not acting as a server'
 cocurrent'base' NB. defined in jd, but must run in base
+require JDP,'test/core/util.ijs'
 OLDFLUSHAUTO_jd_=: FLUSHAUTO_jd_
 FLUSHAUTO_jd_=: 0 NB. tests run more than 2 times slower with flush
 OLDALLOC_jd_=: ROWSMIN_jdtable_,ROWSMULT_jdtable_,ROWSXTRA_jdtable_
 'ROWSMIN_jdtable_ ROWSMULT_jdtable_ ROWSXTRA_jdtable_'=: 4 1 0 NB. lots of resizecsvonly=. 'csv'-:y
 fast=. 'fast'-:y
 csvonly=. 'csv'-:y
-t=. ALLTESTS=:  tests_jd_,tuts_jd_,demos_jd_
+t=. ALLTESTS=:  (tests_jd_,tuts_jd_,demos_jd_)-.<'tutorial/csv_load_tut.ijs'
 if. fast do. t=. t-.'test/dynamic_test.ijs';'tutorial/unique_tut.ijs' end. NB. remove slow tests
 t=. t,~each<JDP
 if. -.IFJHS do. t=. t-.<JDP,'tutorial/server_tut.ijs' end.

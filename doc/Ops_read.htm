@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="jd.css">
+</head>
+<body>
+<p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
+<p><a href="#parsing" title="wikilink">Parsing</a> read ops can be complicated</p>
+<h2 id="read">read</h2>
+<p>Same as reads with /lr option</p>
+<h2 id="reads">reads</h2>
+<p>reads [ <a href="#options" title="wikilink">OPTIONS</a> ]  [ <a href="#select" title="wikilink">SELECT</a> ]   from <a href="#from" title="wikilink">FROM</a>  [where <a href="#where" title="wikilink">WHERE</a> ] [order by <a href="#order-by" title="wikilink">ORDER BY</a>]</p>
+<p>returns select col(s) from table(s) with rows that satisfy where</p>
+<p>alias:col<br />alias:table<br />aggregation [by key1[,key2]]</p>
+<p>For ideas on working with reads results, see essay <a href="http://code.jsoftware.com/wiki/Essays/Inverted_Table">Inverted Table</a>.</p>
+<pre><code>NB. example reads
+jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
+jd&#39;gen ref2 a 3 1 b 2&#39;
+jd&#39;reads from a&#39;
+jd&#39;reads from b&#39;
+jd&#39;reads akey,adata from a&#39;
+jd&#39;reads from a,a.b&#39;
+jd&#39;reads from a where akey&lt;3&#39;
+jd&#39;reads from a,a.b where akey&lt;3 and b.bref=0&#39;
+jd&#39;reads asdf:b.bb12 from a,a.b where akey&lt;3 and b.bref=0&#39;
+jd&#39;reads sum adata from a where akey&gt;0&#39;
+jd&#39;reads sum adata by aref from a&#39;
+jdaccess olddan</code></pre>
+<h2 id="readtc">readtc</h2>
+<p>readtc ... jdtc sentence</p>
+<p>Same as reads except for the jdtc clause.</p>
+<p>J sentence is run first to create temp cols.</p>
+<p>See tutorial tempcol.</p>
+<h2 id="parsing">parsing</h2>
+<p>Parsing read ops can be complicated. There are known issues that can cause problems. Keep things simple to avoid unknown problems.</p>
+<p>Clauses where, order by, jdset, jdtc are stripped from the end and must appear, if present, in that order.</p>
+<p>Use blanks before and after keywords.</p>
+<p>Anything can appear in WHERE between quotes (<code>&quot;s</code>). This is handled and will not cause parse errors.</p>
+<p>Anything can appear in col/table alias. <code>/</code> at start of SELECT will be treated as an option. Keywords (e.g. order by) in alias can cause problems.</p>
+<p>Col alias can include blanks, RESERVEDCHARS, and RESERVEDWORDS and this is useful as they are result col labels.</p>
+<p>Table alias can include blanks, RESERVEDCHARS, and RESERVEDWORDS but this is not useful and can cause parse problems.</p>
+<p>Some problems are avoided as:</p>
+<pre><code>RESERVEDWORDS_jd_ are not allowed as col/table names
+RESERVEDCHARS_jd_ are not allowed in col/table names</code></pre>
+<h2 id="options">OPTIONS</h2>
+<p>/lr - labeled rows instead of labeled cols<br />/e - edate... cols as epochdt rather than iso 8601</p>
+<h2 id="select">SELECT</h2>
+<p>read SELECT from ...</p>
+<p>Select determines which columns are in the result:</p>
+<pre><code> cola
+ alias:cola
+ cola,colb
+ *
+ tabf.cola,tabg.colc
+ *.*
+  sum cola
+ sum cola,avg colb
+ sum cola by key1
+ sum cola by key1,key2</code></pre>
+<pre><code>   jd&#39;info agg&#39; NB. database agg functions (includes custom functions)</code></pre>
+<h3 id="select-clause-details">select clause details</h3>
+<pre><code>Select: Column(, Column)*
+      | AggCol(, AggCol)*
+      | AggCol(, AggCol)* by Column(, Column)*
+Column: [alias:] [Tab.]Col
+AggCol: [alias:] agg [Tab.]Col
+Tab: table  | &quot;*&quot;
+Col: column | &quot;*&quot;</code></pre>
+<p>Tab is name of a table in the from clause<br />(alias, name, or the column used to reference it)<br />root table is used if there is no TAB</p>
+<p>Col is name of a column in the corresponding table</p>
+<p>alias is a name</p>
+<p>agg is an aggregation function</p>
+<p>if not an aggregation then * can be used for Tab and Col<br />if Tab is *, then that column will be shown for all tables<br />if Col is *, then all columns from the table will be used<br />Tab expanded first so *.* gives all columns from all tables<br />If no Columns are given, then *.* is used, or * if only one table</p>
+<p>result name for a col is its alias, or how it was identified</p>
+<p>by keyword groups rows by the key columns that follow it<br />each aggregator is called on the rows of its column in each group</p>
+<p>result col label does not include agg, so an alias is desirable</p>
+<h2 id="from">FROM</h2>
+<p>read ... from FROM ...</p>
+<p>See tutorial from.</p>
+<pre><code>from Table (, Table)*
+Table:     Root | Child
+Root:      [alias:] table
+Child:     [alias:] [JoinWord] Parent(Reference)(Reference)*
+Parent:    alias | table
+Reference: table | reference column
+JoinWord:  default | inner | left | right | outer
+Join:        .     |   -   |  &lt;   |   &gt;   |   =</code></pre>
+<p>The default join is also called left1.</p>
+<p>Only one of the Tables can be the Root.<br />The name of a table is either its alias or the last element of its description (i.e. the table for the Root, and the last Reference for Children). A table can only have one name: if an alias is given, the other name will not be used.<br />Each Parent must be included as the name of some Table in the list.<br />No order is enforced on the Tables, in particular, a Child does not have to follow its Parent.</p>
+<p>example:<br />from A.B, A, C:B<jdreference_a_C_a, inner C.D, B>E-F</p>
+<p>The join used to join a Reference to the table before it is either the one corresponding to the Join symbol used, or, if Join is . and JoinWord is given, that given by JoinWord.</p>
+<p>By default joins are done in an optimal (not guaranteed) order based on a sampling that picks representative rows and tests how restrictive the queries are. The algorithm should be fairly robust.</p>
+<p>exact keyword indicates to use the order as given.</p>
+<p><code>  jd'read from exact f,f-g,g-h where h.a&lt;100'</code></p>
+<h3 id="from-clause---join">from clause - join</h3>
+<p>joins: outer = inner - left &gt; right &lt; left1 .</p>
+<p>outer join A,A=B<br />  all possible rows<br />  A rows duplicated for each match in B<br />  B rows duplicated for each match in A<br />  A or B FILLS provided where no match</p>
+<p>inner join A,A-B:<br />  same as outer except rows with FILLS are excluded</p>
+<p>left join A,A&gt;B<br />  same as outer except B rows that did not match are excluded</p>
+<p>right join A,A<B<br/>   same as outer except A rows that did not match are excluded</p>
+<p>left1 join A,A.B<br />  each A row with 1 matching B row or FILLS<br />  if multiple matching B rows, 1 random one of them is used<br />  not a normal join, but is fast<br />  same as inner join if 1 and only 1 B row matches</p>
+<h2 id="where">WHERE</h2>
+<p>read ... from ... where WHERE</p>
+<pre><code> a=&quot;abc&quot;
+ b&lt;23
+ b in (23,24,25)
+ b lt 23 &amp;&amp; a eq &quot;abc&quot;
+ a like &quot;ab*&quot; 
+ f.a=23 &amp;&amp; g.b=&quot;def&quot;
+ a range (1000,2000)
+ a=1 and b=2
+ a,b = 1,2          - same as above but uses a,b hash if available
+ (a=1 and b=2) or (a=3 and b=4)
+ a,b in (1,2),(3,4) - same as above but uses a,b hash if available</code></pre>
+<p>relationals:</p>
+<pre><code> &gt;= &lt;= &lt;&gt; =  &gt;  &lt;&lt;br/&gt;
+ ge le ne eq gt lt range&lt;br/&gt;
+ in notin like unlike sample sample.</code></pre>
+<pre><code> sample n returns n random rows&lt;br/&gt;
+ sample. users ?. instead of ?
+
+ non-symbol must be blank delimited
+
+ byte data must be in &quot;s and has C escapes (\&quot; \t \n \0 \x09 ...)&lt;br/&gt;
+ numeric data must not be in &quot;s
+
+ like/unlike regex applies to all types
+
+ relationals have implied parens (which must not be present)
+ 
+ a=c (c not a number and not in &quot;s) is a relation between 2 cols
+
+ t (no col/relational) selects rows from table t not created by join</code></pre>
+<p>logicals:</p>
+<pre><code> !   &amp;&amp;  ||&lt;br/&gt;
+ not and or</code></pre>
+<ul>
+<li>must be blank delimited</li>
+</ul>
+<ul>
+<li>logicals evaluate as J (right to left):</li>
+</ul>
+<pre><code>  not a=23 &amp;&amp; b=24 || b=25  ===  not((a=23)&amp;&amp;((b=24)||(b=25)))</code></pre>
+<p>parens can change the order of evaluation</p>
+<h3 id="where-clause-details">where clause details</h3>
+<pre><code>W:  (&quot;!&quot; | &quot;not &quot;)* W1
+W1: W2 (&quot; &quot; (&quot;and&quot;|&quot;or&quot;|&quot;&amp;&amp;&quot;|&quot;||&quot;) &quot; &quot; W)?
+W2: &quot;(&quot; W &quot;)&quot;  |  Q
+Q:  col relational dat  |  col relational col  |  tab</code></pre>
+<p>col is col name as in select and tab is table name</p>
+<p>Q expressions are in implicit parens, which must not be present.</p>
+<p>dat represents a J noun; typically this must have the same type as the items of the column, but its type depends on the operation being used. If dat is a string or byte, it must be quoted; otherwise it will be interpreted as numeric data, a column name, or an error.</p>
+<p>Strings are in &quot;s and C escapes (\&quot;, \n, etc.) can be used.</p>
+<p>Logicals (! $$ || not and or) are grouped from right to left as in J, with parentheses allowed for grouping.</p>
+<p>The three types of simple query:<br />- For an operation on a col and data, the data is fixed so that it has the appropriate type and shape. For most operations, this is the same type and shape as an item in the column. For in and notin, its items will have that type and shape. For sample and sample., it will be converted to a single number. See the section on data conversion below. After conversion, the operation will be applied to select qualifying rows in the column.<br />- For an operation on two columns, the operation will be applied to pairs of rows from the two columns to select qualifying rows. The operations in, notin, like, unlike, sample, and sample. are not available on columns.<br />- The single table query selects rows that are not null. Null rows are created by some joins and do not correspond to a row in the table. They are indicated with fills.</p>
+<p>The relationals:<br />- (&gt;= &lt;= &gt; &lt; range) are for numeric cols<br />- range arg is list of numbers, which is split into pairs if an odd number, the last range extends to _ matches are in the range(s) (inclusive)<br />- in and notin test whether col value is an element of the list<br />- like and unlike take a regex and test if the col data matches<br />- sample and sample. require a data argument that is a single number</p>
+<p>Data can be converted either to string (or byte) or numbers.<br />Numbers must include only the characters -_. and digits.<br />Strings must be quoted to avoid confusion with keywords and col names.</p>
+<p>Following escapes are allowed in quoted strings:</p>
+<pre><code>\&quot;     double quote
+\\     backslash
+\a     alert (BEL)
+\b     backspace
+\e     escape
+\f     form feed
+\n     new line
+\r     carriage return
+\t     horizontal tab
+\v     vertical tab
+\xHH   byte with hexadecimal value HH</code></pre>
+<p>Following escapes may be supported but their use is discouraged:</p>
+<pre><code>\NNN        byte with octal value NNN (1 to 3 digits)
+\xHH        byte with hexadecimal value HH (1 to 2 digits)
+\uHHHH      Unicode  (ISO/IEC  10646)  character with hex value HHHH (4 digits)
+\UHHHHHHHH  Unicode character with hex value HHHHHHHH (8 digits)</code></pre>
+<p>Data is adjusted to the shape of the column. A list of data can be provided by separating items with spaces (this works with numbers or strings). If the data is smaller than the column shape, it will be filled with the fill element corresponding to the column type. If it is larger, an error is signalled.</p>
+<p>For in and notin, data is given in a comma-separated list, optionally enclosed by parens.</p>
+<p>In Q expression of the form &quot;col = dat&quot; or &quot;col in dat&quot;, col can be a comma-separated list of cols. In this case each item in dat is a comma-separated list with the same length as the number of cols. If the relational is &quot;in&quot;, each item in dat must be parenthesized. The col values are compared with the items in dat. If there is a hash columns it will be used for the query.</p>
+<h2 id="order-by">ORDER BY</h2>
+<p>One or more cols separated by commas used to sort the final result. Ascending by default. Add desc at end for descending.</p>
+</body>
+</html>

@@ -125,7 +125,9 @@ case. 0 do.
  i.0 0
 case. do.
  y=. adminp y
+ 'db not compatible with this Jd version'assert -.fexist y,'/jdversion'
  'not a database'assert 'database'-:jdfread y,'/jdclass'
+ 'db damaged'assert (0=ftypex) y,'/jddamage'
  d=. }.(y i:'/')}.y
  
  'x'jdadminlk y NB. remove old lock (if any)
@@ -153,7 +155,6 @@ case. do.
  end.
  NB. default access is for the 1st of the new dans
  jdaccess (;{.c{DBPATHS_jd_),' ',(;{:c{DBUPS_jd_),' intask'
- 'db damaged'assert (0=ftypex) y,'/jddamage'
  i.0 0
 end.
 )
@@ -455,7 +456,7 @@ jdfroms=: 4 : '>(({.y)i.<,x){"1{:y'
 jdrt=: 3 : 0
 aa=. 9}.each _8}.each tuts
 demo=. _4}.each(>:;demos i:each'/')}.each demos
-basic=. 'intro';'reads';'from';'admin';'csv';'join';'epochdt';'table_from_array'
+basic=. 'intro';'reads';'from';'admin';'csv';'csv_load';'join';'epochdt';'table_from_array'
 advanced=. aa-.basic
 y=. ,dltb y
 if. y-:'' do.

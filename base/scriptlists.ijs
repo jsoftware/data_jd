@@ -56,6 +56,7 @@ tuts=: <;._2 [ 0 : 0
 tutorial/admin_tut.ijs
 tutorial/aggregation_tut.ijs
 tutorial/csv_details_tut.ijs
+tutorial/csv_load_tut.ijs
 tutorial/csv_tut.ijs
 tutorial/custom_tut.ijs
 tutorial/dropstop_tut.ijs

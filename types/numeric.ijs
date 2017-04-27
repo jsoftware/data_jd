@@ -17,8 +17,12 @@ DATAFILL=: 0
 DATASIZE=: 1
 fixtype_num =: 3 : 0
   if. 1 ~: 3!:0 y do.
-    throwif -. y *./@:e. 0 1
+    NB. following line triggered 806 avx bug
+    NB. throwif -. y *./@:e. 0 1
+    NB. but it seems more complicated than needed and is replaced by the following
+    a=. y
     y =. 0 ~: y
+    throwif -.a-:y
   end. y
 )
 

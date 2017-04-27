@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="jd.css">
+</head>
+<body>
+<p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
+<h2 id="close">close</h2>
+<p>close</p>
+<p>unmap all files and close all locales<br />does not affect admin or locks</p>
+<p>using a table creates all locales and maps all files</p>
+<p>creating locales and mapping takes time so close only when necessary</p>
+<h2 id="flush">flush</h2>
+<p>flush - flush mapped file dirty memory pages to disk</p>
+<p>close does a flush before it unmaps files</p>
+<p>FLUSHOPS_jd_ (createcol createhash createunique reference ref set)<br />flush at the end as they potentially create lots of dirty pages<br />that might complicate effective host ram management</p>
+<p>disk hardware buffers mean flushed data is not guaranteed<br />to be on disk in the event of a failure such as loss of power,<br />but the chance of corrupted disk data is signficantly reduced</p>
+<p>flush can help performance by allowing better host ram management</p>
+<p>flush after ops that change lots of data can improve performance</p>
+<p>Windows: FlushViewOfFile and FlushFileBuffers<br />Unix: fsync</p>
+<h2 id="gen">gen</h2>
+<p>gen test table rows<br />gen ref2 table1 rows1 cols table2 rows2<br />gen one table rows cols<br />gen two table1 rows1 table2 [rows2]</p>
+<p>generate test table(s)</p>
+<p>test - table with all col types<br />ref2 - reference table1 aref table2 bref - extra cols<br />one - table with extras cols<br />two - default rows2 is &lt;.rows1%10 - suitable for many to one join</p>
+<pre><code>NB. example gen
+jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
+jd&#39;gen test f 3&#39;        NB. f with 3 rows
+jd&#39;reads from f&#39;
+jd&#39;gen ref2 g 5 2 h 3&#39; NB. g 5 rows and 2 extra cols, h 3 rows
+jd&#39;reads from g,g.h&#39;
+jd&#39;gen one i 3 2&#39;
+jd&#39;reads from h&#39;
+jd&#39;gen two j 6 k 3&#39;
+jd&#39;reads from j&#39;
+jd&#39;reads from k&#39;
+jdaccess olddan</code></pre>
+<p>info returns dynamic col info</p>
+<p>some ops are simpler and run faster without dynamics to update<br /></p>
+<h2 id="get">get</h2>
+<p>get table col</p>
+<p>return raw col data - includes deleted data<br />varbyte - indexes;values<br />can be used with set to efficiently adjust col data</p>
+<h2 id="loadcustom">loadcustom</h2>
+<p>loadcustom</p>
+<p>load custom.ijs from db folder db locale</p>
+<h2 id="option">option</h2>
+<p>option space ...</p>
+<p>option space 1 to record last command space<br />option space 0 to not record (reported as _1)</p>
+<p>jd'info last' report last cmd, time, space</p>
+<h2 id="set">set</h2>
+<p>set table col';data</p>
+<p>set raw col data - includes deleted data<br />varbyte - indexes;values<br />can be used with get to efficiently adjust col data</p>
+<h2 id="validate">validate</h2>
+<p>validate</p>
+<p>Runs info validatebad and marks the db damaged if there are problems.</p>
+<p>See <a href="Technical.htm#damaged" title="wikilink">Technical|Damaged</a>.</p>
+<p>See tutorial log.</p>
+</body>
+</html>

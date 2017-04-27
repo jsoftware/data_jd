@@ -58,6 +58,8 @@ NB. y test number - selects csvy cdefy validy
 test=: 3 : 0
 0 test y
 :
+EC__=: ECTOOMUCHMSG_jdcsv_
+ECTOOMUCHMSG_jdcsv_=: ''
 jdadminx'tdb'
 jd'close'
 unmapall_jmf_''
@@ -82,6 +84,7 @@ jd'csvrd /rows 0 jN.csv newjN'  rplc 'N';n
 nr=. jd'read from newj',n
 assert r-:nr 
 jd'close'
+ECTOOMUCHMSG_jdcsv_=: EC__ NB. restore
 r
 )
 
@@ -99,7 +102,7 @@ cdef0=: 0 : 0
 4  double   float
 5  i1       CI1
 8  datetime datetime
-options AUTO AUTO NO NO 0
+options , LF NO NO 0
 )
 
 valid0=: 3 : 0
@@ -124,7 +127,7 @@ cdef1=: 0 : 0
 1 d0 int
 2 d1 int
 3 d2 int
-options  AUTO AUTO NO NO 0
+options  , LF NO NO 0
 )
 
 valid1=: 3 : 0
@@ -146,7 +149,7 @@ cdef2=: 0 : 0
 3 d1 CSTITCH
 4 d2 int
 5 d2 CSTITCH
-options  AUTO AUTO NO NO 0
+options  , LF NO NO 0
 )
 
 valid2=: 3 : 0
@@ -191,7 +194,7 @@ cdef4=: 0 : 0
 1 a int
 2 b varbyte 2
 3 c varbyte 3
-options  AUTO AUTO NO NO 0
+options  , LF NO NO 0
 )
 
 valid4=: 3 : 0
@@ -252,7 +255,7 @@ cdef7=: 0 : 0
 1 a int
 2 a CSTITCH
 3 a CSTITCH
-options  AUTO AUTO NO NO 0
+options  , LF NO NO 0
 )
 
 valid7=: 3 : 0
@@ -271,7 +274,7 @@ csv8=: 0 : 0
 cdef8=: 0 : 0
 1 d0 float
 2 d1 float
-options  AUTO AUTO NO NO 0
+options  , LF NO NO 0
 )
 
 valid8=: 3 : 0
@@ -290,7 +293,7 @@ cdef9=: 0 : 0
 2 dtb datetimex
 3 da  date
 4 db  datex
-options  AUTO AUTO NO NO 0
+options  , LF NO NO 0
 )
 
 valid9=: 3 : 0
@@ -314,7 +317,7 @@ cdef10=: 0 : 0
 3 c float
 4 d float
 5 e date
-options  AUTO AUTO NO NO 0
+options  , LF NO NO 0
 )
 
 valid10=: 3 : 0
@@ -342,7 +345,7 @@ csv11=: 0 : 0
 
 cdef11=: 0 : 0
 1 a CI8X 2
-options  , AUTO NO NO 0
+options  , LF NO NO 0
 )
 
 valid11=: 3 : 0
@@ -353,7 +356,7 @@ csv12=: LF,~1e6$'a' NB. jorge bug increased data buffer size
 
 cdef12=: 0 : 0
 1 a int
-options  , AUTO NO NO 0
+options  , LF NO NO 0
 )
 
 valid12=: 3 : 0
@@ -373,7 +376,7 @@ cdef13=: 0 : 0
 1 a int
 2 b float
 3 c float
-options  AUTO AUTO NO NO 0
+options  , LF NO NO 0
 )
 
 valid13=: 3 : 0
@@ -391,7 +394,7 @@ abcd
 
 cdef14=: 0 : 0
 1 a byte 3
-options  , AUTO NO NO 0
+options  , LF NO NO 0
 )
 
 valid14=: 3 : 0
@@ -422,7 +425,7 @@ options  , CRLF NO NO 0
 
 valid16=: 3 : 0
 assert 1=csverrorcount
-assert 1={.ECROWSEP__csv{0{csverrors__csv
+assert 1={.ECTOOMUCH__csv{0{csverrors__csv
 )
 
 csv17=: 0 : 0
@@ -441,7 +444,7 @@ cdef17=: 0 : 0
 4 town   byte 30
 5 state  byte 30
 6 zip    int
-options  AUTO AUTO " NO 0
+options  , LF " NO 0
 )
 
 valid17=: 3 : 0
@@ -470,7 +473,7 @@ cdef18=: 0 : 0
 3 city   varbyte 10
 4 num0   int
 5 num1   int
-options  AUTO AUTO NO NO 0
+options  , LF NO NO 0
 )
 
 valid18=: 3 : 0
@@ -495,7 +498,7 @@ cdef19=: 0 : 0
 3 city   varbyte 10
 4 num0   int
 5 num1   int
-options  AUTO AUTO NO NO 0
+options  , LF NO NO 0
 )
 
 valid19=: 3 : 0
@@ -514,7 +517,7 @@ fubar,fubar2
 cdef20=: 0 : 0
 1 jvar1  varbyte 10
 2 jvar2  varbyte 10
-options  AUTO AUTO NO NO 0
+options  , LF NO NO 0
 )
 
 valid20=: 3 : 0
@@ -539,7 +542,7 @@ cdef21=: 0 : 0
 6 jvar       varbyte  10
 7 jxdate     date
 8 jxdatetime datetime
-options  AUTO AUTO NO NO 0
+options  , LF NO NO 0
 )
 
 valid21=: 3 : 0
@@ -581,7 +584,7 @@ cdef23=: 0 : 0
 1 jb1 boolean
 2 jb2 boolean
 3 jb3 boolean
-options  AUTO AUTO NO NO 0
+options  , LF NO NO 0
 )
 
 valid23=: 3 : 0
@@ -618,7 +621,7 @@ blue
 NB. should be testing enum, but turned off for now
 cdef24=: 0 : 0
 1 color byte 12
-options  , AUTO NO NO 0
+options  , LF NO NO 0
 )
 
 valid24=: 3 : 0
@@ -691,7 +694,7 @@ cdef27=: 0 : 0
 2  make     varbyte
 3  color    byte    5
 8  datetime datetime
-options AUTO AUTO NO NO 0
+options , LF NO NO 0
 )
 
 valid27=: 3 : 0
@@ -712,7 +715,7 @@ cdef28=: 0 : 0
 2  make     varbyte
 3  color    byte    5
 8  datetime datetime
-options AUTO AUTO NO NO 0
+options , LF NO NO 0
 )
 
 valid28=: 3 : 0
@@ -759,7 +762,7 @@ cdef30=: 0 : 0
 2 v1 varbyte 2
 3 i2 int
 4 v2 varbyte 2
-options AUTO AUTO NO NO 0
+options , LF NO NO 0
 )
 
 valid30=: 3 : 0
@@ -806,7 +809,7 @@ cdef32=: 0 : 0
 2 b1 byte 1
 3 b2 byte 2
 4 b3 byte 3
-options AUTO AUTO NO NO 0
+options , LF NO NO 0
 )
 
 valid32=: 3 : 0
@@ -828,7 +831,7 @@ cdef33=: 0 : 0
 3 c byte 3
 4 d byte
 5 e byte 5
-options AUTO AUTO NO NO 0
+options , LF NO NO 0
 )
 
 valid33=: 3 : 0
@@ -905,11 +908,11 @@ csv36=: csv35 rplc 'a';'\a'
 
 valid36=: 3 : 0
 assert 1=csverrorcount
-assert 1 97 202-:(ECESCAPE__csv){0{csverrors__csv
+assert 1 97 202-:(ECTRUNCATE__csv){0{csverrors__csv
 )
 
 validjd36=: 3 : 0
-assert 63 97-:('?'=,>{:"1 jd'read from j36')#i.256 NB. \a treated as ?
+assert 63=('?'=,>{:"1 jd'read from j36')#i.256 NB. \a treated as ?
 )
 
 NB. test epoch when it is supported

@@ -13,6 +13,7 @@ end.
 
 NB. vsub f table
 NB. return +/active for unique test
+NB. validate count,type,shape
 validateinsert=: 4 : 0
 ns=. {."1 x
 vs=. {:"1 x

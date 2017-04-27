@@ -139,5 +139,5 @@ assert ({:jd'reads from f')-:{:jd'reads from g'
 jd'info table g^*' NB. g is a ptable
 dir CSVFOLDER NB. csvwr wrote csv files for each part
 jddeletefolder_jd_ CSVFOLDER
-jd'csvwr /combine fx.cvs f' NB. combine parts into single csv file
+jd'csvwr /combine fx.csv f' NB. combine parts into single csv file
 dir CSVFOLDER

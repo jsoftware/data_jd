@@ -90,12 +90,21 @@ end.
 i.0 0
 )
 
+log_size_limit=: 16e6
+
 NB. log_jd_ - there is also a log_jdcsv_
 logtxt=: 4 : 0
 if. 0=#DB do. return. end.
 try. f=. dbpath DB catchd. return. end.
 if. -.fexist f,'/jdclass' do. return. end.
 f=. f,'/log.txt'
+
+if. fexist f do.
+ if. log_size_limit<fsize f do.
+  ((<.0.5*log_size_limit)}.fread f)fwrite f
+ end.
+end.
+
 t=. (isotimestamp 6!:0''),' : ',12{.x
 if. 0=L.y do.
  t=. t,y,LF

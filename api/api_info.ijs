@@ -7,7 +7,7 @@ jd_list=: 3 : 0
 t=. bdnames y
 ECOUNT assert 1=#t
 select. ;t
-case. 'version' do. ,.'version';'3.2'
+case. 'version' do. ,.'version';'3.3'
 case. 'open'    do. ,.'open';<>opened''
 case.           do. assert 0['unsupported list command'
 end. 
@@ -130,7 +130,7 @@ infovalidate=: 3 : 0
 
 infovalidatebad=: 3 : 0
 d=.''validateclocs jdclocs y
-b=. '1'=,;{:{:d
+b=. ' '~:,;2{{:d
 ({.d),:(<b)#each {:d
 )
 
@@ -163,15 +163,14 @@ end.
 infosummary=: 3 : 0
 d=. getdb''
 t=. ;{.y
-
 if. (PTM,'*')=_2{.t do.
  ts=. getparttables _2}.t
  'not a ptable' assert 1<#ts
  ad=. >infoad each ts
  n=. (<>ts),(<,.{."1 ad),<,.{:"1 ad
 else.
-
  ts=. /:~NAMES__d
+ if. 0=#ts do. (;:'table active deleted'),:3#<(0 0$'') return. end.
  if. -.''-:t do.
   'not a table'assert NAMES__d e.~ <t
   tloc=. jdgl t

@@ -76,3 +76,11 @@ b=. jd'reads from f'
 assert a-:b
 
 
+NB. bug modify works, but truncates the data:
+jdadminx 'test'
+jd 'createtable tab'
+jd 'createcol tab size int _';3 5 7
+jd 'createcol tab name byte 3';3 3$'bobsamtom'
+a=. jd 'reads jdindex,* from tab'
+'bad shape' jdae 'modify tab';2;'name';,:'david'
+assert a-: jd 'reads jdindex,* from tab'

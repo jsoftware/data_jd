@@ -18,7 +18,6 @@ jdtx_z_=: jdtx_jd_
 
 coclass'jd'
 
-JDE1000=: 'jde: not a database'
 JDE1001=: 'jde: not an op'
 
 fmtx=: 4 : 0
@@ -157,14 +156,10 @@ if. 'intask'-:SERVER do.
  opx=. ;('x'-:{.OP){OP;'x'
  if. -. (<OP) e. NODBOPS do. 
   DBL=: getdb'' NB. DBL global and test for damage
-  t=. JDE1000
-  NB. DB in DBPATHS
   r=. dbrow DBPATHS
-  t assert r<#DBPATHS
-  NB. USER/PSWD in DBUPS
+  'not a db access name' assert r<#DBPATHS
   r=. dbrow DBUPS
-  t assert r<#DBUPS
-  t assert (<UP)e.bdnames>{:r{DBUPS
+  'bad DBUPS' assert (r<#DBUPS)*.(<UP)e.bdnames>{:r{DBUPS
   NB. OP in DBOPS  and jd__CMD defined
   r=. dbrow DBOPS 
   JDE1001 assert r~:#DBOPS 

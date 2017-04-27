@@ -137,8 +137,7 @@ fread F,'a.csv'  NB. just data
 fread F,'aa.csv' NB. 1st row is col names header
 
 NB. csvrd csv a.csv will fail because there is no cdefs file to describe columns
-assert 'domain error'-:jd etx 'csvrd a.csv a'
-assert 'missing cdef file'-:;1{jdlast
+'not found' jdae 'csvrd a.csv a'
 jdlast
 
 NB. csvdefs samples first 5000 rows to guess col type - this will often be right
@@ -195,8 +194,8 @@ ghi,1000
 )
 
 csvtestc fwrite F,'c.csv'
-NB. /u n - default cnames for n cols
-jd'csvcdefs /replace /h 0 /u 10 c.csv'
+NB. /u default cnames for n cols
+jd'csvcdefs /replace /h 0 /u c.csv'
 fread F,'c.cdefs'
 jd'droptable c'
 jd'csvrd c.csv c'
@@ -210,14 +209,9 @@ ghi,1000
 )
 
 csvtestd fwrite F,'d.csv'
-jd'csvcdefs /replace /h 0 /u 10 d.csv' NB. /u n default names for n cols
-fread F,'d.cdefs'
-jd'droptable d'
-jd'csvrd d.csv d'
-jd'reads from d'
-
-NB. visual inspection shows 1st row is col names - rerun with /h 1
-NB. with /h 1 it now gets col names and detects int col
+jd'csvprobe /replace d.csv'
+NB. visual inspection shows 1st row is col names
+NB. run csvcdefs with /h 1 to get col names
 jd'csvcdefs /replace /h 1 d.csv'
 fread F,'d.cdefs'
 jd'droptable d'
@@ -231,8 +225,66 @@ b,,b,b,b,b
 NB. col2 has no data and will be treated as byte 1
 NB. col7 and later have no data and will be ignored
 csvteste fwrite F,'e.csv'
-jd'csvcdefs /replace /h 0 /u 10 e.csv'
+jd'csvcdefs /replace /h 0 /u e.csv'
 fread F,'e.cdefs'
+
+0 : 0
+csvprobe and csvscan are additional tools for working with csv files
+the following steps build a somewhat larger csv file and show
+how you would go about getting it loaded with a proper cdefs files
+)
+
+jdadminx'test'
+bld=: 3 : 0 NB. rows base width
+'r b w'=. y
+i=. b+i.r
+t=. ',',~each":each<"0 i
+t=. t,each',',~each":each<"0 i+0.5
+t=. t,each','     NB. col with 0 bytes
+t=. t,each<'x,'   NB. col with 1 byte
+t=. t,each<'yy,'  NB. col with 2 bytes
+t=. t,each<"1 [(r,w)$'abd def' NB. col with different counts
+;t,each LF
+)
+
+bld 2 100 5
+;bld each 2 100 5; 2 200 8
+
+('a,b,c,d,e,f',LF,;bld each 6000 0 5;3 6000 8)fwrite CSVFOLDER,'new.csv'
+NB. new.csv has 6003 rows and last 3 rows have last col with more bytes
+
+jd'csvprobe /replace new.csv' NB. read first 12 rows as byte cols for inspection
+NB. visual inspection indicates first row is col headers
+jd'csvcdefs /replace /h 1 new.csv' NB. create cdefs - based on first 5000 rows
+fread CSVFOLDER,'new.cdefs'
+NB. note that col f has width 5 - based on first 5000 rows
+jd'csvscan new.csv' NB. scan entire file to get proper width
+fread CSVFOLDER,'new.cdefs' NB. note width adjusted to 8
+jd'csvrd new.csv new'
+jd'read count a from new'
+assert 6003=;{:jd'reads count a from new'
+jd'info schema'
+_ _ 0 _ 2 8-:,'shape'jdfroms_jd_ jd'info schema'
+'abc' fappend CSVFOLDER,'new.csv' NB. damage the csv file
+'ECTOOMUCH' jdae'csvscan new.csv'
+
+NB. try the previous examples without the header row
+(;bld each 6000 0 5;3 6000 8)fwrite CSVFOLDER,'new.csv'
+jd'csvprobe /replace new.csv' NB. read first 12 rows as byte cols for inspection
+NB. visual inspection indicates there are no headers
+jd'csvcdefs /replace /u new.csv' NB. create cdefs with default col names
+fread CSVFOLDER,'new.cdefs'
+NB. note that col f has width 5 - based on first 5000 rows
+jd'csvscan new.csv' NB. scan entire file to get proper width
+fread CSVFOLDER,'new.cdefs' NB. note width adjusted to 8
+jd'droptable new'
+jd'csvrd new.csv new'
+jd'read count c1 from new'
+assert 6003=;{:jd'reads count c1 from new'
+jd'info schema'
+_ _ 0 _ 2 8-:,'shape'jdfroms_jd_ jd'info schema'
+
+
 
 NB. nasty things can happen with incorrect cdefs (that is, not from a csvwr)
 NB. if you create a cdefs always csvrd some records and study them carefully
@@ -257,3 +309,4 @@ jd'csvrestore'
 NB. csvrestore does not do the references, but custom.ijs is there
 jd'createdynamic' NB. do references as defined in custom.ijs
 assert d-:jd'reads from a,a.b'
+

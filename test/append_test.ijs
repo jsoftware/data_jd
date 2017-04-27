@@ -31,8 +31,7 @@ jd etx'tableappend snkt srct foo'
 assert 'invalid srcdb'-:;1{jdlast
 assert t-:DB_jd_
 
-jd etx'tableappend snkt srct snkdb'
-assert 'srcdb same as snkdb'-:;1{jdlast
+'invalid srcdb'jdae'tableappend snkt srct snkdb'
 
 jd'tableappend snkt srct srcdb'
 

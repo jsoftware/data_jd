@@ -70,16 +70,24 @@ jd_z_=: jd_jd_
 
 demos=: (<'demo/'),each 'sandp/sandp.ijs';'northwind/northwind.ijs';'sed/sed.ijs';'vr/vr.ijs'
 
-NB. y is jd_... bdnames
+NB. getnext x args from boxed list
+NB. error if too few or too many
+getnext=: 4 : 0
+'invalid number of args'assert x=#y
+y
+)
+
+NB. y is jd_... ... 
 NB. x is list of options and their arg counts
 NB. result is y with options stripped
 NB. option_name_jd_ set as option value
 NB. options not provided are set to 0
 NB. options provided with count 0 set to 1
-NB. option value(s) must be alphanumeric
-NB. '/e 0 /nx 1 /foo 0'getoptions bdnames '/e /nx 23 abc'
+NB. option value(s) must be numeric and non-negative
+NB. a=. '/e 0 /nx 1 /foo 0'getoptions ca '/e /nx 23 abc'
 getoptions=: 4 : 0
-t=. bdnames x
+y=. ca y
+t=. ca x
 t=. (2,~-:#t)$t
 n=. {."1 t
 c=. ;0".each{:"1 t
@@ -87,15 +95,16 @@ p=. ;(<'_jd_ '),~each (<'option_'),each}.each n
 (p)=: 0 NB. default value for options not provided
 while. '/'={. ;{.y do.
  i=. n i. {.y
- 'invalid option' assert i<#n
+ ('invalid option: ',;{.y) assert i<#n
  e=. '_jd_',~'option_',}.;{.y
  a=. i{c NB. number of values for option
  if. a=0 do.
   (e)=: 1
  else.
   t=. 0+;_".each a{.}.y
-  'option value not integer'assert 4=3!:0 t
-  (e)=: t
+  ('invalid option value: ',;{.y) assert 4=3!:0 t
+  ('invalid option value: ',;{.y) assert t>:0 
+  (e)=: ".":t NB. kludge so that single value is scalar - required in jd_csvcdefs use of jd_csvrd
  end.
  y=. y}.~>:a
 end.
@@ -181,9 +190,8 @@ t=. (((#y)%2),2)$y
 
 dbpath=: 3 : 0
 i=. ({."1 DBPATHS)i.<,y
-if. i=#DBPATHS do. throw JDE1000 end.
-r=. ;i{{:"1 DBPATHS
-r
+'not a db access name'assert i<#DBPATHS
+;i{{:"1 DBPATHS
 )
 
 jd_createdb=: 3 : 0
@@ -488,7 +496,7 @@ jd_tableappend=: 3 : 0
 y=. ca y
 ECOUNT assert 2 3 e.~#y
 'snkt srct srcdb'=. y
-'srcdb same as snkdb' assert -.DB-:&filecase_j_ srcdb
+NB.! 'srcdb same as snkdb' assert -.DB-:&filecase_j_ srcdb
 d=. getdb''
 snktloc=. getloc__d snkt
 assert 0=#SUBSCR__snktloc['dynamic dependencies - use tableinsert or dropdynamic+dynamic'
@@ -817,34 +825,28 @@ end.
 r;a
 )
 
-ophtmls=: 'opsinfo';'opsread';'change';'manage';'dynamic';'csv';'table-table';'misc'
+ophtmls=: 'Ops_info';'Ops_read';'Ops_change';'Ops_manage';'Ops_dynamic';'Ops_csv';'Ops_table-table';'Ops_misc'
 
 jdex=: 3 : 0
 y=. dltb y
-d=. toJ ;fread each(<'.html'),~each(<JDP,'doc/'),each ophtmls
-d=. dltb each<;._2 d,LF
+d=. toJ ;fread each(<'.htm'),~each(<JDP,'doc/'),each ophtmls
 if. ''-:y do.
- s=. 'NB. example '
- d=. (((#s){.each d)=<s)#d
- ;LF,~each(#s)}.each d
+ i=. <"0 [12+('NB. example ' E. d)#i.#d
+ d=. i}.each <d
+ i=. d i.each LF
+ ;LF,~each i{. each d
  return.
 end.
 if. y-:'read' do. y=. 'reads' end.
-s=. 'NB. example ',y
-i=. >:((#s){.each d)i.<s
+i=. 1 i.~('NB. example ',y) E. d
+'example not found'assert i<#d
 d=. i}.d
-assert 0~:#d['example not found'
-i=. 1 i.~ (0=;#each dltb each d)+.(<'<hr>')=4{.each d
-assert 20>i['example too long'
+i=. 1 i.~'</code>' E. d
 d=. i{.d
-d=. ;d,each LF
-d=. d rplc '&lt;';'<';'&gt;';'>'
+d=. d rplc '&lt;';'<';'&gt;';'>';'&#39;';''''
 f=. '~temp/jdexample.ijs'
 d fwrite f
-NB. t=. jdaccess''
-NB. jdadminx'example'
 loadd f
-NB. jdaccess t
 )
 
 assertnoreference=: 3 : 0

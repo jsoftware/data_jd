@@ -79,7 +79,7 @@ end.
 testqueries1 =: ([: read1 'dat'&,) testqueries
 
 ALLOW_FVE_jd_ =: 1 [ af =. ALLOW_FVE_jd_
-testtype@> TYPES_CORE -. ;:'time enum'
+testtype@> TYPES_CORE -. ;:'time enum varbyte'
 testtype@> ,&' 5'&.> TYPES_CORE -. ;:'varbyte date datetime time enum'
 ALLOW_FVE_jd_ =: af
 

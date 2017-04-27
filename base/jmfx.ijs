@@ -34,10 +34,18 @@ end.
 )
 
 jdunmap=: 3 : 0
-if. 0=L.y do. unmap_jmf_ y return. end.
+if. 0=L.y do.
+ r=. unmap_jmf_ y
+ ('unmap failed: ',(":r),' ',y) assert 2~:r
+ return.
+end.
 fn=. 1{(({."1 mappings_jmf_)i.{.y){mappings_jmf_
-unmap_jmf_ y NB. resize failure not detected
-if. (fsize fn)~:HS_jmf_+;1{y do. logijfdamage 'unmap resize';y end. 
+r=. unmap_jmf_ y
+('unmap resize failed: ',(":r),' ',;{.y)assert 2~:r
+NB. resize failure not detected
+if. (fsize fn)~:HS_jmf_+;1{y do.
+ logijfdamage 'unmap resize bad size';y
+end. 
 )
 
 validaterefcounts=: 4 : 0

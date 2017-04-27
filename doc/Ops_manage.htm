@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="jd.css">
+</head>
+<body>
+<p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
+<h2 id="createcol">createcol</h2>
+<p>createcol table col type [trailing-shape] [data]</p>
+<p>creates new col with type and trailing-shape. col has default data or the arg data.</p>
+<p>data requires trailing-shape and _ indicates empty</p>
+<p>data includes deleted rows (similar to get/set)</p>
+<p>For example:</p>
+<pre><code>jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
+jd&#39;createtable f&#39;
+jd&#39;createcol f a int&#39;
+jd&#39;insert f a&#39;;12 13 14
+jd&#39;createcol f b int&#39;
+jd&#39;createcol f c int 2&#39;
+jd&#39;createcol f d int _&#39;;88 89 90
+jd&#39;createcol f e int 2&#39;;100+i.3 2
+jd&#39;reads from f&#39;
+jdaccess olddan</code></pre>
+<h2 id="createcol-1">createcol</h2>
+<p>createcol table col type [trailing-shape] [data]</p>
+<p>creates new col with type and trailing-shape col has default data or the arg data</p>
+<p>data requires trailing-shape and _ indicates empty</p>
+<p>data includes deleted rows (similar to get/set)</p>
+<pre><code>NB. example createcol
+jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
+jd&#39;createtable f&#39;
+jd&#39;createcol f a int&#39;
+jd&#39;insert f a&#39;;12 13 14
+jd&#39;createcol f b int&#39;
+jd&#39;createcol f c int 2&#39;
+jd&#39;createcol f d int _&#39;;88 89 90
+jd&#39;createcol f e int 2&#39;;100+i.3 2
+jd&#39;reads from f&#39;
+jdaccess olddan</code></pre>
+<h2 id="createdb">createdb</h2>
+<p>createdb</p>
+<p>valid only after a dropdb<br />creates filefolder and initial files<br />gets lock</p>
+<h2 id="createtable">createtable</h2>
+<p>createtable [/a MIN MULT XTRA] table [coldefs]</p>
+<p>createtable with 0 or more cols<br />each col defined by: col type [trailing-shape]</p>
+<p>string arg coldefs separated by , or LF<br />boxed arg coldefs in separate boxes</p>
+<p>/a parameters are: MIN-minimum rows, MULT-multiplier, XTRA-extra rows<br />when insert requires mapped col file resize, new size is:    MIN&gt;.&gt;.MULT*XTRA+current_rows+new_rows</p>
+<p>default alloc is 2000 1.5 0</p>
+<pre><code>NB. example createtable
+jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
+jd&#39;createtable f&#39;
+jd&#39;createtable g a int , b int 2&#39;
+jd&#39;createtable h&#39;;&#39;a int&#39;;&#39;b int 2&#39;
+t=: 0 : 0
+a int
+b int 2
+)
+jd&#39;createtable i &#39;,t
+jd&#39;info schema&#39;
+jdaccess olddan</code></pre>
+<h2 id="createptable">createptable</h2>
+<p>createptable table pcol<br />allowed pcol types: int edate edatetime date datetime<br />table must have 0 rows<br />tutorial ptable</p>
+<h2 id="dropcol">dropcol</h2>
+<p>dropcol table col<br />OK if col does not exist<br />error if col is used in hash or reference</p>
+<h2 id="dropdb">dropdb</h2>
+<p>drops each col of each table<br />releases lock<br />deletes filefolder</p>
+<h2 id="dropfilesize">dropfilesize</h2>
+<p>dropfilesize</p>
+<p>files tend to be kept larger than required<br />data in the file can grow without having to resize/remap</p>
+<p>dropfilesize frees up unused file space - use if a db is static</p>
+<p>dropfilesize returns filenames, old size, new size</p>
+<h2 id="droptable">droptable</h2>
+<p>droptable [/reset] table</p>
+<p>/reset preserves schema<br />  drops rows<br />  drops dynamic hash/unique/... cols<br />  keeps filesize</p>
+<p>OK if table does not exist<br />error if table has reference (refers to or referred by)</p>
+<h2 id="renamecol">renamecol</h2>
+<p>renamecol table col newname<br />error if col is used in hash or reference</p>
+<h2 id="renametable">renametable</h2>
+<p>renametable table newname<br />error if the table is used in reference</p>
+</body>
+</html>

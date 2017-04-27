@@ -43,7 +43,7 @@ n=. (-.(<'jd')=2{.each n)#n
 if. optionsort +. -.fexist f do.
  /:~n
 else. 
- con=. ~.n,~;:jdfread f
+ con=. ~.n,~<;._1 ' ',deb jdfread f
  (con e. n)#con
 end.
 )
@@ -112,10 +112,7 @@ if. ifhash =. typ-:'hash' do.
   'typ shape'=. cutsp }.shape
 end.
 shape =. ,".shape
-
-if. (<typ) -.@e. DATATYPES -. APIRULES#'time';'enum' do.
-  throw '101 Invalid datatype: ',typ
-end.
+if. (<typ) -.@e. DATATYPES -. APIRULES#'time';'enum' do. throw '101 Invalid datatype: ',typ end.
 Create nam;typ;shape
 if. ifhash do. MakeHashed nam end.
 )

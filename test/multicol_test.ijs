@@ -63,6 +63,6 @@ assert testinds&>/"1 INDS
 )
 
 ALLOW_FVE_jd_ =: 1 [ af =. ALLOW_FVE_jd_
-testtype@> TYPES_CORE -. ;:'time enum'
+testtype@> TYPES_CORE -. ;:'time enum varbyte'
 NB. testtype@> ,&' 5'&.> TYPES_CORE -. ;:'varbyte date datetime time enum'
 ALLOW_FVE_jd_ =: af

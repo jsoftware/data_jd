@@ -65,6 +65,7 @@ NB. Should only be called by the table.
 Insert=: 3 : 0
 if. 0=#MAP do. return. end.
 assert. (dat +&# 0{::y) = Tlen
+NB. assert -.FORCEINSERTFAIL_jd_-:NAME
 MAP appendmap&> fixinsert y  NB. fixinsert inherited from type
 )
 
@@ -79,7 +80,7 @@ fixvalue=: 3 : 0
 if. (''-:shape)*.1={:$y do. y=. ,y end. 
 'Invalid data rank' throwif (#$y) > ADDRANK + >:#shape
 if. shape =&# $y do. y=.,:y end.
-'Invalid data shape' throwif shape ([ -.@-: #@[ {. ]) }.$y
+ESHAPE throwif shape ([ -.@-: #@[ {. ]) }.$y
 fixtype y
 )
 

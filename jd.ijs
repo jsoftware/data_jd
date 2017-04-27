@@ -10,7 +10,7 @@ NB. is pushed to Jsoftware for building JAL data/jd package
 
 NB. all use of the Jd library is through JDP_z_
 
-nokey_jd_=: 0 : 0 rplc 'INDEX.HTML';jpath '~addons/data/jd/doc/index.html'
+nokey_jd_=: 0 : 0 rplc 'INDEX.HTM';jpath '~addons/data/jd/doc/Index.htm'
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -22,7 +22,7 @@ non-commercial or evaluation key is free
 and does not require a license agreement
 
 See Jd documentation at:
-INDEX.HTML
+INDEX.HTM
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -70,7 +70,7 @@ elseif. 1 do.
 end.
 LIBJD_jd_=: '"',t,'"'
 if. _1=r=. (LIBJD_jd_,' jdinit >x *c') cd <JDP_jd_ do. assert 0[echo nokey_jd_ end.
-'Jd binary and J code mismatch - bad install'assert r=6
+'Jd binary and J code mismatch - bad install'assert r=7
 'Jd regexinit failed'assert 0=(LIBJD_jd_,' regexinit >x *c') cd <p 
 )
 
@@ -128,28 +128,19 @@ if. _1=nc<'OP_jd_' do. NB. one time inits
 end.
 )
 
-jdwelcome_jd_=: 0 : 0 rplc 'BOOKMARK';jpath JDP,'doc/index.html'
-Jd is Copyright 2016 by Jsoftware Inc. All Rights Reserved.
+jdwelcome_jd_=: 0 : 0 rplc 'BOOKMARK';jpath JDP,'doc/Index.htm'
+Jd is Copyright 2017 by Jsoftware Inc. All Rights Reserved.
 Jd is provided "AS IS" without warranty or liability of any kind.
 
 Commercial users must have a Jd License from Jsoftware.
 
-Keep addons (base, JHS, jmf, etc) up to date.
+Wiki documentation of the latest version of Jd is at:
+ http://code.jsoftware.com/wiki/Jd/Index
 
-There is a slight bias for JHS as the front end.
-JHS is the base technology for Jd client/server.
+Snapshot of the Jd wiki for this release is at: 
+ file://BOOKMARK
 
-JAL does not lock against other tasks using the same Jd folder.
-Update with tasks using the same Jd folder will cause problems.
-
-Different J installs should be used for production and development.
-
-Run test suite (takes several minutes): jdtests_jd_''
-
-Bookmark documentation in your browser:
-   file:///BOOKMARK
-
-   jdxwelcome_jd_'' NB. run this to avoid long welcome message
+There is a slight bias for JHS (running tutorials).
 
 Get started:
    jdex_jd_''      NB. list examples from docs
@@ -158,21 +149,7 @@ Get started:
    jdrt_jd_'intro' NB. run intro
 )
 
-jdxwelcome_jd_=: 3 : 0
-jdcreatefolder'~temp/jd'
-i.0 0[(;{:jd'list version')fwrite'~temp/jd/jdversion' NB. avoid welcome
-)
-
-3 : 0''
-new=. ;{:jd'list version'
-old=. fread'~temp/jd/jdversion'
-if. new-:old do.
- echo'   jdwelcome_jd_ NB. Jd welcome message'
-else.
- echo jdwelcome_jd_
-end. 
-)
-
+NB. initial echos
 3 : 0''
 if. -.UNAME-:'Win' do.
  n=. ".}:2!:0'ulimit -n'
@@ -180,4 +157,9 @@ if. -.UNAME-:'Win' do.
   echo LF,'Warning: ',(":n),' for "ulimit -n" is low. See Technotes|file handles.'
  end.
 end.
+ferase 1 dir jpath'~addons/data/jd/doc/*.html' NB.! rid of old .html etc files
+ferase '~addons/data/jd/doc/favicon.ico'
+ferase '~addons/data/jd/doc/jblue.png'
+ferase '~addons/data/jd/doc/jda.css'
+echo'   jdwelcome_jd_ NB. run this sentence for important information'
 )

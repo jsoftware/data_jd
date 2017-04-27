@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="jd.css">
+</head>
+<body>
+<p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm" class="act">Release</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
+<p>The Jd wiki is dynamic. It has the latest corrections, expansions, and changes. It reflects not just the latest release, but development work that hasn't been finalized or released. It reflects the bleeding edge and may not be relevant for the version you are running.</p>
+<p>A snapshot of Jd wiki is converted to htm and included in a release.</p>
+<p>For the latest on Jd, use the wiki. For details relevant to your release, see doc/index.htm.</p>
+<h2 id="april-27---version-3.3">2017 April 27 - version 3.3</h2>
+<ul>
+<li>Jd wiki - latest Jd documentation at: <a href="http://code.jsoftware.com/wiki/Jd/Index">http://code.jsoftware.com/wiki/Jd/Index</a></li>
+<li>Jd wiki snapshot (release specific) at: ~addons/data/ide/doc/Index.htm</li>
+<li>update bug - bad shape deleted record</li>
+<li>modify bug - bad shape truncated byte data</li>
+<li>info validate/validate - col c marks bad tlen - col s marks bad fsize</li>
+<li>new jd shared library version 7</li>
+<li>db log.txt limited in size to 16mb</li>
+<li>table... changes - srcdan removed as arg from all except tablemove</li>
+<li>csv column names - bugs in utf8 and special chars fixed</li>
+<li>csv cdefs cols names can now be any valid Jd col name</li>
+<li>csv BOM UTF8 (239 187 191{.a.) skipped</li>
+<li>csv cdefs # starts a comment line</li>
+<li>csv csvcdefs creates cdefs with default &quot; and NO for escape</li>
+<li>csv cdefs AUTO no longer supported (handled in csvcdefs)</li>
+<li>csvprobe op to examine csv file</li>
+<li>csvscan - scans csv file and updates cdefs to have proper byte widths</li>
+<li>csvcdefs /u no longer takes value - value is derived from data</li>
+<li>csv tutorial reworked</li>
+<li>csv_load tutorial added</li>
+</ul>
+<h2 id="may-12---version-3.2">2016 May 12 - version 3.2</h2>
+<ul>
+<li>partitioned table - significant new facility - see tutorial ptable</li>
+<li>invalid epoch data passes precision assertions</li>
+<li>default epoch and sfe display does not have Z suffix</li>
+<li>table/column/dan name validation (<a href="General.htm#names" title="wikilink">General|Names</a>)</li>
+<li>read op parsing reworked and some bugs fixed</li>
+<li>documentation of ops reorganized and improved</li>
+<li>readtc requires jdtc clause (:::s::: no longer supported)</li>
+<li>validate no longer done before/after insert/update/modify/delete</li>
+<li>Tlen (active+deleted rows) maintained in table state</li>
+<li>S_deleted (deleted rows) maintained in table state</li>
+<li>info summary uses Tlen/S_deleted - fast as no read of jdactive</li>
+<li>info improved and enhanced to handle ptable</li>
+<li>csv loader bug with fields longer than 1000 fixed</li>
+<li>where clause not bug fixed</li>
+<li>datatune support removed</li>
+<li>regex cd problem with linux debian installs fixed</li>
+</ul>
+<h2 id="january-12---version-3.1">2016 January 12 - version 3.1</h2>
+<ul>
+<li>showbox bug fixed for jconsole (non linedraw) box chars</li>
+<li>showbox replaced by sptable (from simple project)</li>
+<li>insert/update datatune bugs fixed</li>
+<li>modify now does datatune</li>
+<li>tutorial datatune updated</li>
+<li>datatune doc</li>
+<li>key enforced by shared library</li>
+<li>Jd binary and code version match enforced</li>
+<li>csv now supprts epoch cols (<a href="Ops_csv.htm#csv" title="wikilink">Ops csv</a>)</li>
+<li>csvrd default reads all rows (rather than just 10)</li>
+<li>tutorial csv updated</li>
+<li>install over previous install (orphans) now OK (scriptlists.ijs)</li>
+<li>JAL version no longer tied to jd'list version'</li>
+</ul>
+<h2 id="december-12---version-2.2.11">2015 December 12 - version 2.2.11</h2>
+<ul>
+<li>dropcol does not update column_create_order.txt - bug fix</li>
+<li>csvappend fails in some cases - bug fix</li>
+<li>min-max/epochdt with no records works (not domain error)</li>
+<li>logging and db validation improved (<a href="Technical.htm#damaged" title="wikilink">Technical|Damaged</a>)</li>
+<li>tutorial log</li>
+<li>validate - detects db problems (<a href="Ops_misc.htm#validate" title="wikilink">Ops misc|validate</a>)</li>
+<li>info validate - info on all db mappings (<a href="Ops_info.htm#info" title="wikilink">Ops info</a>)</li>
+<li>info validatebad - validate mappings with problems (<a href="Ops_misc.htm#validate" title="wikilink">Ops misc|validate</a>)</li>
+<li>jdadmin does validate</li>
+<li>validate done before/after insert/update/modify/delete</li>
+<li>insert revert bug - detailed log and marks db damaged</li>
+</ul>
+<h2 id="october-1---version-2.2.10">2015 October 1 - version 2.2.10</h2>
+<ul>
+<li>linux lock bug fixed - concurrent Jd task not locked out</li>
+<li>info dynamic - (<a href="Ops_info.htm#info" title="wikilink">Ops info</a>)</li>
+<li>createhash/createunique 2 to 10 times faster on large tables</li>
+<li>createhash /nc (<a href="Ops_dynamic.htm#createhash" title="wikilink">Ops dynamic|createhash</a>)</li>
+<li>createunique simplified and changed (<a href="Ops_dynamic.htm#createunique" title="wikilink">Ops dynamic|createunique</a>)</li>
+<li>insert unique simplified and changed (<a href="Ops_change.htm#insert" title="wikilink">Ops change|insert</a>)</li>
+<li>flush - flush mapped file dirty buffers (<a href="Ops_misc.htm#flush" title="wikilink">Ops misc|flush</a>)</li>
+<li>ref changed and improved - (<a href="Ops_dynamic.htm#ref" title="wikilink">Ops dyanamic|ref</a>)</li>
+<li>performance tutorial - table size vs ram</li>
+</ul>
+<h2 id="june-18---version-2.2.9">2015 June 18 - version 2.2.9</h2>
+<ul>
+<li>where cola,colb = 1,2 doc and implementation bug fixed</li>
+<li>jddropstop prevents drops (<a href="General.htm#dropdelete" title="wikilink">General|Drop/Delete</a>)</li>
+<li>jddeletefolder fails if criteria not met (<a href="General.htm#dropdelete" title="wikilink">General|Drop/Delete</a>)</li>
+<li>jddeletefolder more robust vs background tasks (<a href="Technical.htm#windows_search_service" title="wikilink">Technical|Windows search service</a>)</li>
+<li>jddeletefolderok allows otherwise blocked jddeletefolder</li>
+<li>welcome replaced by short message after jdtests run</li>
+<li>modify with indexes as well as where clause - jdex_jd_'modify'</li>
+<li>bugs fixed in where col in ()</li>
+<li>rough version of pm (performance measurement) - pmhelp_jd_</li>
+<li>droptable /reset (<a href="Ops_manage.htm#droptable" title="wikilink">Ops manage|droptable</a>)</li>
+<li>info jd - info on jd... cols (<a href="Ops_info.htm#info" title="wikilink">Ops info</a>)</li>
+<li>better createhash/createunique performance</li>
+<li>fix bug in createhash/createunique for multiple cols</li>
+<li>libjd.so built with stable linux (RH 4/Centos 5) (<a href="Technical.htm#libjd.so" title="wikilink">Technical|libjd.so</a>)</li>
+</ul>
+<h2 id="may-11---version-2.2.7">2015 May 11 - version 2.2.7</h2>
+<ul>
+<li>where cola range (23,64) - tutorial reads</li>
+<li>where cola,colb = 1,2 - tutorial where</li>
+<li>jdadminx'a' (single letter) bug fixed</li>
+<li>new doc page (<a href="General.htm" title="wikilink">General</a>)</li>
+<li>consistent rules for dan/table/col names (<a href="General.htm#names" title="wikilink">General|Names</a>)</li>
+<li>modify bugs fixed</li>
+<li>createtable /a option must be before table name (<a href="Ops_manage.htm#createtable" title="wikilink">Ops manage|createtable</a>)</li>
+<li>create table from array - tutorial table_from_array</li>
+<li>better error messages</li>
+</ul>
+<h2 id="april-14---version-2.2.6">2015 April 14 - version 2.2.6</h2>
+<ul>
+<li>CDEFSFILE (tutorial csv)</li>
+<li>gethashlen bug fixed</li>
+<li>where in () bug fixed</li>
+<li>jdtests reports elapsed time</li>
+<li>performance measurement - pmhelp_jd_</li>
+<li>read.ijs sortfrom bug fixed</li>
+<li>createcol shape validated</li>
+<li>droptable allowed with hash (fails with reference)</li>
+<li>some aggregates sped up</li>
+<li>better error message for insert/update/modify</li>
+<li>jdlast last line shuffled</li>
+<li>renametable implemented</li>
+<li>renamecol implemented</li>
+<li>modify implemented - update in place</li>
+<li>libjd_centos.so (<a href="Technical.htm#libjd.so" title="wikilink">Technical|libjd.so</a>)</li>
+</ul>
+<h2 id="march-10---version-2.2.1">2015 March 10 - version 2.2.1</h2>
+<ul>
+<li>dropdynamic for specified columns</li>
+<li>info unique</li>
+</ul>
+<h2 id="march-9---version-2.2">2015 March 9 - version 2.2</h2>
+<ul>
+<li>ref join - simpler than reference but with restrictions (tutorial join,<a href="Technical.htm#ref" title="wikilink">Technical|Ref</a>)</li>
+<li>improved handle management and related errors (<a href="Technical.htm#file-handles" title="wikilink">Technical|File handles</a>)</li>
+<li>epochdt new features - tutorial epochdt</li>
+<li>epochdt allows blank (as well at T) as delimiter of time fields</li>
+<li>epochdt bug with UTC offsets fixed</li>
+<li>join with empty table bug fixed</li>
+<li>join with createunique crash now signals error</li>
+<li>csvrd bug with float .x vs 0.x fixed</li>
+</ul>
+<h2 id="jan-5---version-2.1">2014 Jan 5 - version 2.1</h2>
+<ul>
+<li>key required to run Jd</li>
+<li>epoch datetime col types (tutorial epochdt, <a href="General.htm#types" title="wikilink">General|Types</a>)</li>
+<li>smarter file allocation and resize (<a href="Ops_manage.htm#createtable" title="wikilink">Ops manage|createtable</a>)</li>
+<li>all column files mapped when db is opened</li>
+<li>list lists version and open databases (<a href="Ops_info.htm#list" title="wikilink">Ops info|list</a>)</li>
+<li>info works only on current database</li>
+</ul>
+<h2 id="april-22---version-2.0">2014 April 22 - version 2.0</h2>
+<ul>
+<li>Jd released as addon</li>
+</ul>
+</body>
+</html>

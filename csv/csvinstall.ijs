@@ -73,6 +73,9 @@ path=. }:;_2}.t
 
 b=. CSVTYPS~:<'CNOT'
 CSVCOLS=: b#CSVCOLS
+if. MANGLEDNAMES do.
+ CSVCOLS=: (0".each CSVCOLS rplc each <'_';' '){each <a.
+end. 
 CSVTYPS=: b#CSVTYPS
 JDTYPS=: b#JDTYPS
 COLDEFS=: b#COLDEFS

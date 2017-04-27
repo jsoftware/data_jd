@@ -38,3 +38,13 @@ jd'reads from ch'
 jd'close'
 
 jd'update';T;'B="qw"';'A';'z'
+
+NB. bug - an error in update deleted the record
+jdadminx 'test'
+jd 'createtable tab'
+jd 'createcol tab size int _';3 5 7
+jd 'createcol tab name byte 3';3 3$'bobsamtom'
+assert'bobsamtom'-:,'name'jdfrom_jd_ jd'read from tab'
+jd 'reads jdindex,* from tab'
+'bad shape' jdae 'update tab';'jdindex=1';'name';,:'ellen'
+assert'bobsamtom'-:,'name'jdfrom_jd_ jd'read from tab' NB. verify row not deleted

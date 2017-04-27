@@ -102,14 +102,14 @@ bld''
 dat__c=: dat__c,1
 vf jdae'validate'
 
-bld''
-dat__c=: 'abc' NB. bad type
-vf jdae'validate'
+NB. bld''
+NB. dat__c=: 'abc' NB. bad type
+NB. vf jdae'validate'
 
-bld''
-g=. jdgl_jd_'g bref'
-dat__g=: 'ab' NB. bad type
-vf jdae'validate'
+NB. bld''
+NB. g=. jdgl_jd_'g bref'
+NB. dat__g=: 'ab' NB. bad type
+NB. vf jdae'validate'
 
 bld''
 'abc'fappend PATH__c,'dat' NB. bad fsize
@@ -127,10 +127,10 @@ jd'validate' NB. with dirty 1
 jd'reads from f,f.h' NB. setdatl
 jd'validate' NB. with dirty 0
 
-bld''
-e=: getloc__t'jdreference_aref_g_bref'
-datl__e=: i.1 NB.bad shape
-vf jdae'validate'
+NB. bld''
+NB. e=: getloc__t'jdreference_aref_g_bref'
+NB. datl__e=: i.1 NB.bad shape
+NB. vf jdae'validate'
 
 bld''
 jd'dropdynamic'

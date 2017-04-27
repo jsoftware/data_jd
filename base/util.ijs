@@ -158,16 +158,14 @@ else.
 end.
 )
 
-cre8folder=: 3 : 0
+jdcreatefolder=: 3 : 0
 t=. jpath y
 for_n. ('/'=t)#i.#t=. t,'/'  do.
   1!:5 :: [ <n{.t
 end.
-'cre8folder failed' assert 2=ftypex y
+('jdcreatefolder failed: ',y) assert 2=ftypex y
 y
 )
-
-jdcreatefolder=: cre8folder_jd_
 
 NB. routines for partition tables
 

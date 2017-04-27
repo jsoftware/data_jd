@@ -39,7 +39,7 @@ cdef=: 0 : 0
 2  make     varbyte
 3  color    byte    5
 8  datetime datetime
-options AUTO AUTO NO NO 0
+options , LF NO NO 0
 )
 
 build_tab0=: 3 : 0

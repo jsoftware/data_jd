@@ -35,10 +35,10 @@ jd'createcol f edtn edatetimen _';efs_jd_'1970-12-12T12:12:12.123456789','2000-0
 
 NB. csvcdefs and epoch
 jd'csvwr /h1 f.csv f'
-a=. dtb each <;._2 fread CSVFOLDER,'f.cdefs'
+a=. }:dtb each <;._2 fread CSVFOLDER,'f.cdefs'
 jd'csvcdefs /replace /h 1 f.csv'
-b=. dtb each <;._2 fread CSVFOLDER,'f.cdefs'
-assert a-:b
+b=. }:dtb each <;._2 fread CSVFOLDER,'f.cdefs'
+assert a-:b NB. differ in " option
 
 jd'csvwr /h1 f.csv f'
 jd'csvrd f.csv fx'
@@ -159,3 +159,36 @@ jd'dropdb'
 jd'createdb'
 jd'csvrestore'
 assert d-:jd'reads from f'
+
+jdadminx'test'
+jd'createtable f'
+jd'createcol f aØc int _';i.3
+jd'createcol f abc int _';i.3
+assert ('aØc';'abc')-:{.jd'reads from f' NB. getdefaultselection utf8
+jd'csvwr f.csv f'
+jd'csvrd f.csv g'
+assert (jd'reads from f')-:jd'reads from g'
+jd'droptable g'
+
+jd'csvwr /h1 f.csv f'
+ferase CSVFOLDER,'f.cdefs'
+jd'csvcdefs /h 1 f.csv'
+jd'csvrd f.csv g'
+assert (jd'reads from f')-:jd'reads from g'
+jd'droptable g'
+
+d=. fread CSVFOLDER,'f.cdefs'
+(d rplc 'aØc';'abc')fwrite CSVFOLDER,'f.cdefs'
+'duplicate'jdae'csvrd f.csv g'
+d fwrite CSVFOLDER,'f.cdefs'
+
+(BOMUTF8_jd_,fread CSVFOLDER,'f.csv')fwrite CSVFOLDER,'f.csv'
+jd'csvrd f.csv g'
+assert (jd'reads from f')-:jd'reads from g'
+
+jd'droptable g'
+jd'csvwr g.csv f'
+(BOMUTF8_jd_,fread CSVFOLDER,'g.csv')fwrite CSVFOLDER,'f.csv'
+jd'csvrd g.csv g'
+assert (jd'reads from f')-:jd'reads from g'
+

@@ -6,7 +6,8 @@ forcecopy_z_=: a: { ]
 NB. from test suite tsu.ijs - return expected error
 etx_z_=: 1 : 'x :: (<:@(13!:11)@i.@0: >@{ 9!:8@i.@0:)'
 
-NB. debug decho and export value to base locale
+decho_z_=: echo_z_
+
 doxp_z_=: do@xp
 
 xp_z_=: 3 : 0
@@ -14,8 +15,6 @@ decho 'doxp: ',y
 n=. (y i.' '){.y
 n,'__=:',n
 )
-
-decho_z_=: echo_z_
 
 NB. JHS echo to console - should be in JHS core or even stdlib
 echoc=: 3 : 0

@@ -33,13 +33,21 @@ end.
 Query ''
 Order order
 if. _1=nc<'option_e' do. option_e=:0 end. NB. non api access does not do readstart
+
 for_i. i.#cnms do.
  c=. i{cloc
- if. (-.option_e) *. 'edate'-:5{.typ__c do.
-  t=. sep__c,utc__c,'dtmn'{~(;:'edate edatetime edatetimem edatetimen')i.<typ__c
-  read=: (<t sfe,>i{read) i}read
- end.
+ NB. edate int converted to string - except for /e and agg count 
+ if. 'edate'-:5{.typ__c do.
+  if. -.option_e do.
+   if. AGG_jd_-:,a: do. b=. 1 else. b=. -.'count'-:;i{AGG_jd_ end.
+   if. b do.
+     t=. sep__c,utc__c,'dtmn'{~(;:'edate edatetime edatetimem edatetimen')i.<typ__c
+     read=: (<t sfe,>i{read) i}read
+   end. 
+  end.
+ end. 
 end.
+
 cnms,.read
 )
 

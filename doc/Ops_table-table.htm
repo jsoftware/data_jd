@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="jd.css">
+</head>
+<body>
+<p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
+<h2 id="table-operations">Table operations</h2>
+<p>See tutorial table_table</p>
+<h2 id="tableappend">tableappend</h2>
+<p>tableappend snktable srctable srcdan - implicit jdaccess'srcdan'</p>
+<p>implemented as a loop over corresponding cols<br />reads src col file and appends to snk col file<br />insists there are no dynamic columns as they would not be updated<br />copies deleted rows and their deleted status</p>
+<p>for bulk updates (lots of new data from csv files for multiple tables)<br />dropdynamic/tableappends/createdynamic can be faster than tableinsert</p>
+<pre><code>NB. example tableappend
+jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
+jd&#39;createtable f a int&#39;
+jd&#39;insert f&#39;;&#39;a&#39;;i.2
+jdadminx&#39;example2&#39;
+jd&#39;createtable g a int&#39;
+jd&#39;insert g&#39;;&#39;a&#39;;100+i.2
+jdaccess&#39;example&#39;
+jd&#39;tableappend f g example2&#39;
+jd&#39;reads from f&#39;
+jdaccess olddan</code></pre>
+<h2 id="tablecopy">tablecopy</h2>
+<p>tablecopy snktable srctable srcdan - implicit jdaccess'srcdan'</p>
+<p>copies a table from srcdan to the current db<br />uses host file copy and runs as fast as hardware allows</p>
+<pre><code>NB. example tablecopy
+jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
+jdadminx&#39;example2&#39;
+jd&#39;createtable f a int&#39;
+jd&#39;insert f&#39;;&#39;a&#39;;i.2
+jdaccess&#39;example&#39;
+jd&#39;tablecopy new f example2&#39;
+jd&#39;reads from new&#39;
+jdaccess olddan</code></pre>
+<h2 id="tableinsert">tableinsert</h2>
+<p>tableinsert snktable srctable srcdan - implicit jdaccess'srcdan'</p>
+<p>implemented as a loop of block read/insert<br />read ignores deleted rows in the src table<br />insert updates dynamic columns in the snk database</p>
+<p>for large, complex updates it might be faster to use tableappend</p>
+<pre><code>NB. example tableinsert
+jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
+jd&#39;createtable f a int&#39;
+jd&#39;insert f&#39;;&#39;a&#39;;i.2
+jdadminx&#39;example2&#39;
+jd&#39;createtable g a int&#39;
+jd&#39;insert g&#39;;&#39;a&#39;;100+i.2
+jdaccess&#39;example&#39;
+jd&#39;tableinsert f g example2&#39;
+jd&#39;reads from f&#39;
+jdaccess olddan</code></pre>
+<h2 id="tablemove">tablemove</h2>
+<p>tablemove snktable srctable srcdan - implicit jdaccess'srcdan'</p>
+<p>moves a table from srcdan to the current db<br />uses host file move and runs fast as it justs updates pointers</p>
+<p>srcdan must be on the same file hardware for move to work</p>
+<pre><code>NB. example tablemove
+jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
+jdadminx&#39;example2&#39;
+jd&#39;createtable f a int&#39;
+jd&#39;insert f&#39;;&#39;a&#39;;i.2
+jdaccess&#39;example&#39;
+jd&#39;tablemove new f example2&#39;
+jd&#39;reads from new&#39;                NB. table f in dan example2 no longer exists
+jdaccess olddan</code></pre>
+</body>
+</html>

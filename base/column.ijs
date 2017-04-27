@@ -240,10 +240,10 @@ end.
 tsv=. #sv=. $v
 if. tsv<#1,shape do. tsv=. #sv=. rows,sv end.
 ETALLY assert (1={.sv)+.rows={.sv
-if. -.sv-:rows,shape do. NB. not exact - see if {. for byte would fix
- ESHAPE assert (JCHAR=3!:0 v)*.(}:sv)-:}:rows,shape
+if. -.sv-:rows,shape do. NB. not exact - see if {. for byte fixes - overtake allowed - undertake not allowed
+ ESHAPE assert -.''-:shape
+ ESHAPE assert (JCHAR=3!:0 v)*.((}:sv)-:}:rows,shape)*.({:sv)<:shape
 end.
-
 vt=. 3!:0 v
 select. typ
 case. 'boolean' do.

@@ -8,7 +8,7 @@ DATAFILL =: ' '
 fixvalue=: 3 : 0
 'Invalid data rank' throwif (#$y) > ADDRANK + >:#shape
 if. shape =&# $y do. y=.,:y end.
-'Invalid data shape' throwif shape +./@:< }.$y
+ESHAPE throwif shape +./@:< }.$y
 fixtype ({.~ #,shape"_) y
 )
 fixtype =: ,@boxopen [ throwif@:(2 ~: 3!:0)

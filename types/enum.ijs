@@ -22,7 +22,7 @@ fixtype =: 3 : 0
   end.
 )
 fixinsert =: 3 : 0
-  new=.nub1-.nub [ 'dat1 nub1'=.y
+  new=.nub1-.nub [ 'dat1 nub1'=. y
   new ;~ (nub,new) i. dat1{nub1
 )
 fixtext =: fixtext_jdtbyte_
