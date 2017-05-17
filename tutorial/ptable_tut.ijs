@@ -88,9 +88,9 @@ jd'reads from f where edt="2016-01-02"'
 jd'update f';'edt="2016-01-02" and val=3';'val';2 2 2
 jd'reads from f where edt="2016-01-02"'
 jd'info summary' NB. note deleted rows from updates
-jd'modify f';'edt="2016-01-02" and val=2';'val';3 3 3
+jd'update f';'edt="2016-01-02" and val=2';'val';3 3 3
 jd'reads from f where edt="2016-01-02"'
-jd'modify f';'edt="2016-01-02" and val=3';'val';2 2 2
+jd'update f';'edt="2016-01-02" and val=3';'val';2 2 2
 jd'info summary' NB. modify does not delete any rows
 
 NB. jdindex works as expected
@@ -117,8 +117,7 @@ jd'reads from goo where jdindex<3'
 jd'renametable goo f'
 jd'reads from f'
 
-NB. ptable can join to other tables with ref (reference is not supported)
-jd'dropdynamic'
+NB. ptable can join to other tables with ref
 jd'droptable j'
 jd'createtable j'
 jd'createcol j val int'
@@ -129,7 +128,7 @@ jd'reads from f,f.j'
 jd'reads from f,f.j where edt="2016-01-02"'
 
 NB. csv
-jd'dropdynamic'
+jd'dropcol f jdref_val_j_val'
 jd'droptable g'
 CSVFOLDER=: '~temp/jd/csv'
 jddeletefolder_jd_ CSVFOLDER

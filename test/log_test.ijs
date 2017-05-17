@@ -42,15 +42,6 @@ assert (<'asdf';123)-:{:{:a
 assert 'assertion failure'-:logijfdamage_jd_ etx 'fubar'
 assert de-:(#de){.}.13!:12''
 
-bld''
-FORCEREVERT_jd_=: 1
-de jdae'insert f a';23
-a=. chk 0 NB. verify no logsentences failed
-dm jdae'read from f'
-jddamage_jd_'' NB. remove damage mark
-jd'read from f'
-assert +./'damage' E. fread plog
-
 NB. logtxt
 jdadminx'test'
 jd'createtable f'
@@ -59,7 +50,7 @@ assert 2=+/LF=fread plog
 
 'fubar'logtxt_jd_ 'adsf';i.3 4
 jd'insert f a';i.20000
-assert 9=+/LF=fread plog
+assert 8=+/LF=fread plog
 
 bld''
 c=. jdgl_jd_'f a'

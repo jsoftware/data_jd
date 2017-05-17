@@ -12,10 +12,77 @@
   <link rel="stylesheet" href="jd.css">
 </head>
 <body>
-<p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm" class="act">Release</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
+<p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm" class="act">Release</a>&nbsp;|&nbsp;<a href="Convert.htm">Convert</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
 <p>The Jd wiki is dynamic. It has the latest corrections, expansions, and changes. It reflects not just the latest release, but development work that hasn't been finalized or released. It reflects the bleeding edge and may not be relevant for the version you are running.</p>
-<p>A snapshot of Jd wiki is converted to htm and included in a release.</p>
-<p>For the latest on Jd, use the wiki. For details relevant to your release, see doc/index.htm.</p>
+<p>A snapshot of Jd wiki is converted to html and included in a release.</p>
+<p>For the latest on Jd, use the wiki. For details relevant to your release, see doc/Index.htm.</p>
+<h2 id="may-17---version-4.1">2017 May 17 - version 4.1</h2>
+<p>Jd 4.1 is a major release and is incompatible with previous versions. A db from a previous version has to be converted to be used by this version.</p>
+<p>See <a href="Convert.htm" title="wikilink">Convert</a> for info on converting a Jd3 database to Jd4.</p>
+<p>Overall the changes were to simplify and streamline code for the use cases that have proved common and to remove unwarranted complications. The big changes were removing jdactive and support for other than a simple join.</p>
+<ul>
+<li>new Jd4 jdkey required (Jd4 key in ~confg and Jd3 key in ~addons/data/jd/config)</li>
+</ul>
+<ul>
+<li>new shared library - version 8</li>
+</ul>
+<ul>
+<li>jdactive col decommitted
+<ul>
+<li>delete immediately removes rows from the table</li>
+<li>not dealing with rows marked as deleted is a major code simplification</li>
+<li>everything (except delete) runs faster and cleaner</li>
+</ul></li>
+</ul>
+<ul>
+<li>left1 is the only join - all others are decommitted</li>
+</ul>
+<ul>
+<li>ref now supports multiple cols</li>
+</ul>
+<ul>
+<li>reference col decommitted
+<ul>
+<li>was required for non left1 joins</li>
+<li>creating reference was slow on large tables</li>
+<li>code to dynamically track changes was complicated</li>
+</ul></li>
+</ul>
+<ul>
+<li>hash col decommitted (primarily for reference)</li>
+</ul>
+<ul>
+<li>update in place (rather than delete/insert)
+<ul>
+<li>much simpler code and much faster</li>
+<li>update varbyte done in place (if space) or new data appended to val end</li>
+</ul></li>
+</ul>
+<ul>
+<li>modify decomitted (update does it all)</li>
+</ul>
+<ul>
+<li>insert
+<ul>
+<li>errors normally caught before insert starts - table unchanged on error</li>
+<li>an error after the insert starts now reverts - table unchanged on error</li>
+</ul></li>
+</ul>
+<ul>
+<li>when col is opened, its length is validated against Tlen - db damaged if wrong</li>
+</ul>
+<ul>
+<li>tableappend decommitted (tableinsert does it cleaner and faster)</li>
+</ul>
+<ul>
+<li>info changed to reflect other changes (deleted/reference/dynamic)</li>
+</ul>
+<ul>
+<li>csvdump /replace</li>
+<li>csvrestore /replace</li>
+<li>csvdump creates jdcsvrefs.txt and csvrestore uses it to create refs</li>
+<li>dropdynamic and createdynamic decommitted</li>
+</ul>
 <h2 id="april-27---version-3.3">2017 April 27 - version 3.3</h2>
 <ul>
 <li>Jd wiki - latest Jd documentation at: <a href="http://code.jsoftware.com/wiki/Jd/Index">http://code.jsoftware.com/wiki/Jd/Index</a></li>
@@ -92,11 +159,11 @@
 <li>linux lock bug fixed - concurrent Jd task not locked out</li>
 <li>info dynamic - (<a href="Ops_info.htm#info" title="wikilink">Ops info</a>)</li>
 <li>createhash/createunique 2 to 10 times faster on large tables</li>
-<li>createhash /nc (<a href="Ops_dynamic.htm#createhash" title="wikilink">Ops dynamic|createhash</a>)</li>
-<li>createunique simplified and changed (<a href="Ops_dynamic.htm#createunique" title="wikilink">Ops dynamic|createunique</a>)</li>
-<li>insert unique simplified and changed (<a href="Ops_change.htm#insert" title="wikilink">Ops change|insert</a>)</li>
+<li>createhash /nc</li>
+<li>createunique simplified and changed</li>
+<li>insert unique simplified and changed</li>
 <li>flush - flush mapped file dirty buffers (<a href="Ops_misc.htm#flush" title="wikilink">Ops misc|flush</a>)</li>
-<li>ref changed and improved - (<a href="Ops_dynamic.htm#ref" title="wikilink">Ops dyanamic|ref</a>)</li>
+<li>ref changed and improved</li>
 <li>performance tutorial - table size vs ram</li>
 </ul>
 <h2 id="june-18---version-2.2.9">2015 June 18 - version 2.2.9</h2>
@@ -110,7 +177,7 @@
 <li>modify with indexes as well as where clause - jdex_jd_'modify'</li>
 <li>bugs fixed in where col in ()</li>
 <li>rough version of pm (performance measurement) - pmhelp_jd_</li>
-<li>droptable /reset (<a href="Ops_manage.htm#droptable" title="wikilink">Ops manage|droptable</a>)</li>
+<li>droptable /reset</li>
 <li>info jd - info on jd... cols (<a href="Ops_info.htm#info" title="wikilink">Ops info</a>)</li>
 <li>better createhash/createunique performance</li>
 <li>fix bug in createhash/createunique for multiple cols</li>
@@ -124,7 +191,7 @@
 <li>new doc page (<a href="General.htm" title="wikilink">General</a>)</li>
 <li>consistent rules for dan/table/col names (<a href="General.htm#names" title="wikilink">General|Names</a>)</li>
 <li>modify bugs fixed</li>
-<li>createtable /a option must be before table name (<a href="Ops_manage.htm#createtable" title="wikilink">Ops manage|createtable</a>)</li>
+<li>createtable /a option must be before table name</li>
 <li>create table from array - tutorial table_from_array</li>
 <li>better error messages</li>
 </ul>
@@ -166,7 +233,7 @@
 <ul>
 <li>key required to run Jd</li>
 <li>epoch datetime col types (tutorial epochdt, <a href="General.htm#types" title="wikilink">General|Types</a>)</li>
-<li>smarter file allocation and resize (<a href="Ops_manage.htm#createtable" title="wikilink">Ops manage|createtable</a>)</li>
+<li>smarter file allocation and resize</li>
 <li>all column files mapped when db is opened</li>
 <li>list lists version and open databases (<a href="Ops_info.htm#list" title="wikilink">Ops info|list</a>)</li>
 <li>info works only on current database</li>

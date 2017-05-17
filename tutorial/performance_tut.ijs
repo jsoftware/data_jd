@@ -16,7 +16,7 @@ that matters is probably (8*rows) bytes.
 If ram is > 7 times size (8*rows), performance is probably good.
 If ram is < 6 times size, performance is probably bad.
 
->7 allows working with more than a single col, temps, references, etc.
+>7 allows working with more than a single col, temps, etc.
 <6 can easily get caught in page thrash that kills performance.
 
 8*100e6 rows is 0.8 gb
@@ -81,19 +81,15 @@ pmr_jd_''
 
 csv=: 3 : 0
 pmclear_jd_''
-jddeletefolder_jd_ CSVFOLDER
-jd'csvdump'
-jd'dropdynamic'
-jd'droptable f'
-jd'droptable g'
-jd'csvrestore'
+jd'csvdump /replace'
+jd'csvrestore /replace'
 pmr_jd_''
 )
 
 run 2 NB. create table f with 2e6 rows
 jd'info summary'
 jd'info schema'
-jd'info dynamic'
+jd'info ref'
 csv'' NB. dump and restore database
 
 0 : 0

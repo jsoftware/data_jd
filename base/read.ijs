@@ -203,7 +203,7 @@ NB. Group queries by table and evaluate
 tabqueries =. inds ((,~i.@#) <@({&(mask#y))@}./. ,~&(i.@#)) tloc
 q =. (<"0 tloc) eval_q&.> tabqueries
 indices =. q  getindices~  getorder`((i.#tnms)"_)@.exact  q
-if. 1 0-:$indices do. indices =. ,: _1,I.dat__active__t [ t=.{.tloc end.
+if. 1 0-:$indices do. indices =. ,: _1,i.Tlen__t [ t=.{.tloc end.
 if. (-:_1$~$) {."1 indices do. indices=.}."1 indices end.
 if. +./|e do. indices =. (#"1~ e *./@:(2~:3|+) =&_1) indices end.
 for_q. (-.mask)#y do. indices =. indices mgetwherex2 >q end.
@@ -246,7 +246,7 @@ t=.x [ q=.y
 striptab =. ([}.~[:(+*)#@[|i:)&'.'
 'not q' =. <@:>"_1 |: (((<'qnot')-:{.) ,&< (striptab&.>@{.,}.)&.>@{:)@> q
 q =. >qand__t&.>/ not qnot__t^:[&.> getwheresimp__t&.> q
-_1&,^:(_1~:{.) (#~ {&dat__active__t) q
+_1&,^:(_1~:{.) q
 )
 NB. y is (locale;queries;path;parent) for a table; x is indices.
 NB. Return updated indices.
@@ -270,7 +270,7 @@ join =. (u,'_join__ref')~ ` ((u,'_join__ref')~&.|.) @. flip
 if. 0={:$j do.
   j=. join ({:j);q
 elseif. (-.flip) *. u-:'default' do.
-  new =. ({&dat__active__c (-.@[-~*) ])  >({:j) readselect ref
+  new =. >({:j) readselect ref
   j=. (#"1~ q e.~{:)^:(*@#q) ({.j),:new
 elseif. 1=#j do.
   j=. join ({:j);q

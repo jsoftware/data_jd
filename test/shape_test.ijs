@@ -19,10 +19,10 @@ end.
 )
 
 mod1=: 3 : 0
-jd 'modify';T;'w=0';,N,.y
+jd 'update';T;'w=0';,N,.y
 :
 try.
- jd'modify';T;'w=0';,N,.y
+ jd'update';T;'w=0';,N,.y
  assert 0
 catch.
  assert (<x)e.;:>;1{jdlast
@@ -30,10 +30,10 @@ end.
 )
 
 mod2=: 3 : 0
-jd 'modify';T;'w in (1,2)';,N,.y
+jd 'update';T;'w in (1,2)';,N,.y
 :
 try.
- jd'modify';T;'w in (1,2)';,N,.y
+ jd'update';T;'w in (1,2)';,N,.y
  assert 0
 catch.
  assert (<x)e.;:>;1{jdlast
@@ -69,8 +69,7 @@ foo''
 ins 0;23;(1 2$23 23);'a';1 2$'a' 
 ins 1 2;6 6;(2 2$6);'xx';2 1$'x' NB. {. byte 2
 
-NB. modify
-NB. modify shape rules similar to insert but allow item to extend
+NB. update shape rules similar to insert but allow item to extend
 
 mod1 0;24;(1 2$23 23);'b';1 2$'a'
 mod2 1 2;7 7;(2 2$7);'ww';2 2$'w'

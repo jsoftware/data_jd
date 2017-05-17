@@ -7,7 +7,7 @@ jd_list=: 3 : 0
 t=. bdnames y
 ECOUNT assert 1=#t
 select. ;t
-case. 'version' do. ,.'version';'3.3'
+case. 'version' do. jdversion
 case. 'open'    do. ,.'open';<>opened''
 case.           do. assert 0['unsupported list command'
 end. 
@@ -20,15 +20,6 @@ select. {.t
 case. 'agg' do.
  d=. getdb''
  ,.'aggs';>{."1 AGGFCNS__d
-case. 'dynamic' do.
- 'ts cs'=. {:''infox a
- b=. (({:$cs){.'jdactive')-:"1 cs
- b=. -.b+.(({:$cs){.'jdindex')-:"1 cs
- cs=. b#cs
- ts=. b#ts
- (;:'table column'),:ts;cs
-case. 'jd' do.
- ''infox a
 case. 'last' do.
  ,.(;:'cmd time space parts'),:(,:lastcmd);lasttime;lastspace;lastparts
 case. 'schema' do.
@@ -43,14 +34,8 @@ case. 'validatebad' do.
  infovalidatebad a
 case. 'varbyte' do.
  infovarbyte a
-case. 'hash' do.
- 'hash' infox a
 case. 'ref' do.
  'ref' infox a
-case. 'reference' do.
- 'reference' infox a
-case. 'unique' do.
- 'unique' infox a
 case. do.
  'unsupported info command'assert 0
 end. 
@@ -153,11 +138,7 @@ end.
 
 infoad=: 3 : 0
 t=. getloc__dloc y
-if. S_deleted__t=_1 do.
- S_deleted__t=: 0
- setS_deleted__t Tlen__t-+/dat__active__t
-end.
-(Tlen__t-S_deleted__t),S_deleted__t
+Tlen__t
 )
 
 infosummary=: 3 : 0
@@ -166,38 +147,35 @@ t=. ;{.y
 if. (PTM,'*')=_2{.t do.
  ts=. getparttables _2}.t
  'not a ptable' assert 1<#ts
- ad=. >infoad each ts
- n=. (<>ts),(<,.{."1 ad),<,.{:"1 ad
+ r=. ;infoad each ts
+ n=. (<>ts),<,.r
 else.
  ts=. /:~NAMES__d
- if. 0=#ts do. (;:'table active deleted'),:3#<(0 0$'') return. end.
+ if. 0=#ts do. (;:'table rows'),:3#<(0 0$'') return. end.
  if. -.''-:t do.
   'not a table'assert NAMES__d e.~ <t
   tloc=. jdgl t
   if. S_ptable__tloc do.
    ts=. ts#~(<t)=(#t){.each ts
    ts=. ts#~PTM~:;{:each ts
-   ad=. >infoad each ts
-   n=. (<t),<"0 +/ad
+   r=. ;infoad each ts
+   n=. (<t),<,.+/r
   else.
-    ts=. ((<t)=(#t){.each ts)#ts
-    q=. >infoad each ts
-    n=. (>ts);(<,.{."1 q),<,.{:"1 q
-    n=. (<,:t),,.each<"0 infoad t
+   ts=. ((<t)=(#t){.each ts)#ts
+   r=. ;infoad each ts
+   n=. (>ts);<,.r
+   n=. (<,:t),,.each<"0 infoad t
   end. 
  else.
   ts=. ts#~PTM~:;{:each ts
-  r=. >infoad each ts
-  a=. 0{"1 r
-  b=. 1{"1 r
+  r=. ;infoad each ts
   q=. dtb each (;ts i. each PTM){.each ts,each' '
   i=. (<"1=q)#each <i.#ts
-  a=. ;+/each i{each <a 
-  b=. ;+/each i{each <b
-  n=. (>({.each i){q);(<,.a),<,.b
+  a=. ;+/each i{each <r 
+  n=. (>({.each i){q);<,.a
  end. 
 end.
-(;:'table active deleted'),:n
+(;:'table rows'),:n
 )
 
 statefmt=: 3 : 0

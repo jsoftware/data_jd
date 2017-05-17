@@ -1,6 +1,31 @@
 NB. Copyright 2015, Jsoftware Inc.  All rights reserved.
 NB. Test multicolumn queries.
 
+NB. following is from old core tests
+TYPES_CORE=. TYPES_jd_-.;:'edate edatetime edatetimem edatetimen' NB. core tests not adapted to new datatypes
+
+toloc =. 'jdt'&,&.>
+
+NB. x is type, y is length
+gen =: 4 :0
+('r_',({.~i.&' ')x)~  y , ".(}.~i.&' ')x
+)
+
+NB. random generators
+NB. y is shape
+r_boolean =: ?@$&2
+r_int     =: ?@$&1e5
+r_float   =: 1e5 * ?@$&0
+r_byte    =: a. {~ 97+?@$&26
+r_enum    =: r_byte
+r_varbyte =: [:r_byte&.> ?@$&10
+r_date    =: 1e7  + ?@$&9e7
+r_datetime=: 1e13 + ?@$&9e13
+r_time    =: 1e5  + ?@$&9e5
+
+NUMERIC =: (#~ ((<'jdtnumeric') e. copath@toloc)"0) TYPES_CORE
+isnum =: NUMERIC e.~ <@:({.~i.&' ')
+
 ind =: (2#0,i.5) , (3#i.4) ,: (6#5 6)
 cols =: ('c',":)&.> i.3
 
@@ -8,32 +33,18 @@ read =: [: >@{:"1@jd 'read ' , ]
 read1=: [: read 'from a' , (' where ' #~ *@#) , ]
 
 testtype =: 3 : 0
+arg=. y
 jdadminx 'test'
-
-NB. Initial table
-jd 'createtable';'a'; ,&(' ',y)&.> cols
-jd 'insert';'a';, cols ,. <"_1 dat=. ind { y gen 7
-testqueries y;<dat
-
-NB. Add and delete
+jd 'createtable';'a'; ,&(' ',arg)&.> cols
+jd 'insert';'a';, cols ,. <"_1 dat=. ind { arg gen 7
+testqueries arg;<dat
 jd 'insert';'a';, cols ,. <@|."_1 dat
-testqueries y;<(,|.)"_1 dat
+testqueries arg;<(,|.)"_1 dat
 jd 'delete';'a';'jdindex < ',":{:$dat
-testqueries y;<|."_1 dat
-
-NB. Hash all columns
-jd 'createhash a';cols
-testqueries y;<|."_1 dat
-
-NB. Hash some columns
-jd 'createhash a';0 1{cols
-testqueries y;<|."_1 dat
-
-NB. Insert/delete again
+testqueries arg;<|."_1 dat
 jd 'insert';'a';, cols ,. <"_1 dat
-jd 'delete';'a';'jdindex < ',":+:{:$dat
-testqueries y;<dat
-
+jd 'delete';'a';'jdindex < ',":{:$dat
+testqueries arg;<dat
 EMPTY
 )
 
@@ -62,7 +73,4 @@ assert testinds&>/"1 INDS
 9!:11 old
 )
 
-ALLOW_FVE_jd_ =: 1 [ af =. ALLOW_FVE_jd_
-testtype@> TYPES_CORE -. ;:'time enum varbyte'
-NB. testtype@> ,&' 5'&.> TYPES_CORE -. ;:'varbyte date datetime time enum'
-ALLOW_FVE_jd_ =: af
+testtype@> TYPES_CORE -. <'varbyte'

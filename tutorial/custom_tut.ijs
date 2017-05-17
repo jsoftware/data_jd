@@ -1,4 +1,4 @@
-NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
+NB. Copyright 2017, Jsoftware Inc.  All rights reserved.
 
 NB. custom.ijs contains db custom ops (ops specific to the db)
 NB. custom ops are of the form jd_x...
@@ -25,14 +25,13 @@ r=. jd_read'cola,colb from f'
 )
 
 jdadminx'test'                               NB. new admin, new db, no custom.ijs
-EMPTY[custom fwrite '~temp/jd/test/custom.ijs'  NB. create custom.ijs
-NB. custom.ijs loaded when db opened - explicit load now as db was already open
-jd'loadcustom'                                  NB. load new custom.ijs
+custom fwrite '~temp/jd/test/custom.ijs'  NB. create custom.ijs
+jdadmin 0
+jdadmin'test' NB. custom.ijs loaded when db opened
 jd'createtable';'f';'cola int,colb int'
 jd'insert';'f';'cola';23 24 25;'colb';33 34 35
 jd'read from f'
 jd'xins';55;66
+jd'read from f'
 jd'xra'
 jd'xsum'
-
-

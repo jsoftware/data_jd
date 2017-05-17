@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="jd.css">
 </head>
 <body>
-<p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm" class="act">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
+<p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm" class="act">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="Convert.htm">Convert</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
 <p>Guide to Jd terminology.</p>
 <h2 id="definitions">Definitions</h2>
 <p><b>admin</b> - manages dan rules for users<br /><b>dac</b> - data column - folder for table column<br /><b>dan</b> - database access name<br /><b>dyc</b> - dynamic column - folder for system column (jd prefix)<br /><b>db</b> - database - folder with all data and metadata for db tables and columns<br /><b>intask</b> - ops run in the Jd task (jconsole/jijx) - client and server are same task<br /><b>remote</b> - ops run in different task (socket) - client and server are different tasks<br /><b>user</b> - access controlled by dan</p>
@@ -75,9 +75,6 @@
 <h2 id="custom.ijs">custom.ijs</h2>
 <p>Admin can customize a database with custom.ijs.</p>
 <ul>
-<li>signal an error if column data for insert was negative</li>
-<li>force column insert data to be in a range</li>
-<li>provide missing column insert data (e.g derive year col data from date data)</li>
 <li>custom jd ops (e.g., common complex query handled as simpler op with simpler args)</li>
 <li>custom aggregations</li>
 </ul>
@@ -103,7 +100,7 @@
 <h2 id="jd-task">Jd task</h2>
 <p>A Jd task makes a db available to admin and users. A Jd task is a J task with the Jd code loaded.</p>
 <pre><code>start J
-   load&#39;data/jd&#39;
+   load&#39;jd&#39;
 ... welcome message ...\
    jdadmin &#39;northwind&#39; NB. make northwind db available</code></pre>
 <h2 id="j-client">J client</h2>
@@ -120,7 +117,7 @@
 <p>A Jd server can be configured to serve pages to a browser and to handle ajax requests that are jd ops. This makes it very easy to provide browser/javascript access to Jd. At some point growth in this kind of use would justify the extra work to provide Apache/nginx between the browsers and the Jd task.</p>
 <h2 id="server">Server</h2>
 <p>start jconsole:</p>
-<pre><code>   load&#39;data/jd&#39;
+<pre><code>   load&#39;jd&#39;
    initserver&#39;default&#39; NB. load ~addons/data/jd/config/server_default.ijs</code></pre>
 <p>The above starts a JHS server on port 65011. The server loads Jd and makes the northwind db available. This server serves J IDE pages such as jijx. It also serves page jjd which provides services to Jd http clients. It also serves page jdapp1 which provides a demo Jd service to a browser. Keep in mind that a JHS server serves different kinds of requests (pages).</p>
 <p>jijx etc pages provide the J IDE and combined with Jd serves Jd admin and user.</p>
@@ -149,11 +146,11 @@
 <h2 id="northwind-remote-server">Northwind remote server</h2>
 <p>Steps to create a server for the northwind db on a different machiine than the client. Client and server can be on the same machine, but things are more interesting if the server is on a different machine. If client/server are on the same machine they communicate securely through localhost ports. If client is on a different machine, then it needs to ssh to the server so ssh can provide login security and encrypted data transport through a tunnel.</p>
 <p>Prepare northwind server:<br />1. select a server to which you have ssh access<br />2. configure ssh to provide a localhost tunnel for port 65011<br />3. ssh to the server<br />4. install J, Jd, and update all packages<br />5. start jconsole<br /></p>
-<pre><code>   load&#39;data/jd&#39;
+<pre><code>   load&#39;jd&#39;
    jdtests&#39;&#39; NB. validate install and craete northwind db
    exit&#39;&#39;</code></pre>
 <p>Start northwind server:<br />1. ssh to server<br />2. start jconsole<br /></p>
-<pre><code>   load&#39;data/jd&#39;
+<pre><code>   load&#39;jd&#39;
    initserver&#39;&#39; NB. list of available server configs
    initserver&#39;default&#39;</code></pre>
 <p>Use northwind as a remote client:<br />1. start new J task (another/same machine) (jconsole/JHS)<br /></p>

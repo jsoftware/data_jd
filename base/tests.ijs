@@ -15,7 +15,6 @@ jdtests=: 3 : 0
 :
 NB. assert -.(<'jjd')e. conl 0['jdtests must be run in task that is not acting as a server'
 cocurrent'base' NB. defined in jd, but must run in base
-require JDP,'test/core/util.ijs'
 OLDFLUSHAUTO_jd_=: FLUSHAUTO_jd_
 FLUSHAUTO_jd_=: 0 NB. tests run more than 2 times slower with flush
 OLDALLOC_jd_=: ROWSMIN_jdtable_,ROWSMULT_jdtable_,ROWSXTRA_jdtable_
@@ -93,7 +92,6 @@ jdt=: (\:;{."1 jdt){jdt
 FLUSHAUTO_jd_=: OLDFLUSHAUTO_jd_ 
 'ROWSMIN_jdtable_ ROWSMULT_jdtable_ ROWSXTRA_jdtable_'=: OLDALLOC_jd_
 echo LF,(":<.start-~6!:1''),' seconds to run tests and tutorials'
-(;{:jd'list version')fwrite'~temp/jd/jdversion' NB. avoid welcome
 'test end'logjd_jd_''
 i.0 0
 )
@@ -146,7 +144,6 @@ setscriptlists=: 3 : 0
 p=. jpath'~/gitdev/addons/data/jd/'
 t=. 1 dir p,'test/*_test.ijs'
 t=. /:~(#p)}.each t
-t=. 'test/core/testall.ijs';t
 t=. ;t,each LF
 tsts=. 'tests=: <;._2 [ 0 : 0',LF,t,')'
 
@@ -155,7 +152,7 @@ t=. /:~(#p)}.each t
 t=. ;t,each LF
 tuts=. 'tuts=: <;._2 [ 0 : 0',LF,t,')'
 
-t=. toCRLF 'NB. Copyright 2015, Jsoftware Inc.  All rights reserved.',LF,'coclass''jd''',LF,tsts,LF,tuts
+t=. toJ 'NB. Copyright 2015, Jsoftware Inc.  All rights reserved.',LF,'coclass''jd''',LF,tsts,LF,tuts
 t fwrite p,'base/scriptlists.ijs'
 load p,'base/scriptlists.ijs'
 )

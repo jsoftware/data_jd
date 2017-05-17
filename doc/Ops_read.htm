@@ -12,13 +12,12 @@
   <link rel="stylesheet" href="jd.css">
 </head>
 <body>
-<p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
+<p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="Convert.htm">Convert</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
 <p><a href="#parsing" title="wikilink">Parsing</a> read ops can be complicated</p>
 <h2 id="read">read</h2>
 <p>Same as reads with /lr option</p>
 <h2 id="reads">reads</h2>
-<p>reads [ <a href="#options" title="wikilink">OPTIONS</a> ]  [ <a href="#select" title="wikilink">SELECT</a> ]   from <a href="#from" title="wikilink">FROM</a>  [where <a href="#where" title="wikilink">WHERE</a> ] [order by <a href="#order-by" title="wikilink">ORDER BY</a>]</p>
-<p>returns select col(s) from table(s) with rows that satisfy where</p>
+<p>reads [options]   [ <a href="#select" title="wikilink">SELECT</a> ]   from <a href="#from" title="wikilink">FROM</a>  [where <a href="#where" title="wikilink">WHERE</a> ] [order by <a href="#order-by" title="wikilink">ORDER BY</a>]<br />  /lr - labeled rows instead of labeled cols<br />  /e - edate... cols as epochdt rather than iso 8601<br /> returns select col(s) from table(s) with rows that satisfy where</p>
 <p>alias:col<br />alias:table<br />aggregation [by key1[,key2]]</p>
 <p>For ideas on working with reads results, see essay <a href="http://code.jsoftware.com/wiki/Essays/Inverted_Table">Inverted Table</a>.</p>
 <pre><code>NB. example reads
@@ -50,8 +49,6 @@ jdaccess olddan</code></pre>
 <p>Some problems are avoided as:</p>
 <pre><code>RESERVEDWORDS_jd_ are not allowed as col/table names
 RESERVEDCHARS_jd_ are not allowed in col/table names</code></pre>
-<h2 id="options">OPTIONS</h2>
-<p>/lr - labeled rows instead of labeled cols<br />/e - edate... cols as epochdt rather than iso 8601</p>
 <h2 id="select">SELECT</h2>
 <p>read SELECT from ...</p>
 <p>Select determines which columns are in the result:</p>
@@ -65,8 +62,7 @@ RESERVEDCHARS_jd_ are not allowed in col/table names</code></pre>
  sum cola,avg colb
  sum cola by key1
  sum cola by key1,key2</code></pre>
-<pre><code>   jd&#39;info agg&#39; NB. database agg functions (includes custom functions)</code></pre>
-<h3 id="select-clause-details">select clause details</h3>
+<pre><code>   jd&#39;info agg&#39; NB. aggregation functions</code></pre>
 <pre><code>Select: Column(, Column)*
       | AggCol(, AggCol)*
       | AggCol(, AggCol)* by Column(, Column)*
@@ -83,30 +79,19 @@ Col: column | &quot;*&quot;</code></pre>
 <p>by keyword groups rows by the key columns that follow it<br />each aggregator is called on the rows of its column in each group</p>
 <p>result col label does not include agg, so an alias is desirable</p>
 <h2 id="from">FROM</h2>
-<p>read ... from FROM ...</p>
-<p>See tutorial from.</p>
-<pre><code>from Table (, Table)*
-Table:     Root | Child
-Root:      [alias:] table
-Child:     [alias:] [JoinWord] Parent(Reference)(Reference)*
-Parent:    alias | table
-Reference: table | reference column
-JoinWord:  default | inner | left | right | outer
-Join:        .     |   -   |  &lt;   |   &gt;   |   =</code></pre>
-<p>The default join is also called left1.</p>
-<p>Only one of the Tables can be the Root.<br />The name of a table is either its alias or the last element of its description (i.e. the table for the Root, and the last Reference for Children). A table can only have one name: if an alias is given, the other name will not be used.<br />Each Parent must be included as the name of some Table in the list.<br />No order is enforced on the Tables, in particular, a Child does not have to follow its Parent.</p>
-<p>example:<br />from A.B, A, C:B<jdreference_a_C_a, inner C.D, B>E-F</p>
-<p>The join used to join a Reference to the table before it is either the one corresponding to the Join symbol used, or, if Join is . and JoinWord is given, that given by JoinWord.</p>
-<p>By default joins are done in an optimal (not guaranteed) order based on a sampling that picks representative rows and tests how restrictive the queries are. The algorithm should be fairly robust.</p>
-<p>exact keyword indicates to use the order as given.</p>
-<p><code>  jd'read from exact f,f-g,g-h where h.a&lt;100'</code></p>
-<h3 id="from-clause---join">from clause - join</h3>
-<p>joins: outer = inner - left &gt; right &lt; left1 .</p>
-<p>outer join A,A=B<br />  all possible rows<br />  A rows duplicated for each match in B<br />  B rows duplicated for each match in A<br />  A or B FILLS provided where no match</p>
-<p>inner join A,A-B:<br />  same as outer except rows with FILLS are excluded</p>
-<p>left join A,A&gt;B<br />  same as outer except B rows that did not match are excluded</p>
-<p>right join A,A<B<br/>   same as outer except A rows that did not match are excluded</p>
-<p>left1 join A,A.B<br />  each A row with 1 matching B row or FILLS<br />  if multiple matching B rows, 1 random one of them is used<br />  not a normal join, but is fast<br />  same as inner join if 1 and only 1 B row matches</p>
+<p>A.B indicates A joined to B (by the A ref col that refers to B)</p>
+<p>. is referred to as a simple join or a left1 join</p>
+<p>  each A row with 1 matching B row or FILLS<br />  if multiple matching B rows, the last one is used<br />  same as classical inner join if 1 and only 1 B row matches</p>
+<pre><code>read ... from FROM ...
+read ... from A , A.B ...
+read ... from A , A.B , A.C ...
+read ... from A , A.B , B.D ...
+read ... from A.B , A ...         NB. order does not matter
+read ... from X:A , X.B , X.C ... NB: alias used in all subsequent uses</code></pre>
+<p>joins are done in an optimal (not guaranteed) order based on a sampling that picks representative rows and tests how restrictive the queries are</p>
+<p>exact keyword indicates to use the order as given</p>
+<pre><code>read ... from exact f,f.g,g.h where h.a&lt;100</code></pre>
+<p>See tutorial from</p>
 <h2 id="where">WHERE</h2>
 <p>read ... from ... where WHERE</p>
 <pre><code> a=&quot;abc&quot;
@@ -150,7 +135,7 @@ Join:        .     |   -   |  &lt;   |   &gt;   |   =</code></pre>
 </ul>
 <pre><code>  not a=23 &amp;&amp; b=24 || b=25  ===  not((a=23)&amp;&amp;((b=24)||(b=25)))</code></pre>
 <p>parens can change the order of evaluation</p>
-<h3 id="where-clause-details">where clause details</h3>
+<p>details:</p>
 <pre><code>W:  (&quot;!&quot; | &quot;not &quot;)* W1
 W1: W2 (&quot; &quot; (&quot;and&quot;|&quot;or&quot;|&quot;&amp;&amp;&quot;|&quot;||&quot;) &quot; &quot; W)?
 W2: &quot;(&quot; W &quot;)&quot;  |  Q

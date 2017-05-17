@@ -27,14 +27,14 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '2.3.4'
+VERSION=: '2.2.4'
 
 FILES=: 0 : 0
 manifest.ijs
 jd.ijs
 demo/common.ijs
 demo/sed/sed.ijs
-demo/sed/csv/custom.ijs
+demo/sed/csv/jdcsvrefs.txt
 demo/sed/csv/r.cdefs
 demo/sed/csv/e.csv
 demo/sed/csv/t.csv
@@ -45,8 +45,8 @@ demo/sed/csv/s.csv
 demo/sed/csv/t.cdefs
 demo/sandp/sandp.ijs
 demo/sandp/csv/spj.cdefs
+demo/sandp/csv/jdcsvrefs.txt
 demo/sandp/csv/sp.csv
-demo/sandp/csv/custom.ijs
 demo/sandp/csv/j.cdefs
 demo/sandp/csv/p.csv
 demo/sandp/csv/s.cdefs
@@ -57,7 +57,7 @@ demo/sandp/csv/s.csv
 demo/sandp/csv/p.cdefs
 demo/vr/vr.ijs
 demo/northwind/northwind.ijs
-demo/northwind/csv/custom.ijs
+demo/northwind/csv/jdcsvrefs.txt
 demo/northwind/csv/Shippers.csv
 demo/northwind/csv/Products.csv
 demo/northwind/csv/Employees.csv
@@ -84,33 +84,27 @@ tutorial/tempcol_tut.ijs
 tutorial/setget_tut.ijs
 tutorial/intro_tut.ijs
 tutorial/custom_tut.ijs
-tutorial/where_tut.ijs
 tutorial/performance_tut.ijs
 tutorial/join_tut.ijs
 tutorial/aggregation_tut.ijs
 tutorial/log_tut.ijs
 tutorial/table_from_array_tut.ijs
-tutorial/hash_tut.ijs
 tutorial/from_tut.ijs
 tutorial/epochdt_tut.ijs
 tutorial/server_tut.ijs
 tutorial/reads_tut.ijs
 tutorial/link_tut.ijs
 tutorial/csv_tut.ijs
-tutorial/unique_tut.ijs
 tutorial/dropstop_tut.ijs
 tutorial/csv_details_tut.ijs
 csv/csv.ijs
 csv/csvinstall.ijs
 csv/csvtest.ijs
 config/server_default.ijs
+tools/convert.ijs
 dynamic/ref.ijs
-dynamic/hash.ijs
-dynamic/smallrange.ijs
 dynamic/base.ijs
-dynamic/unique.ijs
-dynamic/hash1.ijs
-dynamic/reference.ijs
+doc/Convert.htm
 doc/License.htm
 doc/jd.css
 doc/Ops_csv.htm
@@ -123,9 +117,13 @@ doc/Overview.htm
 doc/Technical.htm
 doc/Release.htm
 doc/Support.htm
+doc/Ops_create.htm
 doc/Ops_table-table.htm
+doc/Ops_rename.htm
 doc/Ops.htm
 doc/Admin.htm
+doc/Ops_join.htm
+doc/Ops_drop.htm
 doc/Ops_misc.htm
 doc/Ops_dynamic.htm
 doc/Guide.htm
@@ -148,10 +146,6 @@ pm/pmc.ijs
 pm/pmb.ijs
 pm/pm.ijs
 pm/pmx.ijs
-pm/pma.ijs
-pm/pm_hashtimes.ijs
-pm/pm_hash.ijs
-pm/pm_reference.ijs
 pm/csvtest.ijs
 types/numeric.ijs
 types/epoch.ijs
@@ -180,18 +174,15 @@ base/where.ijs
 base/common.ijs
 base/column.ijs
 base/zutil.ijs
-test/hash_pass_test.ijs
-test/reference_test.ijs
-test/hashx_test.ijs
 test/ptable_read_test.ijs
-test/dynamic_test.ijs
+test/ref_dirty_test.ijs
 test/basic_test.ijs
 test/drop_rename_test.ijs
 test/stress_test.ijs
+test/insert_revert_test.ijs
 test/readx_test.ijs
-test/createhash_unique_test.ijs
+test/table_append_test.ijs
 test/ptable_modify_test.ijs
-test/dropdynamic_test.ijs
 test/insert_test.ijs
 test/ptable_csv_test.ijs
 test/northwind_test.ijs
@@ -204,23 +195,19 @@ test/createcol_test.ijs
 test/error_test.ijs
 test/validate_test.ijs
 test/alloc_test.ijs
-test/float_test.ijs
+test/utf8_test.ijs
 test/ptable_update_test.ijs
 test/join_test.ijs
 test/ptable_insert_test.ijs
-test/smallrange_test.ijs
-test/pm_hash_test.ijs
-test/hash_test.ijs
 test/pm_aggby_test.ijs
 test/info_test.ijs
 test/jdindex_test.ijs
 test/cd_query_test.ijs
 test/modify_test.ijs
-test/hash_insert_test.ijs
 test/update_test.ijs
 test/sandp_test.ijs
 test/orderby_test.ijs
-test/append_test.ijs
+test/delete_test.ijs
 test/flush.ijs
 test/sed_test.ijs
 test/log_test.ijs
@@ -230,17 +217,6 @@ test/ptable_delete_test.ijs
 test/joinorder_test.ijs
 test/where_test.ijs
 test/csv_test.ijs
-test/core/testall.ijs
-test/core/util.ijs
-test/core/hash.ijs
-test/core/datatype-common.ijs
-test/core/joins.ijs
-test/core/utilref.ijs
-test/core/datatype.ijs
-test/core/unique.ijs
-test/core/key.ijs
-test/core/reference.ijs
-test/core/query.ijs
 )
 
-RELEASE=: 'j802 j803 j804 j805 j806'
+RELEASE=: 'j701 j801 j802 j803 j804'

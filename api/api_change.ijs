@@ -12,7 +12,6 @@ end.
 
 
 NB. vsub f table
-NB. return +/active for unique test
 NB. validate count,type,shape
 validateinsert=: 4 : 0
 ns=. {."1 x
@@ -29,7 +28,6 @@ for_i. i.#ns do.
  c=. getloc__t i{ns
  cnt=. (0,cnt) validate_data__c >i{vs
 end.
-+/-.dat__active__t
 )
 
 NB. Insert__d has a number of problems - e.g. shape mismatch damages a table
@@ -42,17 +40,13 @@ jd_insert=: 3 : 0
 FETAB=: ;{.y
 d=. getdb''
 nv=. vsub 1}.y
-n=. nv validateinsert ;{.y
+nv validateinsert ;{.y
 
 r=. insertptable nv
 if. -.''-:r do. r return. end.
 
 Insert__d  ({.y),<nv
 t=. getloc__d ;{.y
-n=. n-~+/-.dat__active__t
-if. 0~:n do.
- 0 assert~EUNIQUE rplc 'N';":n
-end.
 JDOK
 )
 
@@ -112,7 +106,7 @@ for_i. i.ttally s do.
  d=. (<(;{.d),PTM,part),(1{d),<(;2{d),' ',":shape
  jd_createcol d
 end.
-s=. {:jd_info'dynamic ',tab
+s=. {:jd_info'ref ',tab
 for_i. i.ttally s do.
  d=. i tfrom s
  t=. (;{.d),PTM,part
@@ -146,26 +140,8 @@ jd_delete each p
 JDOK
 )
 
-jd_update=: 3 : 0
-ECOUNT assert 2<:#y
-'tab w'=. 2{.y
-FETAB=. tab
-new=. vsub 2}.y
-t=. jdgl tab
-n=. NAMES__t
-n=. n#~-.(<'jd')=2{.each n
-n=. n-.{."1 new
-if. 0~:#n do.
- new=. new,old=. jd_read (}:;n,each','),' from ',tab,' where ',w
-end. 
-new validateinsert tab NB.insert must succeed - bacause deletes have been done
-jd_delete tab;w NB. recalcs where, but that inefficiency is probably ok for now
-jd_insert tab;,new
-JDOK
-)
-
 NB. explicit index for deleted row is allowed
-jd_modify=: 3 : 0
+jd_update=: 3 : 0
 ECOUNT assert 2<:#y
 'tab w'=. 2{.y
 FETAB=. tab
@@ -190,9 +166,8 @@ else.
  w=. ,w
 end.
 
-for_i. i.#ns do. NB. validate
+for_i. i.#ns do. NB. validate and mark ref as dirty if required
  c=. getloc__t {.i{ns
- assertnodynamic NAME__PARENT__c;NAME__c
  (1,#w) validate_data__c >i{vs 
 end.
 

@@ -14,7 +14,7 @@ jd'gen test d X'
 jd'close'
 jd'gen test e X'
 jd'close'
-jd'reference a x b x'
+jd'ref a x b x'
 jd'reads from a,a.b where x=5'
 )
 
@@ -25,7 +25,7 @@ jd'gen test b X'
 jd'gen test c X'
 jd'gen test d X'
 jd'gen test e X'
-jd'reference a x b x'
+jd'ref a x b x'
 jd'reads from a,a.b where x=5'
 )
 

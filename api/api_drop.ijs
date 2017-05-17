@@ -28,7 +28,7 @@ y=. ;y
 d=. getdb''
 'dropstop' assert (0=ftypex) PATH__d,y,'/jddropstop'
 if. -.(<y) e. NAMES__d do. JDOK return. end.
-assertnoreference ;y
+assertnoref ;y
 t=. jdgl y
 
 if. S_ptable__t do.
@@ -39,32 +39,20 @@ if. S_ptable__t do.
  EDELETE assert (0=ftypex) PATH__d,y,PTM
 end.
 
-if. reset do.
- S_deleted__t=: 0
- setTlen__t 0
- a=. <'jdactive'
- ns=. a,NAMES__t-.a NB. jdactive must be done first
+if. reset do. NB. we know there are no ref cols
+ ns=. NAMES__t
  for_n. ns do.
   n=. ;n
   t=. jdgl y NB. could have changed
   c=. jdgl y,' ',n
-  if. 'jd'-:2{.n do.
-   select. ;n
-   case. 'jdactive' do.
-    dat__c=: (0,shape__c)$DATAFILL__c
-   case. 'jdindex' do.
-   case.           do.
-    jd_dropdynamic typ__c,' ',NAME__t,' ',(>:(;n) i. '_')}.;n
-   end.
+  if. typ__c-:'varbyte' do.
+   dat__c=: 0 2$2
+   val__c=: ''
   else.
-   if. typ__c-:'varbyte' do.
-    dat__c=: 0 2$2
-    val__c=: ''
-   else.
-    dat__c=: (0,shape__c)$DATAFILL__c
-   end.
+   dat__c=: (0,shape__c)$DATAFILL__c
   end.
- end. 
+ end.
+ setTlen__t 0 NB. done at end!
 else. 
  Drop__d y
  EDELETE assert (0=ftypex) PATH__d,y
@@ -87,7 +75,7 @@ if. 0~:t do.
  'drop pcol not allowed'assert -.pcol -: ;{:y
 end.
 
-if. -.({:y)e.{."1 jdcols {.y do. JDOK return. end.
+if. -.({:y)e.{."1 jdcolsx {.y do. JDOK return. end.
 ns=. getparttables ;{.y
 for_i. i.#ns do.
  a=. (i{ns),{:y
@@ -97,82 +85,27 @@ for_i. i.#ns do.
  if. fexist f do. (;' ',~each (;:fread f)-.{:y)fwrite f end.
  DeleteCols__d a
  EDELETE assert (0=ftypex) PATH__t,;{:a
+ 
+ if. 'jdref_'-:6{.col do.
+  tab=. ;{.a
+  t=. ({."1 t),.<"1 (}."1 t)
+  f=. jdgl tab
+  fb=. ({."1 SUBSCR__f)=<col
+  EDNONE assert 1=+/fb
+  SUBSCR__f=: (-.fb)#SUBSCR__f
+  writestate__f''
+
+  gn=. '^.',tab,'.',col
+  t=. <;._2 col,'_'
+  colb=. (-:#t){t
+  g=. jdgl colb
+  gb=. ({."1 SUBSCR__g)=<gn
+  EDNONE assert 1=+/gb
+  SUBSCR__g=: (-.gb)#SUBSCR__g
+  writestate__g''
+ end.
 end.
-JDOK
-)
 
-dropdynsub=: 3 : 0
-d=. getdb''
-typ=. ;{.y
-y=. }.y
-select. typ
-
-fcase. 'ref' do.
- ECOUNT assert 4=#y
-
-case.'reference' do.
- ECOUNT assert (4<:#y)*.0=2|#y
- t=. (2,(#y)%2)$y
- validtc__d {.t
- validtc__d {:t
- t=. ({."1 t),.<"1 (}."1 t)
- fn=. 'jd',typ,,;'_'&,&.> ; boxopen&.> }.,y
- f=. jdgl ;{.{.t
- fb=. ({."1 SUBSCR__f)=<fn
- EDNONE assert 1=+/fb
- gn=. '^.',(;{.y),'.jd',typ,,;'_'&,&.> ; boxopen&.> }.,y
- g=. jdgl ;{.{:t
- gb=. ({."1 SUBSCR__g)=<gn
- EDNONE assert 1=+/gb
- jddeletefolder PATH__f,fn
- SUBSCR__f=: (-.fb)#SUBSCR__f
- writestate__f''
- SUBSCR__g=: (-.gb)#SUBSCR__g
- writestate__g''
-case.'hash';'unique' do.
- ECOUNT assert 2<:#y
- validtc__d y
- fn=. 'jd',typ,,;'_'&,&.> ; boxopen&.> }.,y
- f=. jdgl ;{.y
- fb=. ({."1 SUBSCR__f)=<fn
- EDNONE assert 1=+/fb
- a=. {:{:fb#SUBSCR__f
- 'dropdynamic hash/unique is used by reference' assert 1=+/a={:"1 SUBSCR__f
- SUBSCR__f=: (-.fb)#SUBSCR__f
- writestate__f''
- p=. PATH__f,fn
- jd_close'' NB. reopened and must be closed to delete
- jddeletefolder p
-case.do.
- 'dropdynamic unknown type'assert 0
-end.
-jd_close''
-JDOK
-)
-
-jd_dropdynamic=: 3 : 0
-jd_close''
-y=. bdnames y
-if. #y do. dropdynsub y return. end.
-p=. dbpath DB
-d=. 1!:0 <jpath p,'/*'
-d=. (<p,'/'),each {."1 ('d'=;4{each 4{"1 d)#d
-d=. (fexist"0 d,each <'/jdclass')#d
-d=. ((<'table')=jdfread each d,each <'/jdclass')#d
-for_n. d do.
- dd=. {."1[1!:0 <jpath'/*',~;n
- b=. (<'jdhash_')=7{.each dd
- b=. b+.(<'jdunique_')=9{.each dd
- b=. b+.(<'jdreference_')=12{.each dd
- b=. b+.(<'jdref_')=6{.each dd
- dd=. b#dd
- jddeletefolder each n,each,'/',each dd
- f=. '/jdstate',~;n
- s=. 3!:2 jdfread f
- i=. ({."1 s)i.<'SUBSCR'
- s=. (<0 3$a:) (<i,1)}s
- (3!:1 s) fwrite f
-end.
 JDOK
 )
 

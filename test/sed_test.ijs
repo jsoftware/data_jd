@@ -44,6 +44,7 @@ sed_tests''
 ALLRSED=: ALLR
 
 jdadmin'sed_shuffle'
+
 ALLR=: ''
 sed_tests''
 ALLRSEDSHUFFLE=: ALLR

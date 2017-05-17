@@ -46,12 +46,11 @@ f/varbyte ~temp/linker1
 jd'csvrd f.csv f'
 sptable ,.jdlinktargets_jd_'' NB. report link targets
 
-NB. locate f/a0, f/a1, jdactive (system col) in alternate folder
+NB. locate f/a0, f/a1 in alternate folder
 jdadminx'test'
 jdlinkset_jd_ 0 : 0
 f/a0       ~temp/linker0
 f/a1       ~temp/linker0
-f/jdactive ~temp/linker0
 )
 jd'csvrd f.csv f'
 sptable ,.jdlinktargets_jd_'' NB. report link targets
@@ -61,11 +60,11 @@ jd'droptable f'
 jd'csvrd f.csv f'
 sptable ,.jdlinktargets_jd_'' NB. report link targets
 
-NB. hash/unique/reference cols can be linked
+NB. ref cols can be linked
 jdadminx'test'
-jdlinkset_jd_ 'f/jdreference_a2_g_b2 ~temp/linker'
+jdlinkset_jd_ 'f/jdref_a2_g_b2 ~temp/linker'
 jd'gen two f 10 g 5'
-jd'reference f a2 g b2'
+jd'ref f a2 g b2'
 sptable jdlinktargets_jd_''
 
 NB. varbyte cols (dat and val) can be linked

@@ -10,8 +10,8 @@ from any other database col
 
 one use of a temp col is to allow aggregations with a by expression
 
-columns are referenced as table_column
-foo_jd_ references are allowed
+columns are refered to as table_column
+foo_jd_ is allowed
 ". is not allowed
 
 the J sentence is in the jdtc clause

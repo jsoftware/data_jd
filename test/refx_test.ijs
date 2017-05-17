@@ -1,5 +1,5 @@
 NB. Copyright 2015, Jsoftware Inc.  All rights reserved.
-NB. verify ref datl set properly vs reference
+NB. verify ref dat set properly 
 
 acr=: 3 : 0
 n=. y
@@ -16,36 +16,16 @@ jd'createcol h b  int _';|.b
 )
 
 validate=: 3 : 0
-jd'dropdynamic'
 jd'ref f a g a'
 jd'reads from f,f.g where jdindex=0' NB. make dirty ref clean
 jd'ref f b h b'
 jd'reads from f,f.h where jdindex=0' NB. make dirty ref clean
 
 h=. jdgl_jd_'f jdref_a_g_a'
-a=. jdgl_jd_'f jdactive'
-refdatla=: dat__a#datl__h
-
-h=. jdgl_jd_'f jdref_b_h_b'
-refdatlb=: dat__a#datl__h
+a=. jdgl_jd_'f'
+refdata=: Tlen__a=#dat__h
 
 ra=: jd'reads from f,f.g,f.h'
-
-jd'dropdynamic'
-jd'reference f a g a'
-jd'reference f b h b'
-h=. jdgl_jd_'f jdreference_a_g_a'
-a=. jdgl_jd_'f jdactive'
-referencedatla=: dat__a#datl__h
-
-h=. jdgl_jd_'f jdreference_b_h_b'
-referencedatlb=: dat__a#datl__h
-
-rb=: jd'reads from f,f.g,f.h'
-
-assert refdatla-:referencedatla
-assert refdatlb-:referencedatlb
-assert ra-:rb
 )
 
 acr 100

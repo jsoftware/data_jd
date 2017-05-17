@@ -11,10 +11,6 @@ snk_jdcsv_=: x
 jdunmap_jd_ 'snk_jdcsv_'
 )
 
-csvjdx=: 3 : 0
-(ROWS#1) csvjdxsub y,'/jdactive/dat'   NB. active
-)
-
 csvjd=: 3 : 0
 unmapall_jmf_''
 'pathjd pathcsvfolder'=. y
@@ -85,5 +81,5 @@ d=. getdb_jd_''
 Create__d table;<csvjdcoldefs csv
 jd_close_jd_''
 csvjd  jd;csv
-csvjdx jd
+(3!:1 [1 2$'Tlen';ROWS) fwrite jd,'/jdstate' NB. writestate TLen essential
 )

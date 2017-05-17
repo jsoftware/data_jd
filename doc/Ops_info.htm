@@ -12,10 +12,10 @@
   <link rel="stylesheet" href="jd.css">
 </head>
 <body>
-<p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
+<p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="Convert.htm">Convert</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
 <h2 id="info">info</h2>
 <p>info type [...] - info about current DB</p>
-<p><code>agg                         - select aggregators</code><br /><code>dynamic     [table[column]] - dynamic cols</code><br /><code>jd          [table[column]] - jd... cols</code><br /><code>last                        - cmd time space parts</code><br /><code>schema      [table[column]] - normal cols (non jd...)</code><br /><code>summary     [table]         - active,deleted rows</code><br /><code>table       [table]</code><br /><code>validate    [table[column]]</code><br /><code>validatebad [table[column]]</code><br /><code>varbyte     [table[column]]</code><br /><code>hash        [table[column]] - hash cols</code><br /><code>ref         [table[column]] - ref cols</code><br /><code>reference   [table[column]] - reference cols</code><br /><code>unique      [table[column]] - unique cols</code></p>
+<p><code>agg                         - aggregators</code><br /><code>last                        - cmd time space parts</code><br /><code>schema      [table[column]] - normal cols (non jd...)</code><br /><code>summary     [table]         - active,deleted rows</code><br /><code>table       [table]</code><br /><code>validate    [table[column]]</code><br /><code>validatebad [table[column]]</code><br /><code>varbyte     [table[column]]</code><br /><code>ref         [table[column]] - ref cols</code></p>
 <p>Tables are sorted and cols are in default selection order</p>
 <p>Schema and similar types treat ptable as a single table<br />validate and validatebad list ptable parts</p>
 <p><code>summary     - tables active deleted</code><br /><code>summary f~* - tables that make up the ptable</code></p>
@@ -23,10 +23,11 @@
 <pre><code>NB. example info
 jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
 jd&#39;gen ref2 a 3 0 b 2&#39;
+jd&#39;info table&#39;
+jd&#39;info summary&#39;
 jd&#39;info schema&#39;
 jd&#39;info schema a&#39;
 jd&#39;info schema a akey&#39;
-jd&#39;info reference&#39;
 jdaccess olddan</code></pre>
 <h2 id="list">list</h2>
 <p>list version - Jd version<br />list open - open databases</p>

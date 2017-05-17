@@ -1,6 +1,6 @@
 NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 NB. the reads "from" section
-NB. create some tables and references as follows:
+NB. create some tables and refs as follows:
 NB.               A
 NB.              / \
 NB.             B   F
@@ -47,13 +47,13 @@ jd 'insert F'; ".LF-.~0 :0
 'word'; <<;._1' first middle last'
 )
 
-NB. create references between tables
-jd 'reference A bid B id'
-jd 'reference A fid F id'
-jd 'reference B cid C id'
-jd 'reference B eid E id'
-jd 'reference C did D id'
-jd 'reference F eid E id'
+NB. create ref between tables
+jd 'ref A bid B id'
+jd 'ref A fid F id'
+jd 'ref B cid C id'
+jd 'ref B eid E id'
+jd 'ref C did D id'
+jd 'ref F eid E id'
 
 NB. from must contain at least one table, the root.
 jd 'reads from A'
@@ -72,33 +72,3 @@ jd 'reads from A, A.F.E'
 NB. it is possible to reach the same table in two different ways
 NB. in this case, an alias is required to avoid name conflict
 jd 'reads from A, E1:A.B.E, E2:A.F.E'
-NB. another way to refer to a table is to use the name of the reference
-NB. column which connects the current table to the next table
-NB. reference columns are named with jdreference_a1_a2_B_b1_b2
-NB. where a1 and a2 are referencing columns
-NB. and B is the referenced table, and b1 and b2 are the referenced columns
-NB. this is required if there are two or more reference columns from A to B
-jd 'reads from A, B:A.jdreference_bid_B_id'
-
-NB. above examples used (.) for the default or left1 join
-NB. other joins are inner (-), left (>), right (<), and outer (=).
-
-NB. left1 join lists exactly one match for each column on the left (the
-NB. last one in the table to the right), or a fill row if there is no match
-NB. left1 computes much faster than other joins, but isn't always what is wanted
-
-NB. inner join includes a row for every match between left and right sides
-
-NB. left join contains the rows in the inner join, but also adds a fill row
-NB. if one of the items on the left does not match anything
-
-NB. The right join is the same as the left join with the two sides reversed
-
-NB. outer join contains all the rows in either the left or right join
-NB. so that all rows on both sides appear at least once
-
-jd 'reads *.word from C, C=D' NB. Outer join
-jd 'reads *.word from C, outer C.D' NB. Alternative notation
-jd 'reads *.word from C, C>D' NB. Left join
-jd 'reads *.word from C, C<D' NB. Right join
-jd 'reads *.word from C, C-D' NB. Inner join

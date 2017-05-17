@@ -84,14 +84,17 @@ if. 'jdtable'-:;CLASS__c do.
  if. openflag__c do.
   openflag__c=: 0
   openallchildren__c ''
-  active__c=: getloc__c 'jdactive'
   index__c=: getloc__c 'jdindex'
-  if. Tlen__c=0 do. setTlen__c #dat__active__c end.
-  if. Tlen__c~:#dat__active__c do. jddamage 'table ',NAME__c,' Tlen does not match #jdactive' end.
  end. 
 elseif. 'jdcolumn'-:;CLASS__c do. NB. cols map as required
  if. _1=nc {.MAP__c,each <'__c' do.
    mapcolfile__c"0 MAP__c
+   if. typ__c-:'ref' do.
+    b=. (Tlen~:#dat__c)*.-.dirty__c 
+   else.  
+    b=. Tlen~:#dat__c
+   end. 
+   if. b do. jddamage 'Tlen wrong for col ',NAME__c,' in table ',NAME__PARENT__c end.
    opentyp__c ''
  end.
 end.

@@ -47,10 +47,20 @@ else.
 end.
 )
 
-modify =: 4 : 'throw ''Modifying varbyte columns not yet supported: '',NAME'
-modifyfilled =: 4 : 0 
-(MAP)=: (0$~0,shape,2);0$0
-MAP appendmap&> fixtype y x} DATAFILL$~Tlen,shape
+NB. done in place if it fits, otherwise appended to end
+modify=: 4 : 0
+for_n. i.#x do.
+ i=. n{x
+ 'j k'=. i{dat
+ d=. ;n{y
+ if. k>:#;d do.
+  dat=: (j,#d) i}dat 
+  val=: d (j+i.#d)}val
+ else.
+  dat=: ((#val),#d) i}dat
+  'val' appendmap d
+ end.
+end. 
 )
 
 NB. Primitive where queries

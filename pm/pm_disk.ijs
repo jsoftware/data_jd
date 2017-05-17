@@ -46,19 +46,3 @@ unmap_jmf_ 'd'
 )
 
 cu=: 3 : 0
-jdadminx'test'
-jd'gen one f ',(":y),' 1'
-r=. PMT''
-jd'createunique f a0'
-r,PMT''
-)
-
-
-
-
-
-
-
-
-
-

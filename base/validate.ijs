@@ -37,7 +37,7 @@ try.
    s=. #mn~
    count=. count,s
    t=. 0~:Tlen__c-s NB. 1 if too many or too few rows 
-   t=. t*-.*./(typ__c;om)e.(;:'reference datr'),(;:'hash hash'),(;:'unique hash'),(;:'varbyte val'),(;:'ref datl') NB. supposed to be different
+   t=. t*-.*./(typ__c;om)e.(;:'reference datr'),(;:'hash hash'),(;:'unique hash'),(;:'varbyte val'),(;:'ref dat') NB. supposed to be different
    a=. fsize PATH__c,'/',om
    b=. HS_jmf_+getmsize_jmf_ om,Cloc__c
    filesize=. filesize,a

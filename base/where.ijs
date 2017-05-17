@@ -78,20 +78,14 @@ NB. function definitions
 NB. Modifiers: take one or two lists of indices
 qand=: [#~e.
 qor=: /:~@~.@,
-
-NB. xxxqnot=: -.~ I.@".@('dat__active'"_) NB. wrong answers - called dyadically - all rows except 1
-
-NB. before version 3.2 (2016 feb 20) tacit qnot was called dyadically
-qnot=: 4 : 0
-(-.~ I.@".@('dat__active'"_)) y
-)
+qnot=: 4 : 'y-.~i.Tlen'
 
 NB. getwhere v get row index
 getwhere=: 3 : 0
 if. #y do.
-  (#~ {&dat__active) getwherex fixwhere y
+  getwherex fixwhere y
 else.
-  I. dat__active
+  i.Tlen
 end.
 )
 
@@ -100,7 +94,7 @@ NB. getwherex v returns selection mask
 getwherex=: 3 : 0
 select. #y
 case. 0 do.
-  I. dat__active
+  i. Tlen
 case. 1 do.
   'col fn val'=. 0{::,y
   if. '.' e. col do.
@@ -129,12 +123,7 @@ if. ',' e. col do.
   cols =. getloc&.> col =. cutcommas col
   cols 4 :'assertfunc__x y'&> <fn
   val =. (fn;<cols) fixtype_fn_jdcolumn_ val
-  h =. {.hs =. HASH_TYPES FindProp col
-  if. (*#hs) *. *./ 'varbyte'&(4 :'-.x -: typ__y')@> cols do.
-    lookup =. <@lookup__h
-  else.
-    lookup =. [: qand&.>/ cols 4 :'qequal__x y'&.> ]
-  end.
+  lookup =. [: qand&.>/ cols 4 :'qequal__x y'&.> ]
   > qor&.>/ , lookup"1 val
   return.
 end.

@@ -126,7 +126,7 @@ timex 'jd''',y,''''
 )
 
 NODBOPS=: 'close';'createdb';'list';'option' NB. ops without DB
-FLUSHOPS=: 'createcol';'createhash';'createunique';'reference';'ref';'set'
+FLUSHOPS=: 'createcol';'createhash';'createunique';'ref';'set'
 
 NB. jdx always returns a boxed result - jd asserts it is not an error
 jdx=: 3 : 0
@@ -134,7 +134,6 @@ if. IFJHS do. assert (<URL_jhs_) e.'jijx';'jijs' end.
 DBX jdx y
 :
 erase'option_'nl_jd_'' NB. jd_... options (globals)
-APIRULES=: 1
 'DB UP SERVER'=: bdnames x
 USER=: (UP i.'/'){.UP
 'FEOP OP FETAB FECOL FEER FEXTRA'=: <''
@@ -210,7 +209,8 @@ catchd.
   elseif. ': throw'-:_7 {.v do.
    r=. _7}.v
   elseif. 1 do.
-   r=. ;  ( {.t) ,(<': '), }.t
+   t=. t-.<': assert'
+   r=. _2}.;t,each<' |'
   end.
   r=. (5*'jde: '-:5{.r)}.r
   ,.'Jd error';r;fmtoper y

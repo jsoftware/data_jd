@@ -10,6 +10,8 @@ NB. is pushed to Jsoftware for building JAL data/jd package
 
 NB. all use of the Jd library is through JDP_z_
 
+jdversion_jd_=: '4.1'
+
 nokey_jd_=: 0 : 0 rplc 'INDEX.HTM';jpath '~addons/data/jd/doc/Index.htm'
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -69,8 +71,8 @@ elseif. 1 do.
   p=. (p,'jpcre.dll')rplc'/';'\'
 end.
 LIBJD_jd_=: '"',t,'"'
-if. _1=r=. (LIBJD_jd_,' jdinit >x *c') cd <JDP_jd_ do. assert 0[echo nokey_jd_ end.
-'Jd binary and J code mismatch - bad install'assert r=7
+if. _1=r=. (LIBJD_jd_,' jdinit >x *c') cd <jpath'~config' do. assert 0[echo nokey_jd_ end.
+'Jd binary and J code mismatch - bad install'assert r=8 NB. 7 - jd3 and 8 -jd4
 'Jd regexinit failed'assert 0=(LIBJD_jd_,' regexinit >x *c') cd <p 
 )
 
@@ -103,32 +105,37 @@ api/api_read.ijs
 api/client.ijs
 csv/csv.ijs
 csv/csvinstall.ijs
+dynamic/base.ijs
+dynamic/ref.ijs
+types/base.ijs
+types/numeric.ijs
+types/autoindex.ijs
+types/byte.ijs
+types/datetimes.ijs
+types/epoch.ijs
+types/varbyte.ijs
 )
 
-loadall =: (''&$:) : (4 : 0)
-y =. (,'/'-.{:) jpath y
-load (<y) ,&.> (boxxopen x) ~.@, {."1 ]1!:0 y,'*.ijs'
-)
-
-(<;._1' base.ijs numeric.ijs') loadall JDP,'types/'
-(<;._1' base.ijs hash1.ijs hash.ijs')    loadall JDP,'dynamic/'
-erase'loadall'
-
-NB. initial globals
 3 : 0''
-APIRULES_jd_=:  1
-ALLOW_FVE_jd_=: 0 NB. 1 allows hash float - see test/api_float.ijs
 if. _1=nc<'OP_jd_' do. NB. one time inits
  FEOP_jd_=: OP_jd_=: 'none'
  TEMPCOLS_jd_=: i.0 2 
  cntsclear_jd_''
  pmclear_jd_''
- FLUSHAUTO_jd_=: 1 NB. flush done in close and after create... ref reference set
- FORCEVALIDATEAFTER_jd_=: FORCEREVERT_jd_=: 0
+ FLUSHAUTO_jd_=: 1 NB. flush done in close and after create... ref set
+ FORCEVALIDATEAFTER_jd_=: 0
+ FORCEREVERT_jd_=: 0
+end.
+ULIMIT_jd_=: ''
+if. -.UNAME-:'Win' do.
+ n=. ".}:2!:0'ulimit -n'
+ if. n<1024 do.
+  ULIMIT_jd_=: LF,~LF,'Warning: ',(":n),' for "ulimit -n" is low. See Technotes|file handles.'
+ end. 
 end.
 )
 
-jdwelcome_jd_=: 0 : 0 rplc 'BOOKMARK';jpath JDP,'doc/Index.htm'
+jdwelcome_jd_=: 0 : 0 rplc 'BOOKMARK';(jpath JDP,'doc/Index.htm');'ULIMIT';ULIMIT_jd_
 Jd is Copyright 2017 by Jsoftware Inc. All Rights Reserved.
 Jd is provided "AS IS" without warranty or liability of any kind.
 
@@ -141,7 +148,7 @@ Snapshot of the Jd wiki for this release is at:
  file://BOOKMARK
 
 There is a slight bias for JHS (running tutorials).
-
+ULIMIT
 Get started:
    jdex_jd_''      NB. list examples from docs
    jdex_jd_'reads' NB. run reads
@@ -149,17 +156,4 @@ Get started:
    jdrt_jd_'intro' NB. run intro
 )
 
-NB. initial echos
-3 : 0''
-if. -.UNAME-:'Win' do.
- n=. ".}:2!:0'ulimit -n'
- if. n<200000 do.
-  echo LF,'Warning: ',(":n),' for "ulimit -n" is low. See Technotes|file handles.'
- end.
-end.
-ferase 1 dir jpath'~addons/data/jd/doc/*.html' NB.! rid of old .html etc files
-ferase '~addons/data/jd/doc/favicon.ico'
-ferase '~addons/data/jd/doc/jblue.png'
-ferase '~addons/data/jd/doc/jda.css'
 echo'   jdwelcome_jd_ NB. run this sentence for important information'
-)

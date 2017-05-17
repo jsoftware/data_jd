@@ -25,8 +25,6 @@ NB. first and last are the first and last occurrences in the table
 NB. sorting is after aggregation, so not affected by "order by"
 
 jdadminx'test'
-
-jd'droptable f'
 jd'createtable f a int'
 jd'insert f a';_1,(i.4),_1
 jd'reads from f'
@@ -42,6 +40,7 @@ aggavgx addagg 'avgnonneg'
 
 custom fwrite '~temp/jd/test/custom.ijs'
 
-jd'loadcustom'
+jdadmin 0
+jdadmin'test' NB. open db with new custom stuff
 jd'info agg'
 jd'reads avg-non-neg:avgnonneg a,avg:avg a from f'

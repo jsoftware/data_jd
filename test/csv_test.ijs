@@ -192,3 +192,36 @@ jd'csvwr g.csv f'
 jd'csvrd g.csv g'
 assert (jd'reads from f')-:jd'reads from g'
 
+
+NB. csv utf8 col names
+jdadminx 'test'
+
+CDEFS=: 0 : 0
+01 Käyttöpaikan              int
+02 ipaddress                 byte      15
+03 country                   byte      32
+options , LF " \ 0
+)
+
+CDATA=: 0 : 0
+"107177431","27.6.40.2","India"
+"107177432","68.192.46.173","United States"
+)
+
+CDEFS fwrites CSVFOLDER,'/t1.cdefs'
+CDATA fwrites CSVFOLDER,'/t1.csv'
+
+jd 'droptable temp'
+jd 'csvrd t1.csv temp'
+assert ('Käyttöpaikan';'ipaddress';'country')-:{.jd 'reads * from temp'
+
+NB. csv dump/restore csvrefs.ijs
+jdadminx'test'
+jd'gen ref2 f 6 2 g 3'
+jd'ref g bref f aref'
+a=. jd'reads from f,f.g'
+b=. jd'reads from g,g.f'
+jd'csvdump /replace'
+jd'csvrestore /replace'
+assert a-:jd'reads from f,f.g'
+assert b-:jd'reads from g,g.f'

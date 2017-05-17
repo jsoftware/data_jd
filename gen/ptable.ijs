@@ -85,15 +85,15 @@ jd'update base';'val=6';'val';4#123
 jd'update f'   ;'val=6';'val';4#123
 assert ({:jd'reads from base,base.j order by base.sort')-:{:jd'reads from f,f.j order by f.sort'
 
-jd'modify base';'val=123';'val';666
-jd'modify f'   ;'val=123';'val';666
+jd'update base';'val=123';'val';666
+jd'update f'   ;'val=123';'val';666
 assert ({:jd'reads from base,base.j order by base.sort')-:{:jd'reads from f,f.j order by f.sort'
 
 jd'reads jdindex from base where val=666'
 i=. ;{:{:jd'read jdindex from base where val=666'
-jd'modify base';i;'val';777
+jd'update base';i;'val';777
 i=. ;{:{:jd'read jdindex from f where val=666'
-jd'modify f';i;'val';777
+jd'update f';i;'val';777
 assert ({:jd'reads from base,base.j order by base.sort')-:{:jd'reads from f,f.j order by f.sort'
 )
 

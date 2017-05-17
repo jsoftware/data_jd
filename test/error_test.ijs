@@ -11,8 +11,8 @@ jd'createtable f a int,b int'
 'unknown' jdae'insert f qqq';23
 'missing' jdae'insert f';'a';23
 
-'duplicate'jdae'modify f';'a=0';'a';2;'a';3
-'unknown'  jdae'modify f';'a=0';'qqq';23
+'duplicate'jdae'update f';'a=0';'a';2;'a';3
+'unknown'  jdae'update f';'a=0';'qqq';23
 
 
 NB. csv

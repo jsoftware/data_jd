@@ -12,7 +12,7 @@ RESERVEDCHARS=: '/\ *.,:?<>|"''`~' NB. illegal chars in dan/table/col names
 RESERVEDWORDS=: ;:'by from where order'
 
 ECOUNT=:     'incorrect arg count'
-EDNONE=:     'dropdynamic does not exist'
+EDNONE=:     'bad SUBSCR'
 EPRECISION=: 'extra precision'
 ESHAPE=:     'bad shape'
 ETSHAPE=:    'bad trailing shape'

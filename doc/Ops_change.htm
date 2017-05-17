@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="jd.css">
 </head>
 <body>
-<p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
+<p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="Convert.htm">Convert</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
 <h2 id="delete">delete</h2>
 <p>delete table where</p>
 <pre><code>NB. example delete
@@ -26,7 +26,7 @@ jdaccess olddan</code></pre>
 <h2 id="insert">insert</h2>
 <p>insert table col data ...</p>
 <p>col data pairs<br />count of data items must be the same</p>
-<p>insert of duplicates (createunique) marks older rows as deleted<br />and gives an error warning</p>
+<p>bad args detected before insert starts, and error leaves table untouched<br />a bug in insert reverts any changes and leaves the table untouched</p>
 <pre><code>NB. example insert
 jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
 jd&#39;createtable f a int,b byte,b4 byte 4&#39;
@@ -40,23 +40,6 @@ jd&#39;createunique g a&#39;
 jd etx&#39;insert g a&#39;;2;1{jdlast
 jd&#39;reads jdindex,a from g&#39;
 jdaccess olddan</code></pre>
-<h2 id="modify">modify</h2>
-<p>modify table where col data ...<br />modify table indexes col data ...</p>
-<p>updates selected row cols in place<br />data items are scalar extended<br />can not modify col if it has dynamics<br />col data pairs (as for insert and update)</p>
-<p>indexes are row indexes</p>
-<pre><code>NB. example modify
-jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
-jd&#39;createtable f a int,b int,c byte 4&#39;
-jd&#39;insert f&#39;;&#39;a&#39;;24 25 26;&#39;b&#39;;100 101 102;&#39;c&#39;;3 4$&#39;aaaabbbbcccc&#39;
-jd&#39;reads from f&#39;
-jd&#39;modify f&#39;;&#39;a=24&#39;;&#39;b&#39;;200
-jd&#39;reads from f&#39;
-jd&#39;modify f&#39;;&#39;a&lt;26&#39;;&#39;b&#39;;300;&#39;c&#39;;2 4$&#39;xxxxzzzz&#39; NB. 300 scalar extends
-jd&#39;reads from f&#39;
-&#39;i b&#39;=: {:&quot;1 jd&#39;read jdindex,b from f where a in (24,26)&#39;
-jd&#39;modify f&#39;;i;&#39;b&#39;;b+1 NB. modify with indexes
-jd&#39;reads from f&#39;
-jdaccess olddan</code></pre>
 <h2 id="update">update</h2>
 <p>update table where col data ...</p>
 <p>deletes selected records and inserts new updated records<br />count of data items and updated rows must be the same col data pairs</p>
@@ -68,6 +51,14 @@ jd&#39;reads from f&#39;
 jd&#39;update f&#39;;&#39;a=24&#39;;&#39;b&#39;;200
 jd&#39;reads from f&#39;
 jd&#39;update f&#39;;&#39;a&lt;26&#39;;&#39;b&#39;;300 400;&#39;c&#39;;2 4$&#39;xxxxzzzz&#39;
+jd&#39;reads from f&#39;
+jd&#39;reads from f&#39;
+jd&#39;update f&#39;;&#39;a=24&#39;;&#39;b&#39;;200
+jd&#39;reads from f&#39;
+jd&#39;update f&#39;;&#39;a&lt;26&#39;;&#39;b&#39;;300;&#39;c&#39;;2 4$&#39;xxxxzzzz&#39; NB. 300 scalar extends
+jd&#39;reads from f&#39;
+&#39;i b&#39;=: {:&quot;1 jd&#39;read jdindex,b from f where a in (24,26)&#39;
+jd&#39;update f&#39;;i;&#39;b&#39;;b+1 NB. modify with indexes
 jd&#39;reads from f&#39;
 jdaccess olddan</code></pre>
 </body>

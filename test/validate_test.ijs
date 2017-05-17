@@ -51,15 +51,15 @@ FORCEVALIDATEAFTER_jd_=: 1
 vfa jdae'update f';'a=2';'a';2;'b';25
 chkijf 0
 
-NB. validate modify
+NB. validate update
 bld''
 damage 1
-vfb jdae'modify f';'a=2';'b';25
+vfb jdae'update f';'a=2';'b';25
 chkijf 0
 
 bld''
 FORCEVALIDATEAFTER_jd_=: 1
-vfa jdae'modify f';'a=2';'b';25
+vfa jdae'update f';'a=2';'b';25
 chkijf 0
 
 NB. validate delete
@@ -82,7 +82,6 @@ bld=: 3 : 0
 jdadminx'test'
 jd'gen ref2 f 3 2 g 2'
 jd'createcol f v varbyte'
-jd'createunique f adata'
 jd'createtable h'
 jd'createcol h href int _';i.3
 jd'ref f aref h href'
@@ -120,22 +119,17 @@ e=: getloc__t'jdref_aref_h_href'
 assert 1=dirty__e NB. ref starts dirty
 jd'reads from f,f.h'
 assert 0=dirty__e NB. made clean
-assert 0 1 0-:datl__e
+assert 0 1 0-:dat__e
 jd'insert h href';23
 assert 1=dirty__e
 jd'validate' NB. with dirty 1
-jd'reads from f,f.h' NB. setdatl
+jd'reads from f,f.h' NB. setdat
 jd'validate' NB. with dirty 0
 
-NB. bld''
-NB. e=: getloc__t'jdreference_aref_g_bref'
-NB. datl__e=: i.1 NB.bad shape
-NB. vf jdae'validate'
 
 bld''
-jd'dropdynamic'
 jd'validate'
-jd'reference f aref g bref'
+jd'ref f aref g bref'
 jd'validate'
 jd'reads from f,f.g'
 jd'validate'

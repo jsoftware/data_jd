@@ -13,20 +13,11 @@ typ
 shape
 )
 
-NB. =========================================================
-init=: 3 : 0
+NB. map as required
+open=: 3 : 0
 Cloc=: '_',(>LOCALE),'_'
 coinserttofront 'jdt',typ
 NB. writestate''
-)
-
-NB. map as required - hash and unique always map so they are available for col qequal
-open=: 3 : 0
-init ''
-if. (-.APIRULES)+.(<typ)e.'hash';'unique' do.
- mapcolfile"0 MAP
- opentyp ''
-end.
 )
 
 close=: 3 : 'unmapcolfile"0 MAP'
@@ -37,9 +28,10 @@ testcreate=: 4 : 0
 if. (t=.<'jdt',typ) -.@e. conl 0 do. throw 'Invalid column type: ',typ end.
 x testcreate__t shape
 )
+
 create=: 3 : 0
 'typ shape' =: y
-init ''
+open''
 makecolfiles ''
 
 NB. record column names in order of creation
@@ -60,7 +52,7 @@ NB. normal mapping jams refcount to 2 - perhaps wrong for the other task
 NB. unmapping reduces refcount to 1 - unmap in another task crashes on 4!:55 erase
 NB. try using sharename to avoid these problems
 NB. sharename causes jamming refcount high
-NB. this means we miss detection (unmap result 2) of oprhan references
+NB. this means we miss detection (unmap result 2) of oprhans
 NB. also refcount is added so it generally climbs which is not good
 NB. could jam sharename to avoid some of these problems
 NB. db lock enforces only 1 task mapping so these issues can be ignored
@@ -76,7 +68,7 @@ jdunmap (>y),Cloc
 NB. x is (type;shape), y is the name of the file
 makecolfile=: 4 : 0
 typ=.<'jdt',typ  [  'typ shape' =. x
-r=. getallocr''
+r=. ROWSMIN>.Tlen
 jdcreatejmf (PATH,y);r*DATASIZE__typ**/shape
 jdmap (y,Cloc);PATH,y
 if. 0=nc<'DATACOL_jd_' do.
@@ -85,15 +77,6 @@ if. 0=nc<'DATACOL_jd_' do.
 else.
  (y) =: (($,)~ Tlen,shape,$@]) DATAFILL__typ
 end. 
-)
-
-NB. map datr - sized to match other table
-makecolfile_datr=: 3 : 0
-typ=.<'jdt',typ  [  'typ shape' =. ('index';$0)
-r=. getallocr__y''
-jdcreatejmf (PATH,'datr');r*DATASIZE__typ**/shape
-jdmap ('datr',Cloc);PATH,'datr'
-NB.! datr=: (($,)~ Tlen__y,shape,$@]) DATAFILL__typ
 )
 
 NB. resize single mapped name
@@ -182,7 +165,7 @@ Export=: [: ".&.> [: ". 'MAP'"_
 NB. ExportRows=: (({&.:>{.),}.@]) Export
 
 NB. ExportRows above has 2 nasty varbyte bugs
-NB.  returned reference to val (increase ref count)
+NB.  returned ptr to val (increase ref count)
 NB.   if a resize was required this prevented unmap/remap
 NB.   resulting in damaged table
 NB.  entire val was appended to val so size doubled with update
@@ -198,19 +181,6 @@ if. typ-:'varbyte' do.
 else. 
  y (({&.:>{.),}.@]) Export''
 end. 
-)
-
-NB. =========================================================
-NB. Dependency handling
-getdeps =: 3 : 0
-c =. getloc__PARENT&>&.> {:"1 SUBSCR
-cc =. 3 : 'if. 0=4!:0<''ADOPTEDBY__y'' do. getloc__PARENT__y ADOPTEDBY__y else. y end.'"0&.> c
-(getloc__PARENT@> {."1 SUBSCR) #~ +./@:e.&LOCALE&> cc
-)
-NB. Return a list of (child,parent) pairs
-getalldeps =: 3 : 0
-if. 0=#deps=.getdeps'' do. 0 2$a: return. end.
-(LOCALE&,"0 , 3 :'getalldeps__y $0'(<@)"0(;@:))^:(*@#) deps
 )
 
 NB. x is flag,rows - flag 1 for modify
@@ -253,11 +223,11 @@ case. 'float'   do.
 case. ;:'byte enum' do.
  ETYPE assert vt=JCHAR
 case. 'varbyte' do.
- if. modify do.
-  ETYPE assert 0
- else.
+ NB. if. modify do.
+ NB.  ETYPE assert 0
+ NB. else.
   ETYPE assert (vt=JBOXED)+.*/JCHAR=;3!:0 each v
- end.
+ NB. end.
 case.           do.
  ETYPE assert vt e. JINT,JB01
 end.

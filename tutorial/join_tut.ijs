@@ -27,24 +27,13 @@ jd'insert';'dt';'depid';b;'dname';a
 [et=: jd'reads from et'
 [dt=: jd'reads from dt'
 
-NB. reference command allow joins between tables
-NB. drop the ref dynamic col and build reference
-jd'dropdynamic'
-jd'reference et depid dt depid'
-jd'reads from et,et.dt' NB. left1
-jd'reads from et,et-dt' NB. innner
-jd'reads from et,et>dt' NB. left
-jd'reads from et,et<dt' NB. right
-jd'reads from et,et=dt' NB. outer
+NB. ref command allow joins between tables
+jd'ref et depid dt depid'
 
-jd'reference dt depid et depid'
+jd'ref dt depid et depid'
 jd'reads from dt,dt.et' NB. left1
-jd'reads from dt,dt-et' NB. innnr
-jd'reads from dt,dt>et' NB. left
-jd'reads from dt,dt<et' NB. right
-jd'reads from dt,dt=et' NB. outer
 
-NB. multiple reference columns
+NB. multiple ref columns
 ext=: 0 : 0
 name  byte 12
 state int
@@ -69,14 +58,10 @@ c=: 1 2 4 1
 jd'createtable';'dxt';dxt
 jd'insert';'dxt';'dname';a;'state';b;'city';c
 
-jd'reference ext state city dxt state city'
+jd'ref ext state city dxt state city'
 
 jd'reads from ext'
 jd'reads from dxt'
-jd'reads from ext,ext=dxt' NB. outer
-jd'reads from ext,ext-dxt' NB. inner
-jd'reads from ext,ext>dxt' NB. left
-jd'reads from ext,ext<dxt' NB. right
 jd'reads from ext,ext.dxt' NB. left1
 
 NB. multiple references between tables
@@ -86,20 +71,12 @@ jd'createtable';'T';'id int',LF,'aid int'
 jd'insert';'T';'id';(i.3);'aid';|.i.3
 jd'createtable';'U';'id int',LF,'nme int'
 jd'insert';'U';'id';(|.i.3);'nme';10+i.3
-jd'reference T id U id'
-jd'reference T aid U id'
+jd'ref T id U id'
+jd'ref T aid U id'
 jd'reads from T'
 jd'reads from U'
 jd'info schema' NB. normal cols
-jd'info jd'     NB. jd... cols
-jd'info jd U'
-jd'info reference'
-
-NB. reference name is used to select which join to use
-[a=. jd'reads T.id,jdreference_aid_U_id.nme from T,T.jdreference_aid_U_id'
-assert 10 11 12-:,>{:{:a
-[b=. jd'reads T.id,jdreference_id_U_id.nme from T,T.jdreference_id_U_id'
-assert 12 11 10-:,>{:{:b
+jd'info ref'
 
 NB. join tables with a two column ref
 jdadminx'test'
@@ -109,7 +86,7 @@ jd ct1,' , three int'
 jd'insert t1';'one';23 24 25;'two';102 101 100;'three';6 7 8
 jd ct2,' , extra byte 4'
 jd'insert t2';'one';25 24 23;'two';100 101 102;'extra';3 4$'aaaabbbbcccc'
-jd'reference t1 one two t2 one two'
+jd'ref t1 one two t2 one two'
 jd'reads from t1'
 jd'reads from t2'
 jd'reads from t1,t1.t2'

@@ -26,9 +26,6 @@ ins 'Bx' ; (2 2$'zxpo') ; <'ghi';'jklmn'
 jd'reads from ch'
 3=;{:,jd'reads count A from ch'
 
-
-NB. bug - update with exported varbyte value 3 times damages mapping!
-
 jd'update';T;'B="qw"';'A';'z'
 jd'reads from ch'
 jd'close'
@@ -48,3 +45,4 @@ assert'bobsamtom'-:,'name'jdfrom_jd_ jd'read from tab'
 jd 'reads jdindex,* from tab'
 'bad shape' jdae 'update tab';'jdindex=1';'name';,:'ellen'
 assert'bobsamtom'-:,'name'jdfrom_jd_ jd'read from tab' NB. verify row not deleted
+

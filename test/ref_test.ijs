@@ -1,6 +1,6 @@
 NB. Copyright 2015, Jsoftware Inc.  All rights reserved.
-NB. test insert/delete/update vs ref/reference
-NB. test left1 join so same tests work for ref/reference
+NB. test insert/delete/update vs ref
+NB. test left1 join so same tests work for ref
 
 ti=: 3 : 0
 jdadminx'test'
@@ -109,7 +109,7 @@ ti''
 'g'tc 3 2 1
 tref''
 jd'update';'f';'a=1';'a';5
-assert (2 3 5;2 3 0)-:tdata''
+assert (5 2 3;0 2 3)-:tdata''
 testjoins 'fg'
 )
 
@@ -128,7 +128,7 @@ NB. update g to not match f - then update f to match
 ut3=: 3 : 0
 ut2''
 jd'update';'f';'a=1';'a';5
-assert (2 3 5;2 3 5)-:tdata''
+assert (5 2 3;5 2 3)-:tdata''
 testjoins 'fg'
 )
 
@@ -160,7 +160,7 @@ assert (1 3;1 3)-:tdata''
 testjoins 'fg'
 )
 
-NB. f row deleted before ref/reference
+NB. f row deleted before ref
 dt3=: 3 : 0
 ti''
 'f'tc 1 2 3
@@ -171,7 +171,7 @@ assert (1 3;1 3)-:tdata''
 testjoins 'fg'
 )
 
-NB. f row deleted after ref/reference
+NB. f row deleted after ref
 dt4=: 3 : 0
 ti''
 'f'tc 1 2 3
@@ -195,15 +195,15 @@ assert (1 2 3;1 2 3;1 2 3) -: {:"1 jd 'read from f,f.g,g.h'
 testjoins 'fgh'
 
 jd'update';'f';'a=1';'a';5
-assert (2 3 5;2 3 0;2 3 0) -: {:"1 jd 'read from f,f.g,g.h'
+assert (5 2 3;0 2 3;0 2 3) -: {:"1 jd 'read from f,f.g,g.h'
 testjoins 'fgh'
 
 jd'update';'g';'a=2';'a';7
-assert (2 3 5;0 3 0;0 3 0) -: {:"1 jd 'read from f,f.g,g.h'
+assert (5 2 3;0 0 3;0 0 3) -: {:"1 jd 'read from f,f.g,g.h'
 testjoins 'fgh'
 
 jd'update';'h';'a=3';'a';9
-assert (2 3 5;0 3 0;0 0 0) -: {:"1 jd 'read from f,f.g,g.h'
+assert (5 2 3;0 0 3;0 0 0) -: {:"1 jd 'read from f,f.g,g.h'
 testjoins 'fgh'
 )
 
@@ -212,7 +212,7 @@ mt1=: 3 : 0
 ti''
 jd'gen test f 3'
 jd'gen test g 3'
-jd REF,' f int byte byte4 g int byte byte4'
+jd 'ref f int byte byte4 g int byte byte4'
 d=. jd'read from f,f.g'
 assert ('f.x'jdfrom_jd_ d)-:'g.x'jdfrom_jd_ d
 jd'delete';'f';'int=101'
@@ -239,21 +239,6 @@ dt1''
 dt2''
 dt3''
 dt4''
-NB. mt1'' - ref only supports single col
+mt1'' - ref only supports single col
 Mt1''
 
-REF=: 'reference'
-it1''
-it2''
-it3''
-it4''
-it5''
-ut1''
-ut2''
-ut3''
-dt1''
-dt2''
-dt3''
-dt4''
-mt1''
-Mt1''

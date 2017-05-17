@@ -972,7 +972,6 @@ pcsv=. '~temp/jd/csv/data/test',t
 bldjd jt;csvjdcoldefs_jdcsv_ pcsv
 tjd=. '~temp/jd/',jt
 csvjd_jdcsv_  tjd;pcsv
-csvjdx_jdcsv_ tjd
 seejd jt
 )
 

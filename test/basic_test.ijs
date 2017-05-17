@@ -68,13 +68,9 @@ jdadminx'test'
 jd'gen test tab 5'
 jd'createtable';'tab2';'x int';'one int';'two int'
 jd'insert';'tab2';'x';1 2 3 4 5 6;'one';23 24 25 26 27 28;'two';45 46 47 48 49 50
-assert 0 0 0 0-:;$each {:jd'info reference'
-jd'reference tab x tab2 x'
-assert 1 3 1 20-:;$each {:jd'info reference'
-assert 7 -: #>{:{. jd'read from tab,tab=tab2'
-assert 4 -: #>{:{. jd'read from tab,tab-tab2'
-assert 5 -: #>{:{. jd'read from tab,tab>tab2'
-assert 6 -: #>{:{. jd'read from tab,tab<tab2'
+assert 0 0 0 0-:;$each {:jd'info ref'
+jd'ref tab x tab2 x'
+assert 1 3 1 14-:;$each {:jd'info ref'
 assert 5 -: #>{:{. jd'read from tab,tab.tab2'
 
 

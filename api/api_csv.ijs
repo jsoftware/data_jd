@@ -149,8 +149,7 @@ if. #w do.
   assert 0['where clause failed'
  end. 
 else.
-  active=. getloc__t'jdactive'
-  rows=. I.dat__active 
+  rows=. i.Tlen__t
 end.
 WriteCsv__t csvfp;option_h1;cols;rows;option_e;new
 )
@@ -167,9 +166,10 @@ end.
 
 NB. write db tables and script to folder y
 jd_csvdump=: 3 : 0
-y=. '/e 0' getoptions y
-e=. ;option_e_jd_{'';'/e '
+y=. '/e 0 /replace 0' getoptions y
+e=. ;option_e{'';'/e '
 csvset''
+if. option_replace do. jddeletefolder CSVFOLDER__ end.
 assert 0=#dir CSVFOLDER__['CSVFOLDER must be empty'
 tabs=. {."1 jdtables''
 for_t. tabs do.
@@ -178,6 +178,9 @@ for_t. tabs do.
  option_h1=: option_combine=: 0
  ('';'';1) csvwr (t,'.csv');t 
 end.
+NB. create jdcsvrefs.txt file (used by csvresore to create ref cols)
+'a b'=. {:jd_info'ref'
+((,LF,.~a,.5}."1 b)rplc"1 '_';' ')fwrite CSVFOLDER__,'jdcsvrefs.txt'
 copyscripts CSVFOLDER__;jdpath_jd_''
 i.0 0
 )
@@ -389,10 +392,12 @@ dtbm=: 3 : '>dtb each<"1 y'
 
 NB. restore db from dump folder
 jd_csvrestore=: 3 : 0
+y=. '/replace 0' getoptions y
 csvset''
 csv=. (<CSVFOLDER__),each /:~{."1 [ 1!:0 jpath CSVFOLDER__,'*.csv'
 cdefs=. (_4}.each csv),each <'.cdefs'
 assert fexist"0 cdefs
+if. option_replace do. jd_createdb''[jd_dropdb'' end.
 assert 0=#{."1 jdtables''['db already has tables'
 copyscripts (jdpath_jd_'');CSVFOLDER__
 i=. >:(;{.csv)i:'/'
@@ -401,6 +406,18 @@ for_t. tabs do.
  t=. dltb,;t
  csvrd (CSVFOLDER__,t,'.csv');t;0;0
 end.
+
+refs=. fread CSVFOLDER__,'/jdcsvrefs.txt'
+if. (_1~:refs)*.0~:#refs do.
+ rs=. a:-.~dltb each<;._2 refs
+ for_r. rs do.
+  try.
+   jd_ref_jd_ ;r
+  catch.
+   echo DB_jd_,' ',CSVFOLDER__,' csvrestore jd ref failed: ',;r
+  end.
+ end. 
+end. 
 i.0 0
 )
 

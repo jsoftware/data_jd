@@ -16,11 +16,6 @@ test 50e6  10 10000 NB. runs in a few minutes with 6gb
 test 300e6 10 10000 NB. runs in a few minutes with 24gb - thrashes with less
 )
 
-custom=: 0 : 0
-dynamic=: 3 : 0
-jd'reference a aref b bref'
-)
-
 f=: 3 : 'y,~'' '',~6j1 ":timex ''jd y'''
 
 CSVFOLDER=: '~temp/jd/csv/junk'
@@ -36,8 +31,6 @@ jdadmin 0
 jdadminx'test'
 r=. 0 2$''
 r=. r,f 'gen ref2 a ',arows,' ',acols,' b ',brows
-custom fwrite 'custom.ijs',~jdpath_jd_'' NB. used by createdynamic to recreate reference
-s=. 'reads sum adata,avg adata from a,a.b where akey in (3,4,5)'
 r=. r,f s  NB. first may be slow as akey/adata/aref need to be read from disk
 r=. r,f s
 r=. r,f s
@@ -45,7 +38,6 @@ assert 12 4-:,;{:jd s
 r=. r,f 'csvdump'
 jdadminx'test'
 r=. r,f 'csvrestore'
-r=. r,f 'createdynamic'
 r=. r,f s  NB. first may be slow as akey/adata/aref need to be read from disk
 r=. r,f s
 r=. r,f s

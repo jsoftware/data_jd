@@ -124,15 +124,22 @@ jd'createcol f boo byte 4'
 assert (jd'reads from base')-:jd'reads from f'
 
 ptablebld'int'
-jd'dropdynamic'
+t=. {:jd'info ref'
+t=. <"1(>{.t),.' ',.>{:t
+t=. (<'dropcol '),each t
+
+jd'dropcol f jdref_p2_j_p2'
 jd'renametable f boo'
 assert (jd'reads from base')-:jd'reads from boo'
 
 ptablebld'int'
-jd'dropdynamic'
-assert'ptable' jdae'reference f p2 j p2'
-assert'ptable' jdae'createhash f p2'
-assert'ptable' jdae'createunique f p2'
+a=. jd'reads from f,f.j'
+jd'dropcol f jdref_p2_j_p2'
+assert (jd'reads from base')-:jd'reads from f'
+jd'ref f p2 j p2'
+assert a-:jd'reads from f,f.j'
+
+
 
 NB. empty
 jd'reads from f where p=2020'

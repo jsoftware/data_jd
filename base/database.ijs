@@ -65,21 +65,17 @@ columns =. ; <@(LF,~;:^:_1)"1 colmap,.typ,.":&.>shape
 Create name;columns,&<dat
 )
 
-NB. no longer used
-libstitch=: LIBJD_jd_,' stitch > x x x x x x x'
+libstitch=: LIBJD_jd_,' stitch > x x x x x x'
 gad=: 15!:14
 
-NB. no longer used
-NB. table;cols
-NB. stitch jdactive and cols 
-NB. x 1 to map jdactive 0 to 2
-stitch=: 4 : 0
+NB. 'tablename';<'cola';'colb';...
+NB. ref uses for multiple cols
+stitch=: 3 : 0
 'a b'=. y
-t=. getloc a
-w=. getloc__t<'jdactive'
-rows=. #dat__w
-str=. 1 NB. jdactive stride
-src=. gad<'dat__w'
+t=. jdgl a
+rows=. Tlen__t
+str=. ''
+src=. ''
 for_n. b do.
  w=. getloc__t n
  src=. src,gad<'dat__w'
@@ -87,24 +83,7 @@ for_n. b do.
  str=. str,((JTYPES i. 3!:0 dat__w){JSIZES)**/}.$dat__w
 end.
 sink=. (rows,+/str)$'u'
-libstitch cd rows,x,(gad<'sink'),(#str),(gad<'str'),gad<'src'
-sink
-)
-
-NB. no longer used
-NB. stich1 - all active new data (not in mapped files)
-NB. data
-stitch1=: 3 : 0
-y=. boxopen y
-n=. (#y){.<"0 Alpha_j_
-(n)=. y 
-rows=. #A
-active=: rows$1
-src=. gad<'active'
-src=. src,gad n
-str=.  1,((JTYPES i. ;3!:0 each y){JSIZES)*;*/each}.each $each y
-sink=. (rows,+/str)$'u'
-libstitch cd rows,1,(gad<'sink'),(#str),(gad<'str'),gad<'src'
+libstitch cd rows,(gad<'sink'),(#str),(gad<'str'),gad<'src'
 sink
 )
 
@@ -127,28 +106,10 @@ EMPTY
 template&definetemplate;._2 ]0 : 0
 Insert
 Delete
-Append
 InsertCols
 DeleteCols
-AddProp
-FindProp
-MakeHashed
-MakeUnique
 Readr
-Update
 Modify
-Updatebyindices
-)
-
-NB. =========================================================
-MakeRef =: 3 : 0
-('jdreference', ;'_'&,&.> ; boxopen&.> }.,y) MakeRef y
-:
-y =. ,&.>@:,@:boxxopen"1 y
-loc=. getloc {.{.y
-if. # r =. (#~ (y -: 3 :'subscriptions__y')"_1) FindRef__loc {.{:y
-  do. {.r return. end.
-Create__loc x;'reference';<y
 )
 
 NB. =========================================================
@@ -160,21 +121,6 @@ newqueryloc=: 3 : 0
  executescript100__loc=: 0!:100
  executescript100__loc y
  loc
-)
-MakeSumR=: MakeSum @: ( ('Read ','''',,&'''')&.> @: {. , }. ) @: boxopen
-MakeSum=: 3 : 0
- loc=. newqueryloc > {. boxopen y
- assert. 'jdindex' -: '.'&taketo&.|. > {. cnms__loc
- tab=. 3 : 'PARENT__y' {. cloc__loc
- assert. NAME__tab -: '.'&taketo > {. cnms__loc
- MakeSum__tab loc;y
-)
-MakeSumRTable=: MakeSumTable @: ( {. , ('Read ','''',,&'''')&.> @: (1&{) , 2&}. )
-MakeSumTable=: 3 : 0
- loc=. newqueryloc > 1{ y
- tab=. Create > 0{ y
- SUMMARYTABLE__tab=: 1
- tab,MakeSum__tab loc; }.y
 )
 
 NB. =========================================================

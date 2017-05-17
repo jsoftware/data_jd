@@ -1,5 +1,5 @@
 NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
-NB. test ref/reference with gen ref2 tables and random deletes/inserts
+NB. test ref with gen ref2 tables and random deletes/inserts
 
 sortit=: 3 : 0
 a=. jd'read from a,a.b'
@@ -32,22 +32,12 @@ for_i. a do.
 end.
 )
 
-NB. jd'dropdynamic'
-NB. jd'reference a aref b bref'
 testgen1=: 4 : 0
 arows=: y
 brows=: <.-:y
 jdadminx'test'
 jd'gen ref2 a A 0 b B'rplc 'A';(":arows);'B';":brows
-if. x-:'reference' do.
- jd'dropdynamic'
- jd'reference a aref b bref'
- assert basedata-: jd'read from a,a.b'
-elseif. x-:'ref' do.
- basedata=: jd'read from a,a.b'
-elseif. 1 do.
- assert 0
-end. 
+basedata=: jd'read from a,a.b'
 i.0 0
 )
 
@@ -58,10 +48,10 @@ for. i.loop do.
  bdi''
  assert basedata-:sortit''
 end. 
-c=. jdgl_jd_'a jdactive'
-assert (#dat__c)-:arows+rows*loop
-c=. jdgl_jd_'b jdactive'
-assert (#dat__c)-:brows+rows*loop
+t=. jdgl_jd_'a'
+assert 20=Tlen__t
+t=. jdgl_jd_'b'
+assert 10=Tlen__t
 assert (i.arows)-: /:~,;{:jd'reads akey from a'
 assert (i.brows)-: /:~,;{:jd'reads bref from b'
 a=. ,each{:"1 jd'read from a,a.b where akey=0'
@@ -78,9 +68,9 @@ NB. delete b bref=1 bref=2
 NB. verify a,a.b akey=1 or akey=2 default
 
 
-'reference'testgen1 arows
+'ref'testgen1 arows
 test1''
-assert (jd'reads from a,a.b')-:jd'reads from a,a-b' NB. reference left1 sames as inner when only 1 b match
+NB. assert (jd'reads from a,a.b')-:jd'reads from a,a-b' NB. ref left1 sames as inner when only 1 b match
 
 NB. delete b bref=1 bref=2
 NB. verify a,a.b akey=1 or akey=2 defaults

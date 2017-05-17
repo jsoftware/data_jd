@@ -219,6 +219,7 @@ r
 tempcol=: 3 : 0
  t=. ;: y
  r=. ''
+ decho cp
  for_i. i.#t do.
   a=. i{t
   
@@ -243,7 +244,7 @@ tempcol=: 3 : 0
      NAME__c=: col
      NAMES__c=: ''
      PARENT__c=: g
-     cp=. 18!:2 getloc__g 'jdactive'
+     cp=. 2}.18!:2 getloc__g'jdindex' NB. jdtint perhaps not right
      cp 18!:2 c
      TEMPCOLS=: TEMPCOLS,(<a),c
      r=. r,<'dat_',(;c),'_'

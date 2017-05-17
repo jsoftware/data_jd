@@ -1,4 +1,4 @@
-NB. Copyright 2015, Jsoftware Inc.  All rights reserved.
+NB. Copyright 2017, Jsoftware Inc.  All rights reserved.
 NB. write/read/dump/restore csv files
 
 jdadminx'test'
@@ -86,7 +86,7 @@ jd'gen test g 2'
 'test1'fwrite'test1.ijs',~jdpath_jd_'' NB. db related file(s) - copied by dump/restore
 
 jd'csvdump' NB. dump all tables and scripts
-assert 6=#dir F
+assert 7=#dir F
 dir F
 
 jdadminx'test'
@@ -291,22 +291,11 @@ NB. if you create a cdefs always csvrd some records and study them carefully
 NB. use /rows to read just a few rows before reading all (which may take a long time)
 NB. always check csvreport
 
-custom=. 0 : 0
-dynamic=: 3 : 0
-jd'reference a aref b bref'
-)
-
 jddeletefolder_jd_ F
 jdadminx'test'
 jd'gen ref2 a 10 0 b 5'
 [d=. jd'reads from a,a.b'
-NB. gen ref2 does a reference between a and b, but this is not in custom.ijs
-NB. write custom.ijs with the reference so is part of the db metadata
-custom fwrite 'custom.ijs',~jdpath_jd_'' NB. used by createdynamic to recreate reference
 jd'csvdump'
 jdadminx'test'
 jd'csvrestore'
-NB. csvrestore does not do the references, but custom.ijs is there
-jd'createdynamic' NB. do references as defined in custom.ijs
 assert d-:jd'reads from a,a.b'
-

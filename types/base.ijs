@@ -51,20 +51,21 @@ else.
 end.
 ) 
 
+NB. modify data in place
+NB. mark ref cols as dirty if subscr cols are changed
 modify=: 4 : 0
+if. (<NAME)e.;{:"1 SUBSCR__PARENT do. update_subscr__PARENT <NAME end. NB. mark ref dirty if required
 if. (-.''-:shape)*.({:$y)~:{:(#x),shape do.
  y=. ({:(#x),shape){."1 y
 end. 
 dat=: (fixinsert y) x} dat
 )
 
-modifyfilled =: 4 : 'MAP replacemap&> fixtype y x} DATAFILL$~Tlen,shape'
-
 NB. =========================================================
 NB. Should only be called by the table.
 Insert=: 3 : 0
 if. 0=#MAP do. return. end.
-assert. (dat +&# 0{::y) = Tlen
+NB. assert. (dat +&# 0{::y) = Tlen
 NB. assert -.FORCEINSERTFAIL_jd_-:NAME
 MAP appendmap&> fixinsert y  NB. fixinsert inherited from type
 )
@@ -118,12 +119,8 @@ qin           e.
 qnotin        -.@e.
 )
 
-qsample=: 3 : 0
-/:~ y (] {~ ((<.? ])#)) I.dat__active__PARENT
-)
-qSample=: 3 : 0
-/:~ y (] {~ ((<.?.])#)) I.dat__active__PARENT
-)
+qsample=: 3 : 'y?Tlen'
+qSample=: 3 : 'y?.Tlen'
 
 cd_qlike=: LIBJD_jd_,' qlike > x x x x x'
 

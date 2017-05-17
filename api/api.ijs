@@ -117,24 +117,15 @@ a=. bdnames y
 ECOUNT assert 2=#a
 d=. getdb''
 t=. getloc__d {.a
-cs=. '.'strsplit >{:a
-ids=. a:
-for_c. }:cs do.
- src=. getloc__t c
- 'Missing references are not supported by get' assert 0 <: datl__src
- ids=. ids { datl__src
- t=. getreferenced__src''
-end.
-src=. getloc__t {:cs
-select. <typ__src
- case. <'reference' do. r=. ids{a:{datl__src
+c=. getloc__t {:a
+select. <typ__c
+ case. <'autoindex' do. i.Tlen__t
  case. <'varbyte'   do.
-  'Referenced varbyte data is not supported by get' assert r-:a:
-  r=. (a:{dat__src);a:{val__src
- case.  do. r=. ids{a:{dat__src NB. forcecopy
+  (forcecopy dat__c);forcecopy val__c
+ case.  do. forcecopy dat__c
 end.
-r
 )
+
 NB. 'tab';'col';dat [;val]
 NB.! should enforce no hash or related data
 jd_set=: 3 : 0
@@ -342,11 +333,7 @@ if. (1=L.y)*.5=$y do.
  ETYPE assert (<type) e. TYPES -. 'enum';'varbyte'
  t=. getloc__d tab
  'ptable data not allowed'assert 0=S_ptable__t
- if. 0=Tlen__t do. 
-  a=. getloc__t'jdactive'
-  'dat' appendmap__a (#dat)$1
-  setTlen__t #dat NB. createcol - first col
- end. 
+ if. 0=Tlen__t do. setTlen__t #dat end.
  ESHAPE assert (Tlen__t,shape)-:$dat
  t=. (TYPES i. <type){TYPESj
  ETYPE assert t=3!:0 dat
@@ -380,62 +367,10 @@ JDE1001 assert 3=nc<'jd_',OP,'__d'
 ('jd_',OP,'__d')~y
 )
 
-NB. Revert (in case of not unique) does not work on dynamic cols!
-jd_createunique=: 3 : 0
-y=. bdnames y
-FEXTRA=: ;y,each<' '
-ECOUNT assert 2<:#y
-d=. getdb''
-validtc__d y
-t=. jdgl {.y
-n=. +/-.dat__active__t
-MakeUnique__d ({.y),<}.y
-n=. n-~+/-.dat__active__t
-if. 0~:n do.
- 0 assert~EUNIQUE rplc 'N';":n
-end.
-JDOK
-)
-
-jd_createhash=: 3 : 0
-y=. bdnames y
-y=. '/nc 1' getoptions y
-'invalid nc option' assert (option_nc>:0)*.option_nc<:2^31
-FEXTRA=: ;y,each<' '
-ECOUNT assert 2<:#y
-d=. getdb''
-validtc__d y
-try.
- MakeHashed__d ({.y),<}.y
-catchd.
- jd_dropdynamic 'hash',;' ',each y
- '/nc too small'assert 0
-end.
-JDOK
-)
-
-jd_createsmallrange=: 3 : 0
-y=. bdnames y
-ECOUNT assert 2<:#y
-d=. getdb''
-validtc__d y
-'smallrange' AddProp__d ({.y),<}.y
-JDOK
-)
-
-jd_loadcustom=: 3 : 0
-f=. (dbpath DB),'/custom.ijs'
-if. -.fexist f do. throw 'jde: proc file does not exist' end.
-d=. getdb''
-aggcreate__d''
-load__d f
-JDOK
-)
-
 NB. left1 only join (fast and simple) - ref starts out as dirty
 jd_ref=: 3 : 0
 y=. bdnames y
-ECOUNT assert 4=#y
+ECOUNT assert (4<:#y)*.0=2|#y
 d=. getdb''
 t=. (2,(#y)%2)$y
 0 validtc__d {.t NB. ptable allowed on left
@@ -444,7 +379,6 @@ t=. ({."1 t),.<"1 (}."1 t)
 ts=. getparttables ;{.y
 ts=. ts#~PTM~:;{:each ts
 n=. 'jdref', ;'_'&,&.> ; boxopen&.> }.,t
-
 for_t1. ts do.
  a=. ;t1
  h=. jdgl :: 0: a,' ',n
@@ -456,50 +390,13 @@ end.
 JDOK
 )
 
-NB. all join types
-jd_reference=: 3 : 0
-y=. bdnames y
-FEXTRA=: ;y,each<' '
-ECOUNT assert (4<:#y)*.0=2|#y
-d=. getdb''
-t=. (2,(#y)%2)$y
-validtc__d {.t
-validtc__d {:t
-t=. ({."1 t),.<"1 (}."1 t)
-MakeRef__d t
-JDOK
-)
-
 jd_tableinsert=: 3 : 0
-y=. ca y
-ECOUNT assert 3=#y
-'snkt srct srcdb'=. y
-'srcdb same as snkdb' assert -.DB-:&filecase_j_ srcdb
-d=. getdb''
-t=. getloc__d snkt
-
-db=. DB
-try.
- jdaccess srcdb NB.! possible security implication
- d=. getdb''
-catchd.
- jdaccess db
- 'invalid srcdb'assert 0 
-end.
-
-jdaccess db
-Append__t getloc__d srct
-JDOK
-)
-
-jd_tableappend=: 3 : 0
 y=. ca y
 ECOUNT assert 2 3 e.~#y
 'snkt srct srcdb'=. y
 NB.! 'srcdb same as snkdb' assert -.DB-:&filecase_j_ srcdb
 d=. getdb''
 snktloc=. getloc__d snkt
-assert 0=#SUBSCR__snktloc['dynamic dependencies - use tableinsert or dropdynamic+dynamic'
 a=. jdcols snkt
 snkcs=. {:"1 a
 snkns=. {."1 a
@@ -531,7 +428,8 @@ for_i. i.#snkns do.
  
  assert (}.$dat__a)-:}.$dat__b
 end.
-
+update_subscr__snktloc'' NB. mark ref dirty
+setTlen__snktloc new+Tlen__snktloc
 for_i. i.#snkns do.
  a=. i{snkcs
  b=. i{srccs
@@ -543,12 +441,6 @@ for_i. i.#snkns do.
   'dat' appendmap__a dat__b
  end. 
 end.
-d=. getdb''
-t=. getloc__d snkt
-a=. getloc__t'jdactive'
-b=. getloc__srctloc'jdactive'
-'dat' appendmap__a dat__b
-setTlen__t new+Tlen__t NB. tableappend
 JDOK
 )
 
@@ -652,16 +544,6 @@ CHILDREN_jd_=: ''
 JDOK
 )
 
-NB. dynmaic verb must run in base - it is copied to base to run
-jd_createdynamic=: 3 : 0
-jd_dropdynamic''
-d=. getdb''
-assert 3=nc<'dynamic__d'['dynamic not defined by custom.ijs'
-createdynamic__=:  (5!:1<'dynamic__d')5!:0
-createdynamic__ ''
-JDOK
-)
-
 NB.! needs work
 jd_option=: 3 : 0
 a=. ;:y
@@ -699,7 +581,7 @@ case. 'ref2' do.
  t=. (brows,12)$'abc def'
  jd_createcol btab;'bref';'int' ;'_' ;i.brows
  jd_createcol btab;'bb12';'byte';'12';t
- jd'reference A aref B bref'rplc'A';atab;'B';btab NB.! jd_reference_jd_ fails
+ jd'ref A aref B bref'rplc'A';atab;'B';btab NB.! jd_ref_jd_ fails
 case. 'one' do.
  genone }.y
 case. 'two' do.
@@ -773,8 +655,7 @@ i=. p i:'/'
 (Open_jd_ i{.p);(>:i)}.p
 )
 
-NB. unique/hash/reference/ref
-NB. valid tab and cols - float/varbyte/enum not allowed unless ALLOW_FVE (for old style tests)
+NB. valid tab and cols - float/varbyte
 NB. validate ptable
 validtc=: 3 : 0
 1 validtc y
@@ -783,16 +664,13 @@ b=. (<'jd')=2{.each y
 if. +./b do. throw 'jde: invalid name: name (NAME)' rplc 'NAME';;{.b#y end.
 if. -.({.y)e.NAMES do. throw 'jde: not found: table (TAB)' rplc 'TAB';;{.y end.
 t=. getloc {.y
-if. x do. 'ptable not allowed'assert 0=S_ptable__t end.
+if. x do. 'ptable not allowed'assert 0=S_ptable__t end. NB! test not right
 a=. (}.y)-.NAMES__t
 if. #a do. throw 'jde: not found: table (TAB) column (COL)' rplc 'TAB';(;{.y);'COL';;{.a end.
 for_c. }.y do.
  w=. getloc__t c
- if. -.ALLOW_FVE do.
-  if. 'varbyte'-:typ__w do. 'varbyte not allowed'assert 0 end.
-  if. 'float'-:typ__w   do. 'float not allowed'  assert 0 end.
-  if. 'enum'-:typ__w    do. 'enum not allowed'  assert 0 end.
- end. 
+ 'varbyte not allowed' assert -.'varbyte'-:typ__w
+ 'float not allowed'   assert -.'float'-:typ__w
 end. 
 )
 
@@ -849,11 +727,11 @@ d fwrite f
 loadd f
 )
 
-assertnoreference=: 3 : 0
+assertnoref=: 3 : 0
 t=. jdgl y
 a=. {."1 SUBSCR__t
-'table has reference' assert 0=+/;(<'jdref')=5{.each a
-'table has reference' assert 0=+/;+/each(<'.jdref')E.each a
+'table has ref' assert 0=+/;(<'jdref')=5{.each a
+'table has ref' assert 0=+/;+/each(<'.jdref')E.each a
 )
 
 assertnodynamic=: 3 : 0
@@ -864,7 +742,7 @@ t=. jdgl ;{.y
 jd_renametable=: 3 : 0
 a=. bdnames y
 ECOUNT assert 2=#a
-assertnoreference ;{.a
+assertnoref ;{.a
 
 ns=. getparttables ;{.a
 for_i. i.#ns do.

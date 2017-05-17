@@ -89,6 +89,18 @@ a=. b#a
 (/:n){n,.a
 )
 
+jdcolsx=: 3 : 0
+d=. getdb''
+t=. getloc__d y
+n=. NAMES__t
+a=. CHILDREN__t
+b=. (<'jdindex')~:2{.each n
+n=. b#n
+a=. b#a
+(/:n){n,.a
+)
+
+
 jdserverstop=: 3 : 0
 if. IFJHS do. OKURL_jhs_=: '' end.
 )
@@ -125,7 +137,9 @@ case. 0 do.
  i.0 0
 case. do.
  y=. adminp y
- 'db not compatible with this Jd version'assert -.fexist y,'/jdversion'
+ v=. fread y,'/jdversion'
+ v=. (-.v-:_1){3,<.0".":v
+ 'db version not compatible with this Jd version'assert v=<.".jdversion
  'not a database'assert 'database'-:jdfread y,'/jdclass'
  'db damaged'assert (0=ftypex) y,'/jddamage'
  d=. }.(y i:'/')}.y
@@ -173,6 +187,7 @@ end.
 jddeletefolder y
 'w'jdadminlk y
 Create__f d
+jdversion fwrite y,'/jdversion'
 jdadmin yy
 )
 
@@ -452,6 +467,15 @@ c=. jdgl y
 jdfrom=:  4 : '>{:(({."1 y)i.<,x){y'
 
 jdfroms=: 4 : '>(({.y)i.<,x){"1{:y'
+
+NB. if jd'close' or jdadmin 0 fail, things are messes up, so try this
+jdforce_clean=: 3 : 0
+'NAMES_jd_'=: ''
+unmapall_jmf_''
+1 unmap_jmf_ each 0{"1 mappings NB. extra force
+coerase conl 1
+jdadmin 0
+)
 
 jdrt=: 3 : 0
 aa=. 9}.each _8}.each tuts

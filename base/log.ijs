@@ -44,7 +44,7 @@ showmap_jmf_''
 jd_list'version'
 jd_info'summary'
 jd_info'schema'
-jd_info'dynamic'
+jd_info'ref'
 jd_info'validate'
 jd_info'validatebad'
 )

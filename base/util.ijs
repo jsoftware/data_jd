@@ -324,11 +324,9 @@ boolean
 int
 float
 byte
-enum
 varbyte
 date
 datetime
-time
 edate
 edatetime
 edatetimem
@@ -354,7 +352,7 @@ end.
 t
 )
 
-NB. jdsuffle 'table col'
+NB. jdsuffle 'table'
 NB. (100<.#rows) random rows are deleted/inserted one row at a time
 NB. (100<.#rows) random rows are deleted/insertt in bulk
 NB. result is arg which allows: jdshuffle^:3 'foo'

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="jd.css">
+</head>
+<body>
+<p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="Convert.htm" class="act">Convert</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
+<p>Jd 4.1 is incompatible with databases created under previous versions. Jd4 code will not open a Jd3 database and vice versa.</p>
+<p>To continue working with databases created with Jd 3.3 (and earlier) you must:</p>
+<ul>
+<li>rename ~addons/data/jd to ~addons/data/jd3</li>
+</ul>
+<p>And then, when you want to work with a Jd3 database:</p>
+<ul>
+<li>load'~addons/data/jd3/jd.ijs'</li>
+</ul>
+<p>When Jd 4.1 is released, an update will overwrite addons/data/jd with the Jd4 codebase. After that point, update can't give you a jd3 folder. You can create it by downloading the appropriate file from <a href="http://www.jsoftware.com/download/jd3">jd3 zips</a> and unpacking in a temp folder, renaming jd to jd3 and then moving it to your addons folder.</p>
+<p>See <a href="Release.htm" title="wikilink">Release</a> for change details.</p>
+<p>The Jd 4.1 release has conversion tools to migrate a Jd3 database to a Jd4. The conversion is done in place and only works in the one direction.</p>
+<p>Conversion:</p>
+<pre><code>start J
+load &#39;jd&#39;
+jd &#39;list version&#39; NB. verify 4.1
+load &#39;~addons/data/jd/tools/convert.ijs&#39;
+dryrun &#39;~temp/jd/test&#39; NB. dry run this db and report details
+dryrun &#39;~temp/jd&#39;      NB. dry run all jd3 dbs in folder
+   
+DO NOT conrun UNTIL dryrun IS CLEAN!
+BACKUP!
+  
+conrun &#39;~temp/jd/test&#39; NB. convert this db in place and report details
+conrun &#39;~temp/jd&#39;      NB. convert all jd3 dbs in folder</code></pre>
+<p>Conversion summary:</p>
+<ul>
+<li>jdactive col dropped and deleted rows compressed out</li>
+<li>jd... cols (ref/reference/hash/...) dropped</li>
+<li>cols with type time or enum dropped</li>
+<li>jd'ref ...' done for jdref and jdreference cols</li>
+<li>dryrun failure leaves db untouched</li>
+<li>conrun failure probably leaves db damaged - neither jd3 nor jd4 compatible</li>
+</ul>
+</body>
+</html>

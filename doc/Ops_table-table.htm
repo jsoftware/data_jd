@@ -12,24 +12,9 @@
   <link rel="stylesheet" href="jd.css">
 </head>
 <body>
-<p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
+<p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="Convert.htm">Convert</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
 <h2 id="table-operations">Table operations</h2>
 <p>See tutorial table_table</p>
-<h2 id="tableappend">tableappend</h2>
-<p>tableappend snktable srctable srcdan - implicit jdaccess'srcdan'</p>
-<p>implemented as a loop over corresponding cols<br />reads src col file and appends to snk col file<br />insists there are no dynamic columns as they would not be updated<br />copies deleted rows and their deleted status</p>
-<p>for bulk updates (lots of new data from csv files for multiple tables)<br />dropdynamic/tableappends/createdynamic can be faster than tableinsert</p>
-<pre><code>NB. example tableappend
-jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
-jd&#39;createtable f a int&#39;
-jd&#39;insert f&#39;;&#39;a&#39;;i.2
-jdadminx&#39;example2&#39;
-jd&#39;createtable g a int&#39;
-jd&#39;insert g&#39;;&#39;a&#39;;100+i.2
-jdaccess&#39;example&#39;
-jd&#39;tableappend f g example2&#39;
-jd&#39;reads from f&#39;
-jdaccess olddan</code></pre>
 <h2 id="tablecopy">tablecopy</h2>
 <p>tablecopy snktable srctable srcdan - implicit jdaccess'srcdan'</p>
 <p>copies a table from srcdan to the current db<br />uses host file copy and runs as fast as hardware allows</p>
@@ -44,8 +29,8 @@ jd&#39;reads from new&#39;
 jdaccess olddan</code></pre>
 <h2 id="tableinsert">tableinsert</h2>
 <p>tableinsert snktable srctable srcdan - implicit jdaccess'srcdan'</p>
-<p>implemented as a loop of block read/insert<br />read ignores deleted rows in the src table<br />insert updates dynamic columns in the snk database</p>
-<p>for large, complex updates it might be faster to use tableappend</p>
+<p>implemented as an efficient loop over cols with an append of new data</p>
+<p>affected ref cols are marked dirty</p>
 <pre><code>NB. example tableinsert
 jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
 jd&#39;createtable f a int&#39;

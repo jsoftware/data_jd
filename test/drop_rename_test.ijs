@@ -17,24 +17,16 @@ test''
 jd'droptable f'
 
 test''
-jd'createhash f a'
-jd'droptable f' NB. works with hash
-
-test''
-jd'reference f a g a'
-assert 'domain error'-:jd etx'droptable f' NB. fails with reference
+jd'ref f a g a'
+assert 'domain error'-:jd etx'droptable f'
 
 NB. dropcol
 test''
 jd'dropcol f a'
 
 test''
-jd'createhash f a b'
-'domain error'-:jd etx'dropcol f a' NB. fails with hash
-
-test''
-jd'reference f a g a'
-'domain error'-:jd etx'dropcol f a' NB. fails with reference
+jd'ref f a g a'
+'domain error'-:jd etx'dropcol f a' NB. fails with ref
 
 NB. renametable
 test''
@@ -46,14 +38,12 @@ t=. jdgl_jd_'boo'
 assert 'boo'-:NAME__t
 
 test''
-jd'createhash f a'
-jd'createhash g a b'
 jd'renametable f foo' NB. works with hash
 jd'renametable g goo'
 
 test''
-jd'reference f a g a'
-'domain error'-:jd etx'renametable f foo' NB. fails with reference
+jd'ref f a g a'
+'domain error'-:jd etx'renametable f foo' NB. fails with ref
 
 NB. renamecol
 test''
@@ -67,14 +57,31 @@ jd'reads aaaa from f'
 'not found'jdae'renamecol f asdf qewr'
 'already exists'jdae'renamecol f aaaa b'
 
-
 test''
-jd'createhash f a'
-assert'domain error'-:jd etx'renamecol f a aaa' NB. fails with hash
+jd'ref f a g a'
+assert'domain error'-:jd etx'renamecol f a aaa' NB. fails with ref
 
-test''
-jd'reference f a g a'
-assert'domain error'-:jd etx'renamecol f a aaa' NB. fails with reference
+NB. test drop jdref col
+jdadminx'test'
+jd'gen ref2 f 6 3 g 3'
+assert (,'f')-:,;{.{:jd'info ref'
+jd'reads from f,f.g'
+jd'dropcol f jdref_aref_g_bref'
+assert ''-:,;{.{:jd'info ref'
+'not find'jdae'reads from f,f.g'
+
+jdadminx'test'
+jd'gen ref2 f 6 3 g 3'
+jd'ref g bref f akey'
+assert 'fg'-:,;{.{:jd'info ref'
+jd'reads from f,f.g'
+jd'dropcol f jdref_aref_g_bref'
+assert (,'g')-:,;{.{:jd'info ref'
+'not find'jdae'reads from f,f.g'
+jd'dropcol g jdref_bref_f_akey'
+assert ''-:,;{.{:jd'info ref'
+'not find'jdae'reads from g,g.f'
+
 
 
 
