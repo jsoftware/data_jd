@@ -3,10 +3,9 @@ NB. date, datetime, and time types
 coclass 'jdtint'
 coclass deftype 'timelike'
 
-ADDRANK =: 1
 DATAFILL =: -~2
 
-fixdatetime =: 4 :0
+fixdatetime=: 4 :0
 fixtype_jdtint_ y
 )
 

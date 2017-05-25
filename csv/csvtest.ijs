@@ -22,17 +22,6 @@ csvop_tests=: 3 : 0
 jdadminx'test'
 s=: (,2);2 1;2 2
 
-NB. test int trailing shapes
-jd'createtable ints i int, i1 int 1, i2 int 2'
-jd'insert ints';'i';1 2;'i1';(2 1$1 2);'i2';2 2$>:i.4
-jd'read from ints'
-assert s=$each {:"1 jd'read from ints'
-
-jd'csvwr ints.csv ints'
-jd'csvrd ints.csv nints'
-jd'reads from nints'
-assert (jd'read from ints')-:jd'read from nints'
-
 NB. test byte trailing shapes
 jd'createtable bytes b byte, b1 byte 1, b2 byte 2'
 jd'insert bytes';'b';'ab';'b1';(2 1$'ab');'b2';2 2$'abcd'

@@ -131,8 +131,6 @@ name=. x
 EMPTY NB. result
 )
 
-
-
 getbytes=: 3 : 0
 ((JTYPES i. 3!:0 y){JSIZES)**/$y
 )
@@ -158,7 +156,6 @@ end.
 <.r%a**/s
 )
 
-
 NB. Export column to boxes
 ExportMap=: 3 :'MAP ,&.> <Cloc'
 Export=: [: ".&.> [: ". 'MAP'"_
@@ -181,56 +178,4 @@ if. typ-:'varbyte' do.
 else. 
  y (({&.:>{.),}.@]) Export''
 end. 
-)
-
-NB. x is flag,rows - flag 1 for modify
-NB. y is data
-NB. returns rows (used by insert_
-validate_data=: 4 : 0
-'modify rows'=. x
-v=. y
-'FECOL_jd_ FETYP_jd_ FESHAPE_jd_'=: NAME;typ;":shape
-if. 'edate'-:5{.typ do.
- if. JCHAR=3!:0 v do. v=. efs v end. 
- select. typ
-case. 'edate' do.
-  EPRECISION assert *./(0=(86400*1e9)|v)+._9223372036854775808=v
- case. 'edatetime' do.
-  EPRECISION assert *./(0=1e9|v)+._9223372036854775808=v
- case. 'edatetimem' do.
-  EPRECISION assert *./(0=1e6|v)+._9223372036854775808=v
- end.
-end.  
-
-if. -.modify do.
- if. rows=_1 do. rows=. #v end.
- ETALLY assert rows=#v
-end. 
-
-tsv=. #sv=. $v
-if. tsv<#1,shape do. tsv=. #sv=. rows,sv end.
-ETALLY assert (1={.sv)+.rows={.sv
-if. -.sv-:rows,shape do. NB. not exact - see if {. for byte fixes - overtake allowed - undertake not allowed
- ESHAPE assert -.''-:shape
- ESHAPE assert (JCHAR=3!:0 v)*.((}:sv)-:}:rows,shape)*.({:sv)<:shape
-end.
-vt=. 3!:0 v
-select. typ
-case. 'boolean' do.
- ETYPE assert vt=JB01
-case. 'float'   do.
- ETYPE assert vt e. JFL,JINT,JB01
-case. ;:'byte enum' do.
- ETYPE assert vt=JCHAR
-case. 'varbyte' do.
- NB. if. modify do.
- NB.  ETYPE assert 0
- NB. else.
-  ETYPE assert (vt=JBOXED)+.*/JCHAR=;3!:0 each v
- NB. end.
-case.           do.
- ETYPE assert vt e. JINT,JB01
-end.
-
-rows NB. result used by insert
 )

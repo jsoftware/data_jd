@@ -407,7 +407,7 @@ for_t. tabs do.
  csvrd (CSVFOLDER__,t,'.csv');t;0;0
 end.
 
-refs=. fread CSVFOLDER__,'/jdcsvrefs.txt'
+refs=. toJ fread CSVFOLDER__,'/jdcsvrefs.txt'
 if. (_1~:refs)*.0~:#refs do.
  rs=. a:-.~dltb each<;._2 refs
  for_r. rs do.

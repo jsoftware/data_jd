@@ -304,7 +304,6 @@ csverrorfile=: jpath y,'/csverrors'
 csvprogressfile=: jpath y,'/csvprogress'
 ccfiles=: jpath each (<y),each,'/',each colnames,~each <'c_'
 ccfiles=: a: ((a:=colnames)#i.#coldefs)}ccfiles
-NB.! ccfiles=: a: ((CVARX=ctypes'')#i.#coldefs)}ccfiles
 cvfiles=: jpath each (<y),each,'/',each colnames,~each <'v_'
 
 NB. adjust ccfiles and cvfiles for links
@@ -333,7 +332,7 @@ t=. (a:~:ccfiles)#ccfiles
 t=. (t i: each '/'){.each t
 jdcreatefolder_jd_ each t NB. ensure path to files exists
 if. -.appendflag do. ferase each ccfiles,cvfiles end. 
-b=. -.(ctypes'')e. CVAR NB.! CVARX
+b=. -.(ctypes'')e. CVAR NB. CVARX
 cvfiles=: a: (b#i.#coldefs)}cvfiles
 ccnames=: a: ((a:=colnames)#i.#coldefs)}cname each colnames
 cvnames=: a: (b#i.#coldefs)}vname each colnames
@@ -492,7 +491,6 @@ NB. resize c files to remove unused rows
 NB. log'remove extra c_..._jdcsv_ rows: ',":|r
 ROWS=: oldrows+ROWS+r NB. rows to keep
 if. r<0 do.
- NB.! ROWS=: oldrows+ROWS+r NB. rows to keep
  ROWS resizec each (a:~:ccfiles)#i.#coldefs
 end.
 NB. resize v files
@@ -666,7 +664,7 @@ csvmap cn;fn
 coldefs=: (CI8,0 0 0)i}coldefs
 'CSVCOLS CSVTYPS CSVJDTYPS COLDEFS ROWS'=. 3!:2 fread PATHCSVFOLDER,'/info'
 t=. (<'int') (CSVCOLS i. <y)}CSVJDTYPS
-(3!:1 CSVCOLS;CSVTYPS;(<t),<coldefs) fwrite PATHCSVFOLDER,'/info' NB.! map enum to JD int
+(3!:1 CSVCOLS;CSVTYPS;(<t),<coldefs) fwrite PATHCSVFOLDER,'/info' NB. map enum to JD int
 )
 
 NB. f name - create hash from data

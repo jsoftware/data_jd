@@ -25,8 +25,10 @@ jd&#39;reads from f&#39;
 jdaccess olddan</code></pre>
 <h2 id="insert">insert</h2>
 <p>insert table col data ...</p>
-<p>col data pairs<br />count of data items must be the same</p>
-<p>bad args detected before insert starts, and error leaves table untouched<br />a bug in insert reverts any changes and leaves the table untouched</p>
+<p>col data pairs</p>
+<p>count of data items must be the same<br />a scalar extends to be the right count<br />byte N col list extends to be the right count</p>
+<p>byte N does overtake but too much data is an error</p>
+<p>an error (or a bug) leaves the table untouched</p>
 <pre><code>NB. example insert
 jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
 jd&#39;createtable f a int,b byte,b4 byte 4&#39;
@@ -35,14 +37,14 @@ jd&#39;reads from f&#39;
 jd&#39;insert&#39;;&#39;f&#39;;&#39;a&#39;;24 25;&#39;b&#39;;&#39;bc&#39;;&#39;b4&#39;;2 4$&#39;aaaabbbb&#39;
 jd&#39;reads from f&#39;
 jd&#39;createtable g&#39;
-jd&#39;createcol g a int _&#39;;i.3
-jd&#39;createunique g a&#39;
-jd etx&#39;insert g a&#39;;2;1{jdlast
+jd&#39;createcol g a int&#39;;i.3
+jd etx&#39;insert g a&#39;;2;1
+;1{jdlast
 jd&#39;reads jdindex,a from g&#39;
 jdaccess olddan</code></pre>
 <h2 id="update">update</h2>
 <p>update table where col data ...</p>
-<p>deletes selected records and inserts new updated records<br />count of data items and updated rows must be the same col data pairs</p>
+<p>same conformability as for insert</p>
 <pre><code>NB. example update
 jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
 jd&#39;createtable f a int,b int,c byte 4&#39;

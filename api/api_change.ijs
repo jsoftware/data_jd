@@ -2,50 +2,16 @@ NB. Copyright 2015, Jsoftware Inc.  All rights reserved.
 
 coclass'jd'
 
-fsub=: 3 : 0
-if. 1=$$y do.
- ,.<"0 y 
-else.
- ,.<"1 y 
-end.
-)
-
-
-NB. vsub f table
-NB. validate count,type,shape
-validateinsert=: 4 : 0
-ns=. {."1 x
-vs=. {:"1 x
-d=. getdb''
-t=. getloc__d y
-all=. ((<'jd')~:2{.each NAMES__t)#NAMES__t NB. all col names
-unknown_assert ns-.all
-missing_assert all-.ns
-duplicate_assert ns
-
-cnt=. _1 NB. all have the same count - get count from first one
-for_i. i.#ns do.
- c=. getloc__t i{ns
- cnt=. (0,cnt) validate_data__c >i{vs
-end.
-)
-
-NB. Insert__d has a number of problems - e.g. shape mismatch damages a table
-NB. api insert has extra validations/retrictions and gives better error messages
-NB. missing/unknown/duplicate cols
-NB. bad count/shape/data
-NB. date/time must be integer
-NB. date/time not allowed trailing shape
 jd_insert=: 3 : 0
-FETAB=: ;{.y
+FETAB_jd_=: ;{.y
 d=. getdb''
-nv=. vsub 1}.y
-nv validateinsert ;{.y
-
+t=. jdgl FETAB_jd_
+'ns vs rows'=. _1 fixpairs__t 1}.y
+if. rows<1 do. JDOK return. end.
+nv=. ns,.vs
 r=. insertptable nv
 if. -.''-:r do. r return. end.
-
-Insert__d  ({.y),<nv
+rows Insert__d  ({.y),<nv
 t=. getloc__d ;{.y
 JDOK
 )
@@ -103,7 +69,7 @@ for_i. i.ttally s do.
  n=. }.d
  shape=. ;{:d
  shape=. ;(shape=_){shape;''
- d=. (<(;{.d),PTM,part),(1{d),<(;2{d),' ',":shape
+ d=. ;' ',each(<(;{.d),PTM,part),(1{d),<(;2{d),' ',":shape
  jd_createcol d
 end.
 s=. {:jd_info'ref ',tab
@@ -144,35 +110,25 @@ NB. explicit index for deleted row is allowed
 jd_update=: 3 : 0
 ECOUNT assert 2<:#y
 'tab w'=. 2{.y
-FETAB=. tab
-nv=. vsub 2}.y
-t=. jdgl tab
-n=. NAMES__t
-n=. n#~-.(<'jd')=2{.each n
-n=. n-.{."1 nv
-
-ns=. {."1 nv
-vs=. {:"1 nv
-all=. ((<'jd')~:2{.each NAMES__t)#NAMES__t NB. all col names
-unknown_assert ns-.all
-duplicate_assert ns
-
+FETAB_jd_=. ;tab
+t=. jdgl FETAB
 if. 2=3!:0 w do.
- w=. ;{:,old=. jd_read'jdindex from ',tab,' where ',w
+ w=. ;{:,old=. jd_read'jdindex from ',tab,' where ',w NB. ; always a list so 1 n$'abc' works
 else.
  if. 4~:3!:0 w do. NB. see fixtype_num_jdtint_
   if. 1=3!:0 w do. w=. 0+w else. EINDEX assert 0 end.
  end.
- w=. ,w
+ w=. ,w NB. , to allow 1 n$'abc' to work
 end.
+NB. w is always a list - if it has 1 element, this allows data 1 4$'a'
+NB. force w to scalar if single element list to disallow 1 4$'a'
 
-for_i. i.#ns do. NB. validate and mark ref as dirty if required
- c=. getloc__t {.i{ns
- (1,#w) validate_data__c >i{vs 
-end.
+'ns vs rows'=. (#w) fixpairs__t 2}.y
+if. rows=0 do. JDOK return. end.
 
 pt=. jdgl_jd_ :: 0: tab,PTM
 if. 0=pt do.
+ EINDEX assert (w<Tlen__t),0<:w
  for_i. i.#ns do.
   c=. getloc__t {.i{ns
   w modify__c >i{vs

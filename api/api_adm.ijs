@@ -181,7 +181,7 @@ vdname d
 i=. y i:'/'
 f=. Open_jd_ i{.y
 if. (<y)e.{:"1 jdadminlk_jd_'' do. NB. if locked, assume open, and should be dropped
- 'x'jdadminlk y NB.! should be done after Drop - but there are problems
+ 'x'jdadminlk y NB. should be done after Drop - but there are problems
  Drop__f d
 end.
 jddeletefolder y

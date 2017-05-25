@@ -126,28 +126,6 @@ jd'csvrestore'
 assert f-:jd'reads from f'
 assert fx-:jd'reads from fx'
 
-
-NB. Tests for shaped columns
-jd 'droptable t'
-
-NB. varbyte shaped not allowed
-nms=. nms-.<'VARBYTE'
-types=. types-.<'varbyte'
-DATA=. }:DATA
-
-jd 'createtable t'; ; ,&','&.> nms (,' ',,&' 3')&.> types NB. shaped varbyte no allowed
-jd 'insert t'; , nms,. ,:&.>DATA
-
-NB.! CSTITCH does not work for boolean or varbyte
-jd'dropcol t BOOLEAN'
-jd'dropcol t VARBYTE'
-
-
-jd'csvwr q.csv t'
-jd'droptable tx'
-jd'csvrd q.csv tx'
-assert (jd'reads from t')-:jd'reads from tx'
-
 NB. empty tables in dump restore
 jdadminx'test'
 jd'createtable f'

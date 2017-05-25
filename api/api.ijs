@@ -127,7 +127,7 @@ end.
 )
 
 NB. 'tab';'col';dat [;val]
-NB.! should enforce no hash or related data
+NB. should enforce no hash or related data
 jd_set=: 3 : 0
 if. 3=#y do.
  'tab col dat'=. y
@@ -145,7 +145,7 @@ if. 'varbyte'-:typ__snk do.
  'jde: no val and varbyte' assert 0=nc<'val'
  'jde: val wrong length' assert (+/{:"1 dat)=#val
  
- NB.! rsizemap__snk 'val';#val does not work (error on remap???) - workaround
+ NB. rsizemap__snk 'val';#val does not work (error on remap???) - workaround
  jdunmap n=. 'val',Cloc__snk
  f=. PATH__snk,'val'
  ferase f
@@ -218,7 +218,7 @@ end.
 
 jd_createtable=: 3 : 0
 erase<'DATACOL_jd_'
-if. 0=L.y do. NB. string parse has blanks in col defs
+if. 0=L.y do. NB. string parse has , and LF in col defs
  a=. bdnames y
  y=. ''
  if. '/a'-:;{.a do.
@@ -227,7 +227,8 @@ if. 0=L.y do. NB. string parse has blanks in col defs
  end.
  y=. y,{.a NB. table name
  a=. }.a
- y=. y,<;' ',each a
+ NB. y=. y,<;' ',each a
+ y=. y, a:-.~<;._2 LF,LF,~(;a,each' ')rplc',';LF
 end. 
 a=. y
 if. '/a'-:;{.a do.
@@ -243,14 +244,24 @@ a=. }.a
 a=. ;cutcoldefs each a
 if. #a do.
  b=. ><;._2 each a,each' '
- n=. {."1 b
- vcname each n
- duplicate_assert n
- ETYPE assert (1{"1 b)e.TYPES
- q=. _1".each 2}."1 b
- s=. -.+./"1 >_1-:each q
- p=. -.+./"1 >1-:each 0>each q
- 'bad trailing shape' assert s,p
+ ns=. 0{"1 b
+ ts=. 1{"1 b
+ vcname each ns
+ duplicate_assert ns
+ ETYPE assert ts e.TYPES
+ if. 3<:{:$b do. NB. have shapes
+  EBTS assert 3={:$b
+  ss=. 2{"1 b
+  for_i. i.#ns do.
+   FECOL_jd_=: ;i{ns
+   p=. ;i{ts
+   s=. ;i{ss
+   if. 0~:#s do. NB. this quy has a shape
+    s=. _1".s
+    EBTS assert (p-:'byte'),(_1~:s),1=#s
+   end. 
+  end.
+ end. 
 end.
 a=. }:;a,each','
 d=. getdb''
@@ -313,43 +324,56 @@ vdname y
 
 vcname=: vtname NB. validate column name
 
+NB. not boxed  -> no dat and NB. boxed -> dat
 jd_createcol=: 3 : 0
 erase<'DATACOL_jd_'
 d=. getdb''
-if. (1=L.y)*.5=$y do.
- NB. have column values
- dat=. ;{:y
+if. 1=L.y do.
+ NB. boxed assumes has dat
+ dat=. >{:y  NB. col values
  y=. }:y
- 'tab nam type shape'=. y
- FETAB=: tab
- FECOL=: nam
- shape=. _".shape
- if. shape=_ do.
-  shape=. i.0
- else.
-  'shape not allowed'assert (2{y)e.;:'boolean int float byte'
- end.
- ETSHAPE assert 1>:#shape
- ETYPE assert (<type) e. TYPES -. 'enum';'varbyte'
- t=. getloc__d tab
- 'ptable data not allowed'assert 0=S_ptable__t
- if. 0=Tlen__t do. setTlen__t #dat end.
- ESHAPE assert (Tlen__t,shape)-:$dat
- t=. (TYPES i. <type){TYPESj
- ETYPE assert t=3!:0 dat
- y=. tab;nam;type;":shape 
- DATACOL_jd_=: dat
+else.
+ erase<'dat' NB. no col values
+ y=. bdnames y
 end.
-y=. bdnames y
 FETAB=: ;0{y
 FECOL=: ;1{y
 vcname FECOL
-ECOUNT assert 3 4 e.~#y
+if. 4=#y do.
+ if. (,'_')-:;3{y do. y=. }:y end.
+else.
+ ECOUNT assert 3=#y
+end.
+
+shape=. ''
 if. 4=#y do.
  if. -.''-:;3{y do.
-  'shape not allowed'assert (2{y)e.;:'boolean int float byte'
- end. 
- ETSHAPE assert 1>:#_".;{:y
+  EBTS assert (2{y)-:<'byte'
+ end.
+ shape=. _".;{:y
+ EBTS assert (_~:shape),1>:#shape
+end.
+
+if. 0=nc<'dat' do. NB. have column values
+ type=. ;2{y
+ ETYPE assert (<type) e. TYPES -. 'enum';'varbyte'
+ t=. getloc__d FETAB
+ 'ptable data not allowed'assert 0=S_ptable__t
+ if. (0=Tlen__t)*.0=#NAMES__t#~;(<'jd')~:2{.each NAMES__t do. setTlen__t #dat end.
+ if. (1=3!:0 dat)*.-.type-:'boolean' do. dat=. 0+dat end.
+ ETYPE assert ((TYPES i. <type){TYPESj)=3!:0 dat
+ if. (Tlen__t,shape)-:$dat do.
+  DATACOL_jd_=: dat
+ else.
+  if. ''-:shape do.
+   ESHAPE assert 0=#$dat
+  else.
+   ESHAPE assert 2>#$dat
+   ESHAPE assert shape>:#dat
+   dat=. shape{.dat
+  end.
+  DATACOL_jd_=: (Tlen__t,shape)$dat
+ end.
 end.
 
 ns=. getparttables ;{.y
@@ -359,6 +383,7 @@ for_i. i.#ns do.
 end.
 JDOK
 )
+
 
 NB. run custom db jd_x... op in db locale if it exists
 jd_x=: 3 : 0
@@ -394,7 +419,7 @@ jd_tableinsert=: 3 : 0
 y=. ca y
 ECOUNT assert 2 3 e.~#y
 'snkt srct srcdb'=. y
-NB.! 'srcdb same as snkdb' assert -.DB-:&filecase_j_ srcdb
+NB. 'srcdb same as snkdb' assert -.DB-:&filecase_j_ srcdb
 d=. getdb''
 snktloc=. getloc__d snkt
 a=. jdcols snkt
@@ -402,7 +427,7 @@ snkcs=. {:"1 a
 snkns=. {."1 a
 db=. DB
 try.
- jdaccess srcdb NB.! possible security implication
+ jdaccess srcdb NB. possible security implication
  d=. getdb''
  a=. jdcols srct
  srccs=. {:"1 a
@@ -454,7 +479,7 @@ assert 0=#1!:0<jpath snkpath['snk table already exists'
 
 db=. DB
 try.
- jdaccess srcdb NB.! possible security implication
+ jdaccess srcdb NB. possible security implication
  srcpath=. jpath(dbpath DB),'/',src
  assert 'table'-:jdfread srcpath,'/jdclass'
 catchd.
@@ -489,7 +514,7 @@ assert 0=#1!:0<jpath snkpath['snk table already exists'
 
 db=. DB
 try.
- jdaccess srcdb NB.! possible security implication
+ jdaccess srcdb NB. possible security implication
  srcpath=. jpath(dbpath DB),'/',src
  assert 'table'-:jdfread srcpath,'/jdclass'
 catchd.
@@ -544,7 +569,7 @@ CHILDREN_jd_=: ''
 JDOK
 )
 
-NB.! needs work
+NB. needs work
 jd_option=: 3 : 0
 a=. ;:y
 select. ;{.a 
@@ -581,7 +606,7 @@ case. 'ref2' do.
  t=. (brows,12)$'abc def'
  jd_createcol btab;'bref';'int' ;'_' ;i.brows
  jd_createcol btab;'bb12';'byte';'12';t
- jd'ref A aref B bref'rplc'A';atab;'B';btab NB.! jd_ref_jd_ fails
+ jd'ref A aref B bref'rplc'A';atab;'B';btab NB. jd_ref_jd_ fails
 case. 'one' do.
  genone }.y
 case. 'two' do.

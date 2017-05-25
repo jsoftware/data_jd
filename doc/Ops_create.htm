@@ -14,19 +14,16 @@
 <body>
 <p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="Convert.htm">Convert</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
 <h2 id="createcol">createcol</h2>
-<p>createcol table col type [trailing-shape] [data]</p>
-<p>creates new col with type and trailing-shape. col has default data or the arg data.</p>
-<p>data requires trailing-shape and _ indicates empty</p>
-<p>data includes deleted rows (similar to get/set)</p>
+<p>createcol table col type [trailing-shape]<br />createcol table col type [trailing-shape] ; data</p>
+<p>trailing-shape only allowed for byte</p>
+<p>creates new col (default values or data)</p>
 <pre><code>NB. example createcol
 jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
 jd&#39;createtable f&#39;
 jd&#39;createcol f a int&#39;
 jd&#39;insert f a&#39;;12 13 14
 jd&#39;createcol f b int&#39;
-jd&#39;createcol f c int 2&#39;
-jd&#39;createcol f d int _&#39;;88 89 90
-jd&#39;createcol f e int 2&#39;;100+i.3 2
+jd&#39;createcol f d int&#39;;88 89 90
 jd&#39;reads from f&#39;
 jdaccess olddan</code></pre>
 <h2 id="createdb">createdb</h2>
@@ -34,8 +31,11 @@ jdaccess olddan</code></pre>
 <p>valid only after a dropdb creates filefolder and initial files gets lock</p>
 <h2 id="createtable">createtable</h2>
 <p>createtable [/a MIN MULT XTRA] table [coldefs]</p>
-<p>createtable with 0 or more cols each col defined by: col type [trailing-shape]</p>
-<p>string arg coldefs separated by , or LF boxed arg coldefs in separate boxes</p>
+<p>createtable with 0 or more cols</p>
+<p>each col defined by: col type [trailing-shape]</p>
+<p>_ for trailing-shape is not valid (only in createcol with data)</p>
+<p>string arg coldefs separated by , or LF</p>
+<p>boxed arg coldefs in separate boxes</p>
 <p>/a parameters are: MIN-minimum rows, MULT-multiplier, XTRA-extra rows when insert requires mapped col file resize, new size is: MIN&gt;.&gt;.MULT*XTRA+current_rows+new_rows</p>
 <p>default alloc is 2000 1.5 0</p>
 <pre><code>NB. example createtable

@@ -28,11 +28,13 @@ jd'update f';'jdindex in (0,1,2)';'boolean';1;'int';2;'float';2.2;'byte';'b';'ed
 jd'update f';'jdindex in (0,1,2)';'boolean';1;'int';2;'float';2.2;'byte';'b';'edatetime';efs_jd_'2000'
 jd'update f';'jdindex in (0,1,2)';'byte4';'xxxx'
 jd'update f';'jdindex in (0,1,2)';'byte4';3 4$'xxxx'
+'count' jdae'update f';'jdindex in (0,1,2)';'byte4';1 4$'qqqq'
+jd'update f';'jdindex in (0,1,2)';'byte4';'mmmm'
+
 assert de-:jd etx 'update f';'jdindex in (0,1,2)';'byte4';2 4$'xxxx'
-assert de-:jd etx'update f';'jdindex in (0,1,2)';'byte4';1 4$'xxxx'
 
 jd'update f';'jdindex in (0,1,2)';'int';23
-assert de-:jd etx 'update f';'jdindex in (0,1,2)';'int';,23
+ETALLY_jd_ jdae'update f';'jdindex in (0,1,2)';'int';,23
 
 NB. edatetimen
 jd'update f';'jdindex=0';'edatetime';efs_jd_'2000'
@@ -49,10 +51,9 @@ jd'update f';'jdindex in (0,1,2)';'edatetime';0
 de-:jd etx'update f';'jdindex in (0,1,2)';'edatetime';'2000-01-01T00:00:00.123456789'
 assert 'extra precision'-:;1{jdlast
 
-
 NB. types
 jd'update f';'jdindex=0';'boolean';1
-assert de-:jd etx'update f';'jdindex=0';'boolean';2-1
+jd'update f';'jdindex=0';'boolean';2-1
 jd'update f';'jdindex=0';'int';0
 
 modifygen''

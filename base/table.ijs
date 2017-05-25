@@ -125,34 +125,85 @@ end.
 i.0 0
 )
 
-NB. argument is (column names),.(new data)
-Insert=: 3 : 0
+NB. arg is name,value pairs
+NB. return (possibly adjusted) names;values;trailing_shape
+fixpairs=: 4 : 0
+rows=. x
+'fixdata: odd number' assert (2<:#y)*.0=2|#y
+ns=. ,each(2*i.-:#y){y NB. list of names
+duplicate_assert ns
+notjd_assert ns
+unknown_assert ns-.NAMES
+if. x=_1 do. missing_assert ns-.~((<'jd')~:2{.each NAMES)#NAMES end. NB. insert
+
+ns=. vs=. ts=. ''
+count=: 1
+for_i. i.-:#y do.
+ j=. 2*i
+ n=. <,;j{y
+ FECOL_jd_=: >n
+ EUNKNOWN assert n e. NAMES
+ ns=. ns,n
+ c=. 0{CHILDREN{~NAMES i. n
+ ts=. ts,<shape__c
+
+ d=. fixtypex__c >(>:j){y
+ if. (-.''-:shape__c)*.({:$d)~:{:(#d),shape__c do. NB. overtake
+  ESHAPE assert ({:$d)<shape__c                    NB. do not undertake
+  d=. ({:(#d),shape__c){."1 d
+ end.
+ 
+ select. typ__c
+ case. 'edate' do.
+  EPRECISION assert *./(0=(86400*1e9)|d)+._9223372036854775808=d
+ case. 'edatetime' do.
+  EPRECISION assert *./(0=1e9|d)+._9223372036854775808=d
+ case. 'edatetimem' do.
+  EPRECISION assert *./(0=1e6|d)+._9223372036854775808=d
+ end.
+ 
+ d=. <d
+ vs=. vs,d
+ i=. >:i
+end.
+
+NB. data counts match #W or will extend
+NB. scalar cols extend always
+NB. list cols extend if trailinng shape
+
+s=. ;$@:$each vs    NB. scalar, list, table
+b=. s=0             NB. scalar extends
+k=. (s=1)*,;a:~:ts  NB. list extends if trailing shape
+b=. b+.k            NB. will extend
+a=. ;#each vs       NB. unadjusted counts
+
+if. rows=_1 do. NB. insert
+ a=. 1 (b#i.#b)}a NB. extenders marked as 1
+ rows=. >./a NB. number of rows to add to table
+ a=. rows (b#i.#b)}a
+else.
+ a=. rows (b#i.#b)}a NB. extenders marked
+end. 
+ETALLY assert a=rows
+ns;vs;rows
+)
+
+NB. x is rows to add to each col
+NB. y is (column names),.(new data)
+Insert=: 4 : 0
+
 N=.,&.> {."1 y
-if. #i =. (#~ -.@~:) N do.
-  throw 'Duplicated columns to insert: ',>([,', ',])&.>/ i
-end.
-if. #i =. N (e.#[) HIDCOL do.
-  throw 'Cannot insert to hidden columns: ',>([,', ',])&.>/ i
-end.
-if. #i =. getvisiblestatic NAMES -. HIDCOL,N do.
-  throw 'Missing columns to insert: ',>([,', ',])&.>/ i
-end.
-dat=. 4 : 'fixvalue__x y [ x=.getloc x'&.>/"1 y
-if. 1~:#len=.~. #`($:@{.)@.(0<L.)@> dat do.
-  throw 'Columns passed to insert are not the same length'
-end.
-len=.{.len
-if. len=0 do. return. end.
+dat=. {:"1 y
 
 step0=. getloc@> N
 rows=. Tlen
-setTlen Tlen+len
+setTlen Tlen+x  NB. 
 update_subscr'' NB. mark ref cols dirty
 
 try.
  step0  4 :'Insert__x >y'"0  dat NB. step 0: insert static columns
  1+FORCEREVERT#'a'
-catch.
+catchd.
  FORCEREVERT_jd_=: 0
  e=. 'insert failed: ',13!:12''
  setTlen rows

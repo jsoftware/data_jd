@@ -104,7 +104,7 @@ end.
 testqueries1 =: ([: read1 'dat'&,) testqueries
 
 testtype@> TYPES_CORE -. ;:'time enum varbyte'
-testtype@> ,&' 5'&.> TYPES_CORE -. ;:'float varbyte date datetime'
+NB. testtype@> ,&' 5'&.> TYPES_CORE -. ;:'float varbyte date datetime' - trailing shapes
 
 
 NB. bug - ref join where clause empty returns all rows

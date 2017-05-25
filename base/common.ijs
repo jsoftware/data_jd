@@ -246,6 +246,10 @@ duplicate_assert=: 3 : 0
 EDUPLICATE assert 0=#FECOL_jd_=: ;{.(1<+/y =/ y)#y
 )
 
+notjd_assert=: 3 : 0
+ENOTJD assert 0=#FECOL_jd_=: ;{.((<'jd')=2{.each y)#y
+)
+
 unknown_assert=: 3 : 0
 EUNKNOWN assert 0=#FECOL_jd_=: ;{.y
 )

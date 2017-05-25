@@ -219,7 +219,6 @@ r
 tempcol=: 3 : 0
  t=. ;: y
  r=. ''
- decho cp
  for_i. i.#t do.
   a=. i{t
   

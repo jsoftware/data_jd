@@ -41,6 +41,7 @@ test/stress_test.ijs
 test/table_append_test.ijs
 test/update_test.ijs
 test/utf8_test.ijs
+test/valid_data_test.ijs
 test/validate_test.ijs
 test/where_test.ijs
 )

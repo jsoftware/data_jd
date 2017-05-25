@@ -5,11 +5,10 @@ NB. =========================================================
 coclass deftype 'byte'
 DATASIZE =: 1
 DATAFILL =: ' '
-fixvalue=: 3 : 0
-'Invalid data rank' throwif (#$y) > ADDRANK + >:#shape
-if. shape =&# $y do. y=.,:y end.
-ESHAPE throwif shape +./@:< }.$y
-fixtype ({.~ #,shape"_) y
+fixtype=: ,@boxopen [ throwif@:(2 ~: 3!:0)
+fixtext=: >@:fixstring_jdcolumn_
+
+fixtypex=: 3 : 0
+ETYPE assert 2=3!:0 y
+y
 )
-fixtype =: ,@boxopen [ throwif@:(2 ~: 3!:0)
-fixtext =: >@:fixstring_jdcolumn_

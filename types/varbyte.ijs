@@ -10,26 +10,31 @@ makecolfiles=: 3 : 0
 writestate''
 )
 
-DATAFILL =: <''
-fixtype =: 3 : 0
-  y =. boxopen y
-  throwif 1 < L. y
+DATAFILL=: <''
+
+fixtype=: 3 : 0
+y =. boxopen y
+throwif 1 < L. y
   if. (2 *./@:= 3!:0@>) y do.
     if. +./(1 < #@$)@> y do. throw 'jde: (COL) varbyte data item must be scalar or list'rplc'COL';NAME end.
     shp=. 1:`$@.(0~:#@$) y
     y=. ((($$+/\@:(_1&(|.!.0))@,) ,"0 ])@:(#@>) ; ;@,) ,y
     y=. (((shp&$)&.>)@{.,{:) y
-  else.
-    'y_dat y_val' =. y
-    'Invalid index shape' throwif shape ([ -.@-: #@[{.]) }.$y_dat
-    'Ravel is not a list' throwif 1 ~: #$y_val
-    y=. (fixtype_jdtint_ y_dat) ; (fixtype_jdtbyte_ y_val)
-  end. y
+  end.
+y
 )
 
-fixtext =: fixstring_jdcolumn_
-fixinsert =: 3 : 0
+fixtext=: fixstring_jdcolumn_
+
+fixinsert=: 3 : 0
 ((0,~#val)&+"1&.>@{. , {:) y
+)
+
+fixtypex=: 3 : 0
+ETYPE assert 1=L. y
+ETYPE assert 2=;3!:0 each y
+ETYPE assert 2>;$@:$each y
+y
 )
 
 Revert=: 3 : 0
@@ -52,7 +57,11 @@ modify=: 4 : 0
 for_n. i.#x do.
  i=. n{x
  'j k'=. i{dat
- d=. ;n{y
+ if. 1=#y do.
+  d=. ;{.y NB. scalar extension
+ else. 
+  d=. ;n{y
+ end. 
  if. k>:#;d do.
   dat=: (j,#d) i}dat 
   val=: d (j+i.#d)}val

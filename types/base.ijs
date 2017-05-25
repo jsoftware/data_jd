@@ -3,7 +3,7 @@ NB. Template for a type class
 NB. Atomic types will inherit from this
 
 coclass 'jdtbase'
-DATATYPES_jd_ =: ''
+DATATYPES_jd_=: ;:'boolean int index float autoindex byte timelike date datetime elike edate edatetime edatetimem edatetimen varbyte'
 visible =: 1
 static =: 1
 MAP =: ;:'dat'
@@ -18,13 +18,12 @@ makecolfiles=: 3 : 0
 writestate''
 )
 
-getmessage =: 'Invalid ',".@:('typ'"_),' data'"_
-throwif =: (throw@getmessage^:]) : (throw@[^:]) NB. for use in fixtype
-ADDRANK =: 0  NB. additional rank fixtype can handle
-fixtype =: ,@boxopen
-fixinsert =: ]
+getmessage=: 'Invalid ',".@:('typ'"_),' data'"_
+throwif=: (throw@getmessage^:]) : (throw@[^:])
 
-fixtype_where =: 3 : 0
+fixinsert=: ]
+
+fixtype_where=: 3 : 0
 d =. fixtext y
 if. 0=#shape do.
   if. 1<*/$d do.
@@ -40,7 +39,8 @@ if. ($d) > s =. (<:#$d) ({.,*/@:}.) shape do.
 end.
 shape $ s {.!.DATAFILL d
 )
-fixtext =: fixtype_num&.,:@:fixnum
+
+fixtext=: fixtype_num&.,:@:fixnum
 
 NB. note special code for join with empty table
 select=: 3 : 0
@@ -51,38 +51,26 @@ else.
 end.
 ) 
 
-NB. modify data in place
-NB. mark ref cols as dirty if subscr cols are changed
 modify=: 4 : 0
 if. (<NAME)e.;{:"1 SUBSCR__PARENT do. update_subscr__PARENT <NAME end. NB. mark ref dirty if required
-if. (-.''-:shape)*.({:$y)~:{:(#x),shape do.
- y=. ({:(#x),shape){."1 y
-end. 
-dat=: (fixinsert y) x} dat
+dat=: y x} dat
 )
 
-NB. =========================================================
-NB. Should only be called by the table.
 Insert=: 3 : 0
 if. 0=#MAP do. return. end.
-NB. assert. (dat +&# 0{::y) = Tlen
-NB. assert -.FORCEINSERTFAIL_jd_-:NAME
-MAP appendmap&> fixinsert y  NB. fixinsert inherited from type
+t=. Tlen-#dat
+if. t~:#y do. y=. (t,shape)$y end. 
+if. typ-:'varbyte' do.
+ y=.   fixinsert fixtype y
+ MAP appendmap&> y
+else. 
+ MAP appendmap&> <y NB. fixinsert inherited from type
+end. 
 )
 
 Revert=: 3 : 0
 if. 0=#MAP do. return. end.
 y 4 :'(x) =: y{.".x'~^:(<#@".) >{.MAP
-)
-
-NB. =========================================================
-NB. fix a value for insertion
-fixvalue=: 3 : 0
-if. (''-:shape)*.1={:$y do. y=. ,y end. 
-'Invalid data rank' throwif (#$y) > ADDRANK + >:#shape
-if. shape =&# $y do. y=.,:y end.
-ESHAPE throwif shape ([ -.@-: #@[ {. ]) }.$y
-fixtype y
 )
 
 NB. =========================================================
@@ -92,7 +80,6 @@ deftype  =: 3 : 0
   DATATYPES_jd_ =: DATATYPES_jd_, <typ__loc =: y
   'jdt',y
 )
-
 
 NB. =========================================================
 NB. Primitive where queries

@@ -217,8 +217,8 @@ catchd.
 end.
 )
 
-NB.! following code should be made as robust and general as possible
-NB.  it should then be refactored into JHS (where it came from)
+NB. following code should be made as robust and general as possible
+NB. it should then be refactored into JHS (where it came from)
 
 NB. send socket data
 NB. return count of bytes sent

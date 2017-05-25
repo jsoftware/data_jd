@@ -7,9 +7,9 @@ jd'reads from f,f.g'
 assert 0=dirty__c
 
 NB. update of uninvolved cols
-jd'update f';'jdindex=1';'a0';'new stuff'
+jd'update f';'jdindex=1';'a0';12{.'new stuff'
 assert 0=dirty__c
-jd'update g';'jdindex=1';'bb12';'new stuff'
+jd'update g';'jdindex=1';'bb12';12{.'new stuff'
 assert 0=dirty__c
 
 NB. update of involved cols
@@ -17,7 +17,7 @@ jd'update f';'jdindex=1';'aref';2
 assert 1=dirty__c
 jd'reads from f,f.g'
 assert 0=dirty__c
-jd'update g';'jdindex=2';'bref';1;'bb12';'should show'
+jd'update g';'jdindex=2';'bref';1;'bb12';12{.'should show'
 assert 1=dirty__c
 jd'reads from f,f.g'
 assert 0=dirty__c

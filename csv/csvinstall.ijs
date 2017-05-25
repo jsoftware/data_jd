@@ -23,7 +23,7 @@ jdval=: jdfiles,each<'val'
 
 NB. csvdat=: jpath each (<pathcsvfolder),each '/',each (<'c_'),each CSVCOLS
 NB. csvval=: jpath each (<pathcsvfolder),each '/',each (<'v_'),each CSVCOLS
-NB.! assume ccfiles and cvfiles from immediately previous csvload/csvappend
+NB. assume ccfiles and cvfiles from immediately previous csvload/csvappend
 
 csvdat=: (a:~:ccfiles)#ccfiles
 csvval=: (a:~:ccfiles)#cvfiles
