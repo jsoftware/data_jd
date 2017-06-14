@@ -746,10 +746,11 @@ i=. 1 i.~('NB. example ',y) E. d
 d=. i}.d
 i=. 1 i.~'</code>' E. d
 d=. i{.d
-d=. d rplc '&lt;';'<';'&gt;';'>';'&#39;';''''
+d=. d rplc '&quot;';'"';'&lt;';'<';'&gt;';'>';'&#39;';''''
 f=. '~temp/jdexample.ijs'
 d fwrite f
-loadd f
+NB. loadd f
+0!:1 <jpath (4!:55 ;:'d f i y') ] f
 )
 
 assertnoref=: 3 : 0
