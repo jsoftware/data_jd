@@ -10,7 +10,7 @@ NB. is pushed to Jsoftware for building JAL data/jd package
 
 NB. all use of the Jd library is through JDP_z_
 
-jdversion_jd_=: '4.1'
+jdversion_jd_=: '4.2'
 
 nokey_jd_=: 0 : 0 rplc 'INDEX.HTM';jpath '~addons/data/jd/doc/Index.htm'
 
@@ -35,7 +35,6 @@ INDEX.HTM
 'Jd requires addon jfiles'assert fexist '~addons/data/jfiles/jfiles.ijs'
 require'jfiles'
 require'data/jmf'
-require'~addons/ide/jhs/sp.ijs'
 
 3 : 0''
 if. 0*.IFWIN do.

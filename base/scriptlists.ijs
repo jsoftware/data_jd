@@ -62,7 +62,8 @@ tutorial/log_tut.ijs
 tutorial/performance_tut.ijs
 tutorial/ptable_tut.ijs
 tutorial/reads_tut.ijs
-tutorial/server_tut.ijs
+tutorial/server-jhs_tut.ijs
+tutorial/server-zmq_tut.ijs
 tutorial/setget_tut.ijs
 tutorial/table_from_array_tut.ijs
 tutorial/table_table_tut.ijs

@@ -6,7 +6,7 @@ NB. hash does not help Jd performance
 
 jdadminx 'timing'
 jd'createtable t';'a int';'b byte 8';'c byte 4';'d byte 12'
-N=:20e6
+N=:20e6 5e6{~IFIOS+.IFRASPI+.UNAME-:'Android'  NB. arm64
 group1=.10 8 $ 8 # a. {~ 97+(i.10)
 group1v=. group1 {~ ?. N#10
 group2=.10 4 $ 4 # a. {~ 97+(i.5)

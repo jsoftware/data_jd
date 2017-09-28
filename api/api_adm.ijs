@@ -478,6 +478,7 @@ jdadmin 0
 )
 
 jdrt=: 3 : 0
+if. 80607<:0".(fread  '~system/config/version.txt')-.CRLF,'.' do. require'labs/labs' end. NB.! spx vs new labs
 aa=. 9}.each _8}.each tuts
 demo=. _4}.each(>:;demos i:each'/')}.each demos
 basic=. 'intro';'reads';'from';'admin';'csv';'csv_load';'join';'epochdt';'table_from_array'

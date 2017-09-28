@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '2.3.8'
+VERSION=: '2.2.4'
 
 FILES=: 0 : 0
 manifest.ijs
@@ -86,13 +86,14 @@ tutorial/intro_tut.ijs
 tutorial/custom_tut.ijs
 tutorial/performance_tut.ijs
 tutorial/join_tut.ijs
+tutorial/server-jhs_tut.ijs
 tutorial/aggregation_tut.ijs
 tutorial/log_tut.ijs
 tutorial/table_from_array_tut.ijs
 tutorial/from_tut.ijs
 tutorial/epochdt_tut.ijs
-tutorial/server_tut.ijs
 tutorial/reads_tut.ijs
+tutorial/server-zmq_tut.ijs
 tutorial/link_tut.ijs
 tutorial/csv_tut.ijs
 tutorial/dropstop_tut.ijs
