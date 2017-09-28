@@ -28,7 +28,7 @@ c=: jd_server_start portjd
 access__c=: 'sandp u/p' NB. access info
 run__c'info table'      NB. rpcjd called with 'info table'
 run__c'reads from j'
-runsu__c'i.23'          NB. superuser fails with no password
+'asserttion failure'-: runsu__c etx 'i.23' NB. superuser fails with no password
 su__c=: 'su:1234'       NB. set superuser password
 runsu__c'i.23'          NB. superuser fails with no password
 runsu__c'jdadmin''northwind'''

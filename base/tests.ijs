@@ -21,7 +21,7 @@ OLDALLOC_jd_=: ROWSMIN_jdtable_,ROWSMULT_jdtable_,ROWSXTRA_jdtable_
 'ROWSMIN_jdtable_ ROWSMULT_jdtable_ ROWSXTRA_jdtable_'=: 4 1 0 NB. lots of resizecsvonly=. 'csv'-:y
 fast=. 'fast'-:y
 csvonly=. 'csv'-:y
-t=. ALLTESTS=:  (tests_jd_,tuts_jd_,demos_jd_)-.<'tutorial/csv_load_tut.ijs'
+t=. ALLTESTS=:  ((tests_jd_,tuts_jd_,demos_jd_)-.<'tutorial/csv_load_tut.ijs')-.<'tutorial/server-zmq_tut.ijs'
 if. fast do. t=. t-.'test/dynamic_test.ijs';'tutorial/unique_tut.ijs' end. NB. remove slow tests
 t=. t,~each<JDP
 if. -.IFJHS do. t=. t-.<JDP,'tutorial/server_tut.ijs' end.
