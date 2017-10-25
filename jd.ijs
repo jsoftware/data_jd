@@ -10,31 +10,48 @@ NB. is pushed to Jsoftware for building JAL data/jd package
 
 NB. all use of the Jd library is through JDP_z_
 
-jdversion_jd_=: '4.2'
+jdversion_jd_=: '4.3'
 
 nokey_jd_=: 0 : 0 rplc 'INDEX.HTM';jpath '~addons/data/jd/doc/Index.htm'
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 Jd key: missing or invalid
-email: jdinfo@jsoftware.com
-to provide basic info and request a key
-
-non-commercial or evaluation key is free
-and does not require a license agreement
-
-See Jd documentation at:
-INDEX.HTM
+http://code.jsoftware.com/wiki/Jd/License
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 )
+
+evalkey_jd_=: 0 : 0
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+Jd key: evaluation period expired
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+)
+
+updatekey_jd_=: 0 : 0
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+Jd key: not valid for this version
+restore to earlier version or get new key
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+)
+
 
 'Jd requires J64'assert IF64=1
 ('Jd not supported on UNAME: ',UNAME) assert (<UNAME)e.'Win';'Linux';'Darwin' 
 'Jd requires addon jfiles'assert fexist '~addons/data/jfiles/jfiles.ijs'
 require'jfiles'
 require'data/jmf'
+
+echo (t i.' ')}.t=. fread'~config/jdkey.txt'
 
 3 : 0''
 if. 0*.IFWIN do.
@@ -70,7 +87,10 @@ elseif. 1 do.
   p=. (p,'jpcre.dll')rplc'/';'\'
 end.
 LIBJD_jd_=: '"',t,'"'
-if. _1=r=. (LIBJD_jd_,' jdinit >x *c') cd <jpath'~config' do. assert 0[echo nokey_jd_ end.
+r=. (LIBJD_jd_,' jdinit >x *c') cd <jpath'~config'
+if. _1=r do. assert 0[echo nokey_jd_ end.
+if. _2=r do. assert 0[echo evalkey_jd_ end.
+if. _3=r do. assert 0[echo updatekey_jd_ end.
 'Jd binary and J code mismatch - bad install'assert r=8 NB. 7 - jd3 and 8 -jd4
 'Jd regexinit failed'assert 0=(LIBJD_jd_,' regexinit >x *c') cd <p 
 )

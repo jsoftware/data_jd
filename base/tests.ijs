@@ -24,7 +24,7 @@ csvonly=. 'csv'-:y
 t=. ALLTESTS=:  ((tests_jd_,tuts_jd_,demos_jd_)-.<'tutorial/csv_load_tut.ijs')-.<'tutorial/server-zmq_tut.ijs'
 if. fast do. t=. t-.'test/dynamic_test.ijs';'tutorial/unique_tut.ijs' end. NB. remove slow tests
 t=. t,~each<JDP
-if. -.IFJHS do. t=. t-.<JDP,'tutorial/server_tut.ijs' end.
+if. -.IFJHS do. t=. t-.<JDP,'tutorial/server-jhs_tut.ijs' end.
 failed=: ''
 jdt=: i.0 2
 'test start'logjd_jd_''

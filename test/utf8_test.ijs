@@ -1,5 +1,20 @@
 NB. Copyright 2017, Jsoftware Inc.  All rights reserved.
 
+echo (UNAME-:'Darwin')#0 : 0
+
+OSX expected error - filenames stored in decomposed form
+Jd does not currently have code to convert 
+decomposed file system form to composed form required by Jd
+
+The following accented a chars look the same, but have different values.
+
+   a.i.'ä' NB. utf8 from J
+195 164
+   a.i.'ä' NB. after 'corruption' from file system
+97 204 136   
+
+)
+
 jdadminx'test'
 jd'createtable Käyf'
 jd'createcol Käyf Käyfc int'

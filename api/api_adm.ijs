@@ -478,7 +478,13 @@ jdadmin 0
 )
 
 jdrt=: 3 : 0
-if. 80607<:0".(fread  '~system/config/version.txt')-.CRLF,'.' do. require'labs/labs' end. NB.! spx vs new labs
+if. 80607<:0".(fread  '~system/config/version.txt')-.CRLF,'.' do.
+ require'labs/labs'
+ runtut=: lab_z_
+else.
+ require'~addons/ide/jhs/sp.ijs'
+ runtut_z_=: spx_jsp_
+end.
 aa=. 9}.each _8}.each tuts
 demo=. _4}.each(>:;demos i:each'/')}.each demos
 basic=. 'intro';'reads';'from';'admin';'csv';'csv_load';'join';'epochdt';'table_from_array'
@@ -495,9 +501,9 @@ end.
 t=. 'tutorial/',y,'_tut.ijs'
 d=. 'demo/',y,'/',y,'.ijs'
 if. (#tuts)>tuts i. <t do.
- spx JDP,t
+ runtut JDP,t
 elseif. (#demos)>demos i. <d do.
- spx JDP,d
+ runtut JDP,d
 elseif. 1 do.
  'invalid tutorial name'assert 0
 end.

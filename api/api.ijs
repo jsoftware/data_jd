@@ -7,6 +7,28 @@ NB. Jd API provices same interface to JD in task as to JD sever
 NB. jd_cmd that uses abc must do jd_abc ... and not jd'abc ... to get errors
 
 0 : 0
+OSX expected error - filenames stored in decomposed form
+Jd does not currently have code to convert 
+decomposed file system form to composed form required by Jd
+
+The following accented a chars look the same, but have different values.
+
+   a.i.'ä' NB. utf8 from J
+195 164
+   a.i.'ä' NB. after 'corruption' from file system
+97 204 136   
+
+osx iconv utility converts decomposed file names to composed utf8
+
+iconv -f UTF-8-MAC -t UTF-8 bad.txt > good.txt
+
+possible fix is to shell iconv where necessary
+this is Jd specific fix and not general J fix
+
+this would need to be done for 1!:0, map, ???
+)
+
+0 : 0
 ideas on error message
 
 locale jde contains names to include in jdlast
@@ -315,6 +337,7 @@ RESERVEDWORDS=: ;:'by from where order'
 
 vdname=: 3 : 0 NB. validate dan name
 ('invalid name: ',y)assert (0~:#y) *. ('~'~:{.y) *.(2=3!:0 y) *. (2>$$y) *. (*./-.RESERVEDCHARS e. y) *. -.RESERVEDWORDS e.~<y
+if. UNAME-:'Darwin' do. ('invalid name (OSX filename - unicode composed vs decomposed): ',y)assert 127>a.i.y end.
 )
 
 vtname=: 3 : 0 NB. validate table name

@@ -2,7 +2,7 @@ NB. lab for jcs Jd server
 NB. this lab assumes you are familiar with jcs and Jd
 
 NB. to learn about jcs, run:
-NB.    lab'~addons/net/jcs/jcs_lab.ijs'
+NB.    lab'~addons/net/jcs/jcs.ijt'
 
 require'~addons/net/jcs/jcs.ijs'
 version_jcs_''   NB. zmq version - error if problems with zmq installation

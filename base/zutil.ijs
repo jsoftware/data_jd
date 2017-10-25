@@ -3,6 +3,15 @@ coclass'z'
 
 forcecopy_z_=: a: { ]
 
+NB. same as in JHS sp.ijs
+sptable_z_=: 3 : 0
+t=. 9!:6''
+9!:7[11$' '
+d=. ":y
+9!:7 t 
+(-.*./"1 d="1 1[' '#~{:$d)#d
+)
+
 NB. from test suite tsu.ijs - return expected error
 etx_z_=: 1 : 'x :: (<:@(13!:11)@i.@0: >@{ 9!:8@i.@0:)'
 

@@ -1,4 +1,4 @@
-NB. Copyright 2017, Jsoftware Inc.  All rights reserved.
+NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 NB. data/jd manifest
 
 CAPTION=: 'Jd'
@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '4.2.1'
+VERSION=: '2.2.4'
 
 FILES=: 0 : 0
 manifest.ijs
@@ -221,4 +221,4 @@ test/where_test.ijs
 test/csv_test.ijs
 )
 
-RELEASE=: 'j805 j806'
+RELEASE=: 'j804 j805 j806'
