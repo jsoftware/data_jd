@@ -44,9 +44,8 @@
 <li>the <code>^</code> character is used by the system in table names for ptable and should be avoided</li>
 </ul>
 <h2 id="types">Types</h2>
-<p>Standard types are: boolean, int, float, byte.</p>
-<p>All standard types can have trailing shape.</p>
-<pre><code>jd&#39;createtable f a int 2,b byte 4&#39; NB. n,2 int and n,4 byte</code></pre>
+<p>Standard types are: boolean, int, float, byte. Only type byte can have a trailing shape.</p>
+<pre><code>jd&#39;createtable f a int,b byte 4&#39; NB. int and byte cols</code></pre>
 <p>There are also date types, and varbyte - a variable sized byte type.</p>
 <p>Date types are stored internally as int, and converted on read/write:</p>
 <h3 id="edate-epochdt">edate (epochdt)</h3>

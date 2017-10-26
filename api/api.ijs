@@ -751,7 +751,7 @@ end.
 r;a
 )
 
-ophtmls=: 'Ops_info';'Ops_read';'Ops_change';'Ops_manage';'Ops_dynamic';'Ops_csv';'Ops_table-table';'Ops_misc'
+ophtmls=: 'Ops_info';'Ops_read';'Ops_change';'Ops_create';'Ops_drop';'Ops_rename';'Ops_join';'Ops_csv';'Ops_table-table';'Ops_misc'
 
 jdex=: 3 : 0
 y=. dltb y

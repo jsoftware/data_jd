@@ -75,8 +75,10 @@ jd'ref T id U id'
 jd'ref T aid U id'
 jd'reads from T'
 jd'reads from U'
-jd'info schema' NB. normal cols
+'Ambiguous'jdae'reads from T,T.U' NB. don't know which ref to use
 jd'info ref'
+jd'reads from T,T.jdref_id_U_id'
+jd'reads from T,T.jdref_aid_U_id'
 
 NB. join tables with a two column ref
 jdadminx'test'

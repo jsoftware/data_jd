@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '4.2.2'
+VERSION=: '2.2.4'
 
 FILES=: 0 : 0
 manifest.ijs
@@ -113,7 +113,6 @@ doc/Ops_read.htm
 doc/Index.htm
 doc/General.htm
 doc/Ops_info.htm
-doc/Ops_manage.htm
 doc/Overview.htm
 doc/Technical.htm
 doc/Release.htm
@@ -126,7 +125,6 @@ doc/Admin.htm
 doc/Ops_join.htm
 doc/Ops_drop.htm
 doc/Ops_misc.htm
-doc/Ops_dynamic.htm
 doc/Guide.htm
 doc/Ops_change.htm
 cd/libjd.dylib

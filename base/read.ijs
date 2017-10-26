@@ -282,7 +282,7 @@ c ; j
 NB. y is a table name. Turn into a reference column locale.
 getreadref_jdtable_=: 3 : 0
 if. NAMES e.~ <y do.
-  if. 'reference' -: 3 : 'typ__y' l=.getloc y do. l return. end.
+  if. 'ref' -: 3 : 'typ__y' l=.getloc y do. l return. end.
 end.
 r=.FindRef y
 if. 1<#r do.  throw 'Ambiguous reference to table ',y end.

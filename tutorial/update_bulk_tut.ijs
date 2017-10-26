@@ -13,7 +13,6 @@ NB. Single update of Town for Mercedes, ID=14
 jd'update GC';'ID=14';'Town';,:30{.'Stuttgart-Untertuerkheim'
 
 jd'reads from GC'
-NB. Notice that the entry for Mercedes now appears at the end
 
 jd'reads from GC order by ID'
 
@@ -27,12 +26,9 @@ jd'reads from GC'
 
 empty 0 : 0
 Oops, that is not what we had in mind!
-The car makers have been partially relocated.
-Notice that the sequence of the IDs 10, 18, and 42
-is unchanged, except that they now appear at the end.
-When doing a bulk update it is mandatory to pass
-data to the update routine according to the
-sequence in which they show up in an unsorted read.
+when doing a bulk update it is mandatory to pass
+data to the update according to the
+sequence in which they show up in an unsorted read
 )
 
 NB. Delete the whole table
@@ -43,13 +39,12 @@ jd'insert GC';'ID';10 14 17 18 22 42;'Name';(20{."1>'Porsche';'Mercedes';'BWM';'
 jd'reads from GC'
 
 empty 0 : 0
-Prior to updating data let us read the records
-that are affected.
-ID is our "primary" key. The sequence in which the
-IDs re submitted to the where-clause does not matter.
+prior to updating data, read the affected records
+order of IDs in where does not affect order of records in result
 )
 
-]db=.jd 'read ID from GC where ID in 42, 10, 18'
+]db=.jd 'read ID from GC where ID in 18,10,42'
+]db=.jd 'read ID from GC where ID in 42,10,18'
 
 NB. Update records as before
 ]upd_town=:'Town';3 30{.>'Sindelfingen';'Stuttgart-Zuffenhausen';'Wolfsburg-Autostadt'
