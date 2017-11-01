@@ -1,68 +1,120 @@
 NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
-NB. join examples from wikipedia - sql join
-NB. see join section in user.html
 
-jdadminx'wj'
-
-etc=: 0 : 0
-name  byte 12
-depid int
+0 : 0
+probably more tests to verify correct behavior than a tutorial
+some join examples from wikipedia - sql join
 )
 
-a=: 12{."1>;:'Rafferty Jones Steinberg Robinson Smith John Rafferty'
-b=: 31 33 33 34 34 36 33
+bld=: 3 : 0
+jdadminx'wj'
+jd'createtable a id int,name byte'
+jd'insert a';'id';1 2 3 4 1 2 3;'name';'abcdefg'
+jd'createtable b id int,name byte'
+jd'insert b';'id';2 1 3 1 2;'name';'qwert'
+)
 
-jd'createtable';'et';etc
+bld''
+
+jd'reads from a'
+jd'reads from b'
+
+jd'ref a id b id'
+[t1=. jd'reads from a,a.b' NB. left 1 - only last of matching rows
+assert 'rte rte'-:,'b.name'jdfroms_jd_ t1
+
+assert 'rr'-:,'b.name'jdfroms_jd_ t=. jd'reads from a,a.b where b.id=1'
+assert 0=#>{.{:t=. jd'reads from a,a.b where b.id=23'
+
+jd'dropcol a jdref_id_b_id'
+jd'ref /left a id b id'
+[t2=. jd'reads from a,a>b' NB. left outer - all matching rows
+assert 'wrqte wrqte'-:,'b.name'jdfroms_jd_ t2
+
+[t=. jd'reads from a,a>b where b.id=1'
+assert 'wrwr'-:,'b.name'jdfroms_jd_ t
+
+[t=. jd'reads from a,a>b where b.id=23'
+assert 0=#>{.{:t
+
+NB. left1 derived from left
+[t2=. jd'reads from a,a.b'
+assert t1-:t2 NB. left1 same as left1 derived from left
+assert 'rr'-:,'b.name'jdfroms_jd_ t=. jd'reads from a,a.b where b.id=1'
+assert 0=#>{.{:t=. jd'reads from a,a.b where b.id=23'
+
+NB. inner dervied from left
+[t3=. jd'reads from a,a-b'
+assert 'wrqtewrqte'-:,'b.name'jdfroms_jd_ t3
+
+bld1=: 3 : 0
+jdadminx'wj'
+a=. 12{."1>;:'Rafferty Jones Steinberg Robinson Smith John Rafferty'
+b=. 31 33 33 34 34 36 33
+
+jd'createtable et name byte 12,depid int'
 jd'insert';'et';'name';a;'depid';b
 
-dtc=: 0 : 0
-depid int
-dname byte 12
+a=. 12{."1>;:'Sales Engineering Clerical Marketing'
+b=. 31 33 34 35
+jd'createtable dt depid int,dname byte 12'
+jd'insert';'dt';'depid';b;'dname';a
 )
 
-a=: 12{."1>;:'Sales Engineering Clerical Marketing'
-b=: 31 33 34 35
-jd'createtable';'dt';dtc
-jd'insert';'dt';'depid';b;'dname';a
-[et=: jd'reads from et'
-[dt=: jd'reads from dt'
+NB. first part deals with left1 join
 
-NB. ref command allow joins between tables
-jd'ref et depid dt depid'
+bld1''
 
-jd'ref dt depid et depid'
+jd'reads from et'
+jd'reads from dt'
+
+NB. ref /left command allows left1, left, and inner joins
+jd'ref /left et depid dt depid'
+jd'reads from et,et.dt' NB. left1
+jd'reads from et,et-dt' NB. inner
+jd'reads from et,et>dt' NB. left
+
+jd'ref /left dt depid et depid'
 jd'reads from dt,dt.et' NB. left1
+jd'reads from dt,dt-et' NB. innner
+jd'reads from dt,dt>et' NB. left
 
 NB. multiple ref columns
-ext=: 0 : 0
-name  byte 12
-state int
-city  int
-)
-
-a=: 12{."1>;:'Rafferty Jones Steinberg Robinson Smith John'
-b=: 1 1 2 2 3 0
-c=: 1 2 1 2 4 0
+bld2=: 3 : 0
+jdadminx'wj'
+ext=. 'name  byte 12,state int,city  int'
+a=. 12{."1>;:'Rafferty Jones Steinberg Robinson Smith John'
+b=. 1 1 2 2 3 0
+c=. 1 2 1 2 4 0
 jd'createtable';'ext';ext
 jd'insert';'ext';'name';a;'state';b;'city';c
-
-dxt=: 0 : 0
-dname byte 12
-state int
-city  int
-)
-
-a=: 12{."1>;:'Sales Engineering Clerical Marketing'
-b=: 2 2 3 1 
-c=: 1 2 4 1
+dxt=. 'dname byte 12,state int,city  int'
+a=. 12{."1>;:'Sales Engineering Clerical Marketing'
+b=. 2 2 3 1 
+c=. 1 2 4 1
 jd'createtable';'dxt';dxt
 jd'insert';'dxt';'dname';a;'state';b;'city';c
+)
 
-jd'ref ext state city dxt state city'
-
+bld2''
 jd'reads from ext'
 jd'reads from dxt'
-jd'reads from ext,ext.dxt' NB. left1
+jd'ref ext state city dxt state city'
+[t1=. jd'reads from ext,ext.dxt' NB. left1
+ assert'MarketingSalesEngineeringClerical'-:' '-.~,'dxt.dname'jdfroms_jd_ t1
+
+NB. verify left is correct
+jd'dropcol ext jdref_state_city_dxt_state_city'
+jd'ref /left ext state city dxt state city'
+[t2=. jd'reads from ext,ext>dxt'
+assert t1-:t2 NB. no dups so > is same as left1
+assert 6=#'ext.name'jdfroms_jd_ t1
+
+[t2=. jd'reads from ext,ext.dxt' NB. left1 derived from left
+assert t1-:t2
+
+NB. verify inner derived from left is correct
+[t=. jd'reads from ext,ext-dxt'
+assert 4=#'ext.name'jdfroms_jd_ t
 
 NB. multiple references between tables
 jd'dropdb'
@@ -94,6 +146,22 @@ jd'reads from t2'
 jd'reads from t1,t1.t2'
 jd'info schema'
 jd'info schema t2'
+
+
+jdadminx'wj'
+jd'createtable a an byte 4'
+jd'insert a an';5 4$'abcdefjhkkkkijklnnnn'
+jd'createtable b bn byte 4'
+jd'insert b bn';1|.5 4$'abcdefjhkkkkijklnnnn'
+jd'reads from a'
+jd'reads from b'
+jd'ref a an b bn'
+[t=. jd'reads a.jdindex,b.jdindex,a.an,b.bn from a,a.b'
+assert ('a.an'jdfroms_jd_ t)-:'b.bn'jdfroms_jd_ t
+jd'dropcol a jdref_an_b_bn'
+jd'ref /left a an b bn'
+[t=. jd'reads a.jdindex,b.jdindex,a.an,b.bn from a,a.b'
+assert ('a.an'jdfroms_jd_ t)-:'b.bn'jdfroms_jd_ t
 
 NB. readers should experiment further with 
 NB.  A join B, B join C

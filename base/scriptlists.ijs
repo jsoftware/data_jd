@@ -16,6 +16,7 @@ test/insert_test.ijs
 test/jdindex_test.ijs
 test/join_test.ijs
 test/joinorder_test.ijs
+test/joinx_test.ijs
 test/log_test.ijs
 test/modify_test.ijs
 test/multicol_test.ijs
@@ -48,8 +49,8 @@ test/where_test.ijs
 tuts=: <;._2 [ 0 : 0
 tutorial/admin_tut.ijs
 tutorial/aggregation_tut.ijs
+tutorial/bus_lic_tut.ijs
 tutorial/csv_details_tut.ijs
-tutorial/csv_load_tut.ijs
 tutorial/csv_tut.ijs
 tutorial/custom_tut.ijs
 tutorial/dropstop_tut.ijs
@@ -61,6 +62,7 @@ tutorial/link_tut.ijs
 tutorial/log_tut.ijs
 tutorial/performance_tut.ijs
 tutorial/ptable_tut.ijs
+tutorial/quandl_ibm_tut.ijs
 tutorial/reads_tut.ijs
 tutorial/server-jhs_tut.ijs
 tutorial/server-zmq_tut.ijs

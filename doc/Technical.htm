@@ -86,11 +86,6 @@ save the file, restart system, and verify new ulimit</code></pre>
 <h2 id="performance">Performance</h2>
 <p>See pmhelp_jd_ for info.</p>
 <p>Folder pm has scripts for performance measurement.</p>
-<h2 id="ref">Ref</h2>
-<p>.../db/tab/refcol/jdstate has dirty flag and starts as 1</p>
-<p>set 0 whenever ref col is recalculated</p>
-<p>set 1 when delete/update/insert done to either table</p>
-<p>jdstate written whenever dirty flag changes db can be closed with dirty 1</p>
 <h2 id="windows-search-service">Windows search service</h2>
 <p>Windows Search Service (content indexing, ...) can cause lots of disk activity and can interfere with Jd file operations and if possible should be disabled when using Jd.</p>
 <p>Disable Windows Search Service as follows:</p>

@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '4.2.3'
+VERSION=: '2.2.4'
 
 FILES=: 0 : 0
 manifest.ijs
@@ -75,7 +75,6 @@ demo/northwind/csv/Categories.csv
 demo/northwind/csv/Customers.csv
 demo/northwind/csv/Orders.csv
 demo/jhs/jdapp1.ijs
-tutorial/csv_load_tut.ijs
 tutorial/admin_tut.ijs
 tutorial/ptable_tut.ijs
 tutorial/update_bulk_tut.ijs
@@ -88,10 +87,12 @@ tutorial/performance_tut.ijs
 tutorial/join_tut.ijs
 tutorial/server-jhs_tut.ijs
 tutorial/aggregation_tut.ijs
+tutorial/quandl_ibm_tut.ijs
 tutorial/log_tut.ijs
 tutorial/table_from_array_tut.ijs
 tutorial/from_tut.ijs
 tutorial/epochdt_tut.ijs
+tutorial/bus_lic_tut.ijs
 tutorial/reads_tut.ijs
 tutorial/server-zmq_tut.ijs
 tutorial/link_tut.ijs
@@ -204,6 +205,7 @@ test/info_test.ijs
 test/jdindex_test.ijs
 test/cd_query_test.ijs
 test/modify_test.ijs
+test/joinx_test.ijs
 test/update_test.ijs
 test/sandp_test.ijs
 test/orderby_test.ijs

@@ -6,6 +6,8 @@ NB. Jd API provices same interface to JD in task as to JD sever
 
 NB. jd_cmd that uses abc must do jd_abc ... and not jd'abc ... to get errors
 
+jdex_z_=: jdex_jd_
+
 0 : 0
 OSX expected error - filenames stored in decomposed form
 Jd does not currently have code to convert 
@@ -417,7 +419,7 @@ JDE1001 assert 3=nc<'jd_',OP,'__d'
 
 NB. left1 only join (fast and simple) - ref starts out as dirty
 jd_ref=: 3 : 0
-y=. bdnames y
+y=. '/left 0'getoptions y
 ECOUNT assert (4<:#y)*.0=2|#y
 d=. getdb''
 t=. (2,(#y)%2)$y
@@ -432,7 +434,10 @@ for_t1. ts do.
  h=. jdgl :: 0: a,' ',n
  if. h-:0 do.
   loc=. getloc__d a
-  Create__loc n;'ref';<($t)$t1,}.,t
+  c=. Create__loc n;'ref';<($t)$t1,}.,t
+  left__c=: option_left
+ else.
+  'can not change /left option in existing ref'assert left__h=option_left
  end.
 end.
 JDOK
@@ -749,31 +754,6 @@ else.
  r=. ''
 end.
 r;a
-)
-
-ophtmls=: 'Ops_info';'Ops_read';'Ops_change';'Ops_create';'Ops_drop';'Ops_rename';'Ops_join';'Ops_csv';'Ops_table-table';'Ops_misc'
-
-jdex=: 3 : 0
-y=. dltb y
-d=. toJ ;fread each(<'.htm'),~each(<JDP,'doc/'),each ophtmls
-if. ''-:y do.
- i=. <"0 [12+('NB. example ' E. d)#i.#d
- d=. i}.each <d
- i=. d i.each LF
- ;LF,~each i{. each d
- return.
-end.
-if. y-:'read' do. y=. 'reads' end.
-i=. 1 i.~('NB. example ',y) E. d
-'example not found'assert i<#d
-d=. i}.d
-i=. 1 i.~'</code>' E. d
-d=. i{.d
-d=. d rplc '&quot;';'"';'&lt;';'<';'&gt;';'>';'&#39;';''''
-f=. '~temp/jdexample.ijs'
-d fwrite f
-NB. loadd f
-0!:1 <jpath (4!:55 ;:'d f i y') ] f
 )
 
 assertnoref=: 3 : 0

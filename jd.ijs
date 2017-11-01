@@ -10,7 +10,7 @@ NB. is pushed to Jsoftware for building JAL data/jd package
 
 NB. all use of the Jd library is through JDP_z_
 
-jdversion_jd_=: '4.3'
+jdversion_jd_=: '4.4'
 
 nokey_jd_=: 0 : 0 rplc 'INDEX.HTM';jpath '~addons/data/jd/doc/Index.htm'
 
@@ -44,6 +44,10 @@ restore to earlier version or get new key
 
 )
 
+3 : 0''
+if. 10~:#CRLF-.~fread jpath'~config/jdkey.txt' do. return. end.
+assert 0[echo updatekey_jd_
+)
 
 'Jd requires J64'assert IF64=1
 ('Jd not supported on UNAME: ',UNAME) assert (<UNAME)e.'Win';'Linux';'Darwin' 
@@ -136,6 +140,7 @@ types/varbyte.ijs
 )
 
 3 : 0''
+IFTESTS_jd_=: 0
 if. _1=nc<'OP_jd_' do. NB. one time inits
  FEOP_jd_=: OP_jd_=: 'none'
  TEMPCOLS_jd_=: i.0 2 
@@ -154,25 +159,21 @@ if. -.UNAME-:'Win' do.
 end.
 )
 
-jdwelcome_jd_=: 0 : 0 rplc 'BOOKMARK';(jpath JDP,'doc/Index.htm');'ULIMIT';ULIMIT_jd_
+jdwelcome=: 0 : 0 rplc 'BOOKMARK';(jpath JDP,'doc/Index.htm');'ULIMIT';ULIMIT_jd_
 Jd is Copyright 2017 by Jsoftware Inc. All Rights Reserved.
 Jd is provided "AS IS" without warranty or liability of any kind.
 
-Commercial users must have a Jd License from Jsoftware.
+All use must be under a Jd License from Jsoftware.
 
 Wiki documentation of the latest version of Jd is at:
  http://code.jsoftware.com/wiki/Jd/Index
 
 Snapshot of the Jd wiki for this release is at: 
  file://BOOKMARK
-
-There is a slight bias for JHS (running tutorials).
 ULIMIT
 Get started:
-   jdex_jd_''      NB. list examples from docs
-   jdex_jd_'reads' NB. run reads
-   jdrt_jd_''      NB. list tutorials
-   jdrt_jd_'intro' NB. run intro
+   jdex''      NB. list examples from docs
+   jdrt''      NB. list tutorials
 )
 
-echo'   jdwelcome_jd_ NB. run this sentence for important information'
+echo'   jdwelcome NB. run this sentence for important information'

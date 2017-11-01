@@ -103,6 +103,7 @@ if. ifhash do. MakeHashed nam end.
 )
 
 NB. compresses out deleted rows
+NB. jdref col marked dirty
 Delete=: 3 : 0
 r=. getwhere ,y
 if. #r do.
@@ -114,7 +115,7 @@ if. #r do.
   if. (<'jdindex')=i{NAMES do.
    continue
   elseif. (<'jd')=2{.each i{NAMES do.
-   if. -.dirty__c do. dat__c=. b#dat__c end.
+   setdirty__c 1
   elseif. 1 do.
    dat__c=. b#dat__c
   end. 

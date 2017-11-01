@@ -29,7 +29,7 @@ jd'reads from f,f.g'
 
 NB. delete left - should not mark dirty
 jd'delete f';'jdindex=1'
-assert 0=dirty__c
+assert 1=dirty__c
 jd'reads from f,f.g'
 assert 0=dirty__c
 

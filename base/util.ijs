@@ -1,10 +1,74 @@
 NB. Copyright 2015, Jsoftware Inc.  All rights reserved.
+jdrt_z_=:      jdrt_jd_
+jdex_z_=:      jdex_jd_
+
 coclass 'jd'
 
 MAXROWCOUNT=: 1e5
-HASHFAST=: 1         NB. use H code
-HASHPASSLEN=: <.2^60 NB. code exists byt not used
-HASHCREATE32BIT=: 0  NB. code exists but not used
+
+ophtmls=: 'Ops_info';'Ops_read';'Ops_change';'Ops_create';'Ops_drop';'Ops_rename';'Ops_join';'Ops_csv';'Ops_table-table';'Ops_misc'
+
+jdex=: 3 : 0
+y=. dltb y
+d=. toJ ;fread each(<'.htm'),~each(<JDP,'doc/'),each ophtmls
+if. ''-:y do.
+ i=. <"0 [12+('NB. example ' E. d)#i.#d
+ d=. i}.each <d
+ i=. d i.each LF
+ ;LF,~each (<'   jdex '''),each (i{. each d),each''''
+ return.
+end.
+if. y-:'read' do. y=. 'reads' end.
+i=. 1 i.~('NB. example ',y) E. d
+'example not found'assert i<#d
+d=. i}.d
+i=. 1 i.~'</code>' E. d
+d=. i{.d
+d=. d rplc '&quot;';'"';'&lt;';'<';'&gt;';'>';'&#39;';''''
+f=. '~temp/jdexample.ijs'
+d fwrite f
+NB. loadd f
+0!:1 <jpath (4!:55 ;:'d f i y') ] f
+)
+
+jdrt=: 3 : 0
+if. (-.IFJHS)*.80607<:0".(fread'~system/config/version.txt')-.CRLF,'.' do.
+ require'labs/labs'
+ runtut=: lab_z_
+else.
+ require'~addons/ide/jhs/sp.ijs'
+ runtut_z_=: spx_jsp_
+end.
+aa=. 9}.each _8}.each tuts
+basic=. 'intro';'reads';'from';'admin';'csv';'csv_load';'join';'epochdt';'table_from_array'
+demo=. _4}.each(>:;demos i:each'/')}.each demos
+csvload=. 'bus_lic';'quandl_ibm'
+advanced=. aa-.basic,csvload
+y=. ,dltb y
+if. y-:'' do.
+ t=. <'   jdrt '''
+ r=.   (<'basic:'),t,each basic,each''''
+ r=. r,(<'csvload:'),t,each csvload,each''''
+ r=. r,(<'demo:'),t,each demo,each''''
+ r=. r,(<'advanced:'),t,each advanced,each''''
+;r,each LF
+ return.
+end.
+if. 4=3!:0 y do.
+ decho basic,csvload,demo,advanced
+ y=. ;y{basic,csvload,demo,advanced
+end.
+t=. 'tutorial/',y,'_tut.ijs'
+d=. 'demo/',y,'/',y,'.ijs'
+if. (#tuts)>tuts i. <t do.
+ runtut JDP,t
+elseif. (#demos)>demos i. <d do.
+ runtut JDP,d
+elseif. 1 do.
+ 'invalid tutorial name'assert 0
+end.
+)
+
 
 NB. widows bug?
 NB.  fexist seems to 'sync' file ops and prevents ftypex from giving wrong answer 
@@ -417,3 +481,20 @@ tmemberof1=: tindexof~ < ttally@]
 tnubsieve1=: tindexof~ = i.@ttally
 ranking   =: i.!.0~ { /:@/:
 tgrade1   =: /: @ |: @: (ranking&>)
+
+NB. get zip file from joftware jdcsv and unzip in CSVFOLDER
+NB. used by bus_lic and qunadl_ibm tutorials
+getcsv=: 3 : 0 NB. get csv file if it doesn't already exist
+if. -.fexist CSVFOLDER__,y do.
+ require'pacman' NB. httpget
+ 'rc fn'=. httpget_jpacman_'www.jsoftware.com/download/jdcsv/',(y{.~y i.'.'),'.zip'
+ 'httpget failed'assert 0=rc
+ unzip=. ;(UNAME-:'Win'){'unzip';jpath'~tools/zip/unzip.exe'
+ t=. '"',unzip,'" "',fn,'" -d "',(jpath CSVFOLDER__),'"'
+ if. UNAME-:'Win' do. t=. '"',t,'"' end.
+ r=. shell t
+ r,LF,'CSVFOLDER now contains the csv file'
+else.
+ 'CSVFOLDER already contains the csv file'
+end.
+)

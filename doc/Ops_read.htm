@@ -79,19 +79,28 @@ Col: column | &quot;*&quot;</code></pre>
 <p>by keyword groups rows by the key columns that follow it<br />each aggregator is called on the rows of its column in each group</p>
 <p>result col label does not include agg, so an alias is desirable</p>
 <h2 id="from">FROM</h2>
-<p>A.B indicates A joined to B (by the A ref col that refers to B)</p>
-<p>. is referred to as a simple join or a left1 join</p>
-<p>  each A row with 1 matching B row or FILLS<br />  if multiple matching B rows, the last one is used<br />  same as classical inner join if 1 and only 1 B row matches</p>
+<p>A.B indicates A is joined to B by the A ref col that refers to B</p>
 <pre><code>read ... from FROM ...
 read ... from A , A.B ...
+read ... from A,A.jdref_id_B_id ... NB. distinguish multiple refs
 read ... from A , A.B , A.C ...
 read ... from A , A.B , B.D ...
-read ... from A.B , A ...         NB. order does not matter
-read ... from X:A , X.B , X.C ... NB: alias used in all subsequent uses</code></pre>
-<p>joins are done in an optimal (not guaranteed) order based on a sampling that picks representative rows and tests how restrictive the queries are</p>
-<p>exact keyword indicates to use the order as given</p>
-<pre><code>read ... from exact f,f.g,g.h where h.a&lt;100</code></pre>
-<p>See tutorial from</p>
+read ... from A.B , A ...           NB. order does not matter
+read ... from X:A , X.B , X.C ...   NB. X alias used in all subsequent uses</code></pre>
+<p><code>A.B is left1 join</code><br /><code> each A row with 1 matching B row or FILLS</code><br /><code> if multiple matching B rows, the last one is used</code><br /><code> not a standard join, but is fast and adequate in many cases</code><br /><code> same as inner join if 1 and only 1 B row matches</code></p>
+<p><code>A&gt;B is left join</code><br /><code> same as outer except B rows that did not match are excluded</code><br /><code> same as left1 except all B rows that match are included</code></p>
+<p><code>A-B is inner join</code><br /><code> same as left except rows with FILLS are excluded</code><br /><code> same as outer except rows with FILLS are excluded</code></p>
+<p><code>A=B is outer join - this join is not implemented</code><br /><code>  all possible rows</code><br /><code>  A rows duplicated for each match in B</code><br /><code>  B rows duplicated for each match in A</code><br /><code>  A or B FILLS provided where no match</code></p>
+<p><code>A</code><B is right join - this join is not implemented
+   same as outer except A rows that did not match are excluded 
+
+joins are done in an order based on a sampling that picks representative rows
+and tests how restrictive the queries are
+
+<pre></p>
+<p>read ... from exact f,f.g,g.h where h.a&lt;100' NB. exact to use the order as given</p>
+</pre>
+<p>See tutorials from and join</p>
 <h2 id="where">WHERE</h2>
 <p>read ... from ... where WHERE</p>
 <pre><code> a=&quot;abc&quot;

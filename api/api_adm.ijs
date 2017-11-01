@@ -137,10 +137,11 @@ case. 0 do.
  i.0 0
 case. do.
  y=. adminp y
+ 'not a folder'assert 2=ftype y
+ 'not a database'assert 'database'-:jdfread y,'/jdclass'
  v=. fread y,'/jdversion'
  v=. (-.v-:_1){3,<.0".":v
  'db version not compatible with this Jd version'assert v=<.".jdversion
- 'not a database'assert 'database'-:jdfread y,'/jdclass'
  'db damaged'assert (0=ftypex) y,'/jddamage'
  d=. }.(y i:'/')}.y
  
@@ -475,36 +476,4 @@ unmapall_jmf_''
 1 unmap_jmf_ each 0{"1 mappings NB. extra force
 coerase conl 1
 jdadmin 0
-)
-
-jdrt=: 3 : 0
-if. 80607<:0".(fread  '~system/config/version.txt')-.CRLF,'.' do.
- require'labs/labs'
- runtut=: lab_z_
-else.
- require'~addons/ide/jhs/sp.ijs'
- runtut_z_=: spx_jsp_
-end.
-aa=. 9}.each _8}.each tuts
-demo=. _4}.each(>:;demos i:each'/')}.each demos
-basic=. 'intro';'reads';'from';'admin';'csv';'csv_load';'join';'epochdt';'table_from_array'
-advanced=. aa-.basic
-y=. ,dltb y
-if. y-:'' do.
- t=. <'  '
- r=.   (<'basic:'),t,each basic
- r=. r,(<'demo:'),t,each demo
- r=. r,(<'advanced:'),t,each advanced
- ;r,each LF
- return.
-end.
-t=. 'tutorial/',y,'_tut.ijs'
-d=. 'demo/',y,'/',y,'.ijs'
-if. (#tuts)>tuts i. <t do.
- runtut JDP,t
-elseif. (#demos)>demos i. <d do.
- runtut JDP,d
-elseif. 1 do.
- 'invalid tutorial name'assert 0
-end.
 )

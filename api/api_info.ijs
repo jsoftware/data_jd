@@ -35,7 +35,7 @@ case. 'validatebad' do.
 case. 'varbyte' do.
  infovarbyte a
 case. 'ref' do.
- 'ref' infox a
+ 'ref' inforef a
 case. do.
  'unsupported info command'assert 0
 end. 
@@ -78,7 +78,7 @@ a=. ('PARENT_','_',~;y)~
 <NAME__a
 )
 
-infox=: 4 : 0
+inforef=: 4 : 0
 locs=. getinfoclocs y
 ts=. cs=. 0 0$''
 for_c. locs do.

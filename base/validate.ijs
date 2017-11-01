@@ -35,9 +35,10 @@ try.
    map=. map,om
    type=. type,typ__c
    s=. #mn~
+   s=. ('ref'-:typ__c){s,0
    count=. count,s
    t=. 0~:Tlen__c-s NB. 1 if too many or too few rows 
-   t=. t*-.*./(typ__c;om)e.(;:'reference datr'),(;:'hash hash'),(;:'unique hash'),(;:'varbyte val'),(;:'ref dat') NB. supposed to be different
+   t=. t*-.*./(typ__c;om)e.(;:'varbyte val'),(;:'ref dat') NB. supposed to be different
    a=. fsize PATH__c,'/',om
    b=. HS_jmf_+getmsize_jmf_ om,Cloc__c
    filesize=. filesize,a
