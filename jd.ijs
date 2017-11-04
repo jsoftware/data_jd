@@ -10,7 +10,7 @@ NB. is pushed to Jsoftware for building JAL data/jd package
 
 NB. all use of the Jd library is through JDP_z_
 
-jdversion_jd_=: '4.4'
+jdversion_jd_=: '4.5'
 
 nokey_jd_=: 0 : 0 rplc 'INDEX.HTM';jpath '~addons/data/jd/doc/Index.htm'
 
@@ -116,7 +116,6 @@ base/where.ijs
 base/jmfx.ijs
 base/log.ijs
 base/scriptlists.ijs
-base/tests.ijs
 base/validate.ijs
 api/api.ijs
 api/api_adm.ijs
@@ -137,6 +136,17 @@ types/byte.ijs
 types/datetimes.ijs
 types/epoch.ijs
 types/varbyte.ijs
+)
+
+NB. stubs to load scripts not normally loaded
+jdtests=: 3 : 0
+require JDP,'tools/tests.ijs'
+jdtests_jd_ y
+)
+
+setscriptlists_jd_=: 3 : 0
+require JDP,'tools/setscriptlists.ijs'
+setscriptlists_jd_''
 )
 
 3 : 0''

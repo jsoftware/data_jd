@@ -1,6 +1,6 @@
 NB. Copyright 2016, Jsoftware Inc.  All rights reserved.
 
-load JDP,'gen/ptable.ijs'
+require JDP,'tools/ptable.ijs'
 
 chk=: 3 : 0
 jd'update base';y

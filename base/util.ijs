@@ -40,7 +40,7 @@ else.
  runtut_z_=: spx_jsp_
 end.
 aa=. 9}.each _8}.each tuts
-basic=. 'intro';'reads';'from';'admin';'csv';'csv_load';'join';'epochdt';'table_from_array'
+basic=. 'intro';'reads';'from';'quandl_eod_stock_data';'admin';'csv';'csv_load';'join';'epochdt';'table_from_array'
 demo=. _4}.each(>:;demos i:each'/')}.each demos
 csvload=. 'bus_lic';'quandl_ibm'
 advanced=. aa-.basic,csvload

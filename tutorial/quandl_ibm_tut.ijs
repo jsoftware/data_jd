@@ -1,5 +1,4 @@
 NB. Copyright 2017, Jsoftware Inc.  All rights reserved.
-require'plot'
 
 0 : 0
 www.quandl.com is a financial data source
@@ -11,6 +10,9 @@ for this tutorial the EOD-IBM.csv file was downloaded and put at:
 
 download (only done first time) can take a minutes
 )
+
+require'plot'
+require JDP,'tools/jwget.ijs'
 
 CSVFOLDER=: '~temp/jd/csv/ibm/' NB. folder for csv files
 jdcreatefolder_jd_ CSVFOLDER    NB. ensure folder exists

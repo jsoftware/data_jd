@@ -2,7 +2,7 @@ NB. Copyright 2016, Jsoftware Inc.  All rights reserved.
 
 CSVFOLDER=: '~temp/jd/csv/test/'
 
-load JDP,'gen/ptable.ijs'
+require JDP,'tools/ptable.ijs'
 
 ptype=: 'int'
 ptype=: 'edate'

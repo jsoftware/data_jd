@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '4.2.4'
+VERSION=: '2.2.4'
 
 FILES=: 0 : 0
 manifest.ijs
@@ -75,6 +75,7 @@ demo/northwind/csv/Categories.csv
 demo/northwind/csv/Customers.csv
 demo/northwind/csv/Orders.csv
 demo/jhs/jdapp1.ijs
+tutorial/quandl_eod_stock_data_tut.ijs
 tutorial/admin_tut.ijs
 tutorial/ptable_tut.ijs
 tutorial/update_bulk_tut.ijs
@@ -104,6 +105,12 @@ csv/csvinstall.ijs
 csv/csvtest.ijs
 config/server_default.ijs
 tools/convert.ijs
+tools/setscriptlists.ijs
+tools/repair.ijs
+tools/quandl.ijs
+tools/jwget.ijs
+tools/tests.ijs
+tools/ptable.ijs
 dynamic/ref.ijs
 dynamic/base.ijs
 doc/Convert.htm
@@ -131,7 +138,6 @@ doc/Ops_change.htm
 cd/libjd.dylib
 cd/libjd.so
 cd/jd.dll
-gen/ptable.ijs
 api/api_read.ijs
 api/client.ijs
 api/api_csv.ijs
@@ -161,12 +167,10 @@ base/scriptlists.ijs
 base/util_ptable.ijs
 base/util.ijs
 base/table.ijs
-base/repair.ijs
 base/constants.ijs
 base/log.ijs
 base/pm.ijs
 base/validate.ijs
-base/tests.ijs
 base/database.ijs
 base/util_epoch.ijs
 base/read.ijs

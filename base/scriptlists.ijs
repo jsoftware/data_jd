@@ -1,4 +1,4 @@
-NB. Copyright 2015, Jsoftware Inc.  All rights reserved.
+NB. Copyright 2017, Jsoftware Inc.  All rights reserved.
 coclass'jd'
 tests=: <;._2 [ 0 : 0
 test/alloc_test.ijs
@@ -62,6 +62,7 @@ tutorial/link_tut.ijs
 tutorial/log_tut.ijs
 tutorial/performance_tut.ijs
 tutorial/ptable_tut.ijs
+tutorial/quandl_eod_stock_data_tut.ijs
 tutorial/quandl_ibm_tut.ijs
 tutorial/reads_tut.ijs
 tutorial/server-jhs_tut.ijs

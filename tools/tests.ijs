@@ -1,10 +1,10 @@
-NB. Copyright 2015, Jsoftware Inc.  All rights reserved.
+NB. Copyright 2017, Jsoftware Inc.  All rights reserved.
+
 coclass'jd'
 
 JDTIMING=: 1 NB. avoid errors on timing tests - set 0 to check timings
 
-NB. setscriptlists creates/runs script to create tests/tuts script lists
-
+NB. actions are logged to ~temp/jd.txt'
 NB. y ''                      run csv-tests, build-demos, and all tests and tutorials
 NB. y 'fast'                  skip csv-tests and build-demos
 NB. y 'csv'                   run just csv-tests
@@ -22,8 +22,8 @@ OLDALLOC_jd_=: ROWSMIN_jdtable_,ROWSMULT_jdtable_,ROWSXTRA_jdtable_
 'ROWSMIN_jdtable_ ROWSMULT_jdtable_ ROWSXTRA_jdtable_'=: 4 1 0 NB. lots of resizecsvonly=. 'csv'-:y
 fast=. 'fast'-:y
 csvonly=. 'csv'-:y
-t=. ALLTESTS=:  ((tests_jd_,tuts_jd_,demos_jd_)-.<'tutorial/csv_load_tut.ijs')-.<'tutorial/server-zmq_tut.ijs'
-if. fast do. t=. t-.'test/dynamic_test.ijs';'tutorial/unique_tut.ijs' end. NB. remove slow tests
+exclude=. 'tutorial/csv_load_tut.ijs';'tutorial/server-zmq_tut.ijs';'tutorial/quandl_eod_stock_data_tut.ijs'
+t=. ALLTESTS=:  (tests_jd_,tuts_jd_,demos_jd_)-.exclude
 t=. t,~each<JDP
 if. -.IFJHS do. t=. t-.<JDP,'tutorial/server-jhs_tut.ijs' end.
 failed=: ''

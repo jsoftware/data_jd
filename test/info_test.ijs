@@ -57,7 +57,7 @@ t=. jdgl_jd_'f'
 assert 0=Tlen__t
 
 NB. ptable
-load JDP,'gen/ptable.ijs'
+require JDP,'tools/ptable.ijs'
 ptablebld'int'
 assert 3=f'summary'
 assert 1=f'summary f'
