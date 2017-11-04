@@ -1,4 +1,4 @@
-NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
+NB. Copyright 2017, Jsoftware Inc.  All rights reserved.
 
 NB. production Jd library is ~addons/data/jd (installed/updated by JAL)
 NB.   load'data/jd' NB. set JDP_z_ as path to production Jd library
