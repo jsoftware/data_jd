@@ -50,7 +50,7 @@ jd'reads Date,Open from ibm where Open in (',t,')'
 stockplot=: 3 : 0
 if. IFTESTS_jd_ do. return. end. NB. avoid plot in jdtests_jd_''
 title=. 'title IBM Open prices',,' ',.;{:jd'reads min Date,max Date from ibm'
-title plot >{:{.jd'read Open from ibm'
+title plot |.>{:{.jd'read Open from ibm'
 )
 
 stockplot''
