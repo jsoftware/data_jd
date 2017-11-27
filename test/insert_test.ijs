@@ -77,8 +77,8 @@ ins 'ab' ; (2 2$'ab') ; <'abd';'qwert'
 jd'reads from ch'
 assert 5=;{:,jd'reads count a from ch'
 
-'count' insx 'ab'  ; (1 2$'ab') ; <<'abd'
-        ins 'a'   ; (2 2$'ab') ; <<'abd'
+        ins  'ab'  ; (1 2$'ab') ; <<'abd'
+        ins  'a'   ; (2 2$'ab') ; <<'abd'
 'shape' insx 'ab' ;  (2 3$'ab') ; <'abd';'qwert'
 
 N=: ;:'a b'
@@ -94,7 +94,7 @@ ins 'ab' ; (2 2$'ab')
 jd'reads from chx'
 3=;{:,jd'reads count a from chx'
 
-'count' insx 'ab'  ; 1 2$'ab'
+        ins  'ab'  ; 1 2$'ab'
         ins  'a'   ; 2 2$'ab'
-'count' insx 'ab'  ; 1 2$'ab'
+        ins  'ab'  ; 1 2$'ab'
 'shape' insx 'ab' ;  2 3$'ab'

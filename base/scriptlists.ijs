@@ -10,6 +10,7 @@ test/delete_test.ijs
 test/drop_rename_test.ijs
 test/droptable_test.ijs
 test/error_test.ijs
+test/fixpairs_test.ijs
 test/info_test.ijs
 test/insert_revert_test.ijs
 test/insert_test.ijs
@@ -17,6 +18,7 @@ test/jdindex_test.ijs
 test/join_test.ijs
 test/joinorder_test.ijs
 test/joinx_test.ijs
+test/keyindex_test.ijs
 test/log_test.ijs
 test/modify_test.ijs
 test/multicol_test.ijs
@@ -34,6 +36,7 @@ test/readx_test.ijs
 test/ref_dirty_test.ijs
 test/ref_test.ijs
 test/refx_test.ijs
+test/repair_test.ijs
 test/rmdir_test.ijs
 test/sandp_test.ijs
 test/sed_test.ijs
@@ -41,6 +44,7 @@ test/shape_test.ijs
 test/stress_test.ijs
 test/table_append_test.ijs
 test/update_test.ijs
+test/upsert_test.ijs
 test/utf8_test.ijs
 test/valid_data_test.ijs
 test/validate_test.ijs
@@ -71,5 +75,6 @@ tutorial/setget_tut.ijs
 tutorial/table_from_array_tut.ijs
 tutorial/table_table_tut.ijs
 tutorial/tempcol_tut.ijs
-tutorial/update_bulk_tut.ijs
+tutorial/update_tut.ijs
+tutorial/upsert_tut.ijs
 )

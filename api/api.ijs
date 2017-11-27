@@ -714,12 +714,12 @@ validtc=: 3 : 0
 1 validtc y
 :
 b=. (<'jd')=2{.each y
-if. +./b do. throw 'jde: invalid name: name (NAME)' rplc 'NAME';;{.b#y end.
-if. -.({.y)e.NAMES do. throw 'jde: not found: table (TAB)' rplc 'TAB';;{.y end.
+if. +./b do. ('jde: invalid name: name (NAME)' rplc 'NAME';;{.b#y) assert 0 end.
+if. -.({.y)e.NAMES do. ('jde: not found: table (TAB)' rplc 'TAB';;{.y) assert 0 end.
 t=. getloc {.y
 if. x do. 'ptable not allowed'assert 0=S_ptable__t end. NB! test not right
 a=. (}.y)-.NAMES__t
-if. #a do. throw 'jde: not found: table (TAB) column (COL)' rplc 'TAB';(;{.y);'COL';;{.a end.
+if. #a do. ('jde: not found: table (TAB) column (COL)' rplc 'TAB';(;{.y);'COL';;{.a)assert 0 end.
 for_c. }.y do.
  w=. getloc__t c
  'varbyte not allowed' assert -.'varbyte'-:typ__w

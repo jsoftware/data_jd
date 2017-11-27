@@ -102,13 +102,11 @@ Create nam;typ;shape
 if. ifhash do. MakeHashed nam end.
 )
 
-NB. compresses out deleted rows
+NB. y is index of rows to compress out
 NB. jdref col marked dirty
 Delete=: 3 : 0
-r=. getwhere ,y
-if. #r do.
  1 update_subscr''
- b=. -.(i.Tlen)e.r
+ b=. -.(i.Tlen)e.y
  for_i. i.#CHILDREN do.
   c=. i{CHILDREN
   getloc NAME__c NB. map as required
@@ -119,26 +117,30 @@ if. #r do.
   elseif. 1 do.
    dat__c=. b#dat__c
   end. 
-end.
+ end.
  Tlen=: +/b NB. change after all cols are adjusted
  writestate'' NB. Tlen
-end.
 i.0 0
 )
 
-NB. arg is name,value pairs
-NB. return (possibly adjusted) names;values;trailing_shape
+NB. x is _1 insert rules, # update rules, _2 keyindex rules
+NB. y is  name,value pairs
+NB. return (possibly adjusted) names;values;rows
+NB. values are converted to appropriate type
+NB. loose scalar extension
+NB.  scalars treated as 1 element lists
+NB.  byteN - scalars and lists extend to be tables
+NB.  byten - overtake OK, but undertake is an error
+NB. x is _1 for insert and required rows for update
+NB. all conform work is done here - may be duplicated later on
 fixpairs=: 4 : 0
-rows=. x
-'fixdata: odd number' assert (2<:#y)*.0=2|#y
+'name data pairs - odd number' assert (2<:#y)*.0=2|#y
 ns=. ,each(2*i.-:#y){y NB. list of names
 duplicate_assert ns
 notjd_assert ns
 unknown_assert ns-.NAMES
 if. x=_1 do. missing_assert ns-.~((<'jd')~:2{.each NAMES)#NAMES end. NB. insert
-
 ns=. vs=. ts=. ''
-count=: 1
 for_i. i.-:#y do.
  j=. 2*i
  n=. <,;j{y
@@ -147,13 +149,14 @@ for_i. i.-:#y do.
  ns=. ns,n
  c=. 0{CHILDREN{~NAMES i. n
  ts=. ts,<shape__c
-
  d=. fixtypex__c >(>:j){y
- if. (-.''-:shape__c)*.({:$d)~:{:(#d),shape__c do. NB. overtake
-  ESHAPE assert ({:$d)<shape__c                    NB. do not undertake
-  d=. ({:(#d),shape__c){."1 d
+ if. -.''-:shape__c do.
+  'fixpairs: bad shape'assert 'byte'-:typ__c
+  if. 0=$$d do. d=. ,d end.
+  if. 1=$$d do. d=. ,:d end.
+  ESHAPE assert ({:$d)<:shape__c 
+  d=. shape__c{."1 d
  end.
- 
  select. typ__c
  case. 'edate' do.
   EPRECISION assert *./(0=(86400*1e9)|d)+._9223372036854775808=d
@@ -162,30 +165,28 @@ for_i. i.-:#y do.
  case. 'edatetimem' do.
   EPRECISION assert *./(0=1e6|d)+._9223372036854775808=d
  end.
- 
  d=. <d
  vs=. vs,d
  i=. >:i
 end.
+t=. ;#each vs
+ETALLY assert 0=#t-.1,>./t
+m=. x>.>./t
+if. (1 e.t)*.1<m do. NB. scalar extension
+ for_i. i.#vs do.
+  d=. >i{vs 
+  if. 1=#d do.
+   vs=. (<m#d) i}vs
+  end.
+ end.
+end.
+t=. ;#each vs
+rows=. {.t
+'fixpairs: bad count'assert rows=t
+if. x>:0 do. ETALLY assert x=rows end.
 
-NB. data counts match #W or will extend
-NB. scalar cols extend always
-NB. list cols extend if trailinng shape
+ESHAPE assert (}.each$each vs)=ts
 
-s=. ;$@:$each vs    NB. scalar, list, table
-b=. s=0             NB. scalar extends
-k=. (s=1)*,;a:~:ts  NB. list extends if trailing shape
-b=. b+.k            NB. will extend
-a=. ;#each vs       NB. unadjusted counts
-
-if. rows=_1 do. NB. insert
- a=. 1 (b#i.#b)}a NB. extenders marked as 1
- rows=. >./a NB. number of rows to add to table
- a=. rows (b#i.#b)}a
-else.
- a=. rows (b#i.#b)}a NB. extenders marked
-end. 
-ETALLY assert a=rows
 ns;vs;rows
 )
 
@@ -206,13 +207,13 @@ try.
  1+FORCEREVERT#'a'
 catchd.
  FORCEREVERT_jd_=: 0
- e=. 'insert failed: ',13!:12''
- setTlen rows
- for_a. N do.
-  c=. getloc ;a
-  setcount_jmf_ Tlen;~'_',~'dat_',;c NB. jam dat count to be Tlen
- end. 
- e assert 0
+ NB. this could/should be fixed to repair the table
+ NB. needs to jam all columns to have original Tle
+ NB. needs to mark dynamic cols dirty
+ NB. has to do everything that repair would do
+ NB. for now, just mark the db damaged and let repair do the hard work
+ setTlen rows NB. original rows
+ jddamage'insert failed'
 end.
 EMPTY
 )
@@ -272,11 +273,11 @@ for_subs. SUBSCR do.
    'x t c'=. <;._2 c,'.'
    w=. getdb''
    w=. getloc__w t
-   w=. getloc__w c
+   w=. getcolloc__w c
    a=. 1 NB. right ref
   else.
    if. x do. continue. end. NB. delete left ref - do not mark dirty
-   w=. getloc c
+   w=. getcolloc c
    a=. 0 NB. left ref
   end.
   setdirty__w 1
@@ -288,7 +289,7 @@ filterbytype =: ] #~ ,@boxopen@[ e.~ 3 :'<typ__y'"0@]
 
 NB. y is a referenced table name. Find the reference columns to it.
 FindRef =: 3 : 0
-s =. (;:'reference ref') filterbytype getloc@> {."1 SUBSCR
+s =. (<'ref') filterbytype getloc@> {."1 SUBSCR
 (#~ ({.boxopen y) = 3 : '{.{:subscriptions__y'"0) s
 )
 

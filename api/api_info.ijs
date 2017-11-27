@@ -43,7 +43,8 @@ end.
 
 getinfoclocs=: 3 : 0
 if. -.''-:;{.y do. jdclocs y return. end.
-n=. /:~NAMES__dloc
+d=. getdb''
+n=. /:~NAMES__d
 n=. n#~-.;PTM e.each n
 r=. ''
 for_a. n do.
@@ -137,7 +138,8 @@ end.
 )
 
 infoad=: 3 : 0
-t=. getloc__dloc y
+d=. getdb''
+t=. getloc__d y
 Tlen__t
 )
 

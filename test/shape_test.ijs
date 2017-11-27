@@ -54,9 +54,7 @@ N=: 'w';'i';'b';'b2'
 
 NB. insert
 NB. count and shape rules are the same for insert and update
-NB. insert does not extend items
 NB. count of all column data must be the same
-NB. current implementaton limit and might be relaxed in the future
 
 foo''
 ins 0;23;'a';1 2$'a' 
@@ -84,10 +82,10 @@ jd'createtable f w int, i int,i1 int, i2 int'
 foo''
 N=: 'w';'i';'i1';'i2'
 
-ins   0  ; a    ; (1 1$a) ; 1 2$a=. 1
-ins  1 2 ; (2$a) ; (2 1$a) ; 2 2$a=. 2
-mod1 0      ; a     ; (1 1$a) ; 1 2$a=. 3
-mod2 1 2 ; (2$a) ; (2 1$a) ; 2 2$a=. 4
+'shape' ins   0  ; a    ; (1 1$a) ; 1 2$a=. 1
+'shape' ins  1 2 ; (2$a) ; (2 1$a) ; 2 2$a=. 2
+'count' mod1 0      ; a     ; (1 1$a) ; 1 2$a=. 3
+'count' mod2 1 2 ; (2$a) ; (2 1$a) ; 2 2$a=. 4
 
 foo=: 3 : 0
 jdadminx'test'
@@ -96,10 +94,10 @@ jd'createtable f w int, i int,i1 int, i2 int, b byte, b1 byte 1, b2 byte 2'
 foo''
 N=: 'w';'i';'i1';'i2';'b';'b1';'b2'
 
-ins  0   ;1   ; (,2)      ; (1 2$3 4)     ; 'a'  ; (,'b')    ; 1 2$'cd'
-ins  1 2 ;2 3 ; (2 1$3 4) ; (2 2$5 6 7 8) ; 'ab' ; (2 1$'c') ; 2 2$'e'
-mod1 0   ;6   ; (,6)      ; (1 2$6)       ; 'k'  ; (,'k')    ; 1 2$'k'
-mod2 1 2 ;2 3 ; (2 1$3 4) ; (2 2$5 6 7 8) ; 'ab' ; (2 1$'c') ; 2 2$'e'
+'shape' ins  0   ;1   ; (,2)      ; (1 2$3 4)     ; 'a'  ; (,'b')    ; 1 2$'cd'
+'shape' ins  1 2 ;2 3 ; (2 1$3 4) ; (2 2$5 6 7 8) ; 'ab' ; (2 1$'c') ; 2 2$'e'
+'count' mod1 0   ;6   ; (,6)      ; (1 2$6)       ; 'k'  ; (,'k')    ; 1 2$'k'
+'count' mod2 1 2 ;2 3 ; (2 1$3 4) ; (2 2$5 6 7 8) ; 'ab' ; (2 1$'c') ; 2 2$'e'
 
 
 jdadminx'test'

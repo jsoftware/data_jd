@@ -85,8 +85,8 @@ exact=. 'exact '-:6{.from
 if. exact do. from=. 6}.from end.
 'alias root'=. dltb each 2$<;._2 ':',~;{.<;._2 from,','
 NB. check if first table is root and is partitioned table
+if. -.isptable root do. '' return. end. NB. return to do normal read
 t=. jdgl_jd_ :: 0: root,PTM
-if. 0=t do. '' return. end. NB. return to do normal read
 pcol=. getpcol__t''
 from=. (from i.',')}.from
 

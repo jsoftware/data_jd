@@ -12,8 +12,23 @@
   <link rel="stylesheet" href="jd.css">
 </head>
 <body>
-<p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="Convert.htm">Convert</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
+<p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
 <p><a href="#parsing" title="wikilink">Parsing</a> read ops can be complicated</p>
+<h2 id="key">key</h2>
+<p>key [/in] table <a href="#pairs" title="wikilink">col-data-pairs</a></p>
+<p>Get rows in table for <a href="#pairs" title="wikilink">col-data-pairs</a>.</p>
+<p>Without /n it returns last row in table that matches each data row. If no match, _1 is returned.</p>
+<p>With /in all rows in table are returned that match any data row.</p>
+<pre><code>NB. example key
+jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
+jd&#39;gen test f 5&#39;
+jd&#39;key f&#39;;&#39;int&#39;;104 102
+jd&#39;key f&#39;;&#39;int&#39;;104 102 120
+jd&#39;key     f&#39;;&#39;int&#39;;104 102 120;&#39;byte&#39;;&#39;ECx&#39;  NB. data order - _1 for not found
+jd&#39;key /in f&#39;;&#39;int&#39;;104 102 120;&#39;byte&#39;;&#39;ECx&#39;  NB. sorted - no_1
+jd&#39;key     f&#39;;&#39;boolean&#39;;1 NB. last row that matches
+jd&#39;key /in f&#39;;&#39;boolean&#39;;1 NB. all rows that match
+jdaccess olddan</code></pre>
 <h2 id="read">read</h2>
 <p>Same as reads with /lr option</p>
 <h2 id="reads">reads</h2>

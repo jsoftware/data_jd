@@ -66,28 +66,50 @@ Create name;columns,&<dat
 )
 
 libstitch=: LIBJD_jd_,' stitch > x x x x x x'
-gad=: 15!:14
 
+NB. stitch table cols into single key col
 NB. 'tablename';<'cola';'colb';...
-NB. ref uses for multiple cols
+NB. if single col, just return dat
 stitch=: 3 : 0
 'a b'=. y
 t=. jdgl a
+if. 1=#b do. dat__w [ w=. getloc__t b return. end.
 rows=. Tlen__t
 str=. ''
 src=. ''
 for_n. b do.
  w=. getloc__t n
- src=. src,gad<'dat__w'
+ src=. src,symdat<'dat__w'
  s=. ((JTYPES i. 3!:0 dat__w){JSIZES)
  str=. str,((JTYPES i. 3!:0 dat__w){JSIZES)**/}.$dat__w
 end.
 sink=. (rows,+/str)$'u'
-libstitch cd rows,(gad<'sink'),(#str),(gad<'str'),gad<'src'
+'stitch'logjd DB,' ',a,;' ',each b
+libstitch cd rows,(symdat<'sink'),(#str),(symdat<'str'),symdat<'src'
 sink
 )
 
-NB. =========================================================
+NB. stitch multiple cols into single key col
+NB. data1;data2 ...
+stitchx=: 3 : 0
+c=. ;#each y
+rows=. {.c
+'bad row count'assert rows=c
+str=. ''
+src=. ''
+for_i. i.#y do.
+ z=. 'a',":i
+ (z)=. >i{y
+ src=. src,symdat<z
+ s=. ((JTYPES i. 3!:0 z~){JSIZES)
+ str=. str,((JTYPES i. 3!:0 z~){JSIZES)**/}.$z~
+end.
+sink=. (rows,+/str)$'u'
+'stitchx'logjd DB
+libstitch cd rows,(symdat<'sink'),(#str),(symdat<'str'),symdat<'src'
+sink
+)
+
 NB. The following names can be called with arguments (table;data)
 NB. to be called in the correct table.
 template=. 0 : 0

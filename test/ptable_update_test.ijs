@@ -3,9 +3,9 @@ NB. Copyright 2016, Jsoftware Inc.  All rights reserved.
 require JDP,'tools/ptable.ijs'
 
 chk=: 3 : 0
-jd 'update base';y
+jd 'update F ';y
 jd'update f'   ;y
-assert ({:jd'reads from base order by sort')-:{:jd'reads from f order by sort'
+assert ({:jd'reads from F order by sort')-:{:jd'reads from f order by sort'
 )
 
 ptablebld'int'

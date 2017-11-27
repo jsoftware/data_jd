@@ -6,7 +6,7 @@ NB. 0 shows component 0
 NB. 0 3 shows components 0 and 3
 NB. x selects data row
 jdlogijfshow=: 3 : 0
-f=. 'log.ijf',~0 jdpath'' NB. ignore damaged or bad jdclass
+f=. 'log.ijf',~jdpath'' NB. ignore damaged or bad jdclass
 'log.ijf does not exist'assert fexist f
 t=. jsize_jfiles_ f
 if. -.1 4 e.~ 3!:0 y do.
@@ -20,7 +20,7 @@ jread_jfiles_ f;y
 
 NB. last y lines of log.txt
 jdlogtxtshow=: 3 : 0
-f=. 'log.txt',~0 jdpath'' NB. ignore damaged or bad jdclass
+f=. 'log.txt',~jdpath'' NB. ignore damaged or bad jdclass
 'log.txt does not exist'assert fexist f
 r=. fread f
 i=. |.(LF=r)#i.#r

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="jd.css">
+</head>
+<body>
+<p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
+<h2 id="key">key</h2>
+<p>key [/in] table <a href="Ops_common.htm#col-data-pairs" title="wikilink">col-data-pairs</a></p>
+<p>Returns last table row that matches each of the rows in col-data-pairs (_1 for not found).</p>
+<p>With /in option, returns table rows that match any row in col-data-pairs.</p>
+<p>See <a href="Ops_common.htm#key" title="wikilink">key</a> for info.</p>
+<pre><code>NB. example delete
+jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
+jd&#39;gen test f 5&#39;
+jd&#39;key f&#39;;&#39;int&#39;;101 103
+jd&#39;key f&#39;;&#39;int&#39;;103 101 200
+jd&#39;key f&#39;;&#39;int&#39;;103 101;&#39;byte&#39;;&#39;DX&#39;
+jd&#39;key f&#39;;&#39;boolean&#39;;0 1
+jd&#39;key /in f&#39;;&#39;boolean&#39;;1
+jdaccess olddan</code></pre>
+<h2 id="get">get</h2>
+<p>get table col</p>
+<p>return raw col data<br />varbyte - indexes;values<br />can be used with set to efficiently adjust col data</p>
+<h2 id="set">set</h2>
+<p>set table col;data</p>
+<p>set raw col data<br />varbyte - indexes;values<br />can be used with get to efficiently adjust col data</p>
+</body>
+</html>

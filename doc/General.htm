@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="jd.css">
 </head>
 <body>
-<p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm" class="act">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="Convert.htm">Convert</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
+<p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm" class="act">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
 <h2 id="install">Install</h2>
 <p>Install Jd (addon data/jd) with JAL/Package Manager. Jd requires J64 (805 or later) on Windows, Linux, or Mac.</p>
 <h2 id="run">Run</h2>
@@ -20,58 +20,5 @@
    jdwelcome_jd_ NB. run this sentence for important information</code></pre>
 <p>The welcome suggests how to get started. In particular how to list and run tutorials and examples.</p>
 <p>If you don't have a valid key you see a message to that effect.</p>
-<h2 id="args">Args</h2>
-<p>The main function is <code>jd</code>:</p>
-<pre><code>   jd&#39;...&#39; NB. perform Jd op</code></pre>
-<p>The argument is parsed to a list of boxes. A string is treated as list of blank delimited boxes. The first box in a list of boxes is treated as a list of blank delimited values.</p>
-<pre><code>   jd&#39;insert f a&#39;;23     === jd&#39;insert&#39;;&#39;f&#39;;&#39;a&#39;;23</code></pre>
-<p>Column definitions have blanks and are delimited by , or LF and have more complicated rules. The following are equivalent:</p>
-<pre><code>   jd&#39;createtable f a int,b byte 4&#39;
-   jd&#39;createtable f a int&#39;,LF,&#39;byte 4&#39;
-   jd&#39;createtable&#39;;&#39;f&#39;;&#39;a int&#39;;&#39;b byte 4&#39;
-   jd&#39;createtable f a&#39;;&#39;a int&#39;;&#39;b byte 4&#39;</code></pre>
-<p>Options follow the command, start with /, and have a fixed number (0 or more) parameters.</p>
-<pre><code>   jd&#39;reads /lr /e from f&#39;</code></pre>
-<h2 id="names">Names</h2>
-<p>Column, table, and database names have similar validation:</p>
-<ul>
-<li>utf-8 supported</li>
-<li><code> RESERVEDCHARS_jd_ </code>are not allowed in names</li>
-<li><code> RESERVEDWORDS_jd_ </code>are not allowed</li>
-<li>the <code>jd...</code> prefix is not allowed in table or column names</li>
-<li>the <code> ~</code>... prefix is not allowed</li>
-<li>the <code>+-</code> characters are allowed in names, but should be avoided in table names because of conflicts when parsing the read from clause</li>
-<li>the <code>^</code> character is used by the system in table names for ptable and should be avoided</li>
-</ul>
-<h2 id="types">Types</h2>
-<p>Standard types are: boolean, int, float, byte. Only type byte can have a trailing shape.</p>
-<pre><code>jd&#39;createtable f a int,b byte 4&#39; NB. int and byte cols</code></pre>
-<p>There are also date types, and varbyte - a variable sized byte type.</p>
-<p>Date types are stored internally as int, and converted on read/write:</p>
-<h3 id="edate-epochdt">edate (epochdt)</h3>
-<p>edate types are in iso 8601 format and are stored as nanoseconds before/after 2000-01-01. See tutorial epochdt.</p>
-<ul>
-<li>edate - 2014-01-02<br /></li>
-<li>edatetime - 2014-01-02T03:04:05<br /></li>
-<li>edatetimem - 2014-01-02T03:04:05,123<br /></li>
-<li>edatetimen - 2014-01-02T03:04:05,123456789<br /></li>
-</ul>
-<h3 id="date">date</h3>
-<p>date types are:</p>
-<ul>
-<li>date stored as int with digits yyyymmdd</li>
-<li>datetime stored as int with digits yyyymmddhhmmss</li>
-</ul>
-<p>The csv loader supports yyyy/mm/dd vs dd/mm/yyyy.</p>
-<h3 id="varbyte">varbyte</h3>
-<p>With average sizes less than 50, it may be better to store the data as fixed size.</p>
-<h2 id="dropdelete">Drop/Delete</h2>
-<p>A database structure maps directly to a folder structure. A database is a folder, a table is a folder in a database, and a column is a folder in a table.</p>
-<p>A db/table/col drop cannot be undone. It would be unfortunate to inadvertently drop something that was hard to recover.</p>
-<p>Restrictions while building a database can be a nuisance, but when things are stable it can be nice to disallow drops. This can be done with jdaccess but that is perhaps more mechanism than warranted.</p>
-<p><a href="Admin.htm#jddropstop" title="wikilink">jddropstop</a> provides an easy way to prevent bad drops.</p>
-<p>A db/table/col drop uses the utility <a href="Admin.htm#jddeletefolder" title="wikilink">jddeletefolder</a>. This utility is also used in other admin activities, for example, deleting folders of csv files that have been processed.</p>
-<p>A <a href="Admin.htm#jddeletefolder" title="wikilink">jddeletefolder</a> cannot be undone. It would be unfortunate to inadvertently delete something that was hard to recover.</p>
-<p><a href="Admin.htm#jddeletefolder" title="wikilink">jddeletefolder</a> allows delete only if certain criteria are met and this can prevent an unintended delete.</p>
 </body>
 </html>

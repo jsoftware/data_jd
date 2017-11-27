@@ -69,8 +69,8 @@ t=. getloc__d tab
 'dropstop' assert (0=ftypex) PATH__t,col,'/jddropstop'
 assertnodynamic y
 
-t=. jdgl_jd_ :: 0: tab,PTM
-if. 0~:t do.
+if. isptable tab do.
+ t=. jdgl tab,PTM
  pcol=. getpcol__t''
  'drop pcol not allowed'assert -.pcol -: ;{:y
 end.

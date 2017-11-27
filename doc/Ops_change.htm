@@ -12,23 +12,28 @@
   <link rel="stylesheet" href="jd.css">
 </head>
 <body>
-<p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="Convert.htm">Convert</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
+<p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
 <h2 id="delete">delete</h2>
 <p>delete table where</p>
+<p>where - rows to delete:</p>
+<dl>
+
+<dd>rows
+</dd>
+<dd>rows - jd'read jdindex from table where ...'
+</dd>
+<dd>rows - jd'key /in table';<a href="Ops_common.htm#col-data-pairs" title="wikilink">col-data-pairs</a> - key /in gets all matches
+</dd>
+</dl>
 <pre><code>NB. example delete
 jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
-jd&#39;createtable f a int,b byte 4&#39;
-jd&#39;insert f&#39;;&#39;a&#39;;24 25 26;&#39;b&#39;;3 4$&#39;aaaabbbbcccc&#39;
-jd&#39;delete f a=24&#39;
-jd&#39;delete f&#39;;&#39;a=26&#39;
-jd&#39;reads from f&#39;
+jd&#39;gen test f 10&#39;
+jd&#39;delete f&#39;;3 5
+jd&#39;delete f&#39;;&#39;x&lt;3&#39;
+jd&#39;delete f&#39;;&#39;int&#39;;104 107
 jdaccess olddan</code></pre>
 <h2 id="insert">insert</h2>
-<p>insert table col data ...</p>
-<p>col data pairs</p>
-<p>count of data items must be the same<br />a scalar extends to be the right count<br />byte N col list extends to be the right count</p>
-<p>byte N does overtake but too much data is an error</p>
-<p>an error (or a bug) leaves the table untouched</p>
+<p>insert table <a href="Ops_common.htm#col-data-pairs" title="wikilink">col-data-pairs</a></p>
 <pre><code>NB. example insert
 jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
 jd&#39;createtable f a int,b byte,b4 byte 4&#39;
@@ -43,25 +48,36 @@ jd etx&#39;insert g a&#39;;2;1
 jd&#39;reads jdindex,a from g&#39;
 jdaccess olddan</code></pre>
 <h2 id="update">update</h2>
-<p>update table where col data ...</p>
-<p>same conformability as for insert</p>
+<p>update table where <a href="Ops_common.htm#col-data-pairs" title="wikilink">col-data-pairs</a></p>
+<p>where - rows to update:</p>
+<dl>
+
+<dd>rows
+</dd>
+<dd>rows - jd'read jdindex from table where ...'
+</dd>
+<dd>rows - jd'key table';<a href="Ops_common.htm#col-data-pairs" title="wikilink">col-data-pairs</a> - key gets last matches
+</dd>
+</dl>
+<p>Warning: jd'read jdindex ...' returns rows in sort order and this may well not be the order of col-data-pairs. In general this form of update should be used only where 1 row is updated or where several rows are all updated with the same values.</p>
 <pre><code>NB. example update
 jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
-jd&#39;createtable f a int,b int,c byte 4&#39;
-jd&#39;insert f&#39;;&#39;a&#39;;24 25 26;&#39;b&#39;;100 101 102;&#39;c&#39;;3 4$&#39;aaaabbbbcccc&#39;
-jd&#39;reads from f&#39;
-jd&#39;update f&#39;;&#39;a=24&#39;;&#39;b&#39;;200
-jd&#39;reads from f&#39;
-jd&#39;update f&#39;;&#39;a&lt;26&#39;;&#39;b&#39;;300 400;&#39;c&#39;;2 4$&#39;xxxxzzzz&#39;
-jd&#39;reads from f&#39;
-jd&#39;reads from f&#39;
-jd&#39;update f&#39;;&#39;a=24&#39;;&#39;b&#39;;200
-jd&#39;reads from f&#39;
-jd&#39;update f&#39;;&#39;a&lt;26&#39;;&#39;b&#39;;300;&#39;c&#39;;2 4$&#39;xxxxzzzz&#39; NB. 300 scalar extends
-jd&#39;reads from f&#39;
-&#39;i b&#39;=: {:&quot;1 jd&#39;read jdindex,b from f where a in (24,26)&#39;
-jd&#39;update f&#39;;i;&#39;b&#39;;b+1 NB. modify with indexes
-jd&#39;reads from f&#39;
+jd&#39;gen test f 10&#39;
+jd&#39;update f&#39;;6 7;&#39;int&#39;;200 300
+jd&#39;update f&#39;;&#39;boolean=1&#39;;&#39;byte&#39;;&#39;x&#39;
+jd&#39;update f&#39;;&#39;int&#39;;&#39;int&#39;;108 101 104;&#39;byte&#39;;&#39;cba&#39;
+&#39;i b&#39;=: {:&quot;1 jd&#39;read jdindex,boolean from f where int &lt; 104&#39;
+jd&#39;update f&#39;;i;&#39;b&#39;;-.b NB. modify with indexes
+jdaccess olddan</code></pre>
+<h2 id="upsert">upsert</h2>
+<p>upsert table key <a href="Ops_common.htm#col-data-pairs" title="wikilink">col-data-pairs</a></p>
+<p>key is 1 or more cols used to determine if a data row is used to update or insert.</p>
+<pre><code>NB. example upsert
+jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
+jd&#39;createtable f&#39;
+jd&#39;createcol f a int&#39;;i.5
+jd&#39;createcol f b int&#39;;23+i.5
+jd&#39;upsert f&#39;;&#39;a&#39;;&#39;a&#39;;2 5 6;&#39;b&#39;;66 77 88 NB. 1 update and 2 inserts
 jdaccess olddan</code></pre>
 </body>
 </html>

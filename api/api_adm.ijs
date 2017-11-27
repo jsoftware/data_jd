@@ -4,26 +4,20 @@ jdadminx_z_=:  jdadminx_jd_
 
 coclass'jd'
 
-jdpath=: 3 : 0
-1 jdpath y
-:
-d=. x getdb''
-PATH__d
+jdpath=: 3 : 'jpath ''/'',~dbpath DB'
+
+assertnodamage=: 3 : 0
+p=. <jdpath''
+'db damaged and not under repair' assert -.1 0-:fexist p,each'jddamage';'jdrepair'
 )
 
-NB. x 1 does db validation (damage and class)
-NB. x 0 skips db validation
 getdb=: 3 : 0
-1 getdb y
-:
+assertnodamage''
 db=. dbpath DB
-if. x do.
- 'db damaged'assert (0=ftypex) db,'/jddamage'
- 'not database class'assert 'database'-:jdfread db,'/jdclass'
-end. 
+'not database class'assert 'database'-:jdfread db,'/jdclass'
 i=. db i:'/'
-floc_z_=: f=. Open_jd_ jpath i{.db
-dloc_z_=: Open__f (>:i)}.db
+f=. Open_jd_ jpath i{.db
+Open__f (>:i)}.db
 )
 
 NB. table names,.locales sorted by name
@@ -142,9 +136,7 @@ case. do.
  v=. fread y,'/jdversion'
  v=. (-.v-:_1){3,<.0".":v
  'db version not compatible with this Jd version'assert v=<.".jdversion
- 'db damaged'assert (0=ftypex) y,'/jddamage'
  d=. }.(y i:'/')}.y
- 
  'x'jdadminlk y NB. remove old lock (if any)
  'w'jdadminlk y
  
@@ -170,6 +162,11 @@ case. do.
  end.
  NB. default access is for the 1st of the new dans
  jdaccess (;{.c{DBPATHS_jd_),' ',(;{:c{DBUPS_jd_),' intask'
+ 
+ assertnodamage''
+ 
+ NB. 'db damaged and not under repair' assert -.1 0-:fexist (<y),each'/jddamage';'/jdrepair'
+
  i.0 0
 end.
 )
@@ -346,7 +343,7 @@ NB. serious error (e.g., disk full)
 NB. mark db as damaged - prevent any more ops on db
 NB. signal error
 jddamage=: 3 : 0
-p=. '/jddamage',~dbpath DB
+p=. 'jddamage',~jdpath''
 if. #y do.
  'damage'logtxt y
  'damage'logjd y
@@ -355,7 +352,21 @@ if. #y do.
  y assert 0
 end.
 ferase p
+ferase 'jdrepair',~jdpath''
 i.0 0 
+)
+
+NB. jdrepair 'reason' - mark damaged db as under repair
+NB. jdrepair ''       - unmark
+jdrepair=: 3 : 0
+p=. jdpath''
+if. #y do.
+ 'not damaged'assert fexist p,'/jddamage'
+ y fwrite p,'/jdrepair'
+else.
+ ferase p,'/jdrepair'
+end.
+i.0 0
 )
 
 3 : 0''
@@ -420,7 +431,7 @@ else.
 end.
 )
 
-NB. validate and set links.txt in database folder
+NB. set links.txt in database folder
 jdlinkset=: 3 : 0
 f=. 'links.txt',~jdpath''
 if. y-:0 do.

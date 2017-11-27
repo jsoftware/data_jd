@@ -91,9 +91,9 @@ jd'update f';w;'a';4 5;'b4';2 3$'q'
 jd'update f';w;'a';4 5;'b4';'q'
 jd'update f';w;'a';4 5;'b4';'qq'
 
-NB. ,23 and 1 3$'a' do NOT extend
-ETALLY_jd_ jdae'update f';w;'a';4 5;'b';,23
-ETALLY_jd_ jdae'update f';w;'a';4 5;'b4';1 3$'q'
+NB. ,23 and 1 3$'a' do extend
+jd'update f';w;'a';4 5;'b';,23
+jd'update f';w;'a';4 5;'b4';1 3$'q'
 
 NB. simple insert conformability
 w=. 2 3
@@ -105,9 +105,9 @@ jd'insert f';'a';4 5;'b';6 7;'b4';2 3$'q'
 jd'insert f';'a';4 5;'b';6 7;'b4';'q'
 jd'insert f';'a';4 5;'b';6 7;'b4';'qq'
 
-NB. ,23 and 1 3$'a' do NOT extend
+NB. ,23 and 1 3$'a' do extend
 ETALLY_jd_ jdae'insert f';'a';4 5;'b';(,23);'b4';5 4$'z'
-ETALLY_jd_ jdae'insert f';'a';4 5;'b';6 7;'b4';1 3$'q'
+jd'insert f';'a';4 5;'b';6 7;'b4';1 3$'q'
 
 NB. varbyte validate
 jdadminx'test'
@@ -130,23 +130,20 @@ jd'insert f';,N,.24 25;'r';'bbb';<<'ddd'                    NB. insert 2 rows - 
 jd'update f';'jdindex=1';,N,.66;'x';'qwer';<<'abc'                      NB. insert scalars
 jd'update f';'jdindex<2';,N,.67 68;'rt';(2 4$'hhhhjjjj');<'ddd';'hhhhh' NB. insert 2 rows
 jd'update f';'jdindex<2';,N,.69 70;'rt';(2 3$'mmmnnn');<'ddd';'hhhhh'   NB. insert 2 rows - byte4 overtake
-
-'count'jdae'update f';'jdindex<2';,N,.69 70;'rt';(1 3$'mmmnnn');<'ddd';'hhhhh'   NB. insert 2 rows - bad count
-
-
+jd'update f';'jdindex<2';,N,.69 70;'rt';(1 3$'mmmnnn');<'ddd';'hhhhh'   NB. insert 2 rows - bad count
 jd'update f';'jdindex<2';,N,.99;'r';'bbb';<<'ddd'                       NB. insert 2 rows - scalar extend
+jd'insert f';,N,.24 25;'rt';(1 4$'hhhhjjjj');<'ddd';'hhhhh'     NB. insert 2 rows
 
 NB. errors
 E jdae'insert f';,N,.24 25 26;'rt';(2 4$'hhhhjjjj');<'ddd';'hhhhh'  NB. insert 2 rows
 E jdae'insert f';,N,.24 25;'rtx';(2 4$'hhhhjjjj');<'ddd';'hhhhh'    NB. insert 2 rows
 E jdae'insert f';,N,.24 25;'rt';(3 4$'hhhhjjjj');<'ddd';'hhhhh'     NB. insert 2 rows
-E jdae'insert f';,N,.24 25;'rt';(1 4$'hhhhjjjj');<'ddd';'hhhhh'     NB. insert 2 rows
 E jdae'insert f';,N,.24 25;'rt';(2 4$'hhhhjjjj');<'ddd';'hhhhh';'x' NB. insert 2 rows
 
 E jdae'update f';W;,N,.24 25 26;'rt';(2 4$'hhhhjjjj');<'ddd';'hhhhh'
 E jdae'update f';W;,N,.24 25;'rtx';(2 4$'hhhhjjjj');<'ddd';'hhhhh'
 E jdae'update f';W;,N,.24 25;'rt';(3 4$'hhhhjjjj');<'ddd';'hhhhh'  
-E jdae'update f';W;,N,.24 25;'rt';(1 4$'hhhhjjjj');<'ddd';'hhhhh'
+jd'update f';W;,N,.24 25;'rt';(1 4$'hhhhjjjj');<'ddd';'hhhhh'
 E jdae'update f';W;,N,.24 25;'rt';(2 4$'hhhhjjjj');<'ddd';'hhhhh';'x'
 
 
@@ -177,5 +174,5 @@ jd'insert f';'a';2 3 4 5 6;'b';2 3 4 5 6;'b4';5 4$'z'
 jd'update f';w;'a';2 3;'b';23
 jd'update f';w;'a';2 3;'b4';'x'
 jd'update f';w;'a';2 3;'b4';'xx'
-'count'jdae'update f';w;'a';2 3;'b';,23
-'count'jdae'update f';w;'a';2 3;'b4';1 4$'q'
+jd'update f';w;'a';2 3;'b';,23
+jd'update f';w;'a';2 3;'b4';1 4$'q'

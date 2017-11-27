@@ -1,0 +1,31 @@
+load JDP,'tools/ptable.ijs'
+
+tst=: 3 : 0
+kf=:  keyindex_jd_ 'f';y
+kF=:  keyindex_jd_ 'F';y
+assert kf-:kF
+)
+
+ptablebld'int'
+
+NB. nub - single part
+tst 'p';2015;'val';6
+tst 'p';2015;'val';123       NB. not found
+tst 'p';2015 2015;'val';6 16
+tst 'p';2015 2015;'val';6 99 NB. not found
+tst 'p';1999;'val';0         NB. 1st
+tst 'p';1999;'val';123       NB. 1st not found
+
+NB. multiple parts
+tst 'p';2013 2015 2016 2015 2013;'val';16 6 8   19 14
+tst 'p';2013 2015 2016 2015 2013;'val';16 6 999 19 14
+
+tst 'p';2020;'val';23 NB. part not found
+
+NB. update with indexes from keyindex
+key=. 'p';2013 2015 2016 2015 2013;'val';16 6 8 19 14
+k=. keyindex_jd_ 'f';key
+data=. 'p1';66 77 123 88 99
+jd'update F';k;data
+jd'update f';k;data
+assert (jd'reads from f')-:jd'reads from F'

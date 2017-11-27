@@ -1,25 +1,33 @@
-NB. Copyright 2015, Jsoftware Inc.  All rights reserved.
+NB. Copyright 2017, Jsoftware Inc.  All rights reserved.
 
 coclass'jd'
 
+NB. x is upsert key
 jd_insert=: 3 : 0
-FETAB_jd_=: ;{.y
+'' jd_insert y
+:
+FETAB=: tab=. ;{.y
 d=. getdb''
-t=. jdgl FETAB_jd_
+t=. jdgl tab
 'ns vs rows'=. _1 fixpairs__t 1}.y
 if. rows<1 do. JDOK return. end.
 nv=. ns,.vs
-r=. insertptable nv
-if. -.''-:r do. r return. end.
-rows Insert__d  ({.y),<nv
-t=. getloc__d ;{.y
+
+if. isptable tab do.
+ x insertptable nv
+else. 
+ if. ''-:x do.
+  rows Insert__d  ({.y),<nv
+ else. 
+  x upsert ({.y),(<ns),<vs
+ end.
+end. 
 JDOK
 )
 
-insertptable=: 3 : 0
+insertptable=: 4 : 0
 tab=. FETAB
-t=. jdgl_jd_ :: 0: tab,PTM
-if. 0=t do. '' return. end. NB. return to do normal read
+t=. jdgl tab,PTM
 pcol=. getpcol__t''
 c=. {:CHILDREN__t
 i=. ({."1 y)i.<pcol
@@ -43,7 +51,7 @@ else.
   end.
   d=. i{each{:"1 y
   d=. ({."1 y),.d
-  jd_insert (tab,PTM,dtb":;part);,d
+  x jd_insert (tab,PTM,dtb":;part);,d
  end.
 end. 
 
@@ -83,62 +91,103 @@ i.0 0
 )
 
 jd_delete=: 3 : 0
-y=. bdnames y
-FETAB=: ;{.y
-ECOUNT assert 2=#y
-r=. deleteptable y
-if. -.''-:r do. r return. end.
-d=. getdb''
-Delete__d y
+y=. dltb y
+if. 0=L.y do.
+ i=. y i.' '
+ tab=. i{.y
+ w=. (>:i)}.y
+else.
+ if. 2=#y do.
+  tab=. ;{.y
+  w=. ;}.y
+ else.
+  NB. key delete
+  tab=. ;{.y
+  t=. jdgl tab
+  'ns vs rows'=. _2 fixpairs__t }.y
+  w=. 0 keyindex tab;,,ns,.vs
+ end.
+end.
+FETAB=: tab
+if. 2=3!:0 w do. w=. ;{:{:jd'read jdindex from ',tab,' where ',w end. 
+if. 0=#w do. JDOK return. end.
+if. isptable tab do.
+ deleteptable tab;w
+else.
+ d=. getdb''
+ Delete__d tab;w
+end. 
 JDOK
 )
 
 deleteptable=: 3 : 0
-t=. jdgl FETAB
-if. -.S_ptable__t do. '' return. end.
-t=. jdgl FETAB,PTM
+tab=. ;{.y
+t=. jdgl tab,PTM
 pcol=. getpcol__t''
 w=. ;}.y
-set=. (FETAB,' ',pcol)get_jdquery_ w NB. from readptable
-p=. (<FETAB),each PTM,each set
-p=. (<"0 p),each <<w
-jd_delete each p
+'parts tlens'=. getparts tab
+base=. 0,}:+/\tlens
+i=. <:0 i.~"0 1 w >:/ base
+p=. i{parts
+nub=. ~.p
+wx=. w - i{base
+for_n. nub do.
+ f=. tab,PTM,;n
+ pr=. wx#~p=n     NB. ptable rows (includes base)
+ f=. tab,PTM,;n
+ jd_delete f;pr
+end. 
 JDOK
 )
 
-NB. explicit index for deleted row is allowed
+NB. table ; where ; pairs
+NB. where can be
+NB.  read style where clause
+NB.  indexes (jdindex values)
+NB.  col(s) to use with keyindex
 jd_update=: 3 : 0
 ECOUNT assert 2<:#y
 'tab w'=. 2{.y
 FETAB_jd_=. ;tab
 t=. jdgl FETAB
 if. 2=3!:0 w do.
- w=. ;{:,old=. jd_read'jdindex from ',tab,' where ',w NB. ; always a list so 1 n$'abc' works
+ NB. read where clause or col(s)
+ if. *./(;:w)e.NAMES__t do.
+  key=. ;:w NB. search for the
+  'ns vs rows'=. _2 fixpairs__t 2}.y
+  'key col(s) not in pairs'assert 0=#key-.ns
+  if. (#key)=#ns do. JDOK return. end. NB. no data to update
+  i=. ns i. key
+  w=. keyindex tab;,,(i{ns),.i{vs
+  'key(s) not found' assert -._1 e. w
+  i=. (i.#ns)-.i NB. remove key(s) from pairs as they don't need to update
+  
+ else.
+  w=. ;{:,old=. jd_read'jdindex from ',tab,' where ',w NB. ; always a list so 1 n$'abc' works
+  'ns vs rows'=. (#w) fixpairs__t 2}.y
+ end. 
 else.
  if. 4~:3!:0 w do. NB. see fixtype_num_jdtint_
   if. 1=3!:0 w do. w=. 0+w else. EINDEX assert 0 end.
  end.
  w=. ,w NB. , to allow 1 n$'abc' to work
+ 'ns vs rows'=. (#w) fixpairs__t 2}.y
 end.
 NB. w is always a list - if it has 1 element, this allows data 1 4$'a'
 NB. force w to scalar if single element list to disallow 1 4$'a'
+if. 0=#w do. JDOK return. end.
 
-'ns vs rows'=. (#w) fixpairs__t 2}.y
-if. rows=0 do. JDOK return. end.
-
-pt=. jdgl_jd_ :: 0: tab,PTM
-if. 0=pt do.
+if. -.isptable tab do.
  EINDEX assert (w<Tlen__t),0<:w
  for_i. i.#ns do.
   c=. getloc__t {.i{ns
   w modify__c >i{vs
  end.
 else.
- NB. part modify
  'parts tlens'=. getparts tab
  EINDEX assert (w<+/tlens),0<:w
  base=. 0,}:+/\tlens
- i=. <:0 i.~"0 1 w >/ base
+ i=. <:0 i.~"0 1 w >:/ base
  p=. i{parts
  nub=. ~.p
  wx=. w - i{base
@@ -156,4 +205,43 @@ else.
  end. 
 end. 
 JDOK
+)
+
+NB. x is key
+upsert=: 4 : 0
+tab=. ;{.y
+d=. getdb''
+t=. jdgl tab
+'ns vs'=. }.y
+if. 0=#>{.vs do. JDOK return. end.
+if. 1=#x do.
+ ksrc=. >(0{ns i. x){vs
+ ksnk=. jd'get ',tab,' ',;x
+else.
+ ksrc=. stitchx__t (ns i.x){vs
+ ksnk=. stitch__t tab;<x
+end. 
+r=. ksnk i: ksrc
+b=. r<#ksnk
+if. +/b do.
+  update=. tab;(b#r);,ns,.(<b#i.#ksrc){each vs
+ jd_update update
+end.
+b=. -.b
+if. +/b do.
+ insert=. tab;,ns,.(<b#i.#r){each vs
+ jd_insert insert
+end. 
+)
+
+NB. treat upsert as an insert until the last moment
+NB. this simplifies ptable support
+jd_upsert=: 3 : 0
+ECOUNT assert 2<:#y
+'tab key'=. 2{.y
+FETAB_jd_=: tab
+key=. bdnames key
+d=. getdb''
+0 validtc__d (<tab),key
+key jd_insert tab;2}.y
 )

@@ -5,7 +5,7 @@ require JDP,'tools/ptable.ijs'
 chk=: 3 : 0
 'select where xtra'=: y
 if. (0~:#where)*.0~:#xtra do. xtra=. ' and ',xtra end.
-s1=: 'reads      ',select,' from base where ',where,' ',xtra
+s1=: 'reads      ',select,' from F where ',where,' ',xtra
 a=: jd s1
 s2=: 'reads ',select,' from f    where ',where,' ',xtra
 b=: jd s2
@@ -13,7 +13,7 @@ if. -.a-:b do.
  assert (,.&.> tsort_jd_ {:a)-:,.&.> tsort_jd_ {:b
 end.
 
-s1x=: 'reads /lr      ',select,' from base where ',where,' ',xtra
+s1x=: 'reads /lr      ',select,' from F where ',where,' ',xtra
 ax=: jd s1x
 s2x=: 'reads /lr ',select,' from f    where ',where,' ',xtra
 bx=: jd s2x
@@ -25,7 +25,7 @@ end.
 ''
 )
 
-NB. compare base with f
+NB. compare F with f
 ts=: 0 : 0
 '';'';t
 '';'val<=10';t
@@ -37,8 +37,8 @@ ts=: 0 : 0
 )
 
 bigchk=: 3 : 0
-assert (ttally_jd_ {:jd'reads from base')=ttally_jd_ {:jd'reads from f'
-assert (ttally_jd_ {:jd'reads from base where ',y)=ttally_jd_ {:jd'reads from f where ',y
+assert (ttally_jd_ {:jd'reads from F')=ttally_jd_ {:jd'reads from f'
+assert (ttally_jd_ {:jd'reads from F where ',y)=ttally_jd_ {:jd'reads from f where ',y
 
 NB. check when all partitions are read 
 t=. ''
@@ -80,10 +80,10 @@ ptabletst'edatetime'
 ptablebld'edatetime'
 bigchk 'p="2012" or p in ("2014","2016")' NB. big check on de (date epoch col)
 
-assert({:jd'reads from f,f.j where p="2016" order by f.sort')-:{:jd'reads from base,base.j where p="2016" order by base.sort'
+assert({:jd'reads from f,f.j where p="2016" order by f.sort')-:{:jd'reads from F,F.j where p="2016" order by F.sort'
 
-jd'reads from base order by sort'
-jd'reads from base,base.j order by base.sort'
+jd'reads from F order by sort'
+jd'reads from F,F.j order by F.sort'
 
 jd'reads from f order by sort'
 jd'reads from f,f.j order by f.sort' NB. partition alias in order by clause
@@ -96,7 +96,7 @@ assert 2015004=;{:jd'reads sort from f where jdindex=12'
 assert 2015004=;{:jd'reads sort from f where jdindex=12 and p=2015'
 
 NB. info parts
-jd'reads from base'
+jd'reads from F'
 assert _1='parts' jdfroms_jd_ jd'info last'
 jd'reads from f'
 assert (ttally_jd_ {:jd'reads from f',PTM_jd_)='parts' jdfroms_jd_ jd'info last'
@@ -105,23 +105,23 @@ assert 2='parts' jdfroms_jd_ jd'info last'
 
 NB. misc bits
 ptablebld'int'
-jd'renamecol base val foo'
+jd'renamecol F val foo'
 jd'renamecol f    val foo'
-assert (jd'reads from base')-:jd'reads from f'
+assert (jd'reads from F')-:jd'reads from f'
 
 ptablebld'int'
-jd'dropcol base b'
+jd'dropcol F b'
 jd'dropcol f b'
-assert (jd'reads from base')-:jd'reads from f'
+assert (jd'reads from F')-:jd'reads from f'
 assert'pcol'jdae'dropcol f p'
 
 ptablebld'int'
 assert'ptable'jdae'createcol f foo int _';i.5
-jd'createcol base foo int'
-jd'createcol base boo byte 4'
+jd'createcol F foo int'
+jd'createcol F boo byte 4'
 jd'createcol f foo int'
 jd'createcol f boo byte 4'
-assert (jd'reads from base')-:jd'reads from f'
+assert (jd'reads from F')-:jd'reads from f'
 
 ptablebld'int'
 t=. {:jd'info ref'
@@ -130,12 +130,12 @@ t=. (<'dropcol '),each t
 
 jd'dropcol f jdref_p2_j_p2'
 jd'renametable f boo'
-assert (jd'reads from base')-:jd'reads from boo'
+assert (jd'reads from F')-:jd'reads from boo'
 
 ptablebld'int'
 a=. jd'reads from f,f.j'
 jd'dropcol f jdref_p2_j_p2'
-assert (jd'reads from base')-:jd'reads from f'
+assert (jd'reads from F')-:jd'reads from f'
 jd'ref f p2 j p2'
 assert a-:jd'reads from f,f.j'
 

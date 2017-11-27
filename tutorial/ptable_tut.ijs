@@ -38,6 +38,7 @@ jd'createtable f'
 jd'createcol f edt edate'
 jd'createcol f val int'
 jd'createcol f x int'
+jd'createcol f k int'
 jd'createptable f edt' NB. turn normal table into ptable with pcol edt
 )
 
@@ -45,7 +46,7 @@ bld''
 jd'reads from f'
 
 gd=: 3 : 0 NB. data for insert
-'edt';(y#>(<'2016-01-'),each (2":each<"0[>:i.#y)rplc each <' ';'0');'x';((+/y)$<.100*6!:1'');'val';(+/y)$i.3
+'edt';(y#>(<'2016-01-'),each (2":each<"0[>:i.#y)rplc each <' ';'0');'x';((+/y)$<.100*6!:1'');'val';((+/y)$i.3);'k';(0{,;{:jd'reads count k from f')+i.+/y
 )
 
 NB. insert creates parts as required - rows inserted to the relevant part
@@ -81,7 +82,7 @@ jd'info last'
 jd'reads from f where val=0 and edt >= "2016-01-01" and edt <= "2016-01-03"'
 jd'info last'
 
-NB. update and modify work as expected
+NB. update works as expected
 jd'reads from f where edt="2016-01-02" and val=2'
 jd'update f';'edt="2016-01-02" and val=2';'val';3 3 3
 jd'reads from f where edt="2016-01-02"'
@@ -92,6 +93,11 @@ jd'update f';'edt="2016-01-02" and val=2';'val';3 3 3
 jd'reads from f where edt="2016-01-02"'
 jd'update f';'edt="2016-01-02" and val=3';'val';2 2 2
 jd'info summary' NB. modify does not delete any rows
+
+NB. upsert works as epxected
+data=: 'edt';(3 10$'2016-01-022016-01-022016-01-05');'val';1 2 9;'x';666 777 999;'k';13 99 123
+jd'upsert f';'edt k';data
+assert 666 777 999=,>{:jd'reads x from f where k in (13,99,123)'
 
 NB. jdindex works as expected
 jd'reads jdindex,* from f where val=0 and edt >= "2016-01-01" and edt <= "2016-01-03"'

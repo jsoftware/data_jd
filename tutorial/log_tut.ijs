@@ -1,4 +1,4 @@
-NB. Copyright 2015, Jsoftware Inc.  All rights reserved.
+NB. Copyright 2017, Jsoftware Inc.  All rights reserved.
 
 0 : 0
 events are recorded in log.txt and log.ijf in the db folder
@@ -20,20 +20,19 @@ addtional and ad hoc logging can be added as required
 bld=: 3 : 0
 jdadminx'test'
 jd'createtable f'
-jd'createcol f a int'
+jd'createcol f a int';i.10
+jd'createcol f b int';23+i.10
 i.0 0
 )
 
 damage=: 3 : 0 NB. damage db
 c=: jdgl_jd_'f a'
-dat__c=: ;i.<:Tlen__c
+dat__c=: i.<:Tlen__c
 i.0 0
 )
 
 bld''
-jd'insert f a';i.10000
 jdlogtxtshow_jd_ 10 NB. show last 10 log.txt lines
-
 damage'' NB. damage db
 'db marked as damaged'jdae'validate' NB. validate to detect damage
 'db damaged'jdae'read from f'
@@ -47,12 +46,15 @@ i=. ({."1>a)i.<'jd_info''validatebad'''
 [v=. >i{{:"1>a              NB. validatebad when log was written
 NB. notice that f a dat has bad shape
 
-jddamage_jd_'' NB. remove damage mark so we can work with db
-assert v-:jd'info validatebad' NB. same validation failure
-jddamage_jd_''
-jd'dropcol f a'                 NB. rough fix by dropping bad col
-jd'createcol f a int _';i.10000 NB. and creating anew
-jd'validate' 
+jdadmin 0          NB. close db
+assert 'assertion failure'-:jdadmin etx 'test'
+jdrepair_jd_'fixing it now'  NB. mark db as under repair
+jdadmin'test'
+jd'info validatebad'         NB. same validation failure
+jd'dropcol f a'              NB. rough fix by dropping bad col
+jd'createcol f a int _';i.10 NB. and creating anew
+jd'validate'
+jddamage_jd_'' NB. remove damage mark     
 
 NB. jdadmin of a db with damage that has not been detected
 bld''
@@ -69,24 +71,24 @@ jdadmin 0
 assert 'assertion failure'-:jdadmin etx'test'
 13!:12''
 
-NB. validate is run before/after insert/update/modify/delete
-
-NB. info
 bld''
 jd'info validate'
+jd'info validatebad'
 damage''
-jd'info validate' NB. 1 in bad col indicates f a dat has a problem
-NB. jdtypex is the jtype of the jdtype col
+jd'info validate'
+NB. x is X if there is a problem with the col
 NB. fsize is the size of the mapped file
 NB. jsize is the size of the mapped j noun
-NB. jdtypex should be the same as jtype
-NB. jdshape should be the same as jshape
 NB. fsize should be the same as msize
-NB. bad has a 1 where there is a problem
-jd'info validatebad' NB. just the bad rows
 
+jd'info validatebad' NB. just the bad rows
 NB. use jdgl to investigate the problem
 t=. jdgl_jd_'f'   NB. locale for table
 Tlen__t           NB. rows in table
+assert 0=jdgl_jd_ :: 0:'f a' NB. fails because accessing damaged col marks db as damaged
+jdrepair_jd_'fixing it now'  NB. mark db as under repair
+c=. jdgl_jd_ 'f a'
 c=. jdgl_jd_'f a' NB. locale for column a
 #dat__c           NB. rows in column mapped noun dat
+
+bld''

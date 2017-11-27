@@ -55,7 +55,7 @@ if. y-:'' do.
  return.
 end.
 if. 4=3!:0 y do.
- decho basic,csvload,demo,advanced
+ echo basic,csvload,demo,advanced
  y=. ;y{basic,csvload,demo,advanced
 end.
 t=. 'tutorial/',y,'_tut.ijs'

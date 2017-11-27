@@ -64,6 +64,23 @@ CHILDREN =: CHILDREN-.y
 NAMES =: NAMES-.<NAME__y
 )
 
+NB. mark db damaged is col y has incorrect Tlen
+colcheck=: 3 : 0
+if. 'jdindex'-:NAME__y do. return. end.
+if. typ__y-:'ref' do.
+ if. left__y do.
+  b=. 0 NB. could be anything
+ else.
+  b=. (Tlen~:#dat__y)*.-.dirty__y 
+ end. 
+else.  
+ b=. Tlen~:#dat__y
+end. 
+if. b do.
+ if. -.fexist '/jdrepair',~dbpath DB do. jddamage 'Tlen wrong for col ',NAME__y,' in table ',NAME__PARENT__y end.
+end.
+)
+
 NB. get locale and open table children and map column files - note internal use of getloc
 getloc=: 3 : 0
 if. -.'/'e.,>y do.
@@ -89,16 +106,16 @@ if. 'jdtable'-:;CLASS__c do.
 elseif. 'jdcolumn'-:;CLASS__c do. NB. cols map as required
  if. _1=nc {.MAP__c,each <'__c' do.
    mapcolfile__c"0 MAP__c
-   if. typ__c-:'ref' do.
-    b=. (Tlen~:#dat__c)*.-.dirty__c 
-   else.  
-    b=. Tlen~:#dat__c
-   end. 
-   if. b do. jddamage 'Tlen wrong for col ',NAME__c,' in table ',NAME__PARENT__c end.
    opentyp__c ''
  end.
+ colcheck c
 end.
 c
+)
+
+NB. get col locale - do not map (no colcheck)
+getcolloc=: 3 : 0
+c=. (NAMES i. <y){CHILDREN
 )
 
 NB. y is name

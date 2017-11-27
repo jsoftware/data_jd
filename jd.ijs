@@ -10,7 +10,7 @@ NB. is pushed to Jsoftware for building JAL data/jd package
 
 NB. all use of the Jd library is through JDP_z_
 
-jdversion_jd_=: '4.5'
+jdversion_jd_=: '4.6'
 
 nokey_jd_=: 0 : 0 rplc 'INDEX.HTM';jpath '~addons/data/jd/doc/Index.htm'
 
@@ -111,6 +111,7 @@ base/database.ijs
 base/table.ijs
 base/column.ijs
 base/constants.ijs
+base/keyindex.ijs
 base/read.ijs
 base/where.ijs
 base/jmfx.ijs
@@ -123,6 +124,7 @@ api/api_change.ijs
 api/api_csv.ijs
 api/api_drop.ijs
 api/api_info.ijs
+api/api_misc.ijs
 api/api_read.ijs
 api/client.ijs
 csv/csv.ijs
@@ -142,6 +144,11 @@ NB. stubs to load scripts not normally loaded
 jdtests=: 3 : 0
 require JDP,'tools/tests.ijs'
 jdtests_jd_ y
+)
+
+repair_jd_=: 3 : 0
+require JDP,'tools/repair.ijs'
+repair_jd_''
 )
 
 setscriptlists_jd_=: 3 : 0

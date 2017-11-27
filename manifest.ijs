@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '4.2.6'
+VERSION=: '2.2.4'
 
 FILES=: 0 : 0
 manifest.ijs
@@ -78,12 +78,13 @@ demo/jhs/jdapp1.ijs
 tutorial/quandl_eod_stock_data_tut.ijs
 tutorial/admin_tut.ijs
 tutorial/ptable_tut.ijs
-tutorial/update_bulk_tut.ijs
 tutorial/table_table_tut.ijs
 tutorial/tempcol_tut.ijs
 tutorial/setget_tut.ijs
+tutorial/update_tut.ijs
 tutorial/intro_tut.ijs
 tutorial/custom_tut.ijs
+tutorial/upsert_tut.ijs
 tutorial/performance_tut.ijs
 tutorial/join_tut.ijs
 tutorial/server-jhs_tut.ijs
@@ -121,12 +122,14 @@ doc/Ops_read.htm
 doc/Index.htm
 doc/General.htm
 doc/Ops_info.htm
+doc/Ops_common.htm
 doc/Overview.htm
 doc/Technical.htm
 doc/Release.htm
 doc/Support.htm
 doc/Ops_create.htm
 doc/Ops_table-table.htm
+doc/Ops_raw.htm
 doc/Ops_rename.htm
 doc/Ops.htm
 doc/Admin.htm
@@ -147,6 +150,7 @@ api/api_drop.ijs
 api/api.ijs
 api/jjd.ijs
 api/api_adm.ijs
+api/api_misc.ijs
 pm/pm_disk.ijs
 pm/pmc.ijs
 pm/pmb.ijs
@@ -168,6 +172,7 @@ base/util_ptable.ijs
 base/util.ijs
 base/table.ijs
 base/constants.ijs
+base/keyindex.ijs
 base/log.ijs
 base/pm.ijs
 base/validate.ijs
@@ -179,6 +184,7 @@ base/common.ijs
 base/column.ijs
 base/zutil.ijs
 test/valid_data_test.ijs
+test/repair_test.ijs
 test/ptable_read_test.ijs
 test/ref_dirty_test.ijs
 test/basic_test.ijs
@@ -195,6 +201,7 @@ test/shape_test.ijs
 test/droptable_test.ijs
 test/ref_test.ijs
 test/query_test.ijs
+test/upsert_test.ijs
 test/rmdir_test.ijs
 test/createcol_test.ijs
 test/error_test.ijs
@@ -203,6 +210,7 @@ test/alloc_test.ijs
 test/utf8_test.ijs
 test/ptable_update_test.ijs
 test/join_test.ijs
+test/fixpairs_test.ijs
 test/ptable_insert_test.ijs
 test/pm_aggby_test.ijs
 test/info_test.ijs
@@ -212,6 +220,7 @@ test/modify_test.ijs
 test/joinx_test.ijs
 test/update_test.ijs
 test/sandp_test.ijs
+test/keyindex_test.ijs
 test/orderby_test.ijs
 test/delete_test.ijs
 test/flush.ijs

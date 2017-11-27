@@ -3,14 +3,10 @@ NB. Copyright 2017, Jsoftware Inc.  All rights reserved.
 0 : 0
 convert jd3 db to jd4
    dryrun '~temp/jd/test' NB. dry run this db and report details
-   dryrun '~temp/jd'      NB. dry run all jd3 dbs in folder
    
-DO NOT conrun UNTIL dryrun HAS IS CLEAN!   
+DO NOT conrun UNTIL dryrun runs clean!   
 
    conrun '~temp/jd/test' NB. convert this db in place and report details
-   conrun '~temp/jd     ' NB. convert all jd3 dbs in folder
-   
-   getjd3 '~temp/jd'     NB. jd3 dbs in folder
    
 conversion summary:
  jdactive col dropped and deleted rows compressed out
@@ -20,6 +16,10 @@ conversion summary:
 
 dryrun failure leaves db untouched 
 convert failure probably leaves db damaged - neither jd3 nor jd4 compatible
+
+For access to a Jd3 db, use jdadminjd3 with caution:
+   jdadminjd3_jd_ '~temp/jd/test'
+   jd'info validatebad'
 )
 
 dryrun=: 0&convert_jd_
@@ -28,28 +28,34 @@ getjd3=: getjd3_jd_
 
 coclass'jd'
 
+vecho=: echo
+
+jdadminjd3=: 3 : 0
+jdadmin 0
+p=. adminp y
+fv=. p,'/jdversion'
+v=. fread fv
+'not a jd3 db'assert _1=v
+'mark as damaged until conversion complete'fwrite p,'/jddamage' NB. damaged and
+'repair'fwrite p,'/jdrepair'                                    NB. under repair    
+jdversion fwrite fv NB. jam as current version long enough to open
+jdadmin y
+ferase fv NB. back to jd3 until conversion is done
+i.0 0
+)
+
 convert=: 3 : 0
 1 convert y
 :
-if. 'database'-:fread y,'/jdclass' do.
- 'not a jd3 db'assert -.fexist y,'/jdversion'
- y=. boxopen y
- vecho=: echo
-else.
- y=. getjd3 y
- if. 0=#y do. echo'nothing to do' return. end.
- vecho=: [
-end.
-for_n. y do.
- n=. ;n
- try.
-  echo n
-  x convertsub n
- catchd.
-  echo 13!:12''
-  echo n,' *********************** failed'
-  jdforce_clean''
- end.
+'not a database' assert 'database'-:fread y,'/jdclass'
+'not a jd3 db'   assert -.fexist y,'/jdversion'
+n=. y
+try.
+ x convertsub n
+catchd.
+ echo 13!:12''
+ echo n,' *********************** failed'
+ jdforce_clean''
 end.
 i.0 0
 )
@@ -59,67 +65,73 @@ convertsub=: 3 : 0
 0 convert y
 :
 doit=. x=1
-jdadmin 0
-p=. adminp y
-dan=. (>:p i: '/')}.p
-fv=. p,'/jdversion'
-v=. fread fv
-'not a jd3 db'assert _1=v
-jdversion fwrite fv NB. jam as current version long enough to open
-jdadmin y
-ferase fv NB. back to jd3 until conversion is done
+jdadminjd3 y
+dbpath=. dbpath DB
+if. doit do. repair'' end. 
 db=. getdb_jd_''
 refs=. ''
-path=. dbpath dan
 for_tn. NAMES__db do.
  tablename=. ;tn
  t=. getloc__db tn
  ns=. NAMES__t
  cs=. CHILDREN__t
- vecho tablename,' -',;' ',each ns
+ count=. Tlen__t
  a=. getloc__t'jdactive'
  active=. forcecopy dat__a
- dflag=. -.*./active
- if. dflag do. vecho ' rows to delete',~' ',":+/-.active end.
+ if. count~:#active do.
+  vecho ' will repair count - jdactive'
+  active=. count{.active
+ end. 
  
+ dflag=. -.*./active
+ vecho tablename,' TLen A - deleted B'rplc 'A';(":count);'B';":+/-.active
  for_i. i.#ns do.
   n=. ;i{ns
   loc=. i{cs
-  f=. path,'/',tablename,'/',n
+  f=. dbpath,'/',tablename,'/',n
   if. 'jdindex'-:n do. continue. end.
 
   if. 'jdactive'-:n do.
-   vecho ' drop: ',n  
-   if. doit do. jddeletefolder f [ close__loc'' end.
+   if. doit do.
+    jddeletefolder f [ close__loc''
+   else.
+    vecho ' will drop: ',n  
+   end.
    continue.
   end. 
 
-  NB. not that ref cols are deleted and then recreated at end
+  NB. ref cols are deleted and then recreated at end
   if. ('jd')-:2{.n do.
     if. 'jdref'-:5{.n do. refs=. refs,<tablename,(n i. '_')}.n end.
     MAP__loc=: '' NB. decommitted cols have no MAP - need for close
-    vecho ' drop: ',n
     if. doit do.
      close__loc
      jddeletefolder f
-    end.
+    else.
+     vecho ' will drop: ',n
+    end. 
     continue.
   end.
-  
+
   NB. some col types are no longer supported - drop them
   if. (<typ__loc) e. ;:'time enum' do.
    MAP__loc=: '' NB. decommitted cols have no MAP - need for close
-   vecho' drop: ',n,' ',typ__loc
    if. doit do.
      close__loc
      jddeletefolder f
+   else.
+    vecho' will drop: ',n,' ',typ__loc
    end.
    continue.
   end. 
   
-  vecho' ',n
+  loc=. getloc__t n NB. getloc so mapping is done
+  
+  if. count~:#dat__loc do.
+   vecho ' will repair count - ',n
+  end.
   if. doit*.dflag do.
-   loc=. getloc__t n NB. getloc so mapping is done
+   if. count~:#dat__loc do. dat__loc=: count{.dat__loc end.
    dat__loc=: active#dat__loc
   end.
  
@@ -137,7 +149,7 @@ jdadmin 0
 
 vecho LF
 if. doit do.
- jdversion fwrite fv
+ jdversion fwrite dbpath,'/jdversion'
  jdadmin y
  for_r. refs do.
   r=. ;r
@@ -154,6 +166,7 @@ else.
  end.
 end.
 jdadmin 0
+vecho 'finished ',(;doit{'dryrun';'conrun'),' - ',tablename
 i.0 0
 )
 

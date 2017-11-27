@@ -2,6 +2,13 @@ NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 NB. csv loader
 0 : 0
 CVAR type has parameter of expected average size that is used in initial file size calculation (rows*size)
+
+options: COLSEP AUTO looks at first 5000 bytes of csv file
+ first of TAB COMMA or STILE set or error
+ 
+options: ROWSEP AUTO looks at last 2 bytes of csv file
+ CRLF, xLF, xCR set or error
+
 rows: rows grow
 rows is used for initial file allocation
 grow 0 if only load up to rows
@@ -454,6 +461,20 @@ log LF,'!',y,' ',TABLE
 log 'snk: ',PATHCSVFOLDER
 log 'src: ',PATHCSVFILE
 log 'start: ',(":<.6!:0''),LF,}:CDEFS
+
+NB. AUTO
+if. COLSEP-:,{.a. do.
+ t=. fread PATHCSVFILE;0,5000 <. fsize PATHCSVFILE
+ i=. <./t i. TAB,',','|'
+ 'COLSEP AUTO: TAB,COMMA, or STILE not found' assert i<#t
+ COLSEP=: i{t
+end.
+if. ROWSEP-:,{.a. do.
+ t=. fread PATHCSVFILE;2,~_2+fsize PATHCSVFILE
+ ROWSEP=: (-.CR={.t)}.t
+ 'ROWSEP AUTO: not CRLF or CR or LF' assert (<ROWSEP) e. ,each CRLF;CR;LF
+end.
+
 'ina inz'=. setinput''
 if. -.appendflag do.
  oldrows=. 0
@@ -735,9 +756,9 @@ t=. <;._2 ' ',~deb y
 if. 5=#t do. t=. t,<'iso8601-char' end. NB. epoch default
 assert 6=#t
 'c r q e h epoch'=: t
-COLSEP=: c rplc 'BLANK';' ';'TAB';TAB
+COLSEP=: c rplc 'BLANK';' ';'TAB';TAB;'AUTO';{.a.
 assert 1=#COLSEP
-ROWSEP=: r rplc 'CR';CR;'LF';LF;'CRLF';CRLF
+ROWSEP=: r rplc 'CR';CR;'LF';LF;'CRLF';CRLF;'AUTO';{.a.
 assert +./1 2=#ROWSEP
 QUOTED=: q rplc 'NO';' '
 assert 1=#QUOTED

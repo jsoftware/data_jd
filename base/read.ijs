@@ -323,7 +323,7 @@ else.
 end.
 )
 lookupcolind =: 3 : 0
-if. cnms -.@e.~ <y do. throw 'Not found: column ',y end.
+'order by col not in selection' assert (<y) e. cnms
 cnms i. <y
 )
 

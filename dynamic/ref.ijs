@@ -60,28 +60,12 @@ end.
 )
 
 setdatleft1=: 3 : 0
-d=. getdb''
-cola=. ;{.1{subscriptions
-colb=. ;{.0{subscriptions
-if. 1=#;{:1{subscriptions do. NB. single col
- a=. jdgl cola,' ', ;;{:1{subscriptions
- b=. jdgl colb,' ', ;;{:0{subscriptions
- ac=. #dat__a 
- bc=. #dat__b
- if. (bc*8)>getmapsize'dat' do.
-  resizemap 'dat' ; bc*8
- end.
- dat=: dat__a i: dat__b NB. i:
-else. NB. multiple col
- a=. stitch 1{subscriptions
- b=. stitch 0{subscriptions
- ac=. #a 
- bc=. #b
- if. (bc*8)>getmapsize'dat' do.
-  resizemap 'dat' ; bc*8
- end.
- dat=: a i: b
-end. 
+a=. stitch 1{subscriptions
+b=. stitch 0{subscriptions
+ac=. #a 
+bc=. #b
+if. (bc*8)>getmapsize'dat' do. resizemap 'dat' ; bc*8 end.
+dat=: a i: b
 dat=: _1 ((dat=ac)#i.#dat)}dat
 setdirty 0
 )
@@ -108,18 +92,9 @@ right=. right,(#none)#_1
 )
 
 setdatleft=: 3 : 0
-d=. getdb''
-cola=. ;{.1{subscriptions
-colb=. ;{.0{subscriptions
-if. 1=#;{:1{subscriptions do. NB. single col
- a=. jdgl cola,' ', ;;{:1{subscriptions
- b=. jdgl colb,' ', ;;{:0{subscriptions
- r=. dat__b datleft dat__a 
-else. NB. multiple col
- a=. stitch 1{subscriptions
- b=. stitch 0{subscriptions
- r=. b datleft a
-end.
+a=. stitch 1{subscriptions
+b=. stitch 0{subscriptions
+r=. b datleft a
 size=. 8**/$r
 if. size>getmapsize'dat' do. resizemap 'dat' ; size end.
 dat=: r

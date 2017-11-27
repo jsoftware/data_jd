@@ -12,22 +12,52 @@
   <link rel="stylesheet" href="jd.css">
 </head>
 <body>
-<p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm" class="act">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="Convert.htm">Convert</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
-<h2 id="backup">Backup</h2>
+<p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm" class="act">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
+<h2 id="dropdelete">Drop/Delete</h2>
+<p>A database structure maps directly to a folder structure. A database is a folder, a table is a folder in a database, and a column is a folder in a table.</p>
+<p>A db/table/col drop cannot be undone. It would be unfortunate to inadvertently drop something that was hard to recover.</p>
+<p>Restrictions while building a database can be a nuisance, but when things are stable it can be nice to disallow drops. This can be done with jdaccess but that is perhaps more mechanism than warranted.</p>
+<p><a href="Admin.htm#jddropstop" title="wikilink">jddropstop</a> provides an easy way to prevent bad drops.</p>
+<p>A db/table/col drop uses the utility <a href="Admin.htm#jddeletefolder" title="wikilink">jddeletefolder</a>. This utility is also used in other admin activities, for example, deleting folders of csv files that have been processed.</p>
+<p>A <a href="Admin.htm#jddeletefolder" title="wikilink">jddeletefolder</a> cannot be undone. It would be unfortunate to inadvertently delete something that was hard to recover.</p>
+<p><a href="Admin.htm#jddeletefolder" title="wikilink">jddeletefolder</a> allows delete only if certain criteria are met and this can prevent an unintended delete.</p>
+<h2 id="convert-jd3-jd4">convert Jd3-&gt;Jd4</h2>
+<p>Jd4 is incompatible with databases created under previous versions. Jd4 code will not open a Jd3 database and vice versa.</p>
+<p>To continue working with databases created with Jd3 you must:</p>
+<ul>
+<li>rename ~addons/data/jd to ~addons/data/jd3</li>
+</ul>
+<p>And then, when you want to work with a Jd3 database:</p>
+<ul>
+<li>load'~addons/data/jd3/jd.ijs'</li>
+</ul>
+<p>An update will overwrite addons/data/jd with the Jd4 codebase. After that point, update can't give you a jd3 folder. You can create it by downloading the appropriate file from <a href="http://www.jsoftware.com/download/jd3">jd3 zips</a> and unpacking in a temp folder, renaming jd to jd3 and then moving it to your addons folder.</p>
+<p>See <a href="Release.htm" title="wikilink">Release</a> for change details.</p>
+<p>The Jd4 has conversion tools to migrate a Jd3 database to a Jd4. The conversion is done in place and only works in the one direction.</p>
+<p>Conversion:</p>
+<pre><code>start J
+load &#39;jd&#39;
+jd &#39;list version&#39; NB. verify 4.1
+load &#39;~addons/data/jd/tools/convert.ijs&#39;
+dryrun &#39;~temp/jd/test&#39; NB. dry run this db and report details
+   
+DO NOT conrun UNTIL dryrun IS CLEAN!
+BACKUP!
+  
+conrun &#39;~temp/jd/test&#39; NB. convert this db in place and report details</code></pre>
+<p>Conversion summary:</p>
+<ul>
+<li>jdactive col dropped and deleted rows compressed out</li>
+<li>jd... cols (ref/reference/hash/...) dropped</li>
+<li>cols with type time or enum dropped</li>
+<li>jd'ref ...' done for jdref and jdreference cols</li>
+<li>dryrun failure leaves db untouched</li>
+<li>conrun failure probably leaves db damaged - neither jd3 nor jd4 compatible</li>
+</ul>
+<h2 id="backup">backup</h2>
 <p>Complete backup or restore is just a copy of the db file folder. Host shell scripts can provide full backup/restore. With large databases and suitable hardware it might be worthwhile to use multiple tasks and use compression.</p>
 <p>CSV dump/restore also provides complete backup.</p>
-<h2 id="damaged">Damaged</h2>
-<p>See tutorial log.</p>
-<p>There are many ways a database can be damaged: hardware crashes, OS crashes, JD bugs, application bugs...</p>
-<p>A simple example is a table where different cols have different counts. A db with such tables can work in some cases, get unexpected errors, result in further damage (that obscure the orignal problem), or in the worst case give wrong answers.</p>
-<p>When a col is used that has a bad count (not the same table TLen) the db is marked as damaged.</p>
-<p><code>jd'validate'</code> checks the integrity of the db (all tables, columns, files) and if there is a problem, marks the db as damaged and signals an error.</p>
-<p><code>jdadmin</code> does a validate to ensure the db is ready for use.</p>
-<p>Validation details can be seen with:</p>
-<pre><code>   jd&#39;info validate&#39;     NB. complete info
-   jd&#39;info validatebad&#39;  NB. info about problems</code></pre>
-<p>The db is marked as damaged and a jdlog record is written if a validation fails.</p>
-<h2 id="developer">Developer</h2>
+<h2 id="developer">developer</h2>
 <p>Jd is distributed with JAL (Package Manager) and the Jd library is at ~addons/data/jd and is accessed with the following equivalent lines:</p>
 <pre><code>   load&#39;jd&#39;
    load&#39;~addons/data/jd/jd.ijs&#39;</code></pre>
@@ -35,7 +65,7 @@
 <pre><code>   load&#39;~/dev/addons/data/jd/jd.ijs&#39;</code></pre>
 <p>Loading jd.ijs sets JDP_z_ as the path to the Jd library and this is used for all library references.</p>
 <p>An automated process copies the developer repo to the addon svn repo to build a new Jd release.</p>
-<h2 id="file-handles">File handles</h2>
+<h2 id="file-handles">file handles</h2>
 <p>Jd requires lots of file handles. Using thousands of columns requires thousands of handles.</p>
 <p>Jd fails badly if it runs out of handles. Unable to access a file, an error is signaled, perhaps in the middle of an operation that will leave the database damaged.</p>
 <p>Windows user does not have a limit on file handles.</p>
@@ -53,7 +83,7 @@ fred hard nofile 200000
 
 save the file, restart system, and verify new ulimit</code></pre>
 <p>To increase file handle limit for Mac the steps are similar, but of course different, and details are left to the reader. Yosemite has a low soft limit and a high hard limit.</p>
-<h2 id="links">Links</h2>
+<h2 id="symbolic-links">symbolic links</h2>
 <p>Folder symbolic links (Windows folder junctions) are used to place db cols on different drives.</p>
 <p>Possible benefits:</p>
 <ul>
@@ -69,7 +99,7 @@ save the file, restart system, and verify new ulimit</code></pre>
 <pre><code>...$ cat /proc/version
 ...$ cat /etc/issue
 ...$ ldd .../libjd.so</code></pre>
-<h2 id="locales">Locales</h2>
+<h2 id="locales-and-db-file-structure">locales and db file structure</h2>
 <p>Parts of a database (tables, cols, data) correspond directly with the file structure. That is, a table is a folder in the database, each col is a folder in its table folder, and data is a file in its col folder.</p>
 <p>When a database is opened, J locales are created that correspond to the database structure. Each table has a locale with metadata and each col has a locale with metadata and mapped file(s) with the data.</p>
 <p>Sometimes it can be useful to dig into the internals.</p>
@@ -83,7 +113,7 @@ save the file, restart system, and verify new ulimit</code></pre>
    typ__c            NB. column type
    PATH__c           NB. path to col dat file
    dat__c            NB. mapped file data</code></pre>
-<h2 id="performance">Performance</h2>
+<h2 id="performance">performance</h2>
 <p>See pmhelp_jd_ for info.</p>
 <p>Folder pm has scripts for performance measurement.</p>
 <h2 id="windows-search-service">Windows search service</h2>

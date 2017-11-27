@@ -35,6 +35,14 @@ jd'csvwr t.csv t'
 jd'csvrd t.csv tx'
 assert (jd'reads from t')-:jd'reads from tx'
 
+NB. test AUTO
+t=. fread CSVFOLDER,'/t.cdefs'
+t=. t rplc 'TAB';'AUTO';'LF';'AUTO'
+t fwrite CSVFOLDER,'/t.cdefs'
+jd'csvrd t.csv ty'
+assert (jd'reads from t')-:jd'reads from ty'
+
+
 NB. write just 4 cols and 1 row
 jd'csvwr /w a.csv t  BOOLEAN BYTE FLOAT INT *INT=12'
 jd'csvrd a.csv a'
