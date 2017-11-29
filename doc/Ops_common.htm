@@ -71,7 +71,7 @@
 <p><strong>upsert</strong> key is used to determine which data rows are used to update and which data rows are inserted.</p>
 <p><strong>update</strong> where clause can be a key.</p>
 <p><strong>delete</strong> where clause can be a key.</p>
-<p><strong>reads</strong> where clause can include a key.</p>
+<p><strong>reads</strong> where clause does not currently support key. Use of key op to get rows and using them with jdindex in (...) is a workaround.</p>
 <h2 id="damaged">damaged</h2>
 <p>A db can be damaged by: hardware crashes, OS crashes, Jd bugs, application bugs...</p>
 <p>A db is marked as damaged to prevent further use to avoid: appearing OK (when it isn't), strange errors, further damage (obscuring the original problem), wrong answers, ...</p>

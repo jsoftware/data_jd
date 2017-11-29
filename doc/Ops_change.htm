@@ -79,5 +79,18 @@ jd&#39;createcol f a int&#39;;i.5
 jd&#39;createcol f b int&#39;;23+i.5
 jd&#39;upsert f&#39;;&#39;a&#39;;&#39;a&#39;;2 5 6;&#39;b&#39;;66 77 88 NB. 1 update and 2 inserts
 jdaccess olddan</code></pre>
+<h2 id="sort">sort</h2>
+<p>sort [/desc] table col(s)</p>
+<p>table columns are sorted in place by cols(s)</p>
+<pre><code>NB. example sort
+jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
+jd&#39;gen test f 6&#39;
+jd&#39;sort /desc f int&#39;
+jd&#39;reads from f&#39;
+jd&#39;sort /desc f boolean int&#39;
+jd&#39;reads from f&#39;
+jd&#39;sort f int&#39;
+jd&#39;reads from f&#39;
+jdaccess olddan</code></pre>
 </body>
 </html>

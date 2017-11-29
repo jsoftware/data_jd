@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '4.2.46'
+VERSION=: '2.3.46'
 
 FILES=: 0 : 0
 manifest.ijs
@@ -147,6 +147,7 @@ api/api_csv.ijs
 api/api_info.ijs
 api/api_change.ijs
 api/api_drop.ijs
+api/api_sort.ijs
 api/api.ijs
 api/jjd.ijs
 api/api_adm.ijs
@@ -232,6 +233,7 @@ test/ptable_delete_test.ijs
 test/joinorder_test.ijs
 test/where_test.ijs
 test/csv_test.ijs
+test/sort_test.ijs
 )
 
 RELEASE=: 'j804 j805 j806'

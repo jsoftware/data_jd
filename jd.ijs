@@ -126,6 +126,7 @@ api/api_drop.ijs
 api/api_info.ijs
 api/api_misc.ijs
 api/api_read.ijs
+api/api_sort.ijs
 api/client.ijs
 csv/csv.ijs
 csv/csvinstall.ijs
