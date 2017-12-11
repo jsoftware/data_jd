@@ -16,8 +16,6 @@ jdtests=: 3 : 0
 NB. assert -.(<'jjd')e. conl 0['jdtests must be run in task that is not acting as a server'
 cocurrent'base' NB. defined in jd, but must run in base
 IFTESTS_jd_=: 1
-OLDFLUSHAUTO_jd_=: FLUSHAUTO_jd_
-FLUSHAUTO_jd_=: 0 NB. tests run more than 2 times slower with flush
 OLDALLOC_jd_=: ROWSMIN_jdtable_,ROWSMULT_jdtable_,ROWSXTRA_jdtable_
 'ROWSMIN_jdtable_ ROWSMULT_jdtable_ ROWSXTRA_jdtable_'=: 4 1 0 NB. lots of resizecsvonly=. 'csv'-:y
 fast=. 'fast'-:y
@@ -44,7 +42,6 @@ if. csvonly+.-.fast do.
  echo (":<.start-~6!:1''),' seconds to run csv tests'
 end. 
 if. csvonly do.
- FLUSHAUTO_jd_=: OLDFLUSHAUTO_jd_ 
  'ROWSMIN_jdtable_ ROWSMULT_jdtable_ ROWSXTRA_jdtable_'=: OLDALLOC_jd_
  i.0 0
  return.
@@ -90,7 +87,6 @@ if. #conl 1 do.
 end.
 echo LF,(":#t),' tests run',LF,(":#failed),' failed'
 jdt=: (\:;{."1 jdt){jdt
-FLUSHAUTO_jd_=: OLDFLUSHAUTO_jd_ 
 IFTESTS_jd_=: 0
 'ROWSMIN_jdtable_ ROWSMULT_jdtable_ ROWSXTRA_jdtable_'=: OLDALLOC_jd_
 echo LF,(":<.start-~6!:1''),' seconds to run tests and tutorials'

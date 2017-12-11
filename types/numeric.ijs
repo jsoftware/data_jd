@@ -7,8 +7,19 @@ qless         <
 qlessequal    <:
 qgreater      >
 qgreaterequal >:
-qrange        (e. +. 2 | I.~)
 )
+
+qrange=: 3 : 0
+y=. y, (2|#y)#imax NB. odd extends last range to end
+r=. (dat>:{.y)*.dat<:1{y
+y=. 2}.y
+while. #y do.
+ r=. r+.(dat>:{.y)*.dat<:1{y
+ y=. 2}.y
+end.
+I.r
+)
+
 fixtype=: [: ,@boxopen fixtype_num
 
 fixtypex=: fixtype_num

@@ -136,7 +136,7 @@ jd'reads from f,f.j where edt="2016-01-02"'
 NB. csv
 jd'dropcol f jdref_val_j_val'
 jd'droptable g'
-CSVFOLDER=: '~temp/jd/csv'
+CSVFOLDER=: '~temp/jd/csv/ptable'
 jddeletefolder_jd_ CSVFOLDER
 jd'csvwr f.csv f'
 jd'csvrd f.csv g'

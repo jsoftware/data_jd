@@ -238,20 +238,18 @@ csvreportclear_jdcsv_''              NB. clear log file of old reports
 path=. PATH__d
 jdfolder=.  path,table
 csvfolder=. jdfolder,'/jdcsv'        NB. folder for csv intermediate files and reports
-jd_close''                           NB. clean up jd stuff
 csvload_jdcsv_   csvfolder;csv;rows  NB. csvfolder files <- csvfile
 jdfromcsv_jdcsv_ jdfolder;csvfolder  NB. JD table <- csvfolder files
 
 NB. mark ptable as ptable  
 if. PTM e.table do.
-   t=. jdgl (table i.PTM){.table
-   if. -.S_ptable__t do.
-    S_ptable__t=: 1
-    writestate__t''
-   end. 
-  end. 
+ t=. jdgl (table i.PTM){.table
+ if. -.S_ptable__t do.
+  S_ptable__t=: 1
+  writestate__t''
+ end. 
+end. 
 
-jd_close''                           NB. unmap to allow better host management of ram
 JDOK
 )
 

@@ -20,11 +20,9 @@
 <p>creating locales and mapping takes time so close only when necessary</p>
 <h2 id="flush">flush</h2>
 <p>flush - flush mapped file dirty memory pages to disk</p>
-<p>close does a flush before it unmaps files</p>
-<p>FLUSHOPS_jd_ (createcol createhash createunique reference ref set)<br />flush at the end as they potentially create lots of dirty pages<br />that might complicate effective host ram management</p>
+<p>a flush after lots of writes can help ensure that data is on disk</p>
+<p>close does a flush before it unmaps files if <a href="Admin.htm#jdcloseflush" title="wikilink">jdcloseflush</a> has been run</p>
 <p>disk hardware buffers mean flushed data is not guaranteed<br />to be on disk in the event of a failure such as loss of power,<br />but the chance of corrupted disk data is signficantly reduced</p>
-<p>flush can help performance by allowing better host ram management</p>
-<p>flush after ops that change lots of data can improve performance</p>
 <p>Windows: FlushViewOfFile and FlushFileBuffers<br />Unix: fsync</p>
 <h2 id="gen">gen</h2>
 <p>gen test table rows<br />gen ref2 table1 rows1 cols table2 rows2<br />gen one table rows cols<br />gen two table1 rows1 table2 [rows2]</p>

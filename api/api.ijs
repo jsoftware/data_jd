@@ -571,7 +571,7 @@ r
 
 jd_close=: 3 : 0
 ECOUNT assert 0=#y
-if. FLUSHAUTO do. jd_flush'' end.
+if. fexist 'jdcloseflush',~jdpath'' do. jd_flush'' end.
 NB. read error (tab not found) orphans jdquery local
 NB. coerase jdquery local (copath has number locals) leaves a damaged local
 NB. brute force get rid of all jdquery locales
@@ -805,10 +805,5 @@ for_i. i.#ns do.
  jd_close''
  'file rename failed' assert 1=new frename old
 end. 
-JDOK
-)
-
-jd_flush=: 3 : 0
-flush_jmf_''
 JDOK
 )

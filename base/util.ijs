@@ -4,6 +4,9 @@ jdex_z_=:      jdex_jd_
 
 coclass 'jd'
 
+imax=: 9223372036854775807
+imin=: (-imax)-1
+
 MAXROWCOUNT=: 1e5
 
 ophtmls=: 'Ops_info';'Ops_read';'Ops_change';'Ops_create';'Ops_drop';'Ops_rename';'Ops_join';'Ops_csv';'Ops_table-table';'Ops_misc'
@@ -194,6 +197,17 @@ else.
 end.
 i.0 0
 )
+
+jdcloseflush=: 3 : 0
+f=. 'jdcloseflush',~jdpath''
+if. y=0 do.
+ ferase f
+else.
+ ''fwrite f
+end. 
+i.0 0
+)
+
 
 NB. Windows Search Service (content indexing, ...) and and other windows background tasks
 NB. (antivirus?) can cause rmdir to fail. This problem is mitigated by doing rmdir several

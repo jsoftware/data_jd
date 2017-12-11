@@ -188,10 +188,9 @@ select. x
     y =. stripsp@}.@}: ^: (*./*(,#)}:parenl) y
     if. 0=#y do. DATAFILL $~ 0,shape return. end.
     allowed =. -.@wherequoted_jd_ ([ *. 0 = +/\@:*) '()' -/@:(=/) ]
-    r =. (fixtype_where@:stripsp;._1~ =&',' *. allowed) ',',y
-    if. x-:'qrange' do. if. -.(-:/:~)r do.
-      throw 'Argument to range is not sorted: ',y
-    end. end.
+    r=. (fixtype_where@:stripsp;._1~ =&',' *. allowed) ',',y
+    if. x-:'qrange' do. 'range is not sorted' assert (-:/:~)r end.
+    r 
   case. do.
     fixtype_where y
 end.

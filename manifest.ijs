@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '4.3.46'
+VERSION=: '2.2.4'
 
 FILES=: 0 : 0
 manifest.ijs
@@ -138,9 +138,6 @@ doc/Ops_drop.htm
 doc/Ops_misc.htm
 doc/Guide.htm
 doc/Ops_change.htm
-cd/libjd.dylib
-cd/libjd.so
-cd/jd.dll
 api/api_read.ijs
 api/client.ijs
 api/api_csv.ijs
@@ -236,4 +233,17 @@ test/csv_test.ijs
 test/sort_test.ijs
 )
 
-RELEASE=: 'j804 j805 j806'
+FILESWIN64=: 0 : 0
+cd/jd.dll
+)
+
+FILESLINUX64=: 0 : 0
+cd/libjd.so
+cd/libjpcre.so
+)
+
+FILESDARWIN64=: 0 : 0
+cd/libjd.dylib
+)
+
+RELEASE=: 'j805 j806'

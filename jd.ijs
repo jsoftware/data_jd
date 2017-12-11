@@ -10,7 +10,7 @@ NB. is pushed to Jsoftware for building JAL data/jd package
 
 NB. all use of the Jd library is through JDP_z_
 
-jdversion_jd_=: '4.6'
+jdversion_jd_=: '4.7'
 
 nokey_jd_=: 0 : 0 rplc 'INDEX.HTM';jpath '~addons/data/jd/doc/Index.htm'
 
@@ -77,7 +77,7 @@ JDP_z_=: _6}.;f
 t=. jpath JDP,'cd/'
 p=. jpath'~tools/regex/'
 if. UNAME-:'Linux' do.
- t=. t,'libjd.so'
+ t=. t,IFRASPI{::'libjd.so';'libjd.so.1'
  p=. (1=ftype p,'libjpcre.so'){::(p,'libjpcre.so');~'libjpcre.so'  NB. deb install
 elseif. UNAME-:'Darwin' do.
  t=. t,'libjd.dylib'
@@ -164,7 +164,6 @@ if. _1=nc<'OP_jd_' do. NB. one time inits
  TEMPCOLS_jd_=: i.0 2 
  cntsclear_jd_''
  pmclear_jd_''
- FLUSHAUTO_jd_=: 1 NB. flush done in close and after create... ref set
  FORCEVALIDATEAFTER_jd_=: 0
  FORCEREVERT_jd_=: 0
 end.

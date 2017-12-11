@@ -16,6 +16,13 @@
 <p>The Jd wiki is dynamic. It has the latest corrections, expansions, and changes. It reflects not just the latest release, but development work that hasn't been finalized or released. It reflects the bleeding edge and may not be relevant for the version you are running.</p>
 <p>A snapshot of Jd wiki is converted to html and included in a release.</p>
 <p>For the latest on Jd, use the wiki. For details relevant to your release, use the release html.</p>
+<h2 id="december-11---version-4.7">2017 December 11 - version 4.7</h2>
+<p>linux cd folder contains libjpcre.so as it is not included in J deb install</p>
+<p>cd folder contains only jd platform binary</p>
+<p>where range clause runs faster</p>
+<p>FLUSHAUTO has been decommitted. Previously FLUSHAUTO_jd_ (default value 1) flushed buffers when a close, csvrd, createcol, ref, or set was done. This slowed things down (e.g., jdtests took twice as long) and wasn't required except for critical, production systems.</p>
+<p>Use <a href="Admin.htm#jdcloseflush" title="wikilink">jdcloseflush</a> to mark a db to require a flush when a close is done.</p>
+<p>Use <a href="Ops_misc.htm#flush" title="wikilink">flush</a> to flush buffers explicitly when it make sense for the application.</p>
 <h2 id="november-29---version-4.6">2017 November 29 - version 4.6</h2>
 <p>documentation reorg</p>
 <p>csv colsep/rowsep AUTO support added back in</p>

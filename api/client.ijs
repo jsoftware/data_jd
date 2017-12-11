@@ -126,7 +126,6 @@ timex 'jd''',y,''''
 )
 
 NODBOPS=: 'close';'createdb';'list';'option' NB. ops without DB
-FLUSHOPS=: 'createcol';'createhash';'createunique';'ref';'set'
 
 NB. jdx always returns a boxed result - jd asserts it is not an error
 jdx=: 3 : 0
@@ -178,7 +177,6 @@ if. 'intask'-:SERVER do.
  lasttime=: start-~6!:1''
  lastcmd=: FEOP
  lastparts=: parts
- if. FLUSHAUTO *. (<OP) e. FLUSHOPS do. jd_flush'' end.
  pmz''
  r
  return.
