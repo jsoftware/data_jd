@@ -2,7 +2,7 @@ load JDP,'tools/ptable.ijs'
 
 tst=: 3 : 0
 kf=:  keyindex_jd_ 'f';y
-kF=:  keyindex_jd_ 'F';y
+kF=:  keyindex_jd_ 'ptab';y
 assert kf-:kF
 )
 
@@ -26,6 +26,6 @@ NB. update with indexes from keyindex
 key=. 'p';2013 2015 2016 2015 2013;'val';16 6 8 19 14
 k=. keyindex_jd_ 'f';key
 data=. 'p1';66 77 123 88 99
-jd'update F';k;data
+jd'update ptab';k;data
 jd'update f';k;data
-assert (jd'reads from f')-:jd'reads from F'
+assert (jd'reads from f')-:jd'reads from ptab'

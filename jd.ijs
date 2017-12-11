@@ -78,7 +78,8 @@ t=. jpath JDP,'cd/'
 p=. jpath'~tools/regex/'
 if. UNAME-:'Linux' do.
  t=. t,IFRASPI{::'libjd.so';'libjd.so.1'
- p=. (1=ftype p,'libjpcre.so'){::(p,'libjpcre.so');~'libjpcre.so'  NB. deb install
+ p=. p,'libjpcre.so'
+ if. -.fexist p do. p=. jpath JDP,'cd/libjpcre.so' end. NB. J deb install does not have tools/libjpcre.so
 elseif. UNAME-:'Darwin' do.
  t=. t,'libjd.dylib'
  p=. p,'libjpcre.dylib'
@@ -90,6 +91,7 @@ elseif. 1 do.
  end.
   p=. (p,'jpcre.dll')rplc'/';'\'
 end.
+
 LIBJD_jd_=: '"',t,'"'
 r=. (LIBJD_jd_,' jdinit >x *c') cd <jpath'~config'
 if. _1=r do. assert 0[echo nokey_jd_ end.

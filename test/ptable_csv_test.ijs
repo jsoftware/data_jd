@@ -11,17 +11,17 @@ ptablebld ptype
 
 NB. F
 jddeletefolder_jd_ CSVFOLDER
-jd'csvwr fooF.csv F'
+jd'csvwr fooF.csv ptab'
 jd'droptable t'
 jd'csvrd fooF.csv t'
-assert (jd'reads from t')-:jd'reads from F'
+assert (jd'reads from t')-:jd'reads from ptab'
 
 NB. F val=6
 jddeletefolder_jd_ CSVFOLDER
-jd'csvwr /w fooF.csv F * val=6'
+jd'csvwr /w fooF.csv ptab * val=6'
 jd'droptable t'
 jd'csvrd fooF.csv t'
-assert (jd'reads from t')-:jd'reads from F where val=6'
+assert (jd'reads from t')-:jd'reads from ptab where val=6'
 jd'droptable t'
 
 NB. f
@@ -42,7 +42,7 @@ NB. dump
 ptablebld ptype
 jddeletefolder_jd_ CSVFOLDER
 jd'csvdump'
-dF=. jd'reads from F'
+dF=. jd'reads from ptab'
 df=.    jd'reads from f'
 dj=.    jd'reads from j'
 sum=: jd'info summary'
@@ -51,7 +51,7 @@ jdadminx'test'
 jd'csvrestore'
 assert sum-:jd'info summary'
 assert sch-:jd'info schema'
-assert dF-:jd'reads from F'
+assert dF-:jd'reads from ptab'
 assert df   -:jd'reads from f'
 assert dj   -:jd'reads from j'
 
@@ -62,14 +62,14 @@ jdadminx'test'
 jd'csvrestore'
 assert sum-:jd'info summary'
 assert sch-:jd'info schema'
-assert dF-:jd'reads from F'
+assert dF-:jd'reads from ptab'
 assert df   -:jd'reads from f'
 assert dj   -:jd'reads from j'
 
 NB. ref after ptable exists
-jd'ref F p2 j p2'
+jd'ref ptab p2 j p2'
 jd'ref f p2 j p2'
-assert ({:jd'reads from f,f.j')-:{:jd'reads from F,F.j'
+assert ({:jd'reads from f,f.j')-:{:jd'reads from ptab,ptab.j'
 
 NB. csvwr/rd /h1 option
 jddeletefolder_jd_ CSVFOLDER

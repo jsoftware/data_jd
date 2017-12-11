@@ -21,9 +21,9 @@ end.
 
 chk=: 3 : 0
 v=. (gu'')-.guw y
-jd'delete F';y
+jd'delete ptab';y
 jd'delete f';y
-assert (jd'reads from F')-:jd'reads from f'
+assert (jd'reads from ptab')-:jd'reads from f'
 assert v-:gu''
 assert (#v)=gc''
 )
