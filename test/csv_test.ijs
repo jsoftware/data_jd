@@ -227,3 +227,8 @@ jd'csvdump /replace'
 jd'csvrestore /replace'
 assert a-:jd'reads from f,f.g'
 assert b-:jd'reads from g,g.f'
+
+NB. intx csv tests
+CSVFOLDER=: '~temp/jd/csv/intx' 
+jddeletefolder_jd_ CSVFOLDER
+

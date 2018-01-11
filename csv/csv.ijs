@@ -97,8 +97,8 @@ CEDATETIMEN
 )
 
 NB. map JDtypes to csv Ctypes
-JDTYPES=: ;:'int  int  float   byte  varbyte date  datex  datetime  datetimex  boolean  edate  edatetime  edatetimem  edatetimen unsupported'
-JDTMAP=:  ;:'CI8  CI8X CDOUBLE CCHAR CVAR    CDATE CDATEX CDATETIME CDATETIMEX CBOOLEAN CEDATE CEDATETIME CEDATETIMEM CEDATETIMEN'
+JDTYPES=: ;:'int  int  float   byte  varbyte date  datex  datetime  datetimex  boolean  edate  edatetime  edatetimem  edatetimen  int1 int2 int4 unsupported'
+JDTMAP=:  ;:'CI8  CI8X CDOUBLE CCHAR CVAR    CDATE CDATEX CDATETIME CDATETIMEX CBOOLEAN CEDATE CEDATETIME CEDATETIMEM CEDATETIMEN CI1  CI2  CI4'
 
 types=: i.CMAX
 counts=: 0 16 8 1 1 2 4 8 8 8 8 8 0 0 0 1 8 8 8 0 8 8 8 8

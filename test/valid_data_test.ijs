@@ -150,7 +150,7 @@ E jdae'update f';W;,N,.24 25;'rt';(2 4$'hhhhjjjj');<'ddd';'hhhhh';'x'
 jdadminx'test'
 jd'createtable f b4 byte 4'
 jd'insert f';'b4';6 4$'z'
-jd'update f';'jdindex=2';'b4';'abcd' NB. exact
+jd'update f';'jdindex=2';'b4';'abcd'
 jd'update f';'jdindex=2';'b4';'gg'
 jd'update f';'jdindex=2';'b4';'x'
 ESHAPE_jd_ jdae'update f';'jdindex=2';'b4';'abcdef'

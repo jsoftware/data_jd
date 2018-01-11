@@ -35,6 +35,9 @@ jd'reads from ch'
 jd'close'
 
 jd'update';T;'B="qw"';'A';'z'
+assert 'zBx'-:;{:{:jd'read A from ch'
+jd'update ch';_;'A';'a'
+assert 'aaa'-:;{:{:jd'read A from ch'
 
 NB. bug - an error in update deleted the record
 jdadminx 'test'

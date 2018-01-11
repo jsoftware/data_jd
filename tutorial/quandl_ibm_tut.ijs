@@ -1,4 +1,4 @@
-NB. Copyright 2017, Jsoftware Inc.  All rights reserved.
+NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
 
 0 : 0
 www.quandl.com is a financial data source
@@ -24,7 +24,7 @@ NB. zip downloaded from www.jsoftware.com/jdcsv and unzipped in CSVFOLDER
 getcsv_jd_ fcsv
 fsize CSVFOLDER,fcsv
 
-NB. csvprobe sets set initial .cdefs metadata and read first 20 rows
+NB. csvprobe sets set initial .cdefs metadata and reads first 20 rows
 jd'csvprobe /replace ',fcsv
 NB. looking at data it is clear first row is column names
 NB. subsequent rows look like data (rather than more headers)

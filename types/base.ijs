@@ -3,13 +3,15 @@ NB. Template for a type class
 NB. Atomic types will inherit from this
 
 coclass 'jdtbase'
-DATATYPES_jd_=: ;:'boolean int index float autoindex byte timelike date datetime elike edate edatetime edatetimem edatetimen varbyte'
+DATATYPES_jd_=: ;:'boolean int int1 int2 int4 index float autoindex byte timelike date datetime elike edate edatetime edatetimem edatetimen varbyte'
 visible =: 1
 static =: 1
 MAP =: ;:'dat'
 
 DATASIZE =: 8 NB. default 8 bytes
 DATAFILL =: 0
+
+countdat=: #
 
 testcreate=: ]
 opentyp=: ]
@@ -58,13 +60,13 @@ dat=: y x} dat
 
 Insert=: 3 : 0
 if. 0=#MAP do. return. end.
-t=. Tlen-#dat
+t=. Tlen-countdat dat
 if. t~:#y do. y=. (t,shape)$y end. 
 if. typ-:'varbyte' do.
  y=.   fixinsert fixtype y
  MAP appendmap&> y
 else. 
- MAP appendmap&> <y NB. fixinsert inherited from type
+ MAP appendmap&> <fixinsert y NB. fixinsert from type
 end. 
 )
 
@@ -75,10 +77,10 @@ y 4 :'(x) =: y{.".x'~^:(<#@".) >{.MAP
 
 NB. =========================================================
 deftype  =: 3 : 0
-  loc =. <'jdt',y
-  coinsert__loc coname ''
-  DATATYPES_jd_ =: DATATYPES_jd_, <typ__loc =: y
-  'jdt',y
+loc =. <'jdt',y
+coinsert__loc coname ''
+typ__loc =: y
+'jdt',y
 )
 
 NB. =========================================================

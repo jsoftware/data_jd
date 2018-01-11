@@ -14,9 +14,8 @@
 <body>
 <p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
 <h2 id="createcol">createcol</h2>
-<p>createcol table col type [trailing-shape]<br />createcol table col type [trailing-shape] ; data</p>
-<p>trailing-shape only allowed for byte</p>
-<p>creates new col (default values or data)</p>
+<p>createcol table col <a href="Ops_common.htm#type-" title="wikilink"> type</a><br />createcol table col byte [trailing-shape]<br />createcol table col <a href="Ops_common.htm#type-" title="wikilink"> type</a> data<br />createcol table col byte [trailing-shape] data</p>
+<p>creates new col with default values or data</p>
 <pre><code>NB. example createcol
 jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
 jd&#39;createtable f&#39;

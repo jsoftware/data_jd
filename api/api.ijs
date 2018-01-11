@@ -241,7 +241,6 @@ end.
 )
 
 jd_createtable=: 3 : 0
-erase<'DATACOL_jd_'
 if. 0=L.y do. NB. string parse has , and LF in col defs
  a=. bdnames y
  y=. ''
@@ -349,16 +348,16 @@ vdname y
 
 vcname=: vtname NB. validate column name
 
-NB. not boxed  -> no dat and NB. boxed -> dat
+NB. not boxed -> no dat : boxed -> dat
+NB. createcol done with default data and then update with col data
 jd_createcol=: 3 : 0
-erase<'DATACOL_jd_'
 d=. getdb''
-if. 1=L.y do.
+if. 1<:L.y do.
  NB. boxed assumes has dat
  dat=. >{:y  NB. col values
  y=. }:y
 else.
- erase<'dat' NB. no col values
+ dat=. ''
  y=. bdnames y
 end.
 FETAB=: ;0{y
@@ -370,35 +369,12 @@ else.
  ECOUNT assert 3=#y
 end.
 
-shape=. ''
-if. 4=#y do.
- if. -.''-:;3{y do.
-  EBTS assert (2{y)-:<'byte'
- end.
- shape=. _".;{:y
- EBTS assert (_~:shape),1>:#shape
-end.
+if. 4=#y do. EBTS assert (2{y)-:<'byte' end.
 
-if. 0=nc<'dat' do. NB. have column values
- type=. ;2{y
- ETYPE assert (<type) e. TYPES -. 'enum';'varbyte'
+if. #dat do. NB. have column values
  t=. getloc__d FETAB
  'ptable data not allowed'assert 0=S_ptable__t
  if. (0=Tlen__t)*.0=#NAMES__t#~;(<'jd')~:2{.each NAMES__t do. setTlen__t #dat end.
- if. (1=3!:0 dat)*.-.type-:'boolean' do. dat=. 0+dat end.
- ETYPE assert ((TYPES i. <type){TYPESj)=3!:0 dat
- if. (Tlen__t,shape)-:$dat do.
-  DATACOL_jd_=: dat
- else.
-  if. ''-:shape do.
-   ESHAPE assert 0=#$dat
-  else.
-   ESHAPE assert 2>#$dat
-   ESHAPE assert shape>:#dat
-   dat=. shape{.dat
-  end.
-  DATACOL_jd_=: (Tlen__t,shape)$dat
- end.
 end.
 
 ns=. getparttables ;{.y
@@ -406,9 +382,18 @@ for_i. i.#ns do.
  if. i=1 do. continue. end. NB. ignore f~
  InsertCols__d (i{ns),< ;' ',~each}.":each y
 end.
+
+if. #dat do.
+ try.
+  jd_update FETAB;_;FECOL;dat 
+ catch.
+  e=. 13!:12''
+  jd_dropcol FETAB;FECOL
+  e assert 0
+ end. 
+end.
 JDOK
 )
-
 
 NB. run custom db jd_x... op in db locale if it exists
 jd_x=: 3 : 0
@@ -724,6 +709,9 @@ for_c. }.y do.
  w=. getloc__t c
  'varbyte not allowed' assert -.'varbyte'-:typ__w
  'float not allowed'   assert -.'float'-:typ__w
+ 'int1 not allowed'    assert -.'int1'-:typ__w
+ 'int2 not allowed'    assert -.'int2'-:typ__w
+ 'int4 not allowed'    assert -.'int4'-:typ__w
 end. 
 )
 

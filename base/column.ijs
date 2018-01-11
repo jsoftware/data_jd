@@ -71,12 +71,12 @@ typ=.<'jdt',typ  [  'typ shape' =. x
 r=. ROWSMIN>.Tlen
 jdcreatejmf (PATH,y);r*DATASIZE__typ**/shape
 jdmap (y,Cloc);PATH,y
-if. 0=nc<'DATACOL_jd_' do.
- (y)=: DATACOL_jd_
- erase 'DATACOL_jd_'
-else.
- (y) =: (($,)~ Tlen,shape,$@]) DATAFILL__typ
-end. 
+select. typ__typ
+ case. 'int1' do. (y)=: Tlen#  {.a.
+ case. 'int2' do. (y)=: Tlen#2#{.a.
+ case. 'int4' do. (y)=: Tlen#4#{.a.
+ case.        do. (y)=: (($,)~ Tlen,shape,$@]) DATAFILL__typ
+end.
 )
 
 NB. resize single mapped name

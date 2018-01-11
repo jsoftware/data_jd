@@ -1,15 +1,25 @@
-NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
+NB. Copyright 2017, Jsoftware Inc.  All rights reserved.
 coclass 'jdtnumeric'
 coinsert 'jdtbase'
 
-defqueries 0 :0
-qless         <
-qlessequal    <:
-qgreater      >
-qgreaterequal >:
+DATAFILL=: -~2
+DATASIZE=: 8
+countdat=: #
+
+qnumtxt=: 0 : 0
+qless         =: 3 : 'I.dat <  y'
+qlessequal    =: 3 : 'I.dat <: y'
+qequal        =: 3 : 'I.dat =  y'
+qnotequal     =: 3 : 'I.dat ~: y'
+qgreaterequal =: 3 : 'I.dat >: y'
+qgreater      =: 3 : 'I.dat >  y'
+qin           =: 3 : 'I.dat e. y'
+qnotin        =: 3 : 'I.-.dat e. y'
+qsample       =: 3 : 'y?Tlen'
+qSample       =: 3 : 'y?.Tlen'
 )
 
-qrange=: 3 : 0
+qrangetxt=: 0 : 0
 y=. y, (2|#y)#imax NB. odd extends last range to end
 r=. (dat>:{.y)*.dat<:1{y
 y=. 2}.y
@@ -20,48 +30,149 @@ end.
 I.r
 )
 
+NB. qlike/qunlike inherited from base
+NB. i1/i2/i4 qlike/qunlike assert error
+
+". each <;._2 qnumtxt
+qrange=: 3 : qrangetxt 
+
 fixtype=: [: ,@boxopen fixtype_num
 
 fixtypex=: fixtype_num
 
-NB. =========================================================
+fixtype_num=: 3 : 0
+if. 4 ~: 3!:0 y do.
+ a=. y
+ y=. 0+<. :: 0: y
+ 'invalid int data'assert a-:y
+end.
+y
+)
+
 coclass deftype_jdtnumeric_ 'boolean'
 DATAFILL=: 0
 DATASIZE=: 1
 fixtype_num=: 3 : 0
-  if. 1 ~: 3!:0 y do.
-    NB. following line triggered 806 avx bug
-    NB. throwif -. y *./@:e. 0 1
-    NB. but it seems more complicated than needed and is replaced by the following
-    a=. y
-    y =. 0 ~: y
-    throwif -.a-:y
-  end. y
+if. 1 ~: 3!:0 y do.
+ a=. y
+ y=. 0 ~: y
+ 'invalid boolean data'assert a-:y
+end.
+y
 )
 
-NB. =========================================================
+NB.int =========================================================
 coclass deftype_jdtnumeric_ 'int'
-DATAFILL=: -~2
-DATASIZE=: 8
-fixtype_num=: 3 : 0
-  if. 4 ~: 3!:0 y do.
-    throwif y -.@-: int=. <. :: 0: y
-    y=. int + -~ 2
-    throwif 4 ~: 3!:0 y
-  end. y
+
+NB. int1 =========================================================
+coclass deftype_jdtnumeric_ 'int1'
+DATASIZE=: 1
+
+ifromi1=: 3 : 'n-(n<128){256 0[n=. a.i.y'
+i1fromi=: 3 : '((2*#y)$;ifintel{0 1;1 0)#1 ic y' NB.! endian !
+
+". each <;._2 qnumtxt  rplc 'dat';'(ifromi1 dat)'
+qrange=: 3 : (qrangetxt rplc 'dat';'(ifromi1 dat)')
+qlike=: qunlike=: 3 : '''like/unlink not supported for int1/int2/int4''assert 0'
+
+fixtypex=: 3 : 0
+a=. fixtype_num y
+'invalid int1 data'assert (a<2^7),a>:-2^7
+a
 )
 
-NB. =========================================================
+fixinsert=: i1fromi
+
+NB. note special code for join with empty table
+select=: 3 : 0
+if. (0=#dat)*.0~:#y do.
+ y{(1,shape)$DATAFILL
+else.
+ ifromi1 y{dat
+end.
+) 
+
+modify=: 4 : 0
+if. (<NAME)e.;{:"1 SUBSCR__PARENT do. update_subscr__PARENT <NAME end. NB. mark ref dirty if required
+dat=: (fixinsert y) x} dat
+)
+
+NB. int2 =========================================================
+coclass deftype_jdtnumeric_ 'int2'
+DATASIZE=: 2
+countdat=: -:@#
+
+". each <;._2 qnumtxt  rplc 'dat';'(_1 ic dat)'
+qrange=: 3 : (qrangetxt rplc 'dat';'(_1 ic dat)')
+qlike=: qunlike=: 3 : '''like/unlink not supported for int1/int2/int4''assert 0'
+
+fixtypex=: 3 : 0
+a=. fixtype_num y
+'invalid int1 data'assert (a<2^15),a>:-2^15
+a
+)
+
+fixinsert=: 3 : '1 ic y'
+
+NB. note special code for join with empty table
+select=: 3 : 0
+if. (0=#dat)*.0~:#y do.
+ y{(1,shape)$DATAFILL
+else.
+ _1 ic ,(,(2*y),.1+2*y){dat
+end.
+)
+
+modify=: 4 : 0
+if. (<NAME)e.;{:"1 SUBSCR__PARENT do. update_subscr__PARENT <NAME end. NB. mark ref dirty if required
+dat=: (fixinsert y) ((,(2*x),.1+2*x))} dat
+)
+
+
+NB. int4 =========================================================
+coclass deftype_jdtnumeric_ 'int4'
+DATASIZE=: 4
+countdat=: -:@-:@#
+
+". each <;._2 qnumtxt  rplc 'dat';'(_2 ic dat)'
+qrange=: 3 : (qrangetxt rplc 'dat';'(_2 ic dat)')
+qlike=: qunlike=: 3 : '''like/unlink not supported for int1/int2/int4''assert 0'
+
+fixtypex=: 3 : 0
+a=. fixtype_num y
+'invalid int1 data'assert (a<2^31),a>:-2^31
+a
+)
+
+fixinsert=: 3 : '2 ic y'
+
+NB. note special code for join with empty table
+select=: 3 : 0
+if. (0=#dat)*.0~:#y do.
+y{(1,shape)$DATAFILL
+else.
+ _2 ic ,(,(4*y)+"0 1 i.4){dat
+end.
+) 
+
+modify=: 4 : 0
+if. (<NAME)e.;{:"1 SUBSCR__PARENT do. update_subscr__PARENT <NAME end. NB. mark ref dirty if required
+dat=: (fixinsert y) ((,(4*x)+"0 1 i.4))} dat
+)
+
+NB. index =========================================================
 coclass deftype 'index'
 DATAFILL=: _1
 
-NB. =========================================================
+NB. float =========================================================
 coclass deftype_jdtnumeric_ 'float'
 DATASIZE=: 8
 DATAFILL=: -~2.1
+
 fixtype_num=: 3 : 0
-  if. 8 ~: 3!:0 y do.
-    throwif -. (3!:0 y) e. 1 4
-    y=. y + -~ 2.1
-  end. y
+if. 8 ~: 3!:0 y do.
+ 'invalid float data'assert (3!:0 y) e. 1 4
+  y=. y + -~ 2.1
+end.
+y
 )

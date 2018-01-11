@@ -36,27 +36,14 @@ jdaccess &#39;zz me/xx localhost:65002&#39;
 jdaccess &#39;&#39;                          NB. report
 jdaccess 0                           NB. clear access </code></pre>
 <h2 id="jdadmin">jdadmin</h2>
-<p>This loads admin.ijs in the db folder to make it available.</p>
-<ul>
-<li>jdaccess is done for the first dan and user/pwd in admin.ijs</li>
-</ul>
-<ul>
-<li>opens all tables/cols and maps all mapped files</li>
-</ul>
-<ul>
-<li>jd'validate' is done to validate the db</li>
-</ul>
-<pre><code>jdadmin &#39;ab&#39;     NB. make ~temp/jd/ab available
-jdadmin &#39;.../ab&#39; NB. make .../ab available
-jdadmin &#39;&#39;       NB. report 
-jdadmin 0        NB. clear all admin and release all locks</code></pre>
-<p>The DAN (db access name) maps to folder, user/pwds, ops.</p>
-<p>Different DANs can access the same or different folders.</p>
-<p>The DAN rules are set by admin.ijs in db folder.</p>
+<pre><code>jdadmin &#39;&#39;       NB. report all locks, DANs, and related info</code></pre>
+<pre><code>jdadmin 0        NB. release all locks and close all DANs</code></pre>
+<pre><code>jdadmin &#39;ab&#39;     NB. make ~temp/jd/ab DB available
+jdadmin &#39;.../ab&#39; NB. make .../ab DB available</code></pre>
+<p>jdadmin loads admin.ijs to set the DAN (db access name) info and does jdaccess for the first DAN.</p>
+<p>The db in a folder is accessed by a DAN. A DAN maps to folder, user/pwds, ops. Different DANs can access the same or different folders.</p>
 <p>A default admin.ijs is created if it does not exist. In the default, DAN is last path folder, and u/p is user/pwd</p>
-<p>A lock on the db folder prevents interference by other tasks</p>
-<pre><code>jdadmin &#39;...&#39;    NB. gets lock
-jdadmin 0        NB. releases all locks</code></pre>
+<p>The lock on the db folder prevents interference by other tasks</p>
 <h2 id="jdadminx">jdadminx</h2>
 <p>This is used to start a new database, replacing any old database. It deletes any old folder, creates a new db folder, then does jdadmin.</p>
 <pre><code>jdadminx&#39;aa&#39;     NB. create new database ~temp/jd/aa

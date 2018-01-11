@@ -74,7 +74,7 @@ if. typ__y-:'ref' do.
   b=. (Tlen~:#dat__y)*.-.dirty__y 
  end. 
 else.  
- b=. Tlen~:#dat__y
+ b=. Tlen~:countdat__y dat__y
 end. 
 if. b do.
  if. -.fexist '/jdrepair',~dbpath DB do. jddamage 'Tlen wrong for col ',NAME__y,' in table ',NAME__PARENT__y end.

@@ -206,3 +206,40 @@ assert 0=;#each {:scd r
 
 r=. jd'reads from zero,zero.two'
 assert 0=;#each {:scd r
+
+
+NB. from joinorder_test
+
+tc=: 4 : 0
+jd'droptable';x
+jd'createtable';x;'a int'
+jd'insert';x;'a';y
+)
+
+NB. y is a list of boxed integer lists.
+NB. For each make a table with the list in column a, and link them in order.
+NB. Table names are f,g,...
+tcs =: 4 : 0
+jdadminx'test'
+getname =. a.{~ (a.i.'f')&+
+for_i. i.#y do.
+  (getname i) tc i{::y
+  if. i>0 do. jd ('ref ',x,' '),;:^:_1 , (getname&.> (,~<:)i),.<'a' end.
+end.
+)
+
+'' tcs 3#<2#i.5
+jd'reads from f,f.g,g.h'
+
+'/left' tcs 3#<2#i.5
+jd'reads from f,f.g'
+jd'reads from g,g.h'
+jd'reads from f,f-g'
+jd'reads from g,g-h'
+jd'reads from f,f>g'
+jd'reads from g,g>h'
+
+NB. know problems with ref /left1 with mor that 1 join
+'single join'jdae'reads from f,f.g,g.h'
+'single join'jdae'reads from f,f-g,g-h'
+'single join'jdae'reads from f,f>g,g>h'

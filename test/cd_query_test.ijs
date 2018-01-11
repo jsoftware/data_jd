@@ -1,4 +1,4 @@
-NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
+NB. Copyright 2017, Jsoftware Inc.  All rights reserved.
 1[0 : 0
 test where queries that use C routines (util.c)
 support is in 2 areas: integrated regex and fast vartype
@@ -15,8 +15,12 @@ C routines are used for the following:
   eq/ne colf (column in another table)
 tests assume generate table is alwyas the same
 and that if int col is correct that the result is correct
+
+int1/int2/int4 like/unlike not supported
 )
- 
+
+jdadminx'test'
+
 getx=: 3 : 0
 ,'x'jdfroms_jd_ y
 )

@@ -1,6 +1,6 @@
 NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 coclass 'jdtindex'
-coclass deftype 'autoindex'
+coclass deftype_jdtint_ 'autoindex'
 
 STATE=: ;:'typ'
 makecolfiles=: writestate

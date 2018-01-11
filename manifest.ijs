@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '4.4.47'
+VERSION=: '2.2.4'
 
 FILES=: 0 : 0
 manifest.ijs
@@ -152,6 +152,7 @@ api/api_misc.ijs
 pm/pm_disk.ijs
 pm/pmc.ijs
 pm/pmb.ijs
+pm/pm_map.ijs
 pm/pm.ijs
 pm/pmx.ijs
 pm/csvtest.ijs
@@ -162,7 +163,6 @@ types/autoindex.ijs
 types/base.ijs
 types/datetimes.ijs
 types/varbyte.ijs
-types/enum.ijs
 base/jmfx.ijs
 base/folder.ijs
 base/scriptlists.ijs
@@ -210,6 +210,7 @@ test/ptable_update_test.ijs
 test/join_test.ijs
 test/fixpairs_test.ijs
 test/ptable_insert_test.ijs
+test/intx_test.ijs
 test/pm_aggby_test.ijs
 test/info_test.ijs
 test/jdindex_test.ijs
@@ -240,6 +241,8 @@ cd/jd.dll
 FILESLINUX64=: 0 : 0
 cd/libjd.so
 cd/libjpcre.so
+cd/rpi/libjd.so
+cd/rpi/libjpcre.so
 )
 
 FILESDARWIN64=: 0 : 0

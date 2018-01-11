@@ -172,6 +172,7 @@ end.
 )
 
 jdadminx=: 3 : 0
+'y must not be empty'assert 0~:#y
 yy=. y
 y=. jpath adminp y
 d=. }.(y i: '/')}.y
@@ -361,7 +362,6 @@ NB. jdrepair ''       - unmark
 jdrepair=: 3 : 0
 p=. jdpath''
 if. #y do.
- 'not damaged'assert fexist p,'/jddamage'
  y fwrite p,'/jdrepair'
 else.
  ferase p,'/jdrepair'

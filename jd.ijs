@@ -10,7 +10,7 @@ NB. is pushed to Jsoftware for building JAL data/jd package
 
 NB. all use of the Jd library is through JDP_z_
 
-jdversion_jd_=: '4.7'
+jdversion_jd_=: '4.8'
 
 nokey_jd_=: 0 : 0 rplc 'INDEX.HTM';jpath '~addons/data/jd/doc/Index.htm'
 
@@ -77,9 +77,9 @@ JDP_z_=: _6}.;f
 t=. jpath JDP,'cd/'
 p=. jpath'~tools/regex/'
 if. UNAME-:'Linux' do.
- t=. t,IFRASPI{::'libjd.so';'libjd.so.1'
+ t=. t,IFRASPI{::'libjd.so';'rpi/libjd.so'
  p=. p,'libjpcre.so'
- if. -.fexist p do. p=. jpath JDP,'cd/libjpcre.so' end. NB. J deb install does not have tools/libjpcre.so
+ if. -.fexist p do. p=. jpath JDP,IFRASPI{::'cd/libjpcre.so';'cd/rpi/libjpcre.so' end. NB. J deb install does not have tools/libjpcre.so
 elseif. UNAME-:'Darwin' do.
  t=. t,'libjd.dylib'
  p=. p,'libjpcre.dylib'
@@ -145,6 +145,8 @@ types/varbyte.ijs
 
 NB. stubs to load scripts not normally loaded
 jdtests=: 3 : 0
+0 jdtests y
+:
 require JDP,'tools/tests.ijs'
 jdtests_jd_ y
 )
@@ -176,6 +178,7 @@ if. -.UNAME-:'Win' do.
   ULIMIT_jd_=: LF,~LF,'Warning: ',(":n),' for "ulimit -n" is low. See Technotes|file handles.'
  end. 
 end.
+ifintel_jd_=: 'a'={.2 ic a.i.'a' NB. endian
 )
 
 jdwelcome=: 0 : 0 rplc 'BOOKMARK';(jpath JDP,'doc/Index.htm');'ULIMIT';ULIMIT_jd_

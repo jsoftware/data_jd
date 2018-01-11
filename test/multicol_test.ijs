@@ -2,7 +2,7 @@ NB. Copyright 2015, Jsoftware Inc.  All rights reserved.
 NB. Test multicolumn queries.
 
 NB. following is from old core tests
-TYPES_CORE=. TYPES_jd_-.;:'edate edatetime edatetimem edatetimen' NB. core tests not adapted to new datatypes
+TYPES_CORE=. TYPES_jd_-.;:'edate edatetime edatetimem edatetimen int1 int2 int4' NB. core tests not adapted to new datatypes
 
 toloc =. 'jdt'&,&.>
 

@@ -13,12 +13,12 @@
 </head>
 <body>
 <p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
-<p><a href="#parsing" title="wikilink">Parsing</a> read ops can be complicated</p>
 <h2 id="key">key</h2>
-<p>key [/in] table <a href="#pairs" title="wikilink">col-data-pairs</a></p>
-<p>Get rows in table for <a href="#pairs" title="wikilink">col-data-pairs</a>.</p>
-<p>Without /n it returns last row in table that matches each data row. If no match, _1 is returned.</p>
-<p>With /in all rows in table are returned that match any data row.</p>
+<p>key [/in] table <a href="#pairs" title="wikilink">pairs</a></p>
+<p>return rows in table for <a href="#pairs" title="wikilink">pairs</a>.</p>
+<p>elided /n returns last row in table that matches each data row and _1 if no match</p>
+<p>with /in all rows in table are returned that match any data row</p>
+<p>col types int1/int2/int4/float/varbyte not allowed</p>
 <pre><code>NB. example key
 jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
 jd&#39;gen test f 5&#39;
@@ -32,7 +32,8 @@ jdaccess olddan</code></pre>
 <h2 id="read">read</h2>
 <p>Same as reads with /lr option</p>
 <h2 id="reads">reads</h2>
-<p>reads [options]   [ <a href="#select" title="wikilink">SELECT</a> ]   from <a href="#from" title="wikilink">FROM</a>  [where <a href="#where" title="wikilink">WHERE</a> ] [order by <a href="#order-by" title="wikilink">ORDER BY</a>]<br />  /lr - labeled rows instead of labeled cols<br />  /e - edate... cols as epochdt rather than iso 8601<br /> returns select col(s) from table(s) with rows that satisfy where</p>
+<p>reads [options]   [ <a href="#select" title="wikilink">SELECT</a> ]   from <a href="#from" title="wikilink">FROM</a>  [where <a href="#where" title="wikilink">WHERE</a> ] [order by <a href="#order-by" title="wikilink">ORDER BY</a>]<br />  /lr - labeled rows instead of labeled cols<br />  /e - edate... cols as epochdt rather than iso 8601<br /> <a href="#parsing" title="wikilink">parsing</a> read ops can be complicated</p>
+<p>returns select col(s) from table(s) with rows that satisfy where</p>
 <p>alias:col<br />alias:table<br />aggregation [by key1[,key2]]</p>
 <p>For ideas on working with reads results, see essay <a href="http://code.jsoftware.com/wiki/Essays/Inverted_Table">Inverted Table</a>.</p>
 <pre><code>NB. example reads

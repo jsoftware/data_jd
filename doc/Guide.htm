@@ -15,11 +15,11 @@
 <p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm" class="act">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
 <p>Guide to Jd terminology.</p>
 <h2 id="definitions">Definitions</h2>
-<p><b>admin</b> - manages dan rules for users<br /><b>dac</b> - data column - folder for table column<br /><b>dan</b> - database access name<br /><b>dyc</b> - dynamic column - folder for system column (jd prefix)<br /><b>db</b> - database - folder with all data and metadata for db tables and columns<br /><b>intask</b> - ops run in the Jd task (jconsole/jijx) - client and server are same task<br /><b>remote</b> - ops run in different task (socket) - client and server are different tasks<br /><b>user</b> - access controlled by dan</p>
+<p><b>admin</b> - manages dan rules for users<br /><b>dac</b> - data column - folder for table column<br /><b>dan</b> - database access name<br /><b>db</b> - database - folder with all data and metadata for db tables and columns<br /><b>intask</b> - ops run in the Jd task (jconsole/jijx) - client and server are same task<br /><b>remote</b> - ops run in different task (socket) - client and server are different tasks<br /><b>user</b> - access controlled by dan</p>
 <h2 id="names">Names</h2>
-<p>Column, table, db, dan names must be usable as file and J names. Windows file names are not case sensitive. Table f with columns a and A would work in Linux, but not in windows.</p>
+<p>Column, table, db, dan names must be usable as file and J names. Windows and macOS file names are not case sensitive. Tables f and F is OK in Linux, but not in windows or macOS.</p>
 <h2 id="db">db</h2>
-<p>A db is a folder with a folder for each table. Each table folder has a folder for each column (dac and dyc). Each folder has a few metadata files (prefix jd). Following is a simplified db folder/file list:</p>
+<p>A db is a folder with a folder for each table. Each table folder has a folder for each column. Each folder has a few metadata files (prefix jd). Following is a simplified db folder/file list:</p>
 <pre><code>db
   jdlock           - lock prevents multiple task access
   jdclass          - &#39;database&#39;
@@ -33,11 +33,6 @@
       jdclass      - &#39;column&#39;
       jdstate
       dat          - column data - file mapped as J noun with col data
-    dac b
-      ...
-    dyc jdactive
-      ...
-      dat          - boolean - row active/deleted
   table folder g
     ...</code></pre>
 <h2 id="admin">Admin</h2>

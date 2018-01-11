@@ -1,16 +1,6 @@
 NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 coclass'jdcsv'
 
-NB. data f file
-csvjdxsub=: 4 : 0
-f=. jpath y
-ferase f
-jdcreatejmf_jd_ f;(#x)*(4=3!:0 x){1 8
-jdmap_jd_ 'snk_jdcsv_';f
-snk_jdcsv_=: x
-jdunmap_jd_ 'snk_jdcsv_'
-)
-
 csvjd=: 3 : 0
 unmapall_jmf_''
 'pathjd pathcsvfolder'=. y
@@ -76,10 +66,32 @@ CSVTYPS=: b#CSVTYPS
 JDTYPS=: b#JDTYPS
 COLDEFS=: b#COLDEFS
 CSVTSHAPE=: b#CSVTSHAPE
-JDTYPS=: (<'byte') ((CSVTYPS=<'CI1')#i.#CSVTYPS)}JDTYPS NB. kludge map CI8 to byte
+
+NB. JDTYPS=: (<'byte') ((CSVTYPS=<'CI1')#i.#CSVTYPS)}JDTYPS NB. kludge map CI1 to byte
+NB. JDTYPS=: (<'byte') ((CSVTYPS=<'CI2')#i.#CSVTYPS)}JDTYPS NB. kludge map CI2 to byte
+NB. JDTYPS=: (<'byte') ((CSVTYPS=<'CI4')#i.#CSVTYPS)}JDTYPS NB. kludge map CI4 to byte
+
+NB. CSVTSHAPE=: (<'byte') ((CSVTYPS=<'CI1')#i.#CSVTYPS)}JDTYPS NB. kludge map CI1 to byte
+NB. CSVTSHAPE=: (<'byte') ((CSVTYPS=<'CI2')#i.#CSVTYPS)}JDTYPS NB. kludge map CI2 to byte
+NB. CSVTSHAPE=: (<'byte') ((CSVTYPS=<'CI4')#i.#CSVTYPS)}JDTYPS NB. kludge map CI4 to byte
+
 d=. getdb_jd_''
 Create__d table;<csvjdcoldefs csv
 jd_close_jd_''
 csvjd  jd;csv
 (3!:1 [1 2$'Tlen';ROWS) fwrite jd,'/jdstate' NB. writestate TLen essential
+
+NB. int1, int2, int4 need shape fixed
+NB. csv loader creates intx cols as n,x cols
+NB. Jd needs intx cols to have shape'' and be the ravel
+cols=. CSVCOLS#~JDTYPS e. ;:'int1 int2 int4'
+if. #cols do.
+ jdrepair_jd_'csv fix intx'
+ for_n. cols do.
+  c=. jdgl_jd_ table,' ',;n
+  shape__c=: ''
+  dat__c=: ,dat__c
+ end.
+ jdrepair_jd_''
+end. 
 )

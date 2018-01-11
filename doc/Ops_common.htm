@@ -28,7 +28,19 @@
 <h2 id="names">names</h2>
 <p>Column, table, and database names have similar validation:</p>
 <ul>
-<li>utf-8 supported</li>
+<li>names are used directly as file and folder names
+<ul>
+<li>windows file names ignore case - linux file names are case sensitive</li>
+<li>avoid names with upper-case if possible</li>
+<li>names that differ only in case will probably lead to grief</li>
+</ul></li>
+<li>utf-8 supported
+<ul>
+<li>macOS problems with uft-8 file names - composed vs decomposed
+<ul>
+<li>could be resolved - for now avoid utf-8 names on macOS</li>
+</ul></li>
+</ul></li>
 <li><code> RESERVEDCHARS_jd_ </code>are not allowed in names</li>
 <li><code> RESERVEDWORDS_jd_ </code>are not allowed</li>
 <li>the <code>jd...</code> prefix is not allowed in table or column names</li>
@@ -37,29 +49,66 @@
 <li>the <code>^</code> character is used by the system in table names for ptable and should be avoided</li>
 </ul>
 <h2 id="types">types</h2>
-<p>Standard types are: boolean, int, float, byte. Only type byte can have a trailing shape.</p>
-<pre><code>jd&#39;createtable f a int,b byte 4&#39; NB. int and byte cols</code></pre>
-<p>There are also date types, and varbyte - a variable sized byte type.</p>
-<p>Date types are stored internally as int, and converted on read/write:</p>
-<h3 id="edate-epochdt">edate (epochdt)</h3>
-<p>edate types are in iso 8601 format and are stored as nanoseconds before/after 2000-01-01. See tutorial epochdt.</p>
-<ul>
-<li>edate - 2014-01-02<br /></li>
-<li>edatetime - 2014-01-02T03:04:05<br /></li>
-<li>edatetimem - 2014-01-02T03:04:05,123<br /></li>
-<li>edatetimen - 2014-01-02T03:04:05,123456789<br /></li>
-</ul>
-<h3 id="date">date</h3>
-<p>date types are:</p>
-<ul>
-<li>date stored as int with digits yyyymmdd</li>
-<li>datetime stored as int with digits yyyymmddhhmmss</li>
-</ul>
-<p>The csv loader supports yyyy/mm/dd vs dd/mm/yyyy.</p>
-<h3 id="varbyte">varbyte</h3>
-<p>With average sizes less than 50, it may be better to store the data as fixed size.</p>
-<h2 id="col-data-pairs">col-data-pairs</h2>
+<p>boolean int float</p>
+<dl>
+
+<dd>correspond directly to J data types
+</dd>
+</dl>
+<p>byte</p>
+<dl>
+
+<dd>corresponds directly to J literal data
+</dd>
+</dl>
+<dl>
+
+<dd>only type that can have a trailing shape
+</dd>
+</dl>
+<p>int1 int2 int4</p>
+<dl>
+
+<dd>1/2/4 byte signed integers - stored as literal strings
+</dd>
+</dl>
+<dl>
+
+<dd>convert to int for processing (queries/selections/etc.) and in results
+</dd>
+</dl>
+<dl>
+
+<dd>set with J int values that are range checked
+</dd>
+</dl>
+<p>edate edatetime edatetimem edatetimen (tutorial epochdt)</p>
+<dl>
+
+<dd>edate types are in iso 8601 format and are stored as nanoseconds before/after 2000-01-01
+</dd>
+</dl>
+<pre><code>edate      2014-01-02
+edatetime  2014-01-02T03:04:05
+edatetimem 2014-01-02T03:04:05,123
+edatetimen 2014-01-02T03:04:05,123456789</code></pre>
+<p>date datetime</p>
+<pre><code>date     yyyymmdd
+datetime yyyymmddhhmmss</code></pre>
+<dl>
+
+<dd>csv loader supports yyyy/mm/dd vs dd/mm/yyyy
+</dd>
+</dl>
+<p>varbyte</p>
+<dl>
+
+<dd>with max size less than 50, it is better to store as byte N
+</dd>
+</dl>
+<h2 id="pairs">pairs</h2>
 <p>list of pairs of column names and data</p>
+<p>pairs are args to insert, update, and other ops</p>
 <p>'a' ; 23 24 ; 'b' ; 1.2 1.3 ; 'c' ; 2 3$'abcdef' 'a' ; 23 24 ; 'b' ; 1.2 ; 'c' ; 'abc'</p>
 <p>data extends so the count is the same for all cols</p>
 <p>byte N col does undertake but not overtake</p>
@@ -72,39 +121,5 @@
 <p><strong>update</strong> where clause can be a key.</p>
 <p><strong>delete</strong> where clause can be a key.</p>
 <p><strong>reads</strong> where clause does not currently support key. Use of key op to get rows and using them with jdindex in (...) is a workaround.</p>
-<h2 id="damaged">damaged</h2>
-<p>A db can be damaged by: hardware crashes, OS crashes, Jd bugs, application bugs...</p>
-<p>A db is marked as damaged to prevent further use to avoid: appearing OK (when it isn't), strange errors, further damage (obscuring the original problem), wrong answers, ...</p>
-<p>A db is marked as damaged when:</p>
-<dl>
-
-<dd>Jd detects a serious problem - e.g., access a col with a bad count
-</dd>
-<dd>jd'validate' finds a problem
-</dd>
-<dd>jddamage_jd_'reason' is run to mark as damaged
-</dd>
-</dl>
-<pre><code>   jd&#39;info validate&#39;     NB. complete report
-   jd&#39;info validatebad&#39;  NB. problem report
-   jd&#39;validate&#39;          NB. mark db as damaged if problem report not empty</code></pre>
-<p>A hardware crash mid insert can leave cols with bad counts. Accessing the db again and only using cols with good counts will work. But when you access a col with a bad count, the db will be marked as damaged.</p>
-<p>After a crash (or any event that makes you nervous), always run jd'validate' to be sure there are no issues that will bite you down the road.</p>
-<p>See tutorial log.</p>
-<h2 id="repair">repair</h2>
-<p>Jd can work with a damaged db if jdrepair has marked the db as under repair. In some cases this can facilitate determining the damage and effecting a repair.</p>
-<p>The repair tool can fix some problems.</p>
-<p>If you have a damaged db, try the following:</p>
-<pre><code>   jdadmin ...
-|db damaged and not under repair: assert
-|...
-   jd&#39;info validatebad&#39;
-|db damaged and not under repair: assert
-|...
-   jdrepair_jd_ &#39;fixing it now&#39;
-   jd&#39;info validatebad&#39; NB. problems
-...
-   repair_jd_&#39;&#39;         NB. fix col counts - mark refs as dirty
-   jd&#39;info validatebad&#39; NB. are problems fixed?</code></pre>
 </body>
 </html>

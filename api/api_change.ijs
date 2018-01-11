@@ -144,6 +144,7 @@ NB. table ; where ; pairs
 NB. where can be
 NB.  read style where clause
 NB.  indexes (jdindex values)
+NB.  _ for all rows
 NB.  col(s) to use with keyindex
 jd_update=: 3 : 0
 ECOUNT assert 2<:#y
@@ -167,6 +168,7 @@ if. 2=3!:0 w do.
   'ns vs rows'=. (#w) fixpairs__t 2}.y
  end. 
 else.
+ if. w-:_ do. w=. i.Tlen__t end.
  if. 4~:3!:0 w do. NB. see fixtype_num_jdtint_
   if. 1=3!:0 w do. w=. 0+w else. EINDEX assert 0 end.
  end.

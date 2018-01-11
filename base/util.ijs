@@ -409,10 +409,13 @@ edate
 edatetime
 edatetimem
 edatetimen
+int1
+int2
+int4
 )
 
 NB. 3!:0 TYPES values
-TYPESj=: 1 4 8 2 4 4 4 4 4 4 4 4 4
+TYPESj=: 1 4 8 2 4 4 4 4 4 4 4 4 4 1 1 1
 
 jdfread=: 3 : 0
 t=. fread y

@@ -2,7 +2,7 @@ NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 NB. Test queries, using all datatypes, joins, insertions, and deletes.
 
 NB. following is from old core tests
-TYPES_CORE=. TYPES_jd_-.;:'float edate edatetime edatetimem edatetimen' NB. core tests not adapted to new datatypes
+TYPES_CORE=. TYPES_jd_-.;:'float edate edatetime edatetimem edatetimen int1 int2 int4' NB. core tests not adapted to new datatypes
 
 toloc =. 'jdt'&,&.>
 

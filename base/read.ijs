@@ -126,6 +126,17 @@ access@> refs
 tloc =: tloc , t
 tnms =: tnms, <NAME__t"_^:(0=#) a
 tpath =: tpath , <refs,.joins
+
+NB. kludge to catch /left join in series that will fail
+if. 2<#tloc do.
+ for_p. tpath do.
+  p=. ,>p
+  if. 2=#p do.
+   c=. >{.p
+   'ref /left joins only allowed with single join'assert -.left__c
+  end. 
+ end.
+end.
 )
 
 
@@ -300,7 +311,6 @@ lib =. LIBJD,' combinejoins > n x x x'
 comb [ lib cd pointer_to_name&.> ;:'comb x y'
 )
 
-NB. =========================================================
 NB. Assume the query is on columns from two different tables.
 mgetwherex2=: 4 : 0
 'col0 fn col1'=. >{:y
@@ -327,10 +337,10 @@ lookupcolind =: 3 : 0
 cnms i. <y
 )
 
-NB. =========================================================
-NB. Give a join order for the given query
+NB. do NOT do join order stuff - not fully understood - note 1 +.
+NB. give a join order for the given query
 getorder =: 3 : 0
-if. (2>:#tloc) +. a:*./@:=y do. i.#tloc return. end.
+if. 1 +. (2>:#tloc) +. a:*./@:=y do. i.#tloc return. end.
 adj =. <@I. (+|:) (=/ i.@#) _1(0})tparent
 geto =. (, (-.~ ;@:{&adj))^:_@,
 NB. number of rows to sample

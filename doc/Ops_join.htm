@@ -16,11 +16,13 @@
 <h2 id="ref">ref</h2>
 <p>ref [option] tab1 col1a ... tab2 col2a ...</p>
 <p>creates ref col in tab1 that has data necessary to do joins</p>
+<p>col types int1/int2/int4/float/varbyte not allowed</p>
 <p>elided option creates simple data for a left1 join</p>
 <p>/left option creates more complicated data necessary for a left join</p>
+<p>/left ref only works with single joins - f,f-g works and f,f-g,g-h fails</p>
 <p>data for left1 or inner join can be derived from the left data</p>
-<p>insert/delete/update to either table ref col sets dirty flag</p>
-<p>ref col data recalculated (dirty) as required</p>
+<p>insert/delete/update to either table sets ref col dirty flag</p>
+<p>ref col recalculated (dirty) as required</p>
 <p>get ref col names with:</p>
 <p><code>jd'info ref' </code></p>
 <p>drop a ref col by name as you would any other col<br /></p>

@@ -223,7 +223,9 @@ NB. Read is found in read.ijs
 Readr=: getwhere
 Reads=: ({."1 ,: [:tocolumn{:"1)@:Read
 
-NB. Write table to the given csv file.
+NB. Write table to the given csv file
+NB. t parameter to writecsv c routine is:
+NB.  0 J data, 1 varbyte, 2 enum, 3 int1, 4 int2, 5 int4
 WriteCsv =: 3 : 0
 'file headers nms rws epoch new'=. y
 l =. #cols =. getloc@> nms
@@ -243,10 +245,12 @@ else.
  et=. 5|>: (;:'edate edatetime edatetimem edatetimen')i.typ
  seputc=. ,3 : 'try.sep__y,utc__y,''''catch.'',Z''end.' "0 cols
 end. 
-ind =. +/\ 0,}:t{1 2 2
-rws =. pointer_to_name 'rws'
-col =. pointer_to_name@> ; 3 :'ExportMap__y $0'&.> <"0 cols
-lib =. LIBJD,' writecsv > n *c x *x *x *c *x x *x'
+ind=. +/\ 0,}:t{1 2 2
+a=. (;:'int1 int2 int4')i.typ
+t=. t>. (a~:3)*3+a
+rws=. pointer_to_name 'rws'
+col=. pointer_to_name@> ; 3 :'ExportMap__y $0'&.> <"0 cols
+lib=. LIBJD,' writecsv > n *c x *x *x *c *x x *x'
 empty lib cd f;l;t;et;seputc;ind;rws;col
 )
 

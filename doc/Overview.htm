@@ -15,7 +15,7 @@
 <p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm" class="act">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
 <h2 id="overview">Overview</h2>
 <p>Yet another database. Why might you want one? Read on.</p>
-<p>Jd is a commercial database product from Jsoftware. It has similarities with all relational database management systems (RDBMS). Although similar in terminology and features to MySQL, Oracle, DB2, SQL Server, and others, it is closer in spirit and design to Kx's kdb+, Vectornova's Vstar, Jsoftware's free JDB, and all old APL based financial systems that ran on IBM mainframes in the 70s and 80s.</p>
+<p>Jd is a commercial database product from Jsoftware. It has similarities with all relational database management systems (RDBMS). Although similar in terminology and features to MySQL, Oracle, DB2, SQL Server, and others, it is closer in spirit and design to Kx's kdb+, Vectornova's Vstar, and all old APL based financial systems that ran on IBM mainframes in the 70s and 80s.</p>
 <h2 id="similarity">Similarity</h2>
 <p>Jd has one or more databases. A database has one or more tables. A table is rows (unnamed) and columns (named). Data in a column is of the same type (integer, float, datetime, fixed length characters, variable length characters, etc.). Tables can be joined with other tables to function as if they were that large table. Rows and columns can be retrieved by queries on the joined tables. Retrieved data from a query can be aggregated, grouped, and sorted. Rows can be deleted, updated, and inserted.</p>
 <p>The Jd API is SQL like. Similar enough that if you are a guru in another RDBMS you'll pick up the Jd way of thinking without much trouble. And if you're new, then Jd with its tutorials and examples will give you a leg up on getting at your data.</p>
@@ -38,12 +38,12 @@
 <p>Table column data files can be located, under your control, on different drives. For example, table columns critical for query peformance could be on an ssd drive and the rest of the columns could be stored on normal drives.</p>
 <p>This control over drive allocation also works for partitioned tables. For example, column data files for recent dates could be stored on ssd and files for the rest of the data could be stored on normal drives.</p>
 <h2 id="analytics">Analytics</h2>
-<p>Jd is particularly suited to analytics. It works well with large tables (100s of millions of rows), multiple tables connected by complex joins, structured data, numerical data, and complex queries and aggregations.</p>
+<p>Jd is particularly suited to analytics. It works well with large tables (millions of rows to billions), multiple tables connected by joins, structured data, numerical data, and complex queries and aggregations.</p>
 <p>Jd performance is affected primarily by ram. Lots of ram allows lots of rows. Performance is relatively unaffected by the number of columns and many 100s of columns are fine. It is the number of rows and not the byte size of the database that counts.</p>
-<p>Jd supports a reasonable rate of individual record updates/inserts, but is definitely oriented towards fast, customized, bulk updates. That is, periodic (hourly/daily/monthly) bulk loads of lots of new records, perhaps from csv files dumped from a transactional database system, that are customized (ETL) are fast and easy.</p>
+<p>Jd supports a reasonable rate of individual record updates/inserts, but is oriented towards fast, customized, bulk updates. That is, periodic (hourly/daily/monthly) bulk loads of lots of new records, perhaps from csv files dumped from a transactional database system, that are customized (ETL) are fast and easy.</p>
 <p>Jd can serve dozens of simultaneous users of a database in their browsers with high-security and managed access out of the box. This works well for a team of analysts. To serve hundreds or thousands of users requires additional work to put the Jd server behind an apache/nginx/etc front end.</p>
 <p>Jd has a small footprint, is easy to install, and multiple installations are encouraged. An analyst can run Jd on their own computer to work with local databases. A group of analysts can access Jd on a server that provides shared access to the same databases. A Jd instance can serve a single database or multiple databases. A machine can run one or more Jd instances. This allows easy distribution and scalability.</p>
-<p>Jd is strong in analytics, but weaker in other areas. Jd is probably not the right choice for big data (terabytes of unstructured textual data) or for a high-rate transactional system with many 1000s of users.</p>
+<p>Jd is strong in analytics, but weaker in other areas. Jd is probably not the right choice for big data (terabytes of unstructured textual data) or for a high-rate transactional system with 1000s of users.</p>
 <h2 id="adminbackup">Admin/backup</h2>
 <p>Databases/tables/columns/metadata/etc are represented directly in the file structure. A database is a folder. A table is a folder in the database. A column is a folder in the table. The data is one or more files in the column.</p>
 <p>You can backup a database or a table with standard host shell scripts, file copy commands, and tools such as tar/gzip/zip. Jd will provide patterns for standard requirements and you can easily roll your own customized version. If you understand backing up file folders, then you pretty much understand backing up Jd databases. You can also dump a database as csv files and restore a database from csv files. Metadata such as column names and types, user administration data (who can do what), and all other database specific information is automatically included.</p>
@@ -51,9 +51,7 @@
 <h2 id="fast-csv">Fast CSV</h2>
 <p>Jd has a fast CSV loader. The process is managed in J, but the high-performance core is written in C. The loader can handle all reasonable CSV options, has good error reporting, and can get data from external sources into Jd quickly. Data from new csv files (for example, new hourly or daily data) can be quickly loaded and appended to your existing production Jd tables.</p>
 <p>Jd also has a fast CSV unloader with the core written in C.</p>
-<h2 id="jd-and-jdb">Jd and JDB</h2>
-<p>JDB was an early effort, primarily by Chris Burke, that proved the feasibility of building a database system in J.</p>
 <h2 id="open-source">Open source</h2>
-<p>Jd source is largely J code and that code is open and available to the J community. There is a binary shared library (to get high performance at bottlenecks).</p>
+<p>Jd source is largely J code and that code is open and available to licensed users. There is a binary shared library (to get high performance at bottlenecks).</p>
 </body>
 </html>
