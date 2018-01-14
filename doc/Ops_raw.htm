@@ -13,12 +13,25 @@
 </head>
 <body>
 <p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
+<h2 id="intx">intx</h2>
+<p>intx table col new-type</p>
+<p>converts col from its current type to new-type</p>
+<p>col current type must be int/int1/int2/int4</p>
+<p>new-type must be int/int1/int2/int4/intx</p>
+<p>new-type intx converts col to type that takes least space without losing data</p>
+<pre><code>NB. example intx
+jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
+jd&#39;gen test f 5&#39;
+jd&#39;info schema&#39;
+jd&#39;intx f int intx&#39;
+jd&#39;info schema&#39;
+jdaccess olddan</code></pre>
 <h2 id="key">key</h2>
 <p>key [/in] table <a href="Ops_common.htm#pairs" title="wikilink">pairs</a></p>
 <p>Returns last table row that matches each of the rows in pairs (_1 for not found).</p>
 <p>With /in option, returns table rows that match any row in pairs.</p>
 <p>See <a href="Ops_common.htm#key" title="wikilink">key</a> for info.</p>
-<pre><code>NB. example delete
+<pre><code>NB. example key
 jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
 jd&#39;gen test f 5&#39;
 jd&#39;key f&#39;;&#39;int&#39;;101 103

@@ -2,6 +2,22 @@ NB. Copyright 2016, Jsoftware Inc.  All rights reserved.
 
 coclass'jd'
 
+JDOK=: ,.<'Jd OK'
+
+imax=: 9223372036854775807
+imin=: (-imax)-1
+
+i1max=: <:<.2^7
+i1min=: <:-i1max
+
+i2max=: <:<.2^15
+i2min=: <:-i2max
+
+i4max=: <:<.2^31
+i4min=: <:-i4max
+
+MAXROWCOUNT=: 1e5
+
 PTM=: '^'    NB. ptable filename
 
 NB. chars not allowed in Jd names because they are used as file names
@@ -28,6 +44,12 @@ EDELETE=:    'jddeletefolder failed'
 EINDEX=:     'bad index'
 EDROPSTOP=:  'dropstop'
 EUNIQUE=:    'warning: deleted N rows to stay unique'
+EBOOLEAN=:   'bad boolean data'
+EFLOAT=:     'bad float data'
+EINT=:       'bad int data'
+EINT1=:      'bad int1 data'
+EINT2=:      'bad int2 data'
+EINT4=:      'bad int4 data'
 
 LOCALE=: CLASS=: <'jd'
 CHILD=: <'jdfolder'

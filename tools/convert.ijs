@@ -127,6 +127,7 @@ for_tn. NAMES__db do.
   
   loc=. getloc__t n NB. getloc so mapping is done
   
+  NB. don't need countdat and datcount here because intx not in jd3 
   if. count~:#dat__loc do.
    vecho ' will repair count - ',n
   end.

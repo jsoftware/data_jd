@@ -34,7 +34,7 @@ try.
    tlen=. tlen,Tlen__c
    map=. map,om
    type=. type,typ__c
-   s=. #mn~
+   s=. (countdat__c ::#) mn~
    s=. ('ref'-:typ__c){s,0
    count=. count,s
    t=. 0~:Tlen__c-s NB. 1 if too many or too few rows 

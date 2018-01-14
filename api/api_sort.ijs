@@ -4,8 +4,10 @@ coclass'jd'
 
 jd_sort=: 3 : 0
 a=. '/desc 0'getoptions y
-ECOUNT assert <:#a
+ECOUNT assert 2<:#a
 FETAB=: tab=: ;{.a
+d=. getdb''
+1 validtc__d a
 d=. getdb''
 a=. stitch__d tab;<}.a
 if. option_desc do. s=. \:a else. s=. /:a end. 

@@ -16,14 +16,27 @@ jdadminx'test'
 jd'createtable f i int,b4 byte 4'
 jd'insert f';'i';24 25;'b4';'b'
 c=. jdgl_jd_'f b4'
-'bad'assert 2=#dat__c
+'bad'assert 2=countdat__c dat__c
 jd'validate'
 
 jdadminx'test'
 jd'createtable f i int,b4 byte 4'
 jd'insert f';'i';24 25;'b4';'bbb'
 c=. jdgl_jd_'f b4'
-'bad'assert 2=#dat__c
+'bad'assert 2=countdat__c dat__c
+jd'validate'
+
+jdadminx'test'
+jd'createtable f i int,i1 int1,i2 int2,i4 int4'
+jd'insert f';'i';24 25;'i1';24 25;'i2';24 25;'i4';24 25
+c=. jdgl_jd_'f i'
+'bad'assert 2=countdat__c dat__c
+c=. jdgl_jd_'f i1'
+'bad'assert 2=countdat__c dat__c
+c=. jdgl_jd_'f i2'
+'bad'assert 2=countdat__c dat__c
+c=. jdgl_jd_'f i4'
+'bad'assert 2=countdat__c dat__c
 jd'validate'
 
 jdadminx'test'

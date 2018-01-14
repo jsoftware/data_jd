@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '4.4.48'
+VERSION=: '4.4.49'
 
 FILES=: 0 : 0
 manifest.ijs
@@ -141,7 +141,9 @@ doc/Ops_change.htm
 api/api_read.ijs
 api/client.ijs
 api/api_csv.ijs
+api/api_table.ijs
 api/api_info.ijs
+api/api_create.ijs
 api/api_change.ijs
 api/api_drop.ijs
 api/api_sort.ijs
@@ -149,6 +151,8 @@ api/api.ijs
 api/jjd.ijs
 api/api_adm.ijs
 api/api_misc.ijs
+api/api_rename.ijs
+api/api_gen.ijs
 pm/pm_disk.ijs
 pm/pmc.ijs
 pm/pmb.ijs

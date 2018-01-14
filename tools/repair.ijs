@@ -18,7 +18,7 @@ for_tn. NAMES__d do.
   a=. jdclocs_jd_ tn;''
   count=. ''
   for_aa. a do.
-   if. -.'jd'-:2{.NAME__aa do. count=. count,#dat__aa end.
+   if. -.'jd'-:2{.NAME__aa do. count=. count,countdat__aa dat__aa end.
   end.
  end.
  m=. <./count
@@ -29,9 +29,9 @@ for_tn. NAMES__d do.
   cn=. NAME__c
   if. 'jdref_'-:3{.cn do. setdirty__c 1 continue. end.
   if. 'jd'-:2{.cn do. continue. end.
-  if. Tlen__t~:#dat__c do.
+  if. Tlen__t~:countdat__c dat__c do.
    techo' repair count - ',cn
-   dat__c=: Tlen__t{.dat__c
+   dat__c=: (datcount__c Tlen__t){.dat__c
   end. 
  end. 
 end.

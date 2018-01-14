@@ -4,12 +4,7 @@ jdex_z_=:      jdex_jd_
 
 coclass 'jd'
 
-imax=: 9223372036854775807
-imin=: (-imax)-1
-
-MAXROWCOUNT=: 1e5
-
-ophtmls=: 'Ops_info';'Ops_read';'Ops_change';'Ops_create';'Ops_drop';'Ops_rename';'Ops_join';'Ops_csv';'Ops_table-table';'Ops_misc'
+ophtmls=: _4}.each(>:#jpath JDP,'doc')}.each 1 dir JDP,'doc/Ops_*'
 
 jdex=: 3 : 0
 y=. dltb y

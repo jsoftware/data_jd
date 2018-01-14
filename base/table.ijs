@@ -111,11 +111,11 @@ Delete=: 3 : 0
   c=. i{CHILDREN
   getloc NAME__c NB. map as required
   if. (<'jdindex')=i{NAMES do.
-   continue
+   continue.
   elseif. (<'jd')=2{.each i{NAMES do.
    setdirty__c 1
   elseif. 1 do.
-   dat__c=. b#dat__c
+   dat__c=: (b#~datcount__c 1)#dat__c
   end. 
  end.
  Tlen=: +/b NB. change after all cols are adjusted

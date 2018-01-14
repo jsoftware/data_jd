@@ -12,6 +12,7 @@ DATASIZE =: 8 NB. default 8 bytes
 DATAFILL =: 0
 
 countdat=: #
+datcount=: ]
 
 testcreate=: ]
 opentyp=: ]

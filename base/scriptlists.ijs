@@ -1,4 +1,4 @@
-NB. Copyright 2017, Jsoftware Inc.  All rights reserved.
+NB. Copyright 2015, Jsoftware Inc.  All rights reserved.
 coclass'jd'
 tests=: <;._2 [ 0 : 0
 test/alloc_test.ijs

@@ -75,35 +75,29 @@ jd'update f';'jdindex=0';'i8';22;'i1';23;'i2';24;'i4';25
 assert 22 23 24 25=,;{:jd'reads from f where jdindex=0'
 
 NB. invalid data errors
-e=. 'invalid'
-a1=. <:<.2^7
-b1=. <:-a1
-  jd  'update f';'jdindex=0';'i1';a1
-  jd  'update f';'jdindex=0';'i1';b1
-e jdae'update f';'jdindex=0';'i1';>:a1
-e jdae'update f';'jdindex=0';'i1';<:b1
+e=. 'bad int'
+  jd  'update f';'jdindex=0';'i1';i1max_jd_
+  jd  'update f';'jdindex=0';'i1';i1min_jd_
+e jdae'update f';'jdindex=0';'i1';>:i1max_jd_
+e jdae'update f';'jdindex=0';'i1';<:i1min_jd_
 
-a2=. <:<.2^15
-b2=. <:-a2
-  jd  'update f';'jdindex=0';'i2';a2
-  jd  'update f';'jdindex=0';'i2';b2
-e jdae'update f';'jdindex=0';'i2';>:a2
-e jdae'update f';'jdindex=0';'i2';<:b2
+  jd  'update f';'jdindex=0';'i2';i2max_jd_
+  jd  'update f';'jdindex=0';'i2';i2min_jd_
+e jdae'update f';'jdindex=0';'i2';>:i2max_jd_
+e jdae'update f';'jdindex=0';'i2';<:i2min_jd_
 
-a4=. <:<.2^31
-b4=. <:-a4
-  jd  'update f';'jdindex=0';'i4';a4
-  jd  'update f';'jdindex=0';'i4';b4
-e jdae'update f';'jdindex=0';'i4';>:a4
-e jdae'update f';'jdindex=0';'i4';<:b4
+  jd  'update f';'jdindex=0';'i4';i4max_jd_
+  jd  'update f';'jdindex=0';'i4';i4min_jd_
+e jdae'update f';'jdindex=0';'i4';>:i4max_jd_
+e jdae'update f';'jdindex=0';'i4';<:i4min_jd_
 
 NB. csv tests
 
 CSVFOLDER=: '~temp/jd/csv/intx'
 
-d1=: <.(-2^7),23,<:2^7
-d2=: <.(-2^15),23,<:2^15
-d4=: <.(-2^31),23,<:2^31
+d1=: i1min_jd_,23,i1max_jd_
+d2=: i2min_jd_,23,i2max_jd_
+d4=: i4min_jd_,23,i4max_jd_
 d8=: imin_jd_,23,imax_jd_
 
 f=: 3 : 0
@@ -130,3 +124,81 @@ jd'createcol h i4 int4';d4
 jd'createcol h i8 int' ;d8
 
 assert (jd'reads from h')-:jd'reads from f'
+
+NB. intx
+jdadminx'test'
+jd'createtable t1'
+jd'createcol t1 c1 int';i.5
+jd'createcol t1 c2 byte';'abcde'
+
+jd'intx t1 c1 int'
+jd'intx t1 c1 int4'
+jd'intx t1 c1 int2'
+jd'intx t1 c1 int1'
+jd'intx t1 c1 int'
+jd'intx t1 c1 intx'
+assert 'int1'-:typ__c[c=. jdgl_jd_'t1 c1'
+jd'intx t1 c1 int'
+
+jd'intx t1 c1 int'
+jd'update t1';'jdindex=0';'c1';>:i4max_jd_
+e jdae'intx t1 c1 int4'
+e jdae'intx t1 c1 int2'
+e jdae'intx t1 c1 int1'
+
+jd'intx t1 c1 int'
+jd'update t1';'jdindex=0';'c1';<:i4min_jd_
+e jdae'intx t1 c1 int4'
+e jdae'intx t1 c1 int2'
+e jdae'intx t1 c1 int1'
+
+jd'intx t1 c1 int'
+jd'update t1';'jdindex=0';'c1';>:i2max_jd_
+jd     'intx t1 c1 int4'
+e jdae'intx t1 c1 int2'
+e jdae'intx t1 c1 int1'
+
+jd'intx t1 c1 int'
+jd'update t1';'jdindex=0';'c1';<:i2min_jd_
+  jd  'intx t1 c1 int4'
+e jdae'intx t1 c1 int2'
+e jdae'intx t1 c1 int1'
+
+jd'intx t1 c1 int'
+jd'update t1';'jdindex=0';'c1';>:i1max_jd_
+  jd  'intx t1 c1 int4'
+  jd  'intx t1 c1 int2'
+e jdae'intx t1 c1 int1'
+
+jd'intx t1 c1 int'
+jd'update t1';'jdindex=0';'c1';<:i1min_jd_
+  jd  'intx t1 c1 int4'
+  jd  'intx t1 c1 int2'
+e jdae'intx t1 c1 int1'
+
+NB. intx delete
+jdadminx'test'
+jd'gen test f 10'
+jd'intx f int int1'
+jd'delete f';'x<2'
+jd'intx f int int2'
+jd'delete f';'x<4'
+jd'intx f int int4'
+jd'delete f';'x<6'
+assert 106 107 108 109=>{:{:jd'read int from f'
+
+NB. intx sort
+jdadminx'test'
+jd'gen test f 10'
+jd'intx f int int1'
+'int1'jdae'sort f int'
+jd'intx f int int2'
+'int2'jdae'sort f int'
+jd'intx f int int4'
+'int4'jdae'sort f int'
+
+NB. ptable pcol
+jdadminx'test'
+jd'gen test f 0'
+jd'intx f int int2'
+'bad col type'jdae'createptable f int'

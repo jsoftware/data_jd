@@ -89,6 +89,6 @@ assert 0=jdgl_jd_ :: 0:'f a' NB. fails because accessing damaged col marks db as
 jdrepair_jd_'fixing it now'  NB. mark db as under repair
 c=. jdgl_jd_ 'f a'
 c=. jdgl_jd_'f a' NB. locale for column a
-#dat__c           NB. rows in column mapped noun dat
+countdat__c dat__c           NB. rows in column mapped noun dat
 
 bld''

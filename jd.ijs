@@ -10,7 +10,7 @@ NB. is pushed to Jsoftware for building JAL data/jd package
 
 NB. all use of the Jd library is through JDP_z_
 
-jdversion_jd_=: '4.8'
+jdversion_jd_=: '4.9'
 
 nokey_jd_=: 0 : 0 rplc 'INDEX.HTM';jpath '~addons/data/jd/doc/Index.htm'
 
@@ -123,12 +123,16 @@ base/validate.ijs
 api/api.ijs
 api/api_adm.ijs
 api/api_change.ijs
+api/api_create.ijs
 api/api_csv.ijs
 api/api_drop.ijs
+api/api_gen.ijs
 api/api_info.ijs
 api/api_misc.ijs
 api/api_read.ijs
+api/api_rename.ijs
 api/api_sort.ijs
+api/api_table.ijs
 api/client.ijs
 csv/csv.ijs
 csv/csvinstall.ijs

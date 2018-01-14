@@ -5,6 +5,7 @@ coinsert 'jdtbase'
 DATAFILL=: -~2
 DATASIZE=: 8
 countdat=: #
+datcount=: ]
 
 qnumtxt=: 0 : 0
 qless         =: 3 : 'I.dat <  y'
@@ -44,7 +45,7 @@ fixtype_num=: 3 : 0
 if. 4 ~: 3!:0 y do.
  a=. y
  y=. 0+<. :: 0: y
- 'invalid int data'assert a-:y
+ EINT assert a-:y
 end.
 y
 )
@@ -56,7 +57,7 @@ fixtype_num=: 3 : 0
 if. 1 ~: 3!:0 y do.
  a=. y
  y=. 0 ~: y
- 'invalid boolean data'assert a-:y
+ EBOOLEAN assert a-:y
 end.
 y
 )
@@ -77,7 +78,7 @@ qlike=: qunlike=: 3 : '''like/unlink not supported for int1/int2/int4''assert 0'
 
 fixtypex=: 3 : 0
 a=. fixtype_num y
-'invalid int1 data'assert (a<2^7),a>:-2^7
+EINT1 assert (a<2^7),a>:-2^7
 a
 )
 
@@ -101,6 +102,7 @@ NB. int2 =========================================================
 coclass deftype_jdtnumeric_ 'int2'
 DATASIZE=: 2
 countdat=: -:@#
+datcount=: +:
 
 ". each <;._2 qnumtxt  rplc 'dat';'(_1 ic dat)'
 qrange=: 3 : (qrangetxt rplc 'dat';'(_1 ic dat)')
@@ -108,7 +110,7 @@ qlike=: qunlike=: 3 : '''like/unlink not supported for int1/int2/int4''assert 0'
 
 fixtypex=: 3 : 0
 a=. fixtype_num y
-'invalid int1 data'assert (a<2^15),a>:-2^15
+EINT2 assert (a<2^15),a>:-2^15
 a
 )
 
@@ -133,6 +135,7 @@ NB. int4 =========================================================
 coclass deftype_jdtnumeric_ 'int4'
 DATASIZE=: 4
 countdat=: -:@-:@#
+datcount=: +:@+:
 
 ". each <;._2 qnumtxt  rplc 'dat';'(_2 ic dat)'
 qrange=: 3 : (qrangetxt rplc 'dat';'(_2 ic dat)')
@@ -140,7 +143,7 @@ qlike=: qunlike=: 3 : '''like/unlink not supported for int1/int2/int4''assert 0'
 
 fixtypex=: 3 : 0
 a=. fixtype_num y
-'invalid int1 data'assert (a<2^31),a>:-2^31
+EINT4 assert (a<2^31),a>:-2^31
 a
 )
 
@@ -171,7 +174,7 @@ DATAFILL=: -~2.1
 
 fixtype_num=: 3 : 0
 if. 8 ~: 3!:0 y do.
- 'invalid float data'assert (3!:0 y) e. 1 4
+ EFLOAT assert (3!:0 y) e. 1 4
   y=. y + -~ 2.1
 end.
 y

@@ -69,7 +69,7 @@ get=: 4 : 0
 'tab pcol'=. ;:x
 t=. jdgl_jd_ tab,PTM
 c=. jdgl_jd_ tab,PTM,' ',pcol
-jdqpall__c=: 3 : 'i.#dat'
+jdqpall__c=: 3 : 'i.countdat dat'
 s=. forcecopy dat__c
 if. -.''-:y do.
  r=. (<t) eval_q_jdquery_ each pcol pump toSoP_jdquery_ fixwhere_jdtable_ y
@@ -264,7 +264,7 @@ tempcol=: 3 : 0
   shape__c=: }:$dat__c
   typ__c=: ;(1 4 8 2 i. 3!:0 dat__c){'boolean';'int';'float';'byte'
   p=. PARENT__c
-  ('readtc X has wrong number of rows'rplc'X';;{.i{TEMPCOLS)assert Tlen__p=#dat__c
+  ('readtc X has wrong number of rows'rplc'X';;{.i{TEMPCOLS)assert Tlen__p=countdat__c dat__c
  end.
 )
 
