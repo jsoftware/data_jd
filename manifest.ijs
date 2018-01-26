@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '4.4.49'
+VERSION=: '4.4.50'
 
 FILES=: 0 : 0
 manifest.ijs
@@ -253,4 +253,4 @@ FILESDARWIN64=: 0 : 0
 cd/libjd.dylib
 )
 
-RELEASE=: 'j805 j806'
+RELEASE=: 'j805 j806 j807'
