@@ -64,11 +64,3 @@ bld''
 'assertion failure'-:jddamage_jd_ etx'really messed up'
 ferase p,'jddamage'
 assert +./'really messed up' E. fread plog
-
-bld''
-'assertion failure'-:jdcreatejmf_jd_ etx arg=.'~/temp/fubar.fubar.fubar';100
-dm jdae'read from f'
-a=. chk 0
-assert arg-:>{:{:a
-
-bld''

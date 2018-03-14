@@ -13,6 +13,23 @@
 </head>
 <body>
 <p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm" class="act">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
+<h2 id="performance">Performance</h2>
+<h3 id="columnar">columnar</h3>
+<p>Jd performance is due to columnar data. A data column (e.g., name or date or license) is a disk file that is mapped to a J noun. A query on a data column only needs the column data in ram to do the query. If query columns fit in ram then queries run at ram speed. Then only data required for the result is read from disk and typically this is a small fraction of the total database size.</p>
+<h3 id="ram">ram</h3>
+<p>Ram is the most critical factor in Jd performance.</p>
+<p>In general, performance will be good if available ram more that at least 2 times space required by the cols typically used in a query. A factor of 4 is better if more complicated things such as ref and key are used.</p>
+<h3 id="ssd">ssd</h3>
+<p>Working with data in ram is orders of magnitude faster than working with data that has to come from an ssd. For a serious application there is no good reason to not use ssd.</p>
+<h3 id="hdd">hdd</h3>
+<p>Working with data from an ssd is orders of magnitude faster that from a hard disk drive.</p>
+<h3 id="intx">intx</h3>
+<p>Use the smallest intx type that will hold the data. This will reduce overall database size and will make better use of ram.</p>
+<h3 id="partitioned-table">partitioned table</h3>
+<p>A partitioned table has column data in multiple files. For the user, a partitioned table is the same as any other table, but it can make a signficant performance difference. High performance queries/inserts/updates/modifies can be achieved on tables with billions of rows on modest hardware if they are partitioned.</p>
+<h3 id="allocation-across-drives">allocation across drives</h3>
+<p>Table column data files can be located, under your control, on different drives. For example, table columns critical for query peformance could be on an ssd drive and the rest of the columns could be stored on normal drives.</p>
+<p>This control over drive allocation also works for partitioned tables. For example, column data files for recent dates could be stored on ssd and files for the rest of the data could be stored on normal drives.</p>
 <h2 id="dropdelete">Drop/Delete</h2>
 <p>A database structure maps directly to a folder structure. A database is a folder, a table is a folder in a database, and a column is a folder in a table.</p>
 <p>A db/table/col drop cannot be undone. It would be unfortunate to inadvertently drop something that was hard to recover.</p>
@@ -113,7 +130,7 @@ save the file, restart system, and verify new ulimit</code></pre>
    typ__c            NB. column type
    PATH__c           NB. path to col dat file
    dat__c            NB. mapped file data</code></pre>
-<h2 id="performance">performance</h2>
+<h2 id="performance-1">performance</h2>
 <p>See pmhelp_jd_ for info.</p>
 <p>Folder pm has scripts for performance measurement.</p>
 <h2 id="windows-search-service">Windows search service</h2>

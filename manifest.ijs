@@ -1,4 +1,4 @@
-NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
+NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
 NB. data/jd manifest
 
 CAPTION=: 'Jd'
@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '4.4.50'
+VERSION=: '4.4.51'
 
 FILES=: 0 : 0
 manifest.ijs
@@ -240,6 +240,7 @@ test/sort_test.ijs
 
 FILESWIN64=: 0 : 0
 cd/jd.dll
+cd/jpcre.dll
 )
 
 FILESLINUX64=: 0 : 0
@@ -251,6 +252,7 @@ cd/rpi/libjpcre.so
 
 FILESDARWIN64=: 0 : 0
 cd/libjd.dylib
+cd/libjpcre.dylib
 )
 
 RELEASE=: 'j805 j806 j807'

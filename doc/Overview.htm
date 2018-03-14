@@ -32,11 +32,6 @@
 <p>Both scenarios above are simplified, but the point is strong and valid. The end user thinks in records, but the work to get those records is best organized by columns.</p>
 <p>Row oriented is slavishly tied to the design ideas of filing cabinets and manila folders. Column oriented embraces computers.</p>
 <p>A table column is a mapped file.</p>
-<h2 id="partitioned-table">Partitioned table</h2>
-<p>A partitioned table has column data in multiple files. For the user, a partitioned table is the same as any other table, but it can make a signficant performance difference. High performance queries/inserts/updates/modifies can be achieved on tables with billions of rows on modest hardware if they are partitioned.</p>
-<h2 id="allocation-across-drives">Allocation across drives</h2>
-<p>Table column data files can be located, under your control, on different drives. For example, table columns critical for query peformance could be on an ssd drive and the rest of the columns could be stored on normal drives.</p>
-<p>This control over drive allocation also works for partitioned tables. For example, column data files for recent dates could be stored on ssd and files for the rest of the data could be stored on normal drives.</p>
 <h2 id="analytics">Analytics</h2>
 <p>Jd is particularly suited to analytics. It works well with large tables (millions of rows to billions), multiple tables connected by joins, structured data, numerical data, and complex queries and aggregations.</p>
 <p>Jd performance is affected primarily by ram. Lots of ram allows lots of rows. Performance is relatively unaffected by the number of columns and many 100s of columns are fine. It is the number of rows and not the byte size of the database that counts.</p>

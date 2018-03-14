@@ -10,7 +10,7 @@ NB. is pushed to Jsoftware for building JAL data/jd package
 
 NB. all use of the Jd library is through JDP_z_
 
-jdversion_jd_=: '4.9'
+jdversion_jd_=: '4.10'
 
 nokey_jd_=: 0 : 0 rplc 'INDEX.HTM';jpath '~addons/data/jd/doc/Index.htm'
 
@@ -75,22 +75,27 @@ JDP_z_=: _6}.;f
 
 3 : 0''
 t=. jpath JDP,'cd/'
-p=. jpath'~tools/regex/'
 if. UNAME-:'Linux' do.
  t=. t,IFRASPI{::'libjd.so';'rpi/libjd.so'
- p=. p,'libjpcre.so'
- if. -.fexist p do. p=. jpath JDP,IFRASPI{::'cd/libjpcre.so';'cd/rpi/libjpcre.so' end. NB. J deb install does not have tools/libjpcre.so
 elseif. UNAME-:'Darwin' do.
  t=. t,'libjd.dylib'
- p=. p,'libjpcre.dylib'
 elseif. 1 do.
  if. _1=nc<'DLLDEBUG__' do.
   t=. t,'jd.dll'
  else.
   t=. t,'../cdsrc/makevs/x64/debug64/jddll.dll' NB. ms visual studio debug
  end.
-  p=. (p,'jpcre.dll')rplc'/';'\'
 end.
+'Jd share library missing'assert fexist t
+
+NB. Jd must continue to use pcre library - work is required to make use of the new pcre2 library
+select. UNAME
+case. 'Linux'  do. q=. (IFRASPI#'rpi/'),'libjpcre.so'
+case. 'Darwin' do. q=. 'libjpcr.dylib'
+case.          do. q=. 'jpcre.dll'
+end.
+q=. q,~JDP,'cd/'
+'Jd pcre library missing'assert fexist q
 
 LIBJD_jd_=: '"',t,'"'
 r=. (LIBJD_jd_,' jdinit >x *c') cd <jpath'~config'
@@ -98,7 +103,7 @@ if. _1=r do. assert 0[echo nokey_jd_ end.
 if. _2=r do. assert 0[echo evalkey_jd_ end.
 if. _3=r do. assert 0[echo updatekey_jd_ end.
 'Jd binary and J code mismatch - bad install'assert r=8 NB. 7 - jd3 and 8 -jd4
-'Jd regexinit failed'assert 0=(LIBJD_jd_,' regexinit >x *c') cd <p 
+'Jd regexinit failed'assert 0=(LIBJD_jd_,' regexinit >x *c') cd <q 
 )
 
 load@:(JDP&,);._2 ]0 :0
@@ -151,17 +156,17 @@ NB. stubs to load scripts not normally loaded
 jdtests=: 3 : 0
 0 jdtests y
 :
-require JDP,'tools/tests.ijs'
+load JDP,'tools/tests.ijs'
 jdtests_jd_ y
 )
 
 repair_jd_=: 3 : 0
-require JDP,'tools/repair.ijs'
+load JDP,'tools/repair.ijs'
 repair_jd_''
 )
 
 setscriptlists_jd_=: 3 : 0
-require JDP,'tools/setscriptlists.ijs'
+load JDP,'tools/setscriptlists.ijs'
 setscriptlists_jd_''
 )
 
