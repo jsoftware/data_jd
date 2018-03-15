@@ -91,7 +91,7 @@ end.
 NB. Jd must continue to use pcre library - work is required to make use of the new pcre2 library
 select. UNAME
 case. 'Linux'  do. q=. (IFRASPI#'rpi/'),'libjpcre.so'
-case. 'Darwin' do. q=. 'libjpcr.dylib'
+case. 'Darwin' do. q=. 'libjpcre.dylib'
 case.          do. q=. 'jpcre.dll'
 end.
 q=. q,~JDP,'cd/'
