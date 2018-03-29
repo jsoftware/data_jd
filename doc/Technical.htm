@@ -14,22 +14,23 @@
 <body>
 <p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm" class="act">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
 <h2 id="performance">Performance</h2>
+<h3 id="measurement">measurement</h3>
+<p>See tutorial performance and see pmhelp_jd_ for info. Folder pm has some rough scripts for performance measurement.</p>
 <h3 id="columnar">columnar</h3>
 <p>Jd performance is due to columnar data. A data column (e.g., name or date or license) is a disk file that is mapped to a J noun. A query on a data column only needs the column data in ram to do the query. If query columns fit in ram then queries run at ram speed. Then only data required for the result is read from disk and typically this is a small fraction of the total database size.</p>
 <h3 id="ram">ram</h3>
-<p>Ram is the most critical factor in Jd performance.</p>
-<p>In general, performance will be good if available ram more that at least 2 times space required by the cols typically used in a query. A factor of 4 is better if more complicated things such as ref and key are used.</p>
+<p>Ram is the most critical factor in performance. In general, performance will be good if available ram is more than 2 times the space required by the cols typically used in a query. Working with data in ram is orders of magnitude faster than working with data that has to come from disk.</p>
 <h3 id="ssd">ssd</h3>
-<p>Working with data in ram is orders of magnitude faster than working with data that has to come from an ssd. For a serious application there is no good reason to not use ssd.</p>
-<h3 id="hdd">hdd</h3>
-<p>Working with data from an ssd is orders of magnitude faster that from a hard disk drive.</p>
+<p>Working with data from an ssd is orders of magnitude faster than working with data that has to come from an non-ssd. For a serious application there is no good reason to not use ssd.</p>
 <h3 id="intx">intx</h3>
 <p>Use the smallest intx type that will hold the data. This will reduce overall database size and will make better use of ram.</p>
 <h3 id="partitioned-table">partitioned table</h3>
 <p>A partitioned table has column data in multiple files. For the user, a partitioned table is the same as any other table, but it can make a signficant performance difference. High performance queries/inserts/updates/modifies can be achieved on tables with billions of rows on modest hardware if they are partitioned.</p>
 <h3 id="allocation-across-drives">allocation across drives</h3>
-<p>Table column data files can be located, under your control, on different drives. For example, table columns critical for query peformance could be on an ssd drive and the rest of the columns could be stored on normal drives.</p>
+<p>Column data files can be located, under your control, on different drives. For example, columns critical for query peformance could be on an ssd drive and the rest of the columns could be stored on normal drives.</p>
 <p>This control over drive allocation also works for partitioned tables. For example, column data files for recent dates could be stored on ssd and files for the rest of the data could be stored on normal drives.</p>
+<p>Folder symbolic links (Windows folder junctions) are used to place db cols on different drives.</p>
+<p>See tutorial link.</p>
 <h2 id="dropdelete">Drop/Delete</h2>
 <p>A database structure maps directly to a folder structure. A database is a folder, a table is a folder in a database, and a column is a folder in a table.</p>
 <p>A db/table/col drop cannot be undone. It would be unfortunate to inadvertently drop something that was hard to recover.</p>
@@ -38,6 +39,66 @@
 <p>A db/table/col drop uses the utility <a href="Admin.htm#jddeletefolder" title="wikilink">jddeletefolder</a>. This utility is also used in other admin activities, for example, deleting folders of csv files that have been processed.</p>
 <p>A <a href="Admin.htm#jddeletefolder" title="wikilink">jddeletefolder</a> cannot be undone. It would be unfortunate to inadvertently delete something that was hard to recover.</p>
 <p><a href="Admin.htm#jddeletefolder" title="wikilink">jddeletefolder</a> allows delete only if certain criteria are met and this can prevent an unintended delete.</p>
+<h2 id="locales-and-db-file-structure">locales and db file structure</h2>
+<p>Parts of a database (tables, cols, data) correspond directly with the file structure. That is, a table is a folder in the database, each col is a folder in its table folder, and data is a file in its col folder.</p>
+<p>When a database is opened, J locales are created that correspond to the database structure. Each table has a locale with metadata and each col has a locale with metadata and mapped file(s) with the data.</p>
+<p>Sometimes it can be useful to dig into the internals.</p>
+<pre><code>   jdadminx&#39;test&#39;
+   jd&#39;gen test f 3&#39;
+   jd&#39;reads from f&#39;
+   t=. jdgl_jd_&#39;f&#39;   NB. get locale for table f
+   NAME__t           NB. table name
+   NAMES__t          NB. col names in table
+   c=. jdgl_jd_&#39;f x&#39; NB. get locale for col x in table f
+   typ__c            NB. column type
+   PATH__c           NB. path to col dat file
+   dat__c            NB. mapped file data</code></pre>
+<h2 id="backup">backup</h2>
+<p>Complete backup or restore is just a copy of the db file folder. Host shell scripts can provide full backup/restore. With large databases and suitable hardware it might be worthwhile to use multiple tasks and use compression.</p>
+<p>CSV dump/restore also provides complete backup.</p>
+<h2 id="file-handles">file handles</h2>
+<p>Jd requires lots of file handles. Using thousands of columns requires thousands of handles.</p>
+<p>Jd fails badly if it runs out of handles. Unable to access a file, an error is signaled, perhaps in the middle of an operation that will leave the database damaged.</p>
+<p>Windows user does not have a limit on file handles.</p>
+<p>Linux/Mac user often has low soft and hard limits on handles and this must be increased for serious use of Jd. There is no reason to not raise the limit to 100000.</p>
+<p>See the soft and hard limits with:</p>
+<pre><code>...$ ulimit -n</code></pre>
+<p>If hard limit is high enough, it might be easiest, before starting J, to do:</p>
+<pre><code>...$ ulimit -n 100000</code></pre>
+<p>To increase file handle limit for Linux Jd user fred: <code>...$ ulimit -n # show current file handle limit</code></p>
+<pre><code>run superuser text editor and open /etc/security/limits.conf
+add following 2 lines at the end
+
+fred soft nofile 200000
+fred hard nofile 200000
+
+save the file, restart system, and verify new ulimit</code></pre>
+<p>To increase file handle limit for Mac the steps are similar, but of course different, and details are left to the reader. Yosemite has a low soft limit and a high hard limit.</p>
+<h2 id="developer">developer</h2>
+<p>Jd is distributed with JAL (Package Manager) and the Jd library is at ~addons/data/jd and is accessed with the following equivalent lines:</p>
+<pre><code>   load&#39;jd&#39;
+   load&#39;~addons/data/jd/jd.ijs&#39;</code></pre>
+<p>A developer works with a local repo. Use the development library with something like:</p>
+<pre><code>   load&#39;~/dev/addons/data/jd/jd.ijs&#39;</code></pre>
+<p>Loading jd.ijs sets JDP_z_ as the path to the Jd library and this is used for all library references.</p>
+<p>An automated process copies the developer repo to the addon svn repo to build a new Jd release.</p>
+<h2 id="libjd.so">libjd.so</h2>
+<p>Jd linux libjd.so shared library will run on most modern linux systems.</p>
+<p>If Jd gets an error loading the linux shared library, please report the following to the J database forum:</p>
+<pre><code>...$ cat /proc/version
+...$ cat /etc/issue
+...$ ldd .../libjd.so</code></pre>
+<h2 id="windows-search-service">Windows search service</h2>
+<p>Windows Search Service (content indexing, ...) can cause lots of disk activity and can interfere with Jd file operations and if possible should be disabled when using Jd.</p>
+<p>Disable Windows Search Service as follows:</p>
+<ol>
+<li>command prompt ...&gt;services.msc</li>
+<li>scroll down and right click Windows Search</li>
+<li>click Properties</li>
+<li>click Stop button to stop service if it is running</li>
+<li>change Startup type: to Disabled</li>
+<li>click Apply</li>
+</ol>
 <h2 id="convert-jd3-jd4">convert Jd3-&gt;Jd4</h2>
 <p>Jd4 is incompatible with databases created under previous versions. Jd4 code will not open a Jd3 database and vice versa.</p>
 <p>To continue working with databases created with Jd3 you must:</p>
@@ -71,78 +132,5 @@ conrun &#39;~temp/jd/test&#39; NB. convert this db in place and report details</
 <li>dryrun failure leaves db untouched</li>
 <li>conrun failure probably leaves db damaged - neither jd3 nor jd4 compatible</li>
 </ul>
-<h2 id="backup">backup</h2>
-<p>Complete backup or restore is just a copy of the db file folder. Host shell scripts can provide full backup/restore. With large databases and suitable hardware it might be worthwhile to use multiple tasks and use compression.</p>
-<p>CSV dump/restore also provides complete backup.</p>
-<h2 id="developer">developer</h2>
-<p>Jd is distributed with JAL (Package Manager) and the Jd library is at ~addons/data/jd and is accessed with the following equivalent lines:</p>
-<pre><code>   load&#39;jd&#39;
-   load&#39;~addons/data/jd/jd.ijs&#39;</code></pre>
-<p>A developer works with a local repo. Use the development library with something like:</p>
-<pre><code>   load&#39;~/dev/addons/data/jd/jd.ijs&#39;</code></pre>
-<p>Loading jd.ijs sets JDP_z_ as the path to the Jd library and this is used for all library references.</p>
-<p>An automated process copies the developer repo to the addon svn repo to build a new Jd release.</p>
-<h2 id="file-handles">file handles</h2>
-<p>Jd requires lots of file handles. Using thousands of columns requires thousands of handles.</p>
-<p>Jd fails badly if it runs out of handles. Unable to access a file, an error is signaled, perhaps in the middle of an operation that will leave the database damaged.</p>
-<p>Windows user does not have a limit on file handles.</p>
-<p>Linux/Mac user often has low soft and hard limits on handles and this must be increased for serious use of Jd. There is no reason to not raise the limit to 100000.</p>
-<p>See the soft and hard limits with:</p>
-<pre><code>...$ ulimit -n</code></pre>
-<p>If hard limit is high enough, it might be easiest, before starting J, to do:</p>
-<pre><code>...$ ulimit -n 100000</code></pre>
-<p>To increase file handle limit for Linux Jd user fred: <code>...$ ulimit -n # show current file handle limit</code></p>
-<pre><code>run superuser text editor and open /etc/security/limits.conf
-add following 2 lines at the end
-
-fred soft nofile 200000
-fred hard nofile 200000
-
-save the file, restart system, and verify new ulimit</code></pre>
-<p>To increase file handle limit for Mac the steps are similar, but of course different, and details are left to the reader. Yosemite has a low soft limit and a high hard limit.</p>
-<h2 id="symbolic-links">symbolic links</h2>
-<p>Folder symbolic links (Windows folder junctions) are used to place db cols on different drives.</p>
-<p>Possible benefits:</p>
-<ul>
-<li>i/o load balancing across drives</li>
-<li>some cols can be placed on ssd drives</li>
-<li>total db size irrelevant - only limit is biggest col must fit on a drive</li>
-</ul>
-<p>See Admin jdlinkmove, jdlinkset, and jdlinktargets for details.</p>
-<p>See tutorial link.</p>
-<h2 id="libjd.so">libjd.so</h2>
-<p>Jd linux libjd.so shared library will run on most modern linux systems.</p>
-<p>If Jd gets an error loading the linux shared library, please report the following to the J database forum:</p>
-<pre><code>...$ cat /proc/version
-...$ cat /etc/issue
-...$ ldd .../libjd.so</code></pre>
-<h2 id="locales-and-db-file-structure">locales and db file structure</h2>
-<p>Parts of a database (tables, cols, data) correspond directly with the file structure. That is, a table is a folder in the database, each col is a folder in its table folder, and data is a file in its col folder.</p>
-<p>When a database is opened, J locales are created that correspond to the database structure. Each table has a locale with metadata and each col has a locale with metadata and mapped file(s) with the data.</p>
-<p>Sometimes it can be useful to dig into the internals.</p>
-<pre><code>   jdadminx&#39;test&#39;
-   jd&#39;gen test f 3&#39;
-   jd&#39;reads from f&#39;
-   t=. jdgl_jd_&#39;f&#39;   NB. get locale for table f
-   NAME__t           NB. table name
-   NAMES__t          NB. col names in table
-   c=. jdgl_jd_&#39;f x&#39; NB. get locale for col x in table f
-   typ__c            NB. column type
-   PATH__c           NB. path to col dat file
-   dat__c            NB. mapped file data</code></pre>
-<h2 id="performance-1">performance</h2>
-<p>See pmhelp_jd_ for info.</p>
-<p>Folder pm has scripts for performance measurement.</p>
-<h2 id="windows-search-service">Windows search service</h2>
-<p>Windows Search Service (content indexing, ...) can cause lots of disk activity and can interfere with Jd file operations and if possible should be disabled when using Jd.</p>
-<p>Disable Windows Search Service as follows:</p>
-<ol>
-<li>command prompt ...&gt;services.msc</li>
-<li>scroll down and right click Windows Search</li>
-<li>click Properties</li>
-<li>click Stop button to stop service if it is running</li>
-<li>change Startup type: to Disabled</li>
-<li>click Apply</li>
-</ol>
 </body>
 </html>

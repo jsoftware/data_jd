@@ -48,23 +48,6 @@ addagg=: 2 : 0
  EMPTY
 )
 
-NB. =========================================================
-NB. y is (name);(column names);(data to import)
-NB. x is optional JD type data
-NB. TODO
-ImportTable=: 3 : 0
-getjdtype=.(1 4 2 3 _1{~1 2 4 8 i.3!:0)`(5 6 _1{~2 4 i.(3!:0)@>@{.)@.(0<L.)
-(getjdtype@> >{:y) ImportTable y
-:
-'name colmap dat'=.y
-if. -. x *./@:e. 1 2 3 4 5 6 do. throw 'Invalid column types' end.
-typ =. x { ;:'boolean int float byte varbyte enum'
-shape =. (typ = <'varbyte') ($@{.@])`(}:@$@{.@>@{.@])@.[&.> dat
-colmap=.;: ;:^:_1^:(0<:L.) colmap
-columns =. ; <@(LF,~;:^:_1)"1 colmap,.typ,.":&.>shape
-Create name;columns,&<dat
-)
-
 libstitch=: LIBJD_jd_,' stitch > x x x x x x'
 
 NB. stitch table cols into single key col

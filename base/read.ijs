@@ -48,6 +48,16 @@ for_i. i.#cnms do.
  end. 
 end.
 
+if. option_types do.
+ t=. ''
+ for_i. i.#cnms do.
+  c=. i{cloc
+  a=. ;i{cnms
+  b=. typ__c
+  t=. t,<a,'(',b,')'
+ end.
+ cnms=: t
+end.
 cnms,.read
 )
 

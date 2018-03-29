@@ -32,7 +32,10 @@ jdaccess olddan</code></pre>
 <h2 id="read">read</h2>
 <p>Same as reads with /lr option</p>
 <h2 id="reads">reads</h2>
-<p>reads [options]   [ <a href="#select" title="wikilink">SELECT</a> ]   from <a href="#from" title="wikilink">FROM</a>  [where <a href="#where" title="wikilink">WHERE</a> ] [order by <a href="#order-by" title="wikilink">ORDER BY</a>]<br />  /lr - labeled rows instead of labeled cols<br />  /e - edate... cols as epochdt rather than iso 8601<br /> <a href="#parsing" title="wikilink">parsing</a> read ops can be complicated</p>
+<p>reads [options]   [ <a href="#select" title="wikilink">SELECT</a> ]   from <a href="#from" title="wikilink">FROM</a>  [where <a href="#where" title="wikilink">WHERE</a> ] [order by <a href="#order-by" title="wikilink">ORDER BY</a>]<br /> /lr - labeled rows instead of labeled cols</p>
+<p><code>/e  - edate... cols as epochdt rather than iso 8601</code></p>
+<p><code>/types - type added to col name - cola(edate)</code></p>
+<p><a href="#parsing" title="wikilink">parsing</a> read ops can be complicated</p>
 <p>returns select col(s) from table(s) with rows that satisfy where</p>
 <p>alias:col<br />alias:table<br />aggregation [by key1[,key2]]</p>
 <p>For ideas on working with reads results, see essay <a href="http://code.jsoftware.com/wiki/Essays/Inverted_Table">Inverted Table</a>.</p>
@@ -110,26 +113,17 @@ read ... from X:A , X.B , X.C ...   NB. X alias used in all subsequent uses</cod
 <p><code>A</code><B is right join - this join is not implemented
    same as outer except A rows that did not match are excluded 
 
-joins are done in an order based on a sampling that picks representative rows
-and tests how restrictive the queries are
+Joins are done in an order based on a sampling that picks representative rows
+and tests how restrictive the queries are.
 
-<pre></p>
-<p>read ... from exact f,f.g,g.h where h.a&lt;100' NB. exact to use the order as given</p>
+See tutorials from and join
+
+== WHERE ==
+
+read ... from ... where WHERE
+
+<pre><br /><code>a=&quot;abc&quot;</code><br /><code>b&lt;23</code><br /><code>b in (23,24,25)</code><br /><code>b lt 23 &amp;&amp; a eq &quot;abc&quot;</code><br /><code>a like &quot;ab*&quot; </code><br /><code>f.a=23 &amp;&amp; g.b=&quot;def&quot;</code><br /><code>a range (1000,2000)</code><br /><code>a=1 and b=2</code><br /><code>a,b = 1,2          - same as above but uses a,b hash if available</code><br /><code>(a=1 and b=2) or (a=3 and b=4)</code><br /><code>a,b in (1,2),(3,4) - same as above but uses a,b hash if available</code></p>
 </pre>
-<p>See tutorials from and join</p>
-<h2 id="where">WHERE</h2>
-<p>read ... from ... where WHERE</p>
-<pre><code> a=&quot;abc&quot;
- b&lt;23
- b in (23,24,25)
- b lt 23 &amp;&amp; a eq &quot;abc&quot;
- a like &quot;ab*&quot; 
- f.a=23 &amp;&amp; g.b=&quot;def&quot;
- a range (1000,2000)
- a=1 and b=2
- a,b = 1,2          - same as above but uses a,b hash if available
- (a=1 and b=2) or (a=3 and b=4)
- a,b in (1,2),(3,4) - same as above but uses a,b hash if available</code></pre>
 <p>relationals:</p>
 <pre><code> &gt;= &lt;= &lt;&gt; =  &gt;  &lt;&lt;br/&gt;
  ge le ne eq gt lt range&lt;br/&gt;

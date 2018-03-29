@@ -41,14 +41,18 @@ NB. options provided with count 0 set to 1
 NB. option value(s) must be numeric and non-negative
 NB. a=. '/e 0 /nx 1 /foo 0'getoptions ca '/e /nx 23 abc'
 getoptions=: 4 : 0
-y=. ca y
+x getoptionsx ca y
+)
+
+NB. allow getoptions without ca y
+getoptionsx=: 4 : 0
 t=. ca x
 t=. (2,~-:#t)$t
 n=. {."1 t
 c=. ;0".each{:"1 t
 p=. ;(<'_jd_ '),~each (<'option_'),each}.each n
 (p)=: 0 NB. default value for options not provided
-while. '/'={. ;{.y do.
+while. '/'={. ,dltb;{.y do.
  i=. n i. {.y
  ('invalid option: ',;{.y) assert i<#n
  e=. '_jd_',~'option_',}.;{.y
@@ -57,7 +61,9 @@ while. '/'={. ;{.y do.
   (e)=: 1
  else.
   t=. 0+;_".each a{.}.y
-  ('invalid option value: ',;{.y) assert 4=3!:0 t
+  if. -.e-:'option_a_jd_' do. NB. float allowed for createtable /a
+   ('invalid option value: ',;{.y) assert 4=3!:0 t
+  end. 
   ('invalid option value: ',;{.y) assert t>:0 
   (e)=: ".":t NB. kludge so that single value is scalar - required in jd_csvcdefs use of jd_csvrd
  end.

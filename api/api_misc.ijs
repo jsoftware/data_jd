@@ -149,6 +149,7 @@ JDOK
 
 jd_close=: 3 : 0
 ECOUNT assert 0=#y
+if. 0=#DB do. JDOK return. end.
 if. fexist 'jdcloseflush',~jdpath'' do. jd_flush'' end.
 NB. read error (tab not found) orphans jdquery local
 NB. coerase jdquery local (copath has number locals) leaves a damaged local

@@ -6,7 +6,7 @@ readstart=: 3 : 0
 tempcolclear''
 if. 0~:L.y do. y=. ;y[ECOUNT assert 1=#y end.
 if. _1=nc<'option_lr' do. NB. nasty overlap of options - /e in read and in csvwr
- option_e=: option_lr=: 0
+ option_e=: option_lr=: option_types=: 0
 end. 
 while. '/'={.y do.
  if. '/lr '-:4{.y do.
@@ -15,6 +15,9 @@ while. '/'={.y do.
  elseif. '/e '-:3{.y do.
   y=. dlb 3}.y
   option_e=: 1
+ elseif. '/types '-:7{.y do.
+  y=. dlb 7}.y
+  option_types=: 1
  elseif. 1 do.
   'unknown option'assert 0
  end.

@@ -1,10 +1,11 @@
-NB. Copyright 2017, Jsoftware Inc.  All rights reserved.
+NB. Copyright 2015, Jsoftware Inc.  All rights reserved.
 coclass'jd'
 tests=: <;._2 [ 0 : 0
 test/alloc_test.ijs
 test/basic_test.ijs
 test/cd_query_test.ijs
 test/createcol_test.ijs
+test/createtable_test.ijs
 test/csv_test.ijs
 test/delete_test.ijs
 test/drop_rename_test.ijs
@@ -74,7 +75,7 @@ tutorial/reads_tut.ijs
 tutorial/server-jhs_tut.ijs
 tutorial/server-zmq_tut.ijs
 tutorial/setget_tut.ijs
-tutorial/table_from_array_tut.ijs
+tutorial/table_from_pairs_tut.ijs
 tutorial/table_table_tut.ijs
 tutorial/tempcol_tut.ijs
 tutorial/update_tut.ijs

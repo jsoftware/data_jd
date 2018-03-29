@@ -116,12 +116,17 @@ datetime yyyymmddhhmmss</code></pre>
 <dd>with max size less than 50, it is better to store as byte N
 </dd>
 </dl>
+<h2 id="errors">errors</h2>
+<p>jdlast - info on last error</p>
+<p>jdlasty - last operation</p>
 <h2 id="pairs">pairs</h2>
 <p>list of pairs of column names and data</p>
 <p>pairs are args to insert, update, and other ops</p>
 <p>'a' ; 23 24 ; 'b' ; 1.2 1.3 ; 'c' ; 2 3$'abcdef' 'a' ; 23 24 ; 'b' ; 1.2 ; 'c' ; 'abc'</p>
 <p>data extends so the count is the same for all cols</p>
 <p>byte N col does undertake but not overtake</p>
+<p>,jd'read ....' NB. valid pairs</p>
+<p>,|:jd'reads ...' NB. not valid pairs (all cols rank 2 and varbyte not boxed)</p>
 <h2 id="key">key</h2>
 <p>One or more cols in a table can be treated as a key.</p>
 <p>A key in a table does not have to be unique. If a table contains a key more than once, and an operation requires just one match, then the last occurrence (in row order) is the one that is used.</p>

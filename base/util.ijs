@@ -38,7 +38,7 @@ else.
  runtut_z_=: spx_jsp_
 end.
 aa=. 9}.each _8}.each tuts
-basic=. 'intro';'reads';'from';'quandl_eod_stock_data';'admin';'csv';'csv_load';'join';'epochdt';'table_from_array'
+basic=. 'intro';'reads';'from';'table_from_pairs';'quandl_eod_stock_data';'csv';'csv_load';'join';'epochdt';'admin'
 demo=. _4}.each(>:;demos i:each'/')}.each demos
 csvload=. 'bus_lic';'quandl_ibm'
 advanced=. aa-.basic,csvload
@@ -509,4 +509,14 @@ if. -.fexist CSVFOLDER__,y do.
 else.
  'CSVFOLDER already contains the csv file'
 end.
+)
+
+jdtypefromdata=: 3 : 0
+typ=. ;(1 4 8 2 i. 3!:0 y){'boolean';'int';'float';'byte';'varbyte'
+if. typ-:'varbyte' do.
+ 'varbyte bad shape'assert 1=$$y
+ 'varbyte bad shapes' assert 1>:;$@$each y
+ 'varbyte bad types' assert 2=;3!:0 each y
+end.
+typ
 )

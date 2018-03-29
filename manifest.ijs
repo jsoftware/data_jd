@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '4.4.52'
+VERSION=: '4.4.53'
 
 FILES=: 0 : 0
 manifest.ijs
@@ -84,6 +84,7 @@ tutorial/setget_tut.ijs
 tutorial/update_tut.ijs
 tutorial/intro_tut.ijs
 tutorial/custom_tut.ijs
+tutorial/table_from_pairs_tut.ijs
 tutorial/upsert_tut.ijs
 tutorial/performance_tut.ijs
 tutorial/join_tut.ijs
@@ -91,7 +92,6 @@ tutorial/server-jhs_tut.ijs
 tutorial/aggregation_tut.ijs
 tutorial/quandl_ibm_tut.ijs
 tutorial/log_tut.ijs
-tutorial/table_from_array_tut.ijs
 tutorial/from_tut.ijs
 tutorial/epochdt_tut.ijs
 tutorial/bus_lic_tut.ijs
@@ -195,6 +195,7 @@ test/stress_test.ijs
 test/insert_revert_test.ijs
 test/readx_test.ijs
 test/table_append_test.ijs
+test/createtable_test.ijs
 test/ptable_modify_test.ijs
 test/insert_test.ijs
 test/ptable_csv_test.ijs

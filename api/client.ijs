@@ -28,25 +28,13 @@ fmtoper=: 3 : 0
 ('op'fmtx OP),('tab'fmtx FETAB),('col'fmtx FECOL),('xtra'fmtx FEXTRA),('db'fmtx DB),('user'fmtx USER)
 )
 
-fmtsummary=: 3 : 0
-if. 0=L.y do.
- deb y
-else.
- y=. (<'-') ((2~:;3!:0 each y)#i.#y)}y
- y=. (<'-') ((1<;$@$each y)#i.#y)}y
- y=. ;(<' '),~each y
-end.
-if. 120<#y do. y=. '...',~120{.y end.
-deb y
-)
-
 NB. clean args
 NB. box blank delimited args
 NB. args can be quoted in double quotes (to include blanks in arg)
 NB. * escapes to include remainder in final arg
 NB. dltb and , applied to each
 ca=: 3 : 0
-if. 1=L.y do. ,each dltb each y return. end.
+if. 1<:L.y do. ,each dltb each y return. end.
 a=. y
 r=. ''
 while. #a=.dlb a do.
@@ -98,7 +86,6 @@ i.0 0
 
 jd=: 3 : 0
 jdlasty_z_=: y
-fmtlasty=: fmtsummary y
 jdlast_z_=: jdx y
 t=. ;{.{.jdlast
 if. 'Jd error'-:t do.

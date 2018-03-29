@@ -1,4 +1,4 @@
-NB. Copyright 2015, Jsoftware Inc.  All rights reserved.
+NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
 NB. performance for big tables
 
 0 : 0
@@ -72,19 +72,24 @@ jd'reads from f,f.g where c=7'
 )
 
 run=: 3 : 0
+pmclear_jd_'' NB. clear and start recording
 setsize y
 cr''
 rf''
 rd''
+pmclear_jd_ 0 NB. stop recording
 pmr_jd_''
 )
 
 csv=: 3 : 0
-pmclear_jd_''
+pmclear_jd_'' NB. clear and start recording
 jd'csvdump /replace'
 jd'csvrestore /replace'
+pmclear_jd_ 0 NB. stop recording
 pmr_jd_''
 )
+
+pmhelp_jd_
 
 run 2 NB. create table f with 2e6 rows
 jd'info summary'
@@ -102,7 +107,7 @@ but slows quickly with large args
 
 although run 200 is fast, it is very simple and
 not indicative of performance with complicated schema and queries
-limiting to about 100e6 rows with 6gb rows is likely to peforma well
+limiting to about 100e6 rows with 6gb rows is likely to peform well
 )
 
 0 : 0

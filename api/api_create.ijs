@@ -24,17 +24,39 @@ if. 0=L.y do. NB. string parse has , and LF in col defs
  NB. y=. y,<;' ',each a
  y=. y, a:-.~<;._2 LF,LF,~(;a,each' ')rplc',';LF
 end. 
-a=. y
-if. '/a'-:;{.a do.
- alloc=. ;_1".each 3{.}.a
- EALLOC assert 0<alloc
- alloc=. 4 1 1>.alloc
- a=. 4}.a
+a=. '/types 0 /pairs 0 /a 3'getoptionsx y
+
+df=. option_pairs
+if. 3=#option_a do.
+ EALLOC assert 0<option_a
+ alloc=. 4 1 1>.option_a
 else. 
  alloc=. ROWSMIN_jdtable_,ROWSMULT_jdtable_,ROWSXTRA_jdtable_
 end.
 vtname FETAB=: t=. >0{a NB. table
 a=. }.a
+
+if. df do.
+ a=. ,a
+ 'name data pairs - odd number' assert (2<:#a)*.0=2|#a
+ names=. ,each(2*i.-:#a){a
+ names=. names rplc each <'.';'__'
+ data=. (>:2*i.-:#a){a
+ if. option_types do.
+  '(type) missing from names'assert ')'=;{:each names
+  i=. ;names i:each '('
+  typ=. }:each (>:i)}.each names
+  names=. i{.each names
+  tshape=. ":each}.each$each data
+  m=. (typ e. ;:'edate edatetime edatetimem edatetimen')#i.#typ
+  tshape=. (<'') m}tshape
+ else.
+  typ=. jdtypefromdata each data
+  tshape=. ":each}.each$each data
+ end. 
+ a=. names,each' ',each typ,each ' ',each tshape
+end.
+
 a=. ;cutcoldefs each a
 if. #a do.
  b=. ><;._2 each a,each' '
@@ -48,11 +70,10 @@ if. #a do.
   ss=. 2{"1 b
   for_i. i.#ns do.
    FECOL_jd_=: ;i{ns
-   p=. ;i{ts
    s=. ;i{ss
    if. 0~:#s do. NB. this quy has a shape
     s=. _1".s
-    EBTS assert (p-:'byte'),(_1~:s),1=#s
+    EBTS assert ('byte'-:;i{ts),(_1~:s),1=#s
    end. 
   end.
  end. 
@@ -60,6 +81,14 @@ end.
 a=. }:;a,each','
 d=. getdb''
 Create__d t;a;'';alloc   NB. cols;data;alloc
+if. df do.
+ try.
+  jd_insert FETAB;,names,.data
+ catchd.
+  jd_droptable FETAB
+  rethrow''
+ end. 
+end.
 JDOK
 )
 
