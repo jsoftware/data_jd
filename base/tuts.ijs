@@ -28,12 +28,10 @@ op-read_tut.ijs
 op-reads_tut.ijs
 op-sort_tut.ijs
 op-tablecopy_tut.ijs
-op-tableinsert.ijs
 op-tableinsert_tut.ijs
 op-tablemove_tut.ijs
 op-update_tut.ijs
 op-upsert_tut.ijs
-server-zmq_tut.ijs
 xtra-aggregation_tut.ijs
 xtra-custom_tut.ijs
 xtra-dropstop_tut.ijs
@@ -41,8 +39,8 @@ xtra-link_tut.ijs
 xtra-log_tut.ijs
 xtra-performance_tut.ijs
 xtra-ptable_tut.ijs
-xtra-server-jhs_tut.ijs
-xtra-server-zmq_tut.ijs
+xtra-server_jhs_tut.ijs
+xtra-server_zmq_tut.ijs
 xtra-setget_tut.ijs
 xtra-table_table_tut.ijs
 xtra-tempcol_tut.ijs

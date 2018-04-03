@@ -1,12 +1,11 @@
 NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
 
 'new'jdadmin'tutorial'
-jdadminx'example'[olddan=:jdaccess''
 jd'createtable f a int'
 jd'insert f';'a';i.2
 'new'jdadmin'tutorial2'
 jd'createtable g a int'
 jd'insert g';'a';100+i.2
-jdaccess'example'
+jdaccess'tutorial'
 jd'tableinsert f g tutorial2'
 jd'reads from f'

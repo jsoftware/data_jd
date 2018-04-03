@@ -23,10 +23,10 @@ OLDALLOC_jd_=: ROWSMIN_jdtable_,ROWSMULT_jdtable_,ROWSXTRA_jdtable_
 'ROWSMIN_jdtable_ ROWSMULT_jdtable_ ROWSXTRA_jdtable_'=: 4 1 0 NB. lots of resizecsvonly=. 'csv'-:y
 fast=. 'fast'-:y
 csvonly=. 'csv'-:y
-EXCLUDETESTS=: (<'_tut.ijs'),each~(<'tutorial/'),each 'xtra-server-zmq';'basic-stock_data';'csv-bus_lic';'csv-quandl_ibm'
+EXCLUDETESTS=: (<'_tut.ijs'),each~(<'tutorial/'),each 'xtra-server_zmq';'basic-stock_data';'csv-bus_lic';'csv-quandl_ibm'
 t=. ALLTESTS=:  (tests_jd_,((<'tutorial/'),each tuts_jd_))-.EXCLUDETESTS
 t=. t,~each<JDP
-if. -.IFJHS do. t=. t-.<JDP,'tutorial/xtra-server-jhs_tut.ijs' end.
+if. -.IFJHS do. t=. t-.<JDP,'tutorial/xtra-server_jhs_tut.ijs' end.
 failed=: ''
 jdt=: i.0 2
 'test start'logjd_jd_''

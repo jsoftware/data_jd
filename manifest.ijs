@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '4.4.55'
+VERSION=: '4.4.56'
 
 FILES=: 0 : 0
 manifest.ijs
@@ -86,7 +86,7 @@ tutorial/op-createtable_tut.ijs
 tutorial/basic-table_from_pairs_tut.ijs
 tutorial/xtra-aggregation_tut.ijs
 tutorial/demo-vr_tut.ijs
-tutorial/xtra-server-jhs_tut.ijs
+tutorial/xtra-server_zmq_tut.ijs
 tutorial/xtra-tempcol_tut.ijs
 tutorial/demo-sed_tut.ijs
 tutorial/op-sort_tut.ijs
@@ -96,16 +96,15 @@ tutorial/op-read_tut.ijs
 tutorial/xtra-update_tut.ijs
 tutorial/xtra-upsert_tut.ijs
 tutorial/xtra-link_tut.ijs
+tutorial/xtra-server_jhs_tut.ijs
 tutorial/op-key_tut.ijs
 tutorial/xtra-table_table_tut.ijs
 tutorial/xtra-performance_tut.ijs
 tutorial/demo-sandp_tut.ijs
 tutorial/basic-epochdt_tut.ijs
 tutorial/csv-xtra_tut.ijs
-tutorial/op-tableinsert.ijs
 tutorial/op-tableinsert_tut.ijs
 tutorial/basic-admin_tut.ijs
-tutorial/server-zmq_tut.ijs
 tutorial/op-info_tut.ijs
 tutorial/basic-reads_join_tut.ijs
 tutorial/basic-pairs_tut.ijs
@@ -113,7 +112,6 @@ tutorial/xtra-setget_tut.ijs
 tutorial/op-reads_tut.ijs
 tutorial/csv-quandl_ibm_tut.ijs
 tutorial/op-intx_tut.ijs
-tutorial/xtra-server-zmq_tut.ijs
 tutorial/basic-reads_from_tut.ijs
 tutorial/op-tablecopy_tut.ijs
 tutorial/basic-basic_tut.ijs
