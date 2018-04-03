@@ -1,22 +1,36 @@
-NB. Copyright 2017, Jsoftware Inc.  All rights reserved.
+NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
 
 coclass'jd'
 
 NB. setscriptlists creates/runs script to create tests/tuts script lists
-
+NB. tests and tuts scripts to define script lists
+NB. leading digits in folders and files set order
+NB. 999_ guys are sorted by name
+NB. tut names must be unique
 setscriptlists=: 3 : 0
+NB. tests
 p=. jpath'~/gitdev/addons/data/jd/'
 t=. 1 dir p,'test/*_test.ijs'
 t=. /:~(#p)}.each t
 t=. ;t,each LF
-tsts=. 'tests=: <;._2 [ 0 : 0',LF,t,')'
+t=. 'tests=: <;._2 [ 0 : 0',LF,t,')'
+f=. JDP,'base/tests.ijs'
+t fwrite f
+load f
 
-t=. 1 dir p,'tutorial/*_tut.ijs'
-t=. /:~(#p)}.each t
-t=. ;t,each LF
-tuts=. 'tuts=: <;._2 [ 0 : 0',LF,t,')'
+NB. tuts
+d=. {."1 dirtree JDP,'tutorial'
 
-t=. toJ 'NB. Copyright 2017, Jsoftware Inc.  All rights reserved.',LF,'coclass''jd''',LF,tsts,LF,tuts
-t fwrite p,'base/scriptlists.ijs'
-load p,'base/scriptlists.ijs'
+NB. fix order - guys that don't sort where we want them
+zd=. d rplc each <'basic-epochdt_tut.ijs';'basic-zepochdt_tut.ijs'
+zd=. zd rplc each <'basic-admin_tut.ijs';'basic-zzadmin_tut.ijs'
+
+d=. d/:_8}.each zd
+d=. (#JDP,'tutorial/')}.each d
+
+d=. ;LF,~each d
+t=. 'tuts=: <;._2 [ 0 : 0',LF,d,')'
+f=. JDP,'base/tuts.ijs'
+t fwrite f
+load f
 )

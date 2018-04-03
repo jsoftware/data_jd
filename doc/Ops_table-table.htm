@@ -18,42 +18,13 @@
 <h2 id="tablecopy">tablecopy</h2>
 <p>tablecopy snktable srctable srcdan - implicit jdaccess'srcdan'</p>
 <p>copies a table from srcdan to the current db<br />uses host file copy and runs as fast as hardware allows</p>
-<pre><code>NB. example tablecopy
-jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
-jdadminx&#39;example2&#39;
-jd&#39;createtable f a int&#39;
-jd&#39;insert f&#39;;&#39;a&#39;;i.2
-jdaccess&#39;example&#39;
-jd&#39;tablecopy new f example2&#39;
-jd&#39;reads from new&#39;
-jdaccess olddan</code></pre>
 <h2 id="tableinsert">tableinsert</h2>
 <p>tableinsert snktable srctable srcdan - implicit jdaccess'srcdan'</p>
 <p>implemented as an efficient loop over cols with an append of new data</p>
 <p>affected ref cols are marked dirty</p>
-<pre><code>NB. example tableinsert
-jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
-jd&#39;createtable f a int&#39;
-jd&#39;insert f&#39;;&#39;a&#39;;i.2
-jdadminx&#39;example2&#39;
-jd&#39;createtable g a int&#39;
-jd&#39;insert g&#39;;&#39;a&#39;;100+i.2
-jdaccess&#39;example&#39;
-jd&#39;tableinsert f g example2&#39;
-jd&#39;reads from f&#39;
-jdaccess olddan</code></pre>
 <h2 id="tablemove">tablemove</h2>
 <p>tablemove snktable srctable srcdan - implicit jdaccess'srcdan'</p>
 <p>moves a table from srcdan to the current db<br />uses host file move and runs fast as it justs updates pointers</p>
 <p>srcdan must be on the same file hardware for move to work</p>
-<pre><code>NB. example tablemove
-jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
-jdadminx&#39;example2&#39;
-jd&#39;createtable f a int&#39;
-jd&#39;insert f&#39;;&#39;a&#39;;i.2
-jdaccess&#39;example&#39;
-jd&#39;tablemove new f example2&#39;
-jd&#39;reads from new&#39;                NB. table f in dan example2 no longer exists
-jdaccess olddan</code></pre>
 </body>
 </html>

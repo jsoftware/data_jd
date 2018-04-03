@@ -12,7 +12,6 @@ download (only done first time) can take a minutes
 )
 
 require'plot'
-require JDP,'tools/jwget.ijs'
 
 CSVFOLDER=: '~temp/jd/csv/ibm/' NB. folder for csv files
 jdcreatefolder_jd_ CSVFOLDER    NB. ensure folder exists

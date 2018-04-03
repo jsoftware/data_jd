@@ -1,8 +1,12 @@
+require'pacman' NB. httpget
+
 NB. quandl_get 'ibm' 
 quandl_get=: 3 : 0
 jd'droptable ',y
 k=. '?api_key=',fread'~config/quandl_apikey.txt'
-(CSVFOLDER,y,'.csv') jwget_jwget_ 'https://www.quandl.com/api/v3/datasets/EOD/',(toupper y),'.csv',k
+'rc fn'=. httpget_jpacman_ 'https://www.quandl.com/api/v3/datasets/EOD/',(toupper y),'.csv',k
+'httpget failed'assert 0=rc
+(fread fn)fwrite CSVFOLDER,y,'.csv'
 y,'.csv'
 )
 

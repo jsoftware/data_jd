@@ -1,10 +1,7 @@
 NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
-NB. demos built by jdtests''
-
 NB. C.J.Date's suppliers and parts database (sandp)
 NB. data matches that in the SQLite addon
 
-'run jdtests_jd_ to create demos' assert 'database'-:jdfread_jd_'~temp/jd/sandp/jdclass'
 jdadmin'sandp'
 jd'reads from j'
 jd'reads from p'

@@ -10,7 +10,7 @@ NB. is pushed to Jsoftware for building JAL data/jd package
 
 NB. all use of the Jd library is through JDP_z_
 
-jdversion_jd_=: '4.11'
+jdversion_jd_=: '4.12'
 
 nokey_jd_=: 0 : 0 rplc 'INDEX.HTM';jpath '~addons/data/jd/doc/Index.htm'
 
@@ -123,7 +123,6 @@ base/read.ijs
 base/where.ijs
 base/jmfx.ijs
 base/log.ijs
-base/scriptlists.ijs
 base/validate.ijs
 api/api.ijs
 api/api_adm.ijs
@@ -193,7 +192,7 @@ ifintel_jd_=: 'a'={.2 ic a.i.'a' NB. endian
 )
 
 jdwelcome=: 0 : 0 rplc 'BOOKMARK';(jpath JDP,'doc/Index.htm');'ULIMIT';ULIMIT_jd_
-Jd is Copyright 2017 by Jsoftware Inc. All Rights Reserved.
+Jd is Copyright 2018 by Jsoftware Inc. All Rights Reserved.
 Jd is provided "AS IS" without warranty or liability of any kind.
 
 All use must be under a Jd License from Jsoftware.
@@ -205,7 +204,6 @@ Snapshot of the Jd wiki for this release is at:
  file://BOOKMARK
 ULIMIT
 Get started:
-   jdex''      NB. list examples from docs
    jdrt''      NB. list tutorials
 )
 

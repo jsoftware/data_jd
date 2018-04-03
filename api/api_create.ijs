@@ -11,25 +11,30 @@ Create__f db
 JDOK
 )
 
+NB. careful: /replace option used in multiple ops
 jd_createtable=: 3 : 0
 if. 0=L.y do. NB. string parse has , and LF in col defs
  a=. bdnames y
  y=. ''
- if. '/a'-:;{.a do.
-  y=. 4{.a
-  a=. 4}.a
+ while. '/'=;{.a do. NB. skip over options to find table and col defs
+  if. '/a'-:;{.a do.
+   y=. y,4{.a
+   a=. 4}.a
+  else.
+   y=. y,{.a
+   a=. }.a
+  end.
  end.
  y=. y,{.a NB. table name
  a=. }.a
  NB. y=. y,<;' ',each a
  y=. y, a:-.~<;._2 LF,LF,~(;a,each' ')rplc',';LF
-end. 
-a=. '/types 0 /pairs 0 /a 3'getoptionsx y
-
+end.
+a=. '/replace 0 /types 0 /pairs 0 /a 3'getoptionsx y
 df=. option_pairs
 if. 3=#option_a do.
- EALLOC assert 0<option_a
- alloc=. 4 1 1>.option_a
+ EALLOC assert 0 0 _1<option_a
+ alloc=. 4 1 0>.option_a
 else. 
  alloc=. ROWSMIN_jdtable_,ROWSMULT_jdtable_,ROWSXTRA_jdtable_
 end.
@@ -78,6 +83,7 @@ if. #a do.
   end.
  end. 
 end.
+if. option_replace do. jd_droptable FETAB end.
 a=. }:;a,each','
 d=. getdb''
 Create__d t;a;'';alloc   NB. cols;data;alloc

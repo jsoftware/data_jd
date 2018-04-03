@@ -169,6 +169,17 @@ case. do.
 
  i.0 0
 end.
+:
+select. x
+case. 'new' do. jdadminx y
+case. 'access' do.
+ 'bad y'assert ''-:y
+ d=. {."1 jdadmin''
+ d=. /:~~.d#~d~:<'[w]'
+ m=. (d=<DB){' ''';'['''
+ d=. >(<'   jdaccess'),each m,each d,each''''
+case. do. 'bad x'assert 0
+end.
 )
 
 jdadminx=: 3 : 0

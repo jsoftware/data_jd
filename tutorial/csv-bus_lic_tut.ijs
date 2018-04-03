@@ -13,8 +13,6 @@ load csv to Jd table can take 20 seconds on a slow machine
  and 1 second on a fast machine with ssd
 )
 
-require JDP,'tools/jwget.ijs'
-
 CSVFOLDER=: '~temp/jd/csv/buslic/' NB. folder for csv files
 jdcreatefolder_jd_ CSVFOLDER       NB. ensure folder exists
 jdadminx'buslic'                   NB. new db ~temp/jd/test/

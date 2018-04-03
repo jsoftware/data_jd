@@ -1,5 +1,4 @@
 require 'plot'
-require JDP,'tools/jwget.ijs'  NB. get data from the web
 require JDP,'tools/quandl.ijs'
 
 0 : 0

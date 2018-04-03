@@ -1,33 +1,9 @@
 NB. Copyright 2015, Jsoftware Inc.  All rights reserved.
 jdrt_z_=:      jdrt_jd_
-jdex_z_=:      jdex_jd_
 
 coclass 'jd'
 
 ophtmls=: _4}.each(>:#jpath JDP,'doc')}.each 1 dir JDP,'doc/Ops_*'
-
-jdex=: 3 : 0
-y=. dltb y
-d=. toJ ;fread each(<'.htm'),~each(<JDP,'doc/'),each ophtmls
-if. ''-:y do.
- i=. <"0 [12+('NB. example ' E. d)#i.#d
- d=. i}.each <d
- i=. d i.each LF
- ;LF,~each (<'   jdex '''),each (i{. each d),each''''
- return.
-end.
-if. y-:'read' do. y=. 'reads' end.
-i=. 1 i.~('NB. example ',y) E. d
-'example not found'assert i<#d
-d=. i}.d
-i=. 1 i.~'</code>' E. d
-d=. i{.d
-d=. d rplc '&quot;';'"';'&lt;';'<';'&gt;';'>';'&#39;';''''
-f=. '~temp/jdexample.ijs'
-d fwrite f
-NB. loadd f
-0!:1 <jpath (4!:55 ;:'d f i y') ] f
-)
 
 jdrt=: 3 : 0
 if. (-.IFJHS)*.80607<:0".(fread'~system/config/version.txt')-.CRLF,'.' do.
@@ -35,38 +11,35 @@ if. (-.IFJHS)*.80607<:0".(fread'~system/config/version.txt')-.CRLF,'.' do.
  runtut=: lab_z_
 else.
  require'~addons/ide/jhs/sp.ijs'
- runtut_z_=: spx_jsp_
+ runtut=: spx_jsp_
 end.
-aa=. 9}.each _8}.each tuts
-basic=. 'intro';'reads';'from';'table_from_pairs';'quandl_eod_stock_data';'csv';'csv_load';'join';'epochdt';'admin'
-demo=. _4}.each(>:;demos i:each'/')}.each demos
-csvload=. 'bus_lic';'quandl_ibm'
-advanced=. aa-.basic,csvload
-y=. ,dltb y
-if. y-:'' do.
- t=. <'   jdrt '''
- r=.   (<'basic:'),t,each basic,each''''
- r=. r,(<'csvload:'),t,each csvload,each''''
- r=. r,(<'demo:'),t,each demo,each''''
- r=. r,(<'advanced:'),t,each advanced,each''''
-;r,each LF
- return.
-end.
-if. 4=3!:0 y do.
- echo basic,csvload,demo,advanced
- y=. ;y{basic,csvload,demo,advanced
-end.
-t=. 'tutorial/',y,'_tut.ijs'
-d=. 'demo/',y,'/',y,'.ijs'
-if. (#tuts)>tuts i. <t do.
- runtut JDP,t
-elseif. (#demos)>demos i. <d do.
- runtut JDP,d
+builddemos''
+load JDP,'base/tuts.ijs'
+if. ''-:y do.
+ c=. (tuts i.each'-'){.each tuts
+ c=. ~.c
+ ;LF,~each(<'   jdrt '''),each c,each''''
+elseif. -.'-'e.y do.
+ a=. tuts#~(<y)=(#y){.each tuts
+ a=. _8}.each a
+ ;LF,~each(<'   jdrt '''),each a,each''''
 elseif. 1 do.
- 'invalid tutorial name'assert 0
+ f=. ;{.tuts#~;+/each(<y,'_tut.ijs')E.each tuts
+ 'invalid tutorial name'assert 0~:#f
+ runtut JDP,'tutorial/',f
 end.
 )
 
+builddemos=: 3 : 0
+b=. jdfread each'~temp/jd/northwind/jdclass';'~temp/jd/sandp/jdclass';'~temp/jd/sed/jdclass'
+if. *./b=<'database' do. return. end.
+echo'building demos - takes time'
+load__ JDP,'demo/common.ijs'
+builddemo__'northwind'
+builddemo__'sandp'
+builddemo__'sed'
+jdadmin 0
+)
 
 NB. widows bug?
 NB.  fexist seems to 'sync' file ops and prevents ftypex from giving wrong answer 
@@ -494,6 +467,16 @@ tnubsieve1=: tindexof~ = i.@ttally
 ranking   =: i.!.0~ { /:@/:
 tgrade1   =: /: @ |: @: (ranking&>)
 
+jdtypefromdata=: 3 : 0
+typ=. ;(1 4 8 2 i. 3!:0 y){'boolean';'int';'float';'byte';'varbyte'
+if. typ-:'varbyte' do.
+ 'varbyte bad shape'assert 1=$$y
+ 'varbyte bad shapes' assert 1>:;$@$each y
+ 'varbyte bad types' assert 2=;3!:0 each y
+end.
+typ
+)
+
 NB. get zip file from joftware jdcsv and unzip in CSVFOLDER
 NB. used by bus_lic and qunadl_ibm tutorials
 getcsv=: 3 : 0 NB. get csv file if it doesn't already exist
@@ -509,14 +492,4 @@ if. -.fexist CSVFOLDER__,y do.
 else.
  'CSVFOLDER already contains the csv file'
 end.
-)
-
-jdtypefromdata=: 3 : 0
-typ=. ;(1 4 8 2 i. 3!:0 y){'boolean';'int';'float';'byte';'varbyte'
-if. typ-:'varbyte' do.
- 'varbyte bad shape'assert 1=$$y
- 'varbyte bad shapes' assert 1>:;$@$each y
- 'varbyte bad types' assert 2=;3!:0 each y
-end.
-typ
 )

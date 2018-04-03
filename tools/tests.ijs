@@ -6,7 +6,7 @@ JDTIMING=: 1 NB. avoid errors on timing tests - set 0 to check timings
 
 NB. actions are logged to ~temp/jd.txt'
 NB. y ''                      run csv-tests, build-demos, and all tests and tutorials
-NB. y 'fast'                  skip csv-tests and build-demos
+NB. y 'fast'                  skip csv-tests
 NB. y 'csv'                   run just csv-tests
 NB. x 0 or elided             do not echo test scripts as they are run
 NB. x 1                       echo test scripts as they are run
@@ -14,16 +14,19 @@ jdtests=: 3 : 0
 0 jdtests y
 :
 NB. assert -.(<'jjd')e. conl 0['jdtests must be run in task that is not acting as a server'
+jdadmin 0
+load JDP,'base/tuts.ijs'
+load JDP,'base/tests.ijs'
 cocurrent'base' NB. defined in jd, but must run in base
 IFTESTS_jd_=: 1
 OLDALLOC_jd_=: ROWSMIN_jdtable_,ROWSMULT_jdtable_,ROWSXTRA_jdtable_
 'ROWSMIN_jdtable_ ROWSMULT_jdtable_ ROWSXTRA_jdtable_'=: 4 1 0 NB. lots of resizecsvonly=. 'csv'-:y
 fast=. 'fast'-:y
 csvonly=. 'csv'-:y
-exclude=. 'tutorial/csv_load_tut.ijs';'tutorial/server-zmq_tut.ijs';'tutorial/quandl_eod_stock_data_tut.ijs'
-t=. ALLTESTS=:  (tests_jd_,tuts_jd_,demos_jd_)-.exclude
+EXCLUDETESTS=: (<'_tut.ijs'),each~(<'tutorial/'),each 'xtra-server-zmq';'basic-stock_data';'csv-bus_lic';'csv-quandl_ibm'
+t=. ALLTESTS=:  (tests_jd_,((<'tutorial/'),each tuts_jd_))-.EXCLUDETESTS
 t=. t,~each<JDP
-if. -.IFJHS do. t=. t-.<JDP,'tutorial/server-jhs_tut.ijs' end.
+if. -.IFJHS do. t=. t-.<JDP,'tutorial/xtra-server-jhs_tut.ijs' end.
 failed=: ''
 jdt=: i.0 2
 'test start'logjd_jd_''
@@ -46,16 +49,8 @@ if. csvonly do.
  i.0 0
  return.
 end.
-load JDP,'demo/common.ijs'
-if. -.fast  do.
- start=. 6!:1''
- jda=. 6!:1''
- builddemo'northwind'
- builddemo'sandp'
- builddemo'sed'
- jdt=: jdt,(jda-~6!:1'');'build demos'
- echo (":<.start-~6!:1''),' seconds to build demos'
-end. 
+jddeletefolder_jd_'~temp/jd/northwind'
+builddemos_jd_''
 jdserverstop_jd_''
 jd'close'
 jdadmin 0
@@ -136,21 +131,4 @@ for_n. t do.
   echo r
  end.
 end. 
-)
-
-setscriptlists=: 3 : 0
-p=. jpath'~/gitdev/addons/data/jd/'
-t=. 1 dir p,'test/*_test.ijs'
-t=. /:~(#p)}.each t
-t=. ;t,each LF
-tsts=. 'tests=: <;._2 [ 0 : 0',LF,t,')'
-
-t=. 1 dir p,'tutorial/*_tut.ijs'
-t=. /:~(#p)}.each t
-t=. ;t,each LF
-tuts=. 'tuts=: <;._2 [ 0 : 0',LF,t,')'
-
-t=. toJ 'NB. Copyright 2015, Jsoftware Inc.  All rights reserved.',LF,'coclass''jd''',LF,tsts,LF,tuts
-t fwrite p,'base/scriptlists.ijs'
-load p,'base/scriptlists.ijs'
 )

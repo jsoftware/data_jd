@@ -130,6 +130,7 @@ datetime yyyymmddhhmmss</code></pre>
 <h2 id="key">key</h2>
 <p>One or more cols in a table can be treated as a key.</p>
 <p>A key in a table does not have to be unique. If a table contains a key more than once, and an operation requires just one match, then the last occurrence (in row order) is the one that is used.</p>
+<p>Col types int1/int2/int4/float/varbyte not allowed.</p>
 <p><strong>ref</strong> join from table F to table G creates a jdref col in table F that is the index to the corresponding row in table G. The jdref values are <code>Gkey i: Fkey</code> so the join from table F is to the last matching row in G (or nulls if no match).</p>
 <p><strong>ref /left</strong> join from table F to table G creates a jdref col in table F hat has all rows in F paired with a null row or all the rows (matched by key) in G.</p>
 <p><strong>upsert</strong> key is used to determine which data rows are used to update and which data rows are inserted.</p>

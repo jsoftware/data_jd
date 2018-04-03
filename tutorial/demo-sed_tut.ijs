@@ -1,6 +1,4 @@
 NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
-NB. demos built by jdtests''
-
 NB. section/employee/region database
 NB. Tables
 NB.                          r(rno,name;popul)
@@ -11,7 +9,6 @@ NB.       e(ename,secnum)
 NB.       |
 NB. t(tno,enum,tname,tsize)
 
-'run jdtests_jd_ to create demos' assert 'database'-:jdfread_jd_'~temp/jd/sed/jdclass'
 jdadmin'sed'
 jd'reads from r'
 jd'reads from s'

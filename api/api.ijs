@@ -23,8 +23,6 @@ x rplc  ,(,.<"0 t),.,.boxopen y
 
 jd_z_=: jd_jd_
 
-demos=: (<'demo/'),each 'sandp/sandp.ijs';'northwind/northwind.ijs';'sed/sed.ijs';'vr/vr.ijs'
-
 NB. getnext x args from boxed list
 NB. error if too few or too many
 getnext=: 4 : 0

@@ -1,6 +1,4 @@
 NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
-NB. demos built by jdtests''
-
 NB. C.J.Date's suppliers and parts database (sandp)
 NB. data matches that in the SQLite addon
 

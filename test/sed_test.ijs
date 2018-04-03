@@ -1,6 +1,4 @@
 NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
-NB. demos built by jdtests''
-
 NB. section/employee/region database
 NB. Tables
 NB.                          r(rno,name;popul)

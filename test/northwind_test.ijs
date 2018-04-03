@@ -1,5 +1,4 @@
 NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
-NB. demos built by jdtests''
 
 northwind_tests=: 3 : 0
 drd'Description from Categories order by Description'

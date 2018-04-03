@@ -25,28 +25,8 @@
 <dd>rows - jd'key /in table';<a href="Ops_common.htm#pairs" title="wikilink">pairs</a> - key /in gets all matches
 </dd>
 </dl>
-<pre><code>NB. example delete
-jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
-jd&#39;gen test f 10&#39;
-jd&#39;delete f&#39;;3 5
-jd&#39;delete f&#39;;&#39;x&lt;3&#39;
-jd&#39;delete f&#39;;&#39;int&#39;;104 107
-jdaccess olddan</code></pre>
 <h2 id="insert">insert</h2>
 <p>insert table <a href="Ops_common.htm#pairs" title="wikilink">pairs</a></p>
-<pre><code>NB. example insert
-jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
-jd&#39;createtable f a int,b byte,b4 byte 4&#39;
-jd&#39;insert&#39;;&#39;f&#39;;&#39;a&#39;;23;&#39;b&#39;;&#39;a&#39;;&#39;b4&#39;;1 4$&#39;abcd&#39;
-jd&#39;reads from f&#39;
-jd&#39;insert&#39;;&#39;f&#39;;&#39;a&#39;;24 25;&#39;b&#39;;&#39;bc&#39;;&#39;b4&#39;;2 4$&#39;aaaabbbb&#39;
-jd&#39;reads from f&#39;
-jd&#39;createtable g&#39;
-jd&#39;createcol g a int&#39;;i.3
-jd etx&#39;insert g a&#39;;2;1
-;1{jdlast
-jd&#39;reads jdindex,a from g&#39;
-jdaccess olddan</code></pre>
 <h2 id="update">update</h2>
 <p>update table where <a href="Ops_common.htm#pairs" title="wikilink">pairs</a></p>
 <p>where - rows to update:</p>
@@ -56,42 +36,16 @@ jdaccess olddan</code></pre>
 </dd>
 <dd>rows - jd'read jdindex from table where ...'
 </dd>
-<dd>rows - jd'key table';<a href="Ops_common.htm#pairs" title="wikilink">pairs</a> - key gets last matches
+<dd>rows - jd'key table';key-<a href="Ops_common.htm#pairs" title="wikilink">pairs</a>
 </dd>
 </dl>
 <p>Warning: jd'read jdindex ...' returns rows in sort order and this may well not be the order of pairs. In general this form of update should be used only where 1 row is updated or where several rows are all updated with the same values.</p>
-<pre><code>NB. example update
-jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
-jd&#39;gen test f 10&#39;
-jd&#39;update f&#39;;6 7;&#39;int&#39;;200 300
-jd&#39;update f&#39;;_;&#39;float&#39;;7.7
-jd&#39;update f&#39;;&#39;boolean=1&#39;;&#39;byte&#39;;&#39;x&#39;
-jd&#39;update f&#39;;&#39;int&#39;;&#39;int&#39;;108 101 104;&#39;byte&#39;;&#39;cba&#39;
-&#39;i b&#39;=: {:&quot;1 jd&#39;read jdindex,boolean from f where int &lt; 104&#39;
-jd&#39;update f&#39;;i;&#39;boolean&#39;;-.b NB. modify with indexes
-jdaccess olddan</code></pre>
 <h2 id="upsert">upsert</h2>
 <p>upsert table key <a href="Ops_common.htm#pairs" title="wikilink">pairs</a></p>
-<p>key is 1 or more cols used to determine if a data row is used to update or insert.</p>
-<pre><code>NB. example upsert
-jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
-jd&#39;createtable f&#39;
-jd&#39;createcol f a int&#39;;i.5
-jd&#39;createcol f b int&#39;;23+i.5
-jd&#39;upsert f&#39;;&#39;a&#39;;&#39;a&#39;;2 5 6;&#39;b&#39;;66 77 88 NB. 1 update and 2 inserts
-jdaccess olddan</code></pre>
+<p>key is 1 or more cols from pairs used as key</p>
+<p>rows in pairs where key matches are updated and the rest are inserted</p>
 <h2 id="sort">sort</h2>
 <p>sort [/desc] table col(s)</p>
 <p>table columns are sorted in place by cols(s)</p>
-<pre><code>NB. example sort
-jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
-jd&#39;gen test f 6&#39;
-jd&#39;sort /desc f int&#39;
-jd&#39;reads from f&#39;
-jd&#39;sort /desc f boolean int&#39;
-jd&#39;reads from f&#39;
-jd&#39;sort f int&#39;
-jd&#39;reads from f&#39;
-jdaccess olddan</code></pre>
 </body>
 </html>

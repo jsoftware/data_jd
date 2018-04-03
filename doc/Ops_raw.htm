@@ -19,27 +19,6 @@
 <p>col current type must be int/int1/int2/int4</p>
 <p>new-type must be int/int1/int2/int4/intx</p>
 <p>new-type intx converts col to type that takes least space without losing data</p>
-<pre><code>NB. example intx
-jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
-jd&#39;gen test f 5&#39;
-jd&#39;info schema&#39;
-jd&#39;intx f int intx&#39;
-jd&#39;info schema&#39;
-jdaccess olddan</code></pre>
-<h2 id="key">key</h2>
-<p>key [/in] table <a href="Ops_common.htm#pairs" title="wikilink">pairs</a></p>
-<p>Returns last table row that matches each of the rows in pairs (_1 for not found).</p>
-<p>With /in option, returns table rows that match any row in pairs.</p>
-<p>See <a href="Ops_common.htm#key" title="wikilink">key</a> for info.</p>
-<pre><code>NB. example key
-jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
-jd&#39;gen test f 5&#39;
-jd&#39;key f&#39;;&#39;int&#39;;101 103
-jd&#39;key f&#39;;&#39;int&#39;;103 101 200
-jd&#39;key f&#39;;&#39;int&#39;;103 101;&#39;byte&#39;;&#39;DX&#39;
-jd&#39;key f&#39;;&#39;boolean&#39;;0 1
-jd&#39;key /in f&#39;;&#39;boolean&#39;;1
-jdaccess olddan</code></pre>
 <h2 id="get">get</h2>
 <p>get table col</p>
 <p>return raw col data<br />varbyte - indexes;values<br />can be used with set to efficiently adjust col data</p>

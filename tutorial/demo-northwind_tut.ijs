@@ -1,6 +1,5 @@
 NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 
-'run jdtests_jd_ to create demos' assert 'database'-:jdfread_jd_'~temp/jd/northwind/jdclass'
 jdadmin'northwind'
 jd'reads Description from Categories'
 jd'reads Address,City from Suppliers where Country="UK"'

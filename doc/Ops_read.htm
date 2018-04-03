@@ -16,19 +16,10 @@
 <h2 id="key">key</h2>
 <p>key [/in] table <a href="#pairs" title="wikilink">pairs</a></p>
 <p>return rows in table for <a href="#pairs" title="wikilink">pairs</a>.</p>
-<p>elided /n returns last row in table that matches each data row and _1 if no match</p>
-<p>with /in all rows in table are returned that match any data row</p>
+<p>/in elided returns last row in table that matches each data row and _1 if no match</p>
+<p>/in returns all rows (sorted and no _1) in table that match any data row</p>
 <p>col types int1/int2/int4/float/varbyte not allowed</p>
-<pre><code>NB. example key
-jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
-jd&#39;gen test f 5&#39;
-jd&#39;key f&#39;;&#39;int&#39;;104 102
-jd&#39;key f&#39;;&#39;int&#39;;104 102 120
-jd&#39;key     f&#39;;&#39;int&#39;;104 102 120;&#39;byte&#39;;&#39;ECx&#39;  NB. data order - _1 for not found
-jd&#39;key /in f&#39;;&#39;int&#39;;104 102 120;&#39;byte&#39;;&#39;ECx&#39;  NB. sorted - no_1
-jd&#39;key     f&#39;;&#39;boolean&#39;;1 NB. last row that matches
-jd&#39;key /in f&#39;;&#39;boolean&#39;;1 NB. all rows that match
-jdaccess olddan</code></pre>
+<p>see <a href="Ops_common.htm#key" title="wikilink">key</a></p>
 <h2 id="read">read</h2>
 <p>Same as reads with /lr option</p>
 <h2 id="reads">reads</h2>
@@ -39,19 +30,6 @@ jdaccess olddan</code></pre>
 <p>returns select col(s) from table(s) with rows that satisfy where</p>
 <p>alias:col<br />alias:table<br />aggregation [by key1[,key2]]</p>
 <p>For ideas on working with reads results, see essay <a href="http://code.jsoftware.com/wiki/Essays/Inverted_Table">Inverted Table</a>.</p>
-<pre><code>NB. example reads
-jdadminx&#39;example&#39;[olddan=:jdaccess&#39;&#39;
-jd&#39;gen ref2 a 3 1 b 2&#39;
-jd&#39;reads from a&#39;
-jd&#39;reads from b&#39;
-jd&#39;reads akey,adata from a&#39;
-jd&#39;reads from a,a.b&#39;
-jd&#39;reads from a where akey&lt;3&#39;
-jd&#39;reads from a,a.b where akey&lt;3 and b.bref=0&#39;
-jd&#39;reads asdf:b.bb12 from a,a.b where akey&lt;3 and b.bref=0&#39;
-jd&#39;reads sum adata from a where akey&gt;0&#39;
-jd&#39;reads sum adata by aref from a&#39;
-jdaccess olddan</code></pre>
 <h2 id="readtc">readtc</h2>
 <p>readtc ... jdtc sentence</p>
 <p>Same as reads except for the jdtc clause.</p>
