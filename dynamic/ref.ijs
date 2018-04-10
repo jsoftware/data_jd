@@ -104,7 +104,13 @@ setdirty 0
 NB. dat may be out of date - ensure it is current
 select =: 3 : 0
 setdat''
-y{dat
+if. left do.
+ NB. derive left1 from left dat
+ i=. ({.dat)i:i.Tlen
+ y{{:i{"1 dat
+else. 
+ y{dat
+end. 
 )
 
 getreferenced=: 3 : 0
@@ -115,19 +121,20 @@ NB. fix join based on where result
 NB. where_stuff fixr joindata 
 fixr=: 4 : 0
 select. #x
-case. 0 do. y
-case. 1 do. ,._1 _1
+case. 0 do. r=. forcecopy y NB. could be (is?) mapped
+case. 1 do. r=. ,._1 _1
 case.   do.
  x=. }.x NB. remove leading _1 for nulls as we don't keep nulls
- _1,.(#"1~ e.&x@:{:)^:(*@#x) y NB.remove based on r
-end.  
+ r=. _1,.(#"1~ e.&x@:{:)^:(*@#x) y NB.remove based on r
+end.
+r
 )
 
 default_join =: 3 : 0
 setdat''
 'l r' =. y
 'Tl Tr' =. ([:getloc '^.^.'&,)&.> {."1 subscriptions
-'join - should not happen' assert 0=#l
+NB. 'join - should not happen' assert 0=#l
 if. left do.
  NB. derive left1 from left
  last=. ({.dat)i:i.Tlen__Tl
@@ -146,7 +153,7 @@ left_join=: 3 : 0
 setdat''
 'l r' =. y
 'Tl Tr' =. ([:getloc '^.^.'&,)&.> {."1 subscriptions
-'join - should not happen' assert 0=#l
+NB. 'join - should not happen' assert 0=#l
 r fixr dat
 )
 
@@ -155,6 +162,6 @@ inner_join=: 3 : 0
 setdat''
 'l r' =. y
 'Tl Tr' =. ([:getloc '^.^.'&,)&.> {."1 subscriptions
-'join - should not happen' assert 0=#l
+NB. 'join - should not happen' assert 0=#l
 r fixr (1,_1~:}.{:dat)#"1 dat
 )

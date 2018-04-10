@@ -488,6 +488,7 @@ if. -.fexist CSVFOLDER__,y do.
  t=. '"',unzip,'" "',fn,'" -d "',(jpath CSVFOLDER__),'"'
  if. UNAME-:'Win' do. t=. '"',t,'"' end.
  r=. shell t
+ ferase fn
  r,LF,'CSVFOLDER now contains the csv file'
 else.
  'CSVFOLDER already contains the csv file'

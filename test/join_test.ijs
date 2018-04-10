@@ -1,4 +1,4 @@
-NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
+NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
 NB. from join_tut with assert added
 NB. join examples from wikipedia - sql join
 NB. join section in admin.html
@@ -188,3 +188,79 @@ jd'ref zero int two int'
 
 r=. jd'reads from zero,zero.two'
 assert 0=;#each {:scd r
+
+NB. tests after bugs were found in /left joins
+NB. bugs were that where clauses did not work with /left joins
+
+jdadminx'test'
+
+bld=: 3 : 0
+jd'createtable f j byte,b byte'
+jd'insert f';'j';'zyxxy';'b';'abcde'
+jd'createtable g k byte,c byte'
+jd'insert g';'k';'yxy';'c';'qwe'
+)
+
+ver=: -.'3.3'-:;{:jd'list version'
+
+ref=: 3 : 0
+if. ver do.
+ jd'ref /left f j g k'
+else.
+ jd'reference f j g k'
+end.
+)
+
+setc=: 3 : 0
+c=: jdgl_jd_'f jdref_j_g_k'
+i.0 0
+)
+
+bld''
+ref''
+jd'read from f'
+jd'read from g'
+
+[a=.jd'read f.j,g.k from f,f.g'
+assert 'zyxxy'-:'f.j'jdfrom_jd_ a
+assert ' yxxy'-:'g.k'jdfrom_jd_ a
+
+[a=.jd'read f.j,g.k from f,f>g'
+assert 'zyyxxyy'-:'f.j'jdfrom_jd_ a
+assert ' yyxxyy'-:'g.k'jdfrom_jd_ a
+
+[a=. jd'read f.j,g.k from f,f.g where f.j="y"' 
+assert 'yy'-:'f.j'jdfrom_jd_ a
+assert 'yy'-:'g.k'jdfrom_jd_ a
+
+[a=. jd'read f.j,g.k from f,f>g where f.j="y"' 
+assert 'yyyy'-:'f.j'jdfrom_jd_ a
+assert 'yyyy'-:'g.k'jdfrom_jd_ a
+
+[a=. jd'read f.j,g.k from f,f>g where f.j="y" or f.j="z"' 
+assert 'zyyyy'-:'f.j'jdfrom_jd_ a
+assert ' yyyy'-:'g.k'jdfrom_jd_ a
+
+NB. inner join
+[a=. jd'read f.j,g.k from f,f-g where f.j="y" or f.j="z"' 
+assert 'yyyy'-:'f.j'jdfrom_jd_ a
+assert 'yyyy'-:'g.k'jdfrom_jd_ a
+
+NB. test /left join series of joins
+jd'createtable h'
+jd'createcol h w byte';'ew'
+jd'ref /left g c h w'
+[a=. jd'read from f,f.g,g.h'
+assert 'zyxxy'-:'f.j'jdfrom_jd_ a
+assert ' yxxy'-:'g.k'jdfrom_jd_ a
+assert ' ewwe'-:'h.w'jdfrom_jd_ a
+
+[a=. jd'read from f,f>g,g>h'
+assert 'zyyxxyy'-:'f.j'jdfrom_jd_ a
+assert ' yyxxyy'-:'g.k'jdfrom_jd_ a
+assert '  eww e'-:'h.w'jdfrom_jd_ a
+
+[a=. jd'read from f,f-g,g-h'
+assert 'yxxy'-:'f.j'jdfrom_jd_ a
+assert 'yxxy'-:'g.k'jdfrom_jd_ a
+assert 'ewwe'-:'h.w'jdfrom_jd_ a

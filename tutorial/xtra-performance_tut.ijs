@@ -51,7 +51,7 @@ jdcreatefolder_jd_'~temp/jdpm'
 jdadminx'~temp/jdpm/','d',(":y)
 pmclear_jd_''
 a=. (n$3,<.2^34)+i.n NB. avoid small int range hashing
-b=. 5*i.1e6
+b=. 5*i.>FORCELEFT_jd_{1e6;1000 NB. left join y=/x out of memory
 jd'createtable f'
 jd'createcol  f a  int _';a
 jd'createcol  f b  int _';n$b  NB. ref f b g b - many to one

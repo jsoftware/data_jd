@@ -109,7 +109,7 @@ else.
  end.
 end.
 FETAB=: tab
-if. 2=3!:0 w do. w=. ;{:{:jd'read jdindex from ',tab,' where ',w end. 
+if. 2=3!:0 w do. w=. ;{:{:jd_read'jdindex from ',tab,' where ',w end. 
 if. 0=#w do. JDOK return. end.
 if. isptable tab do.
  deleteptable tab;w

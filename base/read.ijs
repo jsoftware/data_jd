@@ -1,4 +1,4 @@
-NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
+NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
 coclass 'jdquery'
 coinsert 'jddatabase'
 
@@ -136,21 +136,8 @@ access@> refs
 tloc =: tloc , t
 tnms =: tnms, <NAME__t"_^:(0=#) a
 tpath =: tpath , <refs,.joins
-
-NB. kludge to catch /left join in series that will fail
-if. 2<#tloc do.
- for_p. tpath do.
-  p=. ,>p
-  if. 2=#p do.
-   c=. >{.p
-   'ref /left joins only allowed with single join'assert -.left__c
-  end. 
- end.
-end.
 )
 
-
-NB. =========================================================
 NB. ***** SELBY *****
 sel_split=: <"_1 @: |: @: ((_2 {. strsplit)&:>"_ 0)
 

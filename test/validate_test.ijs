@@ -119,7 +119,7 @@ e=: getloc__t'jdref_aref_h_href'
 assert 1=dirty__e NB. ref starts dirty
 jd'reads from f,f.h'
 assert 0=dirty__e NB. made clean
-assert 0 1 0-:dat__e
+assert dat__c-:0 1 0
 jd'insert h href';23
 assert 1=dirty__e
 jd'validate' NB. with dirty 1

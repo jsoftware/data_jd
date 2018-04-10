@@ -121,14 +121,27 @@ JDE1001 assert 3=nc<'jd_',OP,'__d'
 ('jd_',OP,'__d')~y
 )
 
-NB. left1 only join (fast and simple) - ref starts out as dirty
 jd_ref=: 3 : 0
 y=. '/left 0'getoptions y
+option_left=: option_left +. FORCELEFT
 ECOUNT assert (4<:#y)*.0=2|#y
 d=. getdb''
 t=. (2,(#y)%2)$y
 0 validtc__d {.t NB. ptable allowed on left
 validtc__d {:t
+
+NB. verify col pairs match type and shape
+ta=. getloc__d {.{.t
+tb=. getloc__d {.{:t
+a=. }.{.t
+b=. }.{:t
+for_i. i.#a do.
+ ca=. getloc__ta i{a
+ cb=. getloc__tb i{b
+ 'ref types not the same'assert typ__ca-:typ__cb
+ 'ref trailing shapes not the same'assert shape__ca-:shape__cb
+end.
+
 t=. ({."1 t),.<"1 (}."1 t)
 ts=. getparttables ;{.y
 ts=. ts#~PTM~:;{:each ts

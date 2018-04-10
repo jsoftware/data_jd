@@ -239,7 +239,12 @@ jd'reads from g,g-h'
 jd'reads from f,f>g'
 jd'reads from g,g>h'
 
-NB. know problems with ref /left1 with mor that 1 join
-'single join'jdae'reads from f,f.g,g.h'
-'single join'jdae'reads from f,f-g,g-h'
-'single join'jdae'reads from f,f>g,g>h'
+NB. fixed - problems with ref /left1 with more than 1 join
+a=. jd'reads from f,f.g,g.h'
+b=. jd'reads from f,f-g,g-h'
+c=. jd'reads from f,f>g,g>h'
+
+NB. catch bug where mapped noun was changed because of missing forcecopy
+assert a-:jd'reads from f,f.g,g.h'
+assert b-:jd'reads from f,f-g,g-h'
+assert c-:jd'reads from f,f>g,g>h' NB.! bug!

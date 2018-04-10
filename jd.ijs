@@ -10,7 +10,7 @@ NB. is pushed to Jsoftware for building JAL data/jd package
 
 NB. all use of the Jd library is through JDP_z_
 
-jdversion_jd_=: '4.12'
+jdversion_jd_=: '4.13'
 
 nokey_jd_=: 0 : 0 rplc 'INDEX.HTM';jpath '~addons/data/jd/doc/Index.htm'
 
@@ -177,6 +177,7 @@ if. _1=nc<'OP_jd_' do. NB. one time inits
  cntsclear_jd_''
  FORCEVALIDATEAFTER_jd_=: 0
  FORCEREVERT_jd_=: 0
+ FORCELEFT_jd_=: 0  NB. force all refs to be /left for testing
  PMON_jd_=: 0       NB. performance monitor not recording
  PMN_jd_=: PMT_jd_=: '' NB. no records
  PMMR_jd_=: 100     NB. max records kept

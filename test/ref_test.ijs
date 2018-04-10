@@ -2,6 +2,27 @@ NB. Copyright 2015, Jsoftware Inc.  All rights reserved.
 NB. test insert/delete/update vs ref
 NB. test left1 join so same tests work for ref
 
+bld=: 3 : 0
+'new'jdadmin'test'
+jd'createtable /pairs f';'a';23 24;'b';'bc';'c';1.5 2.5;'d';2 3$'abcdef'
+jd'createtable /pairs g';'a';23 24;'b';'bc';'c';1.5 2.5;'d';(2 3$'abcdef');'e';2 4$'x'
+)
+
+bld''
+jd'read from f'
+jd'read from g'
+
+jd'ref f a g a'
+jd'ref f b g b'
+'float'jdae'ref f c g c'
+jd'ref f d g d'
+'shape'jdae'ref f d g e'
+'type' jdae'ref f a g b'
+
+jd'ref f a b g a b'
+'type'jdae'ref f a b g b e'
+'shape'jdae'ref f a d g a e'
+
 ti=: 3 : 0
 jdadminx'test'
 )
