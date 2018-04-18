@@ -10,7 +10,7 @@ NB. is pushed to Jsoftware for building JAL data/jd package
 
 NB. all use of the Jd library is through JDP_z_
 
-jdversion_jd_=: '4.13'
+jdversion_jd_=: '4.14'
 
 nokey_jd_=: 0 : 0 rplc 'INDEX.HTM';jpath '~addons/data/jd/doc/Index.htm'
 

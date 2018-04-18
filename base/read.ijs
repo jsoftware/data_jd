@@ -24,11 +24,11 @@ Read=: 3 : 0
 From from
 SelBy sel;by
 Where where
-if. MAXROWCOUNT < #indices do.
-  msg =. 'Asked for ',(":#indices),' rows; returning first '
-  msg =. msg,(":MAXROWCOUNT),' (MAXROWCOUNT_jd_) rows.'
-  smoutput msg
-  indices =: MAXROWCOUNT {. indices
+t=. {:$indices
+if. MAXROWCOUNT < t do.
+  msg =. 'Asked for ',(":t),' rows; returning first ',(":MAXROWCOUNT),' (MAXROWCOUNT_jd_) rows.'
+  echo msg
+  indices =: MAXROWCOUNT {."1 indices
 end.
 Query ''
 Order order

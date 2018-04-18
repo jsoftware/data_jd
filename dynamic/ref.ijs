@@ -27,7 +27,7 @@ opentyp =: ]
 NB. y 0 or 1
 setdirty=: 3 : 0
 if. dirty=y do. return. end.
-if. y do. dat=: 0#2 end.
+if. y *. 0=nc<'dat' do. dat=: 0#2 end.
 dirty=: y
 writestate''
 )
@@ -42,11 +42,7 @@ writestate''
 )
 
 getmapsize=: 3 : 0
-try.
-  msize_jmf_ 6 pick (({."1 mappings_jmf_) i. <y,Cloc){mappings_jmf_
-catch.
-  0
-end.
+msize_jmf_ 6 pick (({."1 mappings_jmf_) i. <y,Cloc){mappings_jmf_
 )
 
 NB. left1 join - set dat column

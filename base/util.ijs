@@ -16,12 +16,38 @@ end.
 builddemos''
 load JDP,'base/tuts.ijs'
 if. ''-:y do.
- c=. (tuts i.each'-'){.each tuts
+ c=. (tuts i.each'/'){.each tuts
  c=. ~.c
  ;LF,~each(<'   jdrt '''),each c,each''''
-elseif. -.'-'e.y do.
+elseif. -.'/'e.y do.
  a=. tuts#~(<y)=(#y){.each tuts
  a=. _8}.each a
+ ;LF,~each(<'   jdrt '''),each a,each''''
+elseif. 1 do.
+ f=. ;{.tuts#~;+/each(<y,'_tut.ijs')E.each tuts
+ 'invalid tutorial name'assert 0~:#f
+ runtut JDP,'tutorial/',f
+end.
+)
+
+jdrt=: 3 : 0
+if. (-.IFJHS)*.80607<:0".(fread'~system/config/version.txt')-.CRLF,'.' do.
+ require'labs/labs'
+ runtut=: lab_z_
+else.
+ require'~addons/ide/jhs/sp.ijs'
+ runtut=: spx_jsp_
+end.
+builddemos''
+load JDP,'base/tuts.ijs'
+if. ''-:y do.
+ c=. (tuts i.each'/'){.each tuts
+ c=. ~.c
+ ;LF,~each(<'   jdrt '''),each c,each''''
+elseif. -.5=(;:'basic csv demo op xtra')i.<y do.
+ a=. tuts#~(<y)=(#y){.each tuts
+ a=. _8}.each a
+ a=. (>:#y)}.each a
  ;LF,~each(<'   jdrt '''),each a,each''''
 elseif. 1 do.
  f=. ;{.tuts#~;+/each(<y,'_tut.ijs')E.each tuts

@@ -81,7 +81,7 @@ if. b do.
 end.
 )
 
-NB. get locale and open table children and map column files - note internal use of getloc
+NB. get locale and open table children and map column files
 getloc=: 3 : 0
 if. -.'/'e.,>y do.
  if. '.' e. y=.,>y do. 4 :'getloc__y x'/ LOCALE ,~ |.<;._1'.',y return. end.
@@ -104,7 +104,7 @@ if. 'jdtable'-:;CLASS__c do.
   index__c=: getloc__c 'jdindex'
  end. 
 elseif. 'jdcolumn'-:;CLASS__c do. NB. cols map as required
- if. _1=nc {.MAP__c,each <'__c' do.
+ if. _1=nc {.MAP__c,each <'__c' do. NB. assumed mapped if defined
    mapcolfile__c"0 MAP__c
    opentyp__c ''
  end.

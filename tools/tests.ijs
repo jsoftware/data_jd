@@ -21,9 +21,11 @@ cocurrent'base' NB. defined in jd, but must run in base
 IFTESTS_jd_=: 1
 OLDALLOC_jd_=: ROWSMIN_jdtable_,ROWSMULT_jdtable_,ROWSXTRA_jdtable_
 'ROWSMIN_jdtable_ ROWSMULT_jdtable_ ROWSXTRA_jdtable_'=: 4 1 0 NB. lots of resizecsvonly=. 'csv'-:y
+OLDMAXROWCOUNT_jd_=: MAXROWCOUNT_jd_
+MAXROWCOUNT_jd_=: _
 fast=. 'fast'-:y
 csvonly=. 'csv'-:y
-EXCLUDETESTS=: (<'_tut.ijs'),each~(<'tutorial/'),each 'xtra-server_zmq';'basic-stock_data';'csv-bus_lic';'csv-quandl_ibm'
+EXCLUDETESTS=: (<'_tut.ijs'),each~(<'tutorial/'),each 'xtra/server_zmq';'basic/stock_data';'csv/bus_lic';'csv/quandl_ibm'
 t=. ALLTESTS=:  (tests_jd_,((<'tutorial/'),each tuts_jd_))-.EXCLUDETESTS
 t=. t,~each<JDP
 if. -.IFJHS do. t=. t-.<JDP,'tutorial/xtra-server_jhs_tut.ijs' end.
@@ -84,6 +86,7 @@ echo LF,(":#t),' tests run',LF,(":#failed),' failed'
 jdt=: (\:;{."1 jdt){jdt
 IFTESTS_jd_=: 0
 'ROWSMIN_jdtable_ ROWSMULT_jdtable_ ROWSXTRA_jdtable_'=: OLDALLOC_jd_
+MAXROWCOUNT_jd_=: OLDMAXROWCOUNT_jd_
 echo LF,(":<.start-~6!:1''),' seconds to run tests and tutorials'
 'test end'logjd_jd_''
 i.0 0

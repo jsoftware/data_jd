@@ -58,6 +58,11 @@ NB. could jam sharename to avoid some of these problems
 NB. db lock enforces only 1 task mapping so these issues can be ignored
 
 mapcolfile=: 3 : 0
+if. NAME-:'fubar' do.
+ c=. getloc__PARENT'a'
+ dat=: 23+dat__c
+ return.
+end. NB.!
 jdmap (,&Cloc ; PATH&,) >y
 )
 

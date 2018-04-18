@@ -116,6 +116,24 @@ jd_createcol tab,PTM,' ',col,' ',typ__c,' ',":shape__c
 JDOK
 )
 
+0 : 0
+create derived col
+normal name
+ but does not appear in default selection or *
+ is not allowed or required in insert/update/upsert
+derive function to calculate the col is in the col folder
+derive is called in mapcol under try catch
+result of derive col sets dat to a legal value
+csv dump/restore carries derive
+validate doesn't look at derive col
+dirty - set by data change
+
+can it be done in select (like jdindex, instead of in mapcol)?
+perhaps there should be a select version and a mapcol version
+)
+jd_createdcol=: 3 : 0
+)
+
 NB. not boxed -> no dat : boxed -> dat
 NB. createcol done with default data and then update with col data
 jd_createcol=: 3 : 0

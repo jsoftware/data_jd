@@ -34,6 +34,7 @@ if. 0=#y do. '' else. ' ',y end.
 
 NB. record section end
 pmz=: 3 : 0
+if. _1=nc<'PMON' do. PMON=: 0 end.
 if. -.PMON do. return. end.
 t=. 0>.(#PMN)-<:PMMR
 PMN=: t}.PMN,<(14{.PMNAME),fmtsummary jdlasty

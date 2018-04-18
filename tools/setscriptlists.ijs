@@ -21,9 +21,18 @@ load f
 NB. tuts
 d=. {."1 dirtree JDP,'tutorial'
 
+NB. verify base names are unique
+t=. (>:;d i:each'/')}.each d
+t=. _8}.each t
+t=. (1~:+/t =/ t)#d
+if. 0~:#t do.
+ echo >t
+ 'duplicate tutorial names'assert 0
+end.  
+
 NB. fix order - guys that don't sort where we want them
-zd=. d rplc each <'basic-epochdt_tut.ijs';'basic-zepochdt_tut.ijs'
-zd=. zd rplc each <'basic-admin_tut.ijs';'basic-zzadmin_tut.ijs'
+zd=. d rplc each <'epochdt_tut.ijs';'zepochdt_tut.ijs'
+zd=. zd rplc each <'admin_tut.ijs'; 'zzadmin_tut.ijs'
 
 d=. d/:_8}.each zd
 d=. (#JDP,'tutorial/')}.each d
