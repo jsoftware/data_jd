@@ -275,4 +275,6 @@ cd/libjd.dylib
 cd/libjpcre.dylib
 )
 
-RELEASE=: 'j805 j806 j807'
+RELEASE=: 'j805'
+
+FOLDER=: 'data/jd'
