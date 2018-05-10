@@ -6,6 +6,7 @@ test/createcol_test.ijs
 test/createtable_test.ijs
 test/csv_test.ijs
 test/delete_test.ijs
+test/derived_test.ijs
 test/drop_rename_test.ijs
 test/droptable_test.ijs
 test/error_test.ijs
@@ -46,6 +47,7 @@ test/stress_test.ijs
 test/table_append_test.ijs
 test/update_test.ijs
 test/upsert_test.ijs
+test/user_test.ijs
 test/utf8_test.ijs
 test/valid_data_test.ijs
 test/validate_test.ijs

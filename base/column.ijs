@@ -8,9 +8,18 @@ NB. There are 3 col types: static, dynamic, and summary (which may be killed off
 CLASS=: <'jdcolumn'
 CHILD=: a:
 
+derived=: 0 NB. normal col vs derived col
+derivedname=: ''
+
 STATE=: <;._2 ]0 : 0
 typ
 shape
+derived
+derivedname
+)
+
+setderiveddirty=: 3 : 0
+if. derived do. erase'dat' end. NB. so next getloc/mapcol will derive new values
 )
 
 NB. map as required
@@ -57,13 +66,17 @@ NB. also refcount is added so it generally climbs which is not good
 NB. could jam sharename to avoid some of these problems
 NB. db lock enforces only 1 task mapping so these issues can be ignored
 
+NB. called from geloc when dat is not defined
 mapcolfile=: 3 : 0
-if. NAME-:'fubar' do.
- c=. getloc__PARENT'a'
- dat=: 23+dat__c
- return.
-end. NB.!
-jdmap (,&Cloc ; PATH&,) >y
+if. -.derived do. jdmap (,&Cloc ; PATH&,) >y return. end.
+FETAB_jd_=: NAME__PARENT
+FECOL_jd_=: NAME
+'derived verb not defined'assert 3=nc<derivedname
+d=. derivedname~''
+'derived bad count'assert Tlen=#d
+'derived bad trailing shape'assert shape-:}.$d
+'derived bad type'assert (3!:0 d)-:3!:0 DATAFILL
+dat=: d
 )
 
 unmapcolfile=: 3 : 0
@@ -111,28 +124,6 @@ end.
 appendmap=: 4 : 0
 resize_if x;y;0
 ". 'name=:name,y' rplc 'name';x
-EMPTY NB. result
-)
-
-replacemap=: 4 : 0
-name=. x
-data=. y
-while. 1 do.
- try.
-  (name)=: data
-  break.
- catch. NB. not catchd. as this error is expected and required
-  assert 32=13!:11'' NB. allocation error
-  resizemap name;>.Padvar*fsize PATH,name
- end.
-end.
-EMPTY NB. result
-)
-
-replacemap=: 4 : 0
-resize_if x;y;1
-name=. x
-(name)=: y
 EMPTY NB. result
 )
 

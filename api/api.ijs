@@ -179,8 +179,7 @@ NB. cols not allowed types float/varbyte/int1/int2/int4
 validtc=: 3 : 0
 1 validtc y
 :
-b=. (<'jd')=2{.each y
-if. +./b do. ('jde: invalid name: name (NAME)' rplc 'NAME';;{.b#y) assert 0 end.
+notjd_assert y
 if. -.({.y)e.NAMES do. ('jde: not found: table (TAB)' rplc 'TAB';;{.y) assert 0 end.
 t=. getloc {.y
 if. x do. 'ptable not allowed'assert 0=S_ptable__t end. NB! test not right

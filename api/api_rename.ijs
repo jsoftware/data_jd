@@ -27,7 +27,7 @@ ECOUNT assert 3=#a
 t=. jdgl {.a
 'col not found'      assert   (1{a)e.NAMES__t
 'col already exists' assert -.(2{a)e.NAMES__t
-'jd prefix not allowed' assert -.(<'jd')=2{.each }.a
+notjd_assert }.a
 vcname ;2{a
 assertnodynamic 2{.a
 ns=. getparttables ;{.a

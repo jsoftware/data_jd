@@ -10,12 +10,17 @@ FETAB=: tab=. ;{.y
 d=. getdb''
 t=. jdgl tab
 'ns vs rows'=. _1 fixpairs__t 1}.y
+bdn=. 3 : 'derived__y' "0 CHILDREN__t NB. derived names
+dn=. bdn#NAMES__t
+EDERIVED assert 0=#FECOL_jd_=: ;{.ns#~ns e. dn
+EMISSING assert 0=#FECOL_jd_=: (NAMES__t#~-.bjdn NAMES__t)-.ns,dn
 if. rows<1 do. JDOK return. end.
 nv=. ns,.vs
 
 if. isptable tab do.
  x insertptable nv
-else. 
+else.
+ markderiveddirty__t''
  if. ''-:x do.
   rows Insert__d  ({.y),<nv
  else. 
@@ -154,15 +159,21 @@ t=. jdgl FETAB
 if. 2=3!:0 w do.
  NB. read where clause or col(s)
  if. *./(;:w)e.NAMES__t do.
+  
+  NB. key update 
+ 'name data pairs - odd number' assert (2<:#y)*.0=2|#y
+  ns=. ,each(2*i.-:#y){y NB. list of names
+  vs=. (>:2*i.-:#y){y    NB. list of values
   key=. ;:w NB. search for the
-  'ns vs rows'=. _2 fixpairs__t 2}.y
-  'key col(s) not in pairs'assert 0=#key-.ns
+  'key(s) not in pairs'assert 0=#key-.ns
   if. (#key)=#ns do. JDOK return. end. NB. no data to update
   i=. ns i. key
   w=. keyindex tab;,,(i{ns),.i{vs
-  'key(s) not found' assert -._1 e. w
-  i=. (i.#ns)-.i NB. remove key(s) from pairs as they don't need to update
-  
+  'ns vs rows'=. (#w) fixpairs__t 2}.y
+  NB. remove keys from pairs
+  b=. -.ns e. key
+  ns=. b#ns
+  vs=. b#vs
  else.
   w=. ;{:,old=. jd_read'jdindex from ',tab,' where ',w NB. ; always a list so 1 n$'abc' works
   'ns vs rows'=. (#w) fixpairs__t 2}.y
@@ -177,10 +188,16 @@ else.
 end.
 NB. w is always a list - if it has 1 element, this allows data 1 4$'a'
 NB. force w to scalar if single element list to disallow 1 4$'a'
+
+ETALLY assert rows=#w
 if. 0=#w do. JDOK return. end.
+
+bdn=. 3 : 'derived__y' "0 CHILDREN__t NB. mask of derived names
+EDERIVED assert -.+./ns e.~ bdn#NAMES__t
 
 if. -.isptable tab do.
  EINDEX assert (w<Tlen__t),0<:w
+ markderiveddirty__t''
  for_i. i.#ns do.
   c=. getloc__t {.i{ns
   w modify__c >i{vs
@@ -198,6 +215,9 @@ else.
   pr=. wx#~p=n     NB. ptable rows (includes base)
   dr=. (p=n)#i.#w NB. data rows
   f=. tab,PTM,;n
+  
+  NB.! need to mark table derived dirty
+  
   for_i. i.#ns do.
    c=. jdgl f,' ',;{.i{ns
    d=. >i{vs

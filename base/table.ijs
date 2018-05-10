@@ -34,7 +34,7 @@ getvisiblestatic=: #~ 3 :'visible__y *. static__y'@getloc@>^:(*@#)
 getdefaultselection=: 3 : 0
 f=. PATH,'column_create_order.txt'
 n=. NAMES
-n=. (-.(<'jd')=2{.each n)#n
+n=. n#~-.bjdn n
 if. optionsort +. -.fexist f do.
  /:~n
 else. 
@@ -109,12 +109,14 @@ Delete=: 3 : 0
  b=. -.(i.Tlen)e.y
  for_i. i.#CHILDREN do.
   c=. i{CHILDREN
-  getloc NAME__c NB. map as required
   if. (<'jdindex')=i{NAMES do.
    continue.
-  elseif. (<'jd')=2{.each i{NAMES do.
+  elseif. bjdn i{NAMES do.
    setdirty__c 1
+  elseif. derived__c do.
+   setderiveddirty__c''
   elseif. 1 do.
+   getloc NAME__c NB. map as required
    dat__c=: (b#~datcount__c 1)#dat__c
   end. 
  end.
@@ -123,7 +125,13 @@ Delete=: 3 : 0
 i.0 0
 )
 
-NB. x is _1 insert rules, # update rules, _2 keyindex rules
+markderiveddirty=: 3 : 0
+bdn=. 3 : 'derived__y' "0 CHILDREN NB. derived names
+(3 : 'setderiveddirty__y 1') "0 bdn#CHILDREN NB. mark derived names dirty
+)
+
+
+NB. x is <0 no rules (insert/keyindex), # update rules (scalar extension)
 NB. y is  name,value pairs
 NB. return (possibly adjusted) names;values;rows
 NB. values are converted to appropriate type
@@ -133,13 +141,13 @@ NB.  byteN - scalars and lists extend to be tables
 NB.  byten - overtake OK, but undertake is an error
 NB. x is _1 for insert and required rows for update
 NB. all conform work is done here - may be duplicated later on
+NB. derived names validated and setdirty as required
 fixpairs=: 4 : 0
 'name data pairs - odd number' assert (2<:#y)*.0=2|#y
 ns=. ,each(2*i.-:#y){y NB. list of names
 duplicate_assert ns
 notjd_assert ns
 unknown_assert ns-.NAMES
-if. x=_1 do. missing_assert ns-.~((<'jd')~:2{.each NAMES)#NAMES end. NB. insert
 ns=. vs=. ts=. ''
 for_i. i.-:#y do.
  j=. 2*i
@@ -183,10 +191,7 @@ end.
 t=. ;#each vs
 rows=. {.t
 'fixpairs: bad count'assert rows=t
-if. x>:0 do. ETALLY assert x=rows end.
-
 ESHAPE assert (}.each$each vs)=ts
-
 ns;vs;rows
 )
 
@@ -299,7 +304,7 @@ s =. (<'ref') filterbytype getloc@> {."1 SUBSCR
 
 getpcol=: 3 : 0
 'not pcol table' assert PTM={:NAME
-t=. NAMES#~-.(<'jd')=2{.each NAMES
+t=. NAMES#~-.bjdn NAMES
 'pcol table with more than 1 col' assert 1=#t
 ;t
 )

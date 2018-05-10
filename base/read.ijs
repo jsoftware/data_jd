@@ -39,7 +39,7 @@ for_i. i.#cnms do.
  NB. edate int converted to string - except for /e and agg count 
  if. 'edate'-:5{.typ__c do.
   if. -.option_e do.
-   if. AGG_jd_-:,a: do. b=. 1 else. b=. -.'count'-:;i{AGG_jd_ end.
+   if. (AGG_jd_-:,a:)+.i>:#AGG_jd_ do. b=. 1 else. b=. -.'count'-:;i{AGG_jd_ end.
    if. b do.
      t=. sep__c,utc__c,'dtmn'{~(;:'edate edatetime edatetimem edatetimen')i.<typ__c
      read=: (<t sfe,>i{read) i}read

@@ -56,12 +56,12 @@ loc =. cocreate ''
 coinsert__loc CHILD
 coinsert__loc PARENT__loc =: LOCALE
 CHILDREN =: CHILDREN,loc
-NAMES =: NAMES,<NAME__loc=:y
+NAMES=: NAMES,<NAME__loc=:y
 loc
 )
 RemoveChild =: 3 : 0
 CHILDREN =: CHILDREN-.y
-NAMES =: NAMES-.<NAME__y
+NAMES=: NAMES-.<NAME__y
 )
 
 NB. mark db damaged is col y has incorrect Tlen
@@ -264,7 +264,7 @@ EDUPLICATE assert 0=#FECOL_jd_=: ;{.(1<+/y =/ y)#y
 )
 
 notjd_assert=: 3 : 0
-ENOTJD assert 0=#FECOL_jd_=: ;{.((<'jd')=2{.each y)#y
+ENOTJD assert 0=#FECOL_jd_=: ;{.y#~bjdn y
 )
 
 unknown_assert=: 3 : 0

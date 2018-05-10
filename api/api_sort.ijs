@@ -21,7 +21,7 @@ for_c. CHILDREN__t do.
   if. dirty__c do. continue. end.
   if. left__c  do. setdirty__c 1 continue. end. NB. could handle this
  end.
- dat__c=: s{dat__c
+ if. derived__c do. setderiveddirty__c'' else. dat__c=: s{dat__c end. 
 end.  
 JDOK
 )

@@ -56,8 +56,7 @@ for_i. i.#tables do.
   cols=. <c
  else. 
   cols=. getdefaultselection__t''
-  n=. NAMES__t
-  cols=. cols,((<'jd')=2{.each n)#NAMES__t
+  cols=. cols,(bjdn NAMES__t)#NAMES__t
  end.
  r=. r,(NAMES__t i. cols){CHILDREN__t
 end.
@@ -77,7 +76,7 @@ d=. getdb''
 t=. getloc__d y
 n=. NAMES__t
 a=. CHILDREN__t
-b=. (<'jd')~:2{.each n
+b=. -.bjdn n
 n=. b#n
 a=. b#a
 (/:n){n,.a

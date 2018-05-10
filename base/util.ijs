@@ -3,6 +3,12 @@ jdrt_z_=:      jdrt_jd_
 
 coclass 'jd'
 
+
+NB. boolean mask - names starting with jd
+bjdn=: 3 : 0
+(<'jd')=2{.each y
+)
+
 ophtmls=: _4}.each(>:#jpath JDP,'doc')}.each 1 dir JDP,'doc/Ops_*'
 
 jdrt=: 3 : 0

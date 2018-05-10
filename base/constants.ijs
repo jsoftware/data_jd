@@ -16,7 +16,7 @@ i2min=: <:-i2max
 i4max=: <:<.2^31
 i4min=: <:-i4max
 
-MAXROWCOUNT=: 1e5
+MAXROWCOUNT=: _
 
 PTM=: '^'    NB. ptable filename
 
@@ -50,6 +50,7 @@ EINT=:       'bad int data'
 EINT1=:      'bad int1 data'
 EINT2=:      'bad int2 data'
 EINT4=:      'bad int4 data'
+EDERIVED=:   'derived not allowed'
 
 LOCALE=: CLASS=: <'jd'
 CHILD=: <'jdfolder'

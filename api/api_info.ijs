@@ -36,6 +36,8 @@ case. 'varbyte' do.
  infovarbyte a
 case. 'ref' do.
  'ref' inforef a
+case. 'derived' do.
+ infoderived a
 case. do.
  'unsupported info command'assert 0
 end. 
@@ -136,6 +138,21 @@ for_c. locs do.
 end.
 (;:'table column min avg max'),:ts;cs;(,.>0{"1 r);(,.>1{"1 r);,.>2{"1 r
 )
+
+infoderived=: 3 : 0
+locs=. getinfoclocs y
+ts=. cs=. 0 0$''
+r=. 0 3$0
+for_c. locs do.
+ if. derived__c do.
+  t=. PARENT__c
+  ts=. ts,NAME__t
+  cs=. cs,NAME__c
+ end. 
+end.
+(;:'table column'),:ts;cs
+)
+
 
 infoad=: 3 : 0
 d=. getdb''
