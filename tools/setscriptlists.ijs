@@ -9,7 +9,7 @@ NB. 999_ guys are sorted by name
 NB. tut names must be unique
 setscriptlists=: 3 : 0
 NB. tests
-p=. jpath'~/gitdev/addons/data/jd/'
+p=. JDP
 t=. 1 dir p,'test/*_test.ijs'
 t=. /:~(#p)}.each t
 t=. ;t,each LF

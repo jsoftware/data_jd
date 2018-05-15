@@ -11,6 +11,8 @@ NB.  0  jddropstop erases all jddropstop files in the path
 
 NB. jddropstop file prevents a drop of a db/table/col
 
+de=: 'domain error'
+
 jdadminx'test'
 jd'createtable f a int,b int'
 jd'createtable g a int,b int'
