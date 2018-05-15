@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '4.4.59'
+VERSION=: '4.4.60'
 
 FILES=: 0 : 0
 manifest.ijs
@@ -100,7 +100,7 @@ tutorial/demo/vr_tut.ijs
 tutorial/demo/sed_tut.ijs
 tutorial/demo/northwind_tut.ijs
 tutorial/demo/sandp_tut.ijs
-tutorial/csv/basic_tut.ijs
+tutorial/csv/intro_csv_tut.ijs
 tutorial/csv/xtra_tut.ijs
 tutorial/csv/quandl_ibm_tut.ijs
 tutorial/csv/bus_lic_tut.ijs

@@ -33,6 +33,8 @@ end.
 NB. fix order - guys that don't sort where we want them
 zd=. d rplc each <'epochdt_tut.ijs';'zepochdt_tut.ijs'
 zd=. zd rplc each <'admin_tut.ijs'; 'zzadmin_tut.ijs'
+zd=. zd rplc each <'intro_csv_tut.ijs'; 'aintro_csv_tut.ijs'
+
 
 d=. d/:_8}.each zd
 d=. (#JDP,'tutorial/')}.each d

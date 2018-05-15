@@ -10,7 +10,7 @@ basic/stock_data_tut.ijs
 basic/table_from_pairs_tut.ijs
 basic/epochdt_tut.ijs
 basic/admin_tut.ijs
-csv/basic_tut.ijs
+csv/intro_csv_tut.ijs
 csv/bus_lic_tut.ijs
 csv/quandl_ibm_tut.ijs
 csv/xtra_tut.ijs
