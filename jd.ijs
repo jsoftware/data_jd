@@ -24,15 +24,15 @@ noncomkey=:  '!!! Jd key: non-commercial use only!'
 invalidkey=: '!!! Jd key: invalid'
 updatekey=:  '!!! Jd key: expired - restore earlier version or get new key'
 fkey=:   '~config/jdkey.txt'
-noncom=: 'a11544796265500412'
+noncom=: 'a11544796265500412' NB. validation bug sometimes needs blank at end
 
 3 : 0''
 k=. fread fkey
 if. (_1=k)+.(<3{.}.(k i.' ')}.k)e.;:'edu eva' do.
  echo missingkey
- 'non_commercial key install failed'assert (#noncom)=noncom fwrite fkey
+ 'non_commercial key install failed'assert (>:#noncom)=(noncom,' ') fwrite fkey
 else.
- if. noncom-:k do. echo noncomkey else. echo '!!! Jd key:',(k i.' ')}.k end.
+ if. noncom-:k-.' ' do. echo noncomkey else. echo '!!! Jd key:',(k i.' ')}.k end.
 end. 
 NB. ensure different (production vs development) Jd libraries are not both loaded
 n=. '/jd.ijs'
