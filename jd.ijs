@@ -28,7 +28,7 @@ noncom=: 'a11544796265500412'
 
 3 : 0''
 k=. fread fkey
-if. (_1=k)+.'e'={.}.(k i.' ')}.k do.
+if. (_1=k)+.(<3{.}.(k i.' ')}.k)e.;:'edu eva' do.
  echo missingkey
  'non_commercial key install failed'assert (#noncom)=noncom fwrite fkey
 else.
