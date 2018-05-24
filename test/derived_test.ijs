@@ -80,7 +80,7 @@ jd'delete f';'a=666'
 chkd''
 chkv''
 
-jd'sort /desc f a' 
+jd'sort f a desc' 
 chkd''
 chkv''
 

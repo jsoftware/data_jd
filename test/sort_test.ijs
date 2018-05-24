@@ -1,26 +1,35 @@
 NB. Copyright 2017, Jsoftware Inc.  All rights reserved.
 
-tst=: 3 : 0
-jd'sort ',y
-assert d-:jd'reads from f,f.g order by f.akey'
+f=: 3 : 0
+'new'jdadmin'test'
+jd'createtable /pairs f';'a';((y?.y){y$i:3);'b';y$'abbcas'
 )
 
-jdadminx'test'
-jd'gen ref2 f 6 2 g 4'
-d=: jd'reads from f,f.g order by f.akey'
+tst=: 3 : 0
+f 30
+d=: jd'reads from f order by ',y
+jd'sort f ',y
+assert d-:jd'reads from f'
+)
 
-tst'/desc g bref'
-tst'      g bref'
-tst'/desc g bref bb12'
-tst'      g bref bb12'
+tst'a'
+tst'a desc'
+tst'b'
+tst'b desc'
 
-tst'/desc f aref'
-tst'     f aref'
-tst'/desc f adata a0'
-tst'      f adata a0'
+tst'a,b'
+tst'a desc,b'
+tst'a,b desc'
+tst'a desc,b desc'
 
-jd'gen test h 10'
-d=. jd'reads from h order by boolean desc,int desc'
-jd'sort /desc h boolean int'
-assert d-:jd'reads from h'
+tst'b,a'
+tst'b desc,a'
+tst'b,a desc'
+tst'b desc,a desc'
+
+f 30
+jd'sort f a,b'
+d=. jd'reads from f'
+jd'sort f a,b desc'
+assert -.d-:jd'reads from f'
 

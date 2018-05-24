@@ -1,10 +1,12 @@
 NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
 
-'new'jdadmin'tutorial'
-jd'gen test f 6'
-jd'sort /desc f int'
-jd'reads from f'
-jd'sort /desc f boolean int'
-jd'reads from f'
-jd'sort f int'
-jd'reads from f'
+f=: 3 : 0
+'new'jdadmin'test'
+jd'createtable /pairs f';'a';((y?.y){y$i:3);'b';y$'abbcas'
+)
+
+jd'reads from f' [ f 10
+jd'reads from f' [ jd'sort f a'
+jd'reads from f' [ jd'sort f a desc' 
+jd'reads from f' [ jd'sort f a,b'
+jd'reads from f' [ jd'sort f a,b desc'

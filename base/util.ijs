@@ -66,6 +66,7 @@ builddemos=: 3 : 0
 b=. jdfread each'~temp/jd/northwind/jdclass';'~temp/jd/sandp/jdclass';'~temp/jd/sed/jdclass'
 if. *./b=<'database' do. return. end.
 echo'building demos - takes time'
+if. IFQT do. wd'msgs' end.
 load__ JDP,'demo/common.ijs'
 builddemo__'northwind'
 builddemo__'sandp'

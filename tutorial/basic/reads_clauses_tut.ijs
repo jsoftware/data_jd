@@ -20,7 +20,6 @@ NB.  it consists of relations like qty>100 or city="Paris"
 NB.  which can be preceded by "not" and combined by "and" and "or"
 NB.  operations execute as in J (right to left and can be parenthesized)
 NB.  cols of compatible type can be compared
-NB. see user.html for complete info 
 
 jd'reads from p where pname="Screw" or weight<14 and city="London"'
 jd'reads from p where pname="Screw" or (weight<14 and city="London")'

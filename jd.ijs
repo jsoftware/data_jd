@@ -11,7 +11,7 @@ all use is through JDP_z_
 )
 
 coclass'jd'
-jdversion=: '4.15'
+jdversion=: '4.16'
 
 'Jd requires J64'assert IF64=1
 ('Jd not supported on UNAME: ',UNAME) assert (<UNAME)e.'Win';'Linux';'Darwin' 
