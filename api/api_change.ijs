@@ -189,8 +189,12 @@ end.
 NB. w is always a list - if it has 1 element, this allows data 1 4$'a'
 NB. force w to scalar if single element list to disallow 1 4$'a'
 
+if. 0=#w do. NB. allow 0 or 1 rows if nothing to do
+ ETALLY assert rows e. 0 1
+ JDOK return.
+end. 
+
 ETALLY assert rows=#w
-if. 0=#w do. JDOK return. end.
 
 bdn=. 3 : 'derived__y' "0 CHILDREN__t NB. mask of derived names
 EDERIVED assert -.+./ns e.~ bdn#NAMES__t
