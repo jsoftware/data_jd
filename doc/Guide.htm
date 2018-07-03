@@ -6,16 +6,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title></title>
   <style type="text/css">code{white-space: pre;}</style>
-  <!--[if lt IE 9]>
-    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-  <![endif]-->
   <link rel="stylesheet" href="jd.css">
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
 </head>
 <body>
 <p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm" class="act">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
 <p>Guide to Jd terminology.</p>
 <h2 id="definitions">Definitions</h2>
-<p><b>admin</b> - manages dan rules for users<br /><b>dac</b> - data column - folder for table column<br /><b>dan</b> - database access name<br /><b>db</b> - database - folder with all data and metadata for db tables and columns<br /><b>intask</b> - ops run in the Jd task (jconsole/jijx) - client and server are same task<br /><b>remote</b> - ops run in different task (socket) - client and server are different tasks<br /><b>user</b> - access controlled by dan</p>
+<p><b>admin</b> - manages dan rules for users<br />
+<b>dac</b> - data column - folder for table column<br />
+<b>dan</b> - database access name<br />
+<b>db</b> - database - folder with all data and metadata for db tables and columns<br />
+<b>intask</b> - ops run in the Jd task (jconsole/jijx) - client and server are same task<br />
+<b>remote</b> - ops run in different task (socket) - client and server are different tasks<br />
+<b>user</b> - access controlled by dan</p>
 <h2 id="db">db</h2>
 <p>A db is a folder with a folder for each table. Each table folder has a folder for each column. Each folder has a few metadata files (prefix jd). Following is a simplified db folder/file list:</p>
 <pre><code>db
@@ -138,19 +144,34 @@
 </ul>
 <h2 id="northwind-remote-server">Northwind remote server</h2>
 <p>Steps to create a server for the northwind db on a different machiine than the client. Client and server can be on the same machine, but things are more interesting if the server is on a different machine. If client/server are on the same machine they communicate securely through localhost ports. If client is on a different machine, then it needs to ssh to the server so ssh can provide login security and encrypted data transport through a tunnel.</p>
-<p>Prepare northwind server:<br />1. select a server to which you have ssh access<br />2. configure ssh to provide a localhost tunnel for port 65011<br />3. ssh to the server<br />4. install J, Jd, and update all packages<br />5. start jconsole<br /></p>
+<p>Prepare northwind server:<br />
+1. select a server to which you have ssh access<br />
+2. configure ssh to provide a localhost tunnel for port 65011<br />
+3. ssh to the server<br />
+4. install J, Jd, and update all packages<br />
+5. start jconsole<br />
+</p>
 <pre><code>   load&#39;jd&#39;
    jdtests&#39;&#39; NB. validate install and create northwind db
    exit&#39;&#39;</code></pre>
-<p>Start northwind server:<br />1. ssh to server<br />2. start jconsole<br /></p>
+<p>Start northwind server:<br />
+1. ssh to server<br />
+2. start jconsole<br />
+</p>
 <pre><code>   load&#39;jd&#39;
    initserver&#39;&#39; NB. list of available server configs
    initserver&#39;default&#39;</code></pre>
-<p>Use northwind as a remote client:<br />1. start new J task (another/same machine) (jconsole/JHS)<br /></p>
+<p>Use northwind as a remote client:<br />
+1. start new J task (another/same machine) (jconsole/JHS)<br />
+</p>
 <pre><code>   load&#39;~addons/data/jd/api/client.ijs&#39; NB. just client, not full Jd
    jdaccess&#39;northwind u/p localhost:65011&#39;
    jd&#39;reads CompanyName from Suppliers&#39;</code></pre>
-<p>Access Jd northwind server as dbadmin:<br />1. start browser<br />2. browse to localhost:65011:jijx<br />3. login with user test password test<br /></p>
+<p>Access Jd northwind server as dbadmin:<br />
+1. start browser<br />
+2. browse to localhost:65011:jijx<br />
+3. login with user test password test<br />
+</p>
 <pre><code>   jdadmin&#39;&#39; </code></pre>
 </body>
 </html>

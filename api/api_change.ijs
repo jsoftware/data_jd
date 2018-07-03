@@ -13,7 +13,7 @@ t=. jdgl tab
 bdn=. 3 : 'derived__y' "0 CHILDREN__t NB. derived names
 dn=. bdn#NAMES__t
 EDERIVED assert 0=#FECOL_jd_=: ;{.ns#~ns e. dn
-EMISSING assert 0=#FECOL_jd_=: (NAMES__t#~-.bjdn NAMES__t)-.ns,dn
+EMISSING assert 0=#FECOL_jd_=: ;{.(NAMES__t#~-.bjdn NAMES__t)-.ns,dn
 if. rows<1 do. JDOK return. end.
 nv=. ns,.vs
 

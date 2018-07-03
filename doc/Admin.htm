@@ -6,10 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title></title>
   <style type="text/css">code{white-space: pre;}</style>
-  <!--[if lt IE 9]>
-    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-  <![endif]-->
   <link rel="stylesheet" href="jd.css">
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
 </head>
 <body>
 <p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm" class="act">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
@@ -22,7 +22,8 @@
 <p><code>  jdadmin 0 NB. release all locks and close all DANs</code></p>
 <p><code>  'new'jdadmin'...' NB. same as jdadminx '...'</code></p>
 <p><code>  'access'jadmin'' NB. lists jdaccess for available DANS</code></p>
-<p><code>  jdadmin'ab'     NB. make DB ~temp/jd/ab available</code><br /><code>  jdadmin'.../ab' NB. make DB .../ab available</code></p>
+<p><code>  jdadmin'ab'     NB. make DB ~temp/jd/ab available</code><br />
+<code>  jdadmin'.../ab' NB. make DB .../ab available</code></p>
 <p>When a DB is made available its admin.ijs is loaded to set the DAN (db access name) info and does jdaccess for the first DAN.</p>
 <p>The db in a folder is accessed by a DAN. A DAN maps to folder, user/pwds, ops. Different DANs can access the same or different folders.</p>
 <p>A default admin.ijs is created if it does not exist. In the default, DAN is last path folder, and u/p is user/pwd</p>
@@ -41,7 +42,8 @@ jdaccess &#39;&#39;                          NB. report
 jdaccess 0                           NB. clear access </code></pre>
 <h2 id="jdadminx">jdadminx</h2>
 <p>Creates a new database, replacing any old database. It deletes any old folder, creates a new db folder, then does jdadmin.</p>
-<p><code>  jdadminx'aa'     NB. create new database ~temp/jd/aa</code><br /><code>  jdadminx'.../bb' NB. create new database .../bb</code></p>
+<p><code>  jdadminx'aa'     NB. create new database ~temp/jd/aa</code><br />
+<code>  jdadminx'.../bb' NB. create new database .../bb</code></p>
 <p>A new database can be created in an empty folder. A new database overwrites an old database unless <a href="Admin.htm#jddropstop" title="wikilink">jddropstop</a> is set.</p>
 <p>fails if folder:</p>
 <ul>
@@ -126,7 +128,7 @@ jdaccess 0                           NB. clear access </code></pre>
 <ul>
 <li>allowed if jddeletok exists</li>
 <li>not allowed if jddropstop exists</li>
-<li>not allowed if too few &quot;/&quot; characters (e.g. <code>/abc/def</code> is ok, but <code>/abc</code> fails)</li>
+<li>not allowed if too few “/” characters (e.g. <code>/abc/def</code> is ok, but <code>/abc</code> fails)</li>
 <li>allowed if empty or a jd folder (jdclass exists) or in ~temp</li>
 <li>otherwise, not allowed</li>
 </ul>

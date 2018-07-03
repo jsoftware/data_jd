@@ -408,8 +408,9 @@ opts=. COLSEP,(2{.ROWSEP),QUOTED,ESCAPED
 cols=. >:>./;0".each(d i. each' '){.each d NB. scan an extra col
 PATHCSVFILE=: csvfp_jd_
 'ina inz'=. setinput''
-maxwidths=: cols$_1
-r=. >{.xscan (opts;cols;ina;inz),<maxwidths
+r=. xscan (opts;cols;ina;inz),<cols$_1
+maxwidths=: >5{r
+r=. >{.r
 unmapall_jmf_''
 r
 )
@@ -836,7 +837,9 @@ elseif. 1 do.
  else.
   cdefx col
   col=. <:col
-  if. type=CCHAR do. count=. xtra end.
+  if. type=CCHAR do.
+   count=. xtra
+  end.
   coldefs=: (type,count,xtra,col) col}coldefs
   colnames=: (<name) col}colnames
   elidedx=: elf col}elidedx
