@@ -132,7 +132,6 @@ tools/tests.ijs
 tools/ptable.ijs
 dynamic/ref.ijs
 dynamic/base.ijs
-doc/Convert.htm
 doc/License.htm
 doc/jd.css
 doc/Ops_csv.htm
@@ -258,6 +257,8 @@ test/csv_test.ijs
 test/sort_test.ijs
 test/derived_test.ijs
 test/user_test.ijs
+bug/empty_join_where.ijs
+bug/csvwr.ijs
 )
 
 FILESWIN64=: 0 : 0
