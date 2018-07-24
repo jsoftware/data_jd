@@ -34,6 +34,14 @@ if. (_1=k)+.(<3{.}.(k i.' ')}.k)e.;:'edu eva' do.
 else.
  if. noncom-:k-.' ' do. echo noncomkey else. echo '!!! Jd key:',(k i.' ')}.k end.
 end. 
+
+if. IFWIN do.
+ 'Jd requires Windows version > XP'assert 5<{:,(8#256)#:;'kernel32.dll GetVersion x' cd ''
+ try. 'msvcr120.dll foo x'cd'' catch. end.
+ t=. 'Jd requires msvcr120.dll',LF,'http://www.microsoft.com/en-ca/download/details.aspx?id=40784',LF,'download vcredist_x64.exe and run to install msvcr110.dll'
+ t assert 2 0=cder''
+end.
+
 NB. ensure different (production vs development) Jd libraries are not both loaded
 n=. '/jd.ijs'
 d=. jpath each 4!:3''
