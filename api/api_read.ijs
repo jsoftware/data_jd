@@ -93,7 +93,7 @@ t=. jdgl_jd_ :: 0: root,PTM
 pcol=. getpcol__t''
 from=. (from i.',')}.from
 
-NB.!!! change to OP is bad - so use another flag
+NB.! change to OP is bad - so use another flag
 OP_jd_=: 'readptable' NB. kludge flag to SelBy for automatic count agg and autoindex 
 optlr=: option_lr
 NB. build read arg (order stripped out to be done at end)

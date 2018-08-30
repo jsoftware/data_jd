@@ -95,13 +95,13 @@ sortfrom=: 3 : 0
 getname =. [: (}.~ '.-><=' >:@(1 i:~ e.~) ]) '.'&,
 y =. (getname@[&.>^:(a:=])~/ , {:)"1 deb&.> y  NB. Default alias
 if. +./ r=.-.~:{."1 y do.
-  throw 'Repeated table names: ',_2}.;,&', '&.> r#{."1 y
+  throw 'Repeated table names (try using alias, e.g., a:b,a.b) : ',_2}.;,&', '&.> r#{."1 y
 end.
 NB. list of parent table indices
 getroot =. [: (}.~>:@i:&' ')^:(' '&e.) ({.~ # | '.-><='&(1 i.~ e.~))
 parents =. (i. getroot&.>)/ |:y
 if. 1 ~: n=.(+/@:=#)parents do.
-  throw 'Expected exactly one root table and received ',":n
+ throw 'Expected exactly one root table and received ',":n
 end.
 paths=. {~^:(<@<:@#@])~ (,#) parents
 if. -. (#parents) +./@:= {:paths do.
@@ -293,8 +293,12 @@ if. NAMES e.~ <y do.
   if. 'ref' -: 3 : 'typ__y' l=.getloc y do. l return. end.
 end.
 r=.FindRef y
-if. 1<#r do.  throw 'Ambiguous reference to table ',y end.
 if. 1=#r do. {.r return. end.
+if. 1<#r do.
+ ('Ambiguous reference to table ',y)assert 1=#~.r
+ {.r
+ return.
+end.
 throw 'Could not find table ',y,' from table ',NAME
 )
 
