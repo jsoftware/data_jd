@@ -54,7 +54,6 @@ end.
 jddeletefolder_jd_'~temp/jd/northwind'
 builddemos_jd_''
 jdserverstop_jd_''
-jd'close'
 jdadmin 0
 start=. 6!:1''
 for_n. i.#t do.

@@ -2,6 +2,39 @@ NB. Copyright 2016, Jsoftware Inc.  All rights reserved.
 
 coclass'jd'
 
+NB. map all cols except ref - used for rx
+NB. options /time n - do it if n seconds since last time
+jd_map=: 3 : 0
+ECOUNT assert 0=#y
+d=. getdb''
+f=. PARENT__d
+Close__f DB
+d=. getdb''
+rxmap__d=: 0 NB. mark as not mapped
+openallchildren__d'' NB. this could fail - not sure what to do
+
+for_t. CHILDREN__d do.
+ for_c. CHILDREN__t do.
+  if. -.(<typ__c) e. 'autoindex';'ref' do.
+   mapcolfile__c"0 MAP__c
+   opentyp__c ''
+   
+   if. Tlen__t~:countdat__c dat__c do.
+    m=. 'Tlen bad for table ',NAME__PARENT__c,' col ',NAME__c
+    if. 'rx'-:locktype'' do.
+     m assert 0
+    else. 
+     if. -.fexist '/jdrepair',~dbpath DB do. jddamage m end.
+    end.
+   end.
+  end. 
+ end.
+end. 
+
+rxmap__d=: 1 NB. mark as mapped
+JDOK
+)
+
 readstart=: 3 : 0
 tempcolclear''
 if. 0~:L.y do. y=. ;y[ECOUNT assert 1=#y end.
@@ -34,7 +67,6 @@ y=. readstart y
 
 r=. readptable y
 if. -.''-:r do. r return. end.
-
 
 d=. getdb''
 if. option_lr do.

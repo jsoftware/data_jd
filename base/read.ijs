@@ -2,6 +2,33 @@ NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
 coclass 'jdquery'
 coinsert 'jddatabase'
 
+0 : 0
+rx notes
+jdamin'foo';'rx'
+
+A DB opened 'rx' is readonly and assumes it is open in another task as 'w'.
+
+A read from an 'rx' DB closes/opens the DB if the DB readstate Tlen has changed from Tlen in the table locale.
+
+The close/open will get changes in the table schema reflected in the locales.
+
+It also unmaps the cols so that they will be remapped when referenced.
+
+As rx cols are mapped their Tlen is checked against the table Tlen. A col Tlen is adjust down to match the table TLen. Otherwise it is an error.
+ 
+Joins not supported in rx.
+
+When jdadmin is done for rx it should limit ops.
+ jdadmin'foo';'rx'
+ 'foo' jdadminop_jd_ 'read reads info'
+
+table - not mapped
+ jd'map' maps all cols for all tables - and marks as mapped
+  error if Tlen mismatch 
+ jd'read f' error if not mapped
+)
+
+
 rdsplit=: 4 : 0
 x=. ' ',x,' '
 y=. ' ',y,' '
@@ -33,7 +60,6 @@ end.
 Query ''
 Order order
 if. _1=nc<'option_e' do. option_e=:0 end. NB. non api access does not do readstart
-
 for_i. i.#cnms do.
  c=. i{cloc
  NB. edate int converted to string - except for /e and agg count 
@@ -79,6 +105,11 @@ NB. Build table data:
 NB.   tnms, the name of each table
 NB.   tloc, the corresponding table locale
 From =: 3 : 0
+if. 'rx'-:locktype_jd_'' do.
+ 'rx admin: joins not supported'assert -.'.'e.y
+  d=. getdb''
+  'rx admin: map required'assert rxmap__d
+end.
 n =. #ex =. 'exact '
 if. exact =: 0:`(','~:n&{)@.(ex-:n&{.) y do. y=.n}.y end.
 from =. sortfrom ':'&(_2 {. strsplit)@> ',' strsplit y

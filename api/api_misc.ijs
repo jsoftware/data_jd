@@ -160,31 +160,23 @@ end.
 JDOK
 )
 
+NB. close DB
 jd_close=: 3 : 0
 ECOUNT assert 0=#y
 if. 0=#DB do. JDOK return. end.
-if. fexist 'jdcloseflush',~jdpath'' do. jd_flush'' end.
+d=. getdb''
+f=. PARENT__d
+
 NB. read error (tab not found) orphans jdquery local
 NB. coerase jdquery local (copath has number locals) leaves a damaged local
-NB. brute force get rid of all jdquery locales
+NB. get rid of all jdquery locales
 for_n. conl 1 do.
- if. 'jdquery'-:;{.copath n do. coerase n end.
+NB. if. 'jdquery'-:;{.copath n do. coerase n end.
 end. 
 
-t=. opened''
-for_a. t do.
- a=. ;a
- i=. a i:'/'
- f=. Open_jd_ i{.a
- Close__f (>:i)}.a
-end.
+NB. if. fexist 'jdcloseflush',~jdpath'' do. jd_flush'' end.
 
-NB. coerase all folder locals for a clean slate
-for_n. conl 1 do.
- if. 'jdfolder'-:;{.copath n do. coerase n end.
-end.get
-NAMES_jd_=: '' 
-CHILDREN_jd_=: ''
+Close__f NAME__d
 
 JDOK
 )

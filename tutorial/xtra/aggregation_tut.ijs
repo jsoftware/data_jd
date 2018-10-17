@@ -1,5 +1,4 @@
 NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
-
 jdadmin'sandp'
 
 jd'reads from j'

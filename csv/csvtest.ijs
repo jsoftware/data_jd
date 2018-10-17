@@ -971,7 +971,7 @@ d=. Open__f 'tdb'
 Drop__d :: [ table
 Create__d y NB. ;<tdbdata
 r=. Reads__d 'from ',table
-closeall''
+cClose_jd_ jpath'~temp'
 r
 )
 
@@ -990,8 +990,4 @@ d=. Open__f 'tdb'
 r=. Reads__d y
 Close_jd_'*'
 r
-)
-
-closeall=: 3 : 0
-Close_jd_ jpath'~temp'
 )

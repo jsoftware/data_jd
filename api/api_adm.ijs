@@ -1,8 +1,23 @@
 NB. Copyright 2015, Jsoftware Inc.  All rights reserved.
+
+0 : 0
+locks
+ [w] -  read/write - other [w] tasks locked out
+ [r+] - read       - does not require or get [w] lock
+)
+
 jdadmin_z_=:   jdadmin_jd_
 jdadminx_z_=:  jdadminx_jd_
 
 coclass'jd'
+
+locktype=: 3 : 0
+
+i=. ({."1 DBPATHS) i. <DB
+p=. <'/jdlock',~jpath;{:i{DBPATHS
+i=. (1{"1 LOCKED)i.p
+;2{i{LOCKED
+)
 
 jdpath=: 3 : 'jpath ''/'',~dbpath DB'
 
@@ -18,6 +33,32 @@ db=. dbpath DB
 i=. db i:'/'
 f=. Open_jd_ jpath i{.db
 Open__f (>:i)}.db
+)
+
+NB. close all locales - unmaps files - does NOT jd_flush - does NOT release locks
+jdcloseall=: 3 : 0
+NB. read error (tab not found) orphans jdquery local
+NB. coerase jdquery local (copath has number locals) leaves a damaged local
+NB. get rid of all jdquery locales
+for_n. conl 1 do.
+ if. 'jdquery'-:;{.copath n do. coerase n end.
+end. 
+
+t=. opened''
+for_a. t do.
+ a=. ;a
+ i=. a i:'/'
+ f=. Open_jd_ i{.a
+ Close__f (>:i)}.a
+end.
+
+NB. coerase all folder locals for a clean slate
+for_n. conl 1 do.
+ if. 'jdfolder'-:;{.copath n do. coerase n end.
+end.
+NAMES_jd_=: '' 
+CHILDREN_jd_=: ''
+i.0 0
 )
 
 NB. table names,.locales sorted by name
@@ -121,7 +162,7 @@ case. '' do.
  t=. (jdadminfp''),(jdadminup''),(jdadminop''),jdadminlk''
  (/:{."1 t){t
 case. 0 do.
- jd'close' 
+ jdcloseall'' 
  jdadminlk 0
  jdadminfp 0
  jdadminup 0
@@ -129,6 +170,10 @@ case. 0 do.
  jdaccess 0
  i.0 0
 case. do.
+ lock=. 'w'
+ if. 1=L.y do.
+  'y lock'=. y
+ end.
  y=. adminp y
  'not a folder'assert 2=ftype y
  'not a database'assert 'database'-:jdfread y,'/jdclass'
@@ -137,7 +182,7 @@ case. do.
  'db version not compatible with this Jd version'assert v=<.".jdversion
  d=. }.(y i:'/')}.y
  'x'jdadminlk y NB. remove old lock (if any)
- 'w'jdadminlk y
+ lock jdadminlk y
  
  NB. remove old admin for this folder
  dan=. (;(<jpath y)=jpath each {:"1 DBPATHS)#{."1 DBPATHS
@@ -161,11 +206,7 @@ case. do.
  end.
  NB. default access is for the 1st of the new dans
  jdaccess (;{.c{DBPATHS_jd_),' ',(;{:c{DBUPS_jd_),' intask'
- 
  assertnodamage''
- 
- NB. 'db damaged and not under repair' assert -.1 0-:fexist (<y),each'/jddamage';'/jdrepair'
-
  i.0 0
 end.
 :
@@ -303,14 +344,13 @@ lock=: 4 : 0
 f=. jpath y,'/jdlock'
 'lock not a file' assert (2~:ftypex) f
 if. ('x'~:{.x) *. -.fexist f do.'rw'fwrite f[jdcreatefolder y end.
-lf=. (<f) e. {:"1 LOCKED
+lf=. (<f) e. 1{"1 LOCKED
 select. x
-
 case.'w'do.
  if. lf do. 1 return. end.
  h=. lockopen f
  if. locklock h do.
-  LOCKED_jd_=: LOCKED,h;f
+  LOCKED_jd_=: LOCKED,h;f;x
  else. 
   lockclose h
   assert 0['lock w failed - another task has database locked'
@@ -319,15 +359,19 @@ case.'w'do.
 case.'r'do.
  assert 0['lock r not supported'
  
+case. 'rx' do.
+   LOCKED_jd_=: LOCKED,0;f;x
+ 
 case.'x'do.
  if. lf do.
-  i=. ({:"1 LOCKED)i.<f
-  lockclose  ;{.i{LOCKED
+  i=. (1{"1 LOCKED)i.<f
+  h=. ;{.i{LOCKED
+  if. 0~:h do. lockclose h end. NB. rx has no lock
   LOCKED_jd_=: LOCKED-.i{LOCKED
  end.
 
 case. do.
- assert 0['lock not wrx'
+ assert 0['lock not in: w rx x'
 end. 
 )
 
@@ -339,9 +383,9 @@ NB. lock is on a file in the database folder
 jdadminlk=: 3 : 0
 select. y
 case. '' do.
- (<'[w]'),._7}.each{:"1 LOCKED
+ (2{"1 LOCKED),._7}.each 1{"1 LOCKED
 case. 0 do.
- i.0 0['x'jdadminlk each _7}.each{:"1 LOCKED
+ i.0 0['x'jdadminlk each _7}.each 1{"1 LOCKED
 case. do.
  assert 0['invalid argument'
 end.
@@ -383,7 +427,7 @@ i.0 0
 if. _1=nc<'DBPATHS' do. DBPATHS=: 0 2$'' end.
 if. _1=nc<'DBUPS'   do. DBUPS=:   0 2$'' end.
 if. _1=nc<'DBOPS'   do. DBOPS=:   0 2$'' end.
-if. _1=nc<'LOCKED'  do. LOCKED=:  0 2$'' end.
+if. _1=nc<'LOCKED'  do. LOCKED=:  0 3$'' end.
 LIBC=: unxlib'c'
 )
 

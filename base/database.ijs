@@ -20,6 +20,8 @@ AGGFCNS=: 0 2$<''
  (+/) addagg 'sum'
 )
 
+rxmap=: 0 NB. rx needs map
+
 open=: 3 : 0
 aggcreate''
 f=. PATH,'/custom.ijs'
