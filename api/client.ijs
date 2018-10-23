@@ -112,7 +112,7 @@ jdtx=: 3 : 0
 timex 'jd''',y,''''
 )
 
-NODBOPS=: 'createdb';'list';'option' NB. ops without DB
+NODBOPS=: 'close';'createdb';'list';'option' NB. ops without DB
 
 NB. jdx always returns a boxed result - jd asserts it is not an error
 jdx=: 3 : 0
@@ -156,14 +156,9 @@ if. 'intask'-:SERVER do.
  if. optionspace do.
   lastspace=: 7!:2'r=. (''jd_'',opx)~a' 
  else.
-  
-NB.  if. logops do.
-NB.    r=. (3!:1 [a)
-NB.    ('jdlog000000',(21":#r),(32{.opx),r)fappend '~temp/jd.log'
-NB.  end.
-  
-  
+  NB. 'refs before'validaterefcounts''
   r=. ('jd_',opx)~a
+  NB. 'refs after' validaterefcounts''
   lastspace=: _1
  end.
  lasttime=: start-~6!:1''

@@ -152,16 +152,7 @@ if. #w do.
 else.
   rows=. i.Tlen__t
 end.
-
-decho 'here'
-
 WriteCsv__t csvfp;option_h1;cols;rows;option_e;new
-
-
-decho 'there'
-return.
-
-
 )
 
 NB. copyscripts snk;src

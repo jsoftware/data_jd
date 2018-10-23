@@ -19,7 +19,7 @@ cnts_map_jd_=: >:cnts_map_jd_
 ('map name invalid: ',jn)assert _1=nc <jn
 ('map file does not exist: ',fn)assert fexist fn
 try.
- x map_jmf_ y , '';'rx'-:locktype'' NB. !
+ x map_jmf_ y
 catchd.
  echo 'jdmap failed - will retry : ',fn,' : ',LF-.~,13!:12''
  try.

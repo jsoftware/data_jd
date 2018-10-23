@@ -77,7 +77,7 @@ end.
 jdaccess db
 snkpath=. '"',snkpath,'"'
 srcpath=. '"',srcpath,'"'
-jdcloseall''
+jd_close''
 if. IFWIN do.
  r=. shell 'robocopy ',(hostpathsep srcpath),' ',(hostpathsep snkpath),' *.* /E'
  if. +/'ERROR' E. r do.
@@ -110,7 +110,7 @@ catchd.
 end.
 
 jdaccess db
-jdcloseall''
+jd_close'' NB. does not release lock
 assert 1=snkpath frename srcpath['frename failed'
 JDOK
 )
