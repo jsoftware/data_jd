@@ -95,6 +95,7 @@ base/column.ijs
 base/constants.ijs
 base/keyindex.ijs
 base/read.ijs
+base/replicate.ijs
 base/where.ijs
 base/jmfx.ijs
 base/log.ijs

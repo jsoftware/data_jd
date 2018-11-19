@@ -127,14 +127,14 @@ try.
 if. 'intask'-:SERVER do.
  'jde: jd not loaded'assert 0=nc<'DBPATHS'
  if. 0=L.y do.
-  y=. dlb y
-  i=. y i.' '
-  FEOP=: OP=: i{.y
-  a=. dltb i}.y
+  t=. dlb y
+  i=. t i.' '
+  FEOP=: OP=: i{.t
+  a=. dltb i}.t
  else.
-  y=. (bdnames ;{.y),}.y
-  FEOP=: OP=: dltb ;{.y
-  a=. }.y
+  t=. (bdnames ;{.y),}.y
+  FEOP=: OP=: dltb ;{.t
+  a=. }.t
  end.
  pm OP
  'op'logtxt FEOP
@@ -150,15 +150,21 @@ if. 'intask'-:SERVER do.
   JDE1001 assert r~:#DBOPS 
   JDE1001 assert +./(OP;,'*')e.bdnames>{:r{DBOPS
   JDE1001 assert 3=nc<'jd_',opx 
+ else.
+  DBL=: ''
  end. 
  start=. 6!:1''
  parts=: _1
  if. optionspace do.
   lastspace=: 7!:2'r=. (''jd_'',opx)~a' 
  else.
-  NB. 'refs before'validaterefcounts''
   r=. ('jd_',opx)~a
-  NB. 'refs after' validaterefcounts''
+  
+  if. (<opx) e. rops_jddatabase_ do.
+    d=. getdb'' NB. some ops change DBL locale
+    opx rlog__d y
+  end. 
+  
   lastspace=: _1
  end.
  lasttime=: start-~6!:1''

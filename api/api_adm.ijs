@@ -1,6 +1,7 @@
 NB. Copyright 2015, Jsoftware Inc.  All rights reserved.
-jdadmin_z_=:   jdadmin_jd_
-jdadminx_z_=:  jdadminx_jd_
+jdadmin_z_   =: jdadmin_jd_
+jdadminnew_z_=: jdadminnew_jd_
+jdadminx_z_  =: jdadminx_jd_
 
 coclass'jd'
 
@@ -179,6 +180,10 @@ case. 'access' do.
  d=. >(<'   jdaccess'),each m,each d,each''''
 case. do. 'bad x'assert 0
 end.
+)
+
+jdadminnew=: 3 : 0
+'new'jdadmin y
 )
 
 jdadminx=: 3 : 0

@@ -5,7 +5,19 @@ coinsert 'jd'
 CLASS =: <'jddatabase'
 CHILD =: <'jdtable'
 
-STATE=: ''
+STATE=: <;._2 ]0 :0
+REPLICATE
+RLOGFOLDER
+RLOGPER
+RLOGN
+)
+
+REPLICATE =: 0     NB. 1 for source, 2 for sink
+RLOGFOLDER=: ''    NB. folder for log files
+RLOGPER   =: 30000 NB. files per folder
+RLOGN     =: 0     NB. next record 
+
+NB. RLOGD and RLOGN set by repsrc abd repsnkolder
 
 NB. define aggregation functions
 aggcreate=: 3 : 0
@@ -21,6 +33,7 @@ AGGFCNS=: 0 2$<''
 )
 
 open=: 3 : 0
+readstate''
 aggcreate''
 f=. PATH,'/custom.ijs'
 if. fexist f do. load f end.
