@@ -21,7 +21,7 @@ coclass'jd'
 JDE1001=: 'jde: not an op'
 
 fmtx=: 4 : 0
-if. 0=#y do. '' else. x,':',(":y),' ' end.
+if. 0=#y do. '' else. x,':',(}:;,&','@":&>boxxopen y),' ' end.
 )
 
 fmtoper=: 3 : 0

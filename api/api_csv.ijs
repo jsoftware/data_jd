@@ -204,6 +204,7 @@ fs=. {."1[1!:0 jpath (_4}.csv),PTM,'*.csv'
 if. #fs do.
  fs=. (<csv),fs,~each<CSVFOLDER__
  '/cdefs not supported'assert -.option_cdefs_jd_
+ echo^:(0<#) >(#~ -.@fexist"0) (_4}.each fs),each<'.cdefs'
  'one or more missing cdefs' assert fexist"0 (_4}.each fs),each<'.cdefs'
 
  ts=. _4}.each fs
@@ -226,6 +227,7 @@ csvrd=: 3 : 0
 d=. getdb''
 csv=.   csv
 cdefs=. (_3}.csv),'cdefs'
+echo^:(-.@:fexist) csv
 assert fexist csv
 assert -.(<table)e.{."1 jdtables''['table already exists'
 if. flagcdefs do.
@@ -395,6 +397,7 @@ y=. '/replace 0' getoptions y
 csvset''
 csv=. (<CSVFOLDER__),each /:~{."1 [ 1!:0 jpath CSVFOLDER__,'*.csv'
 cdefs=. (_4}.each csv),each <'.cdefs'
+echo^:(0<#) >(#~ -.@fexist"0) cdefs
 assert fexist"0 cdefs
 if. option_replace do. jd_createdb''[jd_dropdb'' end.
 assert 0=#{."1 jdtables''['db already has tables'

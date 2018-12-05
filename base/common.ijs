@@ -245,7 +245,7 @@ EMPTY
 readstate=: 3 : 0
 if. #STATE do.
  cnts_readstate_jd_=: >:cnts_readstate_jd_
- pdef (3!:2) jdfread PATH,'jdstate'
+ pdef@:(3!:2)^:(_1&(-.@-:)) jdfread PATH,'jdstate'
 end.
 )
 
