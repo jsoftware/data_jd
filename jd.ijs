@@ -95,9 +95,9 @@ base/column.ijs
 base/constants.ijs
 base/keyindex.ijs
 base/read.ijs
-base/replicate.ijs
 base/where.ijs
 base/jmfx.ijs
+base/lock.ijs
 base/log.ijs
 base/validate.ijs
 api/api.ijs
@@ -111,6 +111,7 @@ api/api_info.ijs
 api/api_misc.ijs
 api/api_read.ijs
 api/api_rename.ijs
+api/api_replicate.ijs
 api/api_sort.ijs
 api/api_table.ijs
 api/client.ijs
@@ -147,7 +148,8 @@ setscriptlists''
 IFTESTS=: 0
 if. _1=nc<'OP' do. NB. one time inits
  FEOP=: OP=: 'none'
- TEMPCOLS=: i.0 2 
+ TEMPCOLS=: i.0 2
+ LOGOPS=: 0 NB. do not log ops
  cntsclear''
  FORCEVALIDATEAFTER=: 0
  FORCEREVERT=: 0

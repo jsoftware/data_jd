@@ -31,6 +31,7 @@ dat__c=: i.<:Tlen__c
 i.0 0
 )
 
+LOGOPS_jd_=: 1
 bld''
 jdlogtxtshow_jd_ 10 NB. show last 10 log.txt lines
 damage'' NB. damage db
@@ -42,9 +43,6 @@ a=. jdlogijfshow_jd_ 0 NB. read component 0
 >3{.each a              NB. show first bit
 
 >{."1>a              NB. types of data in record
-i=. ({."1>a)i.<'jd_info''validatebad'''
-[v=. >i{{:"1>a              NB. validatebad when log was written
-NB. notice that f a dat has bad shape
 
 jdadmin 0          NB. close db
 assert 'assertion failure'-:jdadmin etx 'test'
@@ -92,3 +90,4 @@ c=. jdgl_jd_'f a' NB. locale for column a
 countdat__c dat__c           NB. rows in column mapped noun dat
 
 bld''
+LOGOPS_jd_=: 0

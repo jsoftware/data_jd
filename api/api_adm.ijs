@@ -1,4 +1,4 @@
-NB. Copyright 2015, Jsoftware Inc.  All rights reserved.
+NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
 jdadmin_z_   =: jdadmin_jd_
 jdadminnew_z_=: jdadminnew_jd_
 jdadminx_z_  =: jdadminx_jd_
@@ -18,7 +18,7 @@ db=. dbpath DB
 'not database class'assert 'database'-:jdfread db,'/jdclass'
 i=. db i:'/'
 f=. Open_jd_ jpath i{.db
-Open__f (>:i)}.db
+DBL=: Open__f (>:i)}.db
 )
 
 NB. table names,.locales sorted by name
@@ -202,6 +202,7 @@ jddeletefolder y
 'w'jdadminlk y
 Create__f d
 jdversion fwrite y,'/jdversion'
+''fwrite y,'/log.txt'
 jdadmin yy
 )
 
@@ -275,66 +276,6 @@ DBOPS=: (b#DBOPS),((0~:#>{:t),2)$t
 i.0 0
 )
 
-lockopen=: 3 : 0
-if. IFWIN do.
- h=. 1!:21 <y
-else.
- h=. (LIBC,' open > i *c i')cd y;2
-end.
-assert 0<h
-h
-)
-
-lockclose=: 3 : 0
-if. IFWIN do.
- 1!:22 y
-else.
- (LIBC,' close i i')cd y
-end.
-)
-
-locklock=: 3 : 0
-if. IFWIN do.
- r=. 1!:31 y,0 2
-else.
- r=. 0=(LIBC,' lockf > i i i i')cd y,2 0 NB. F_TLOCK 2
-end. 
-)
-
-NB. type lock file- return 1 success and 0 failure
-NB. x - x (unlock), r (readonly), or w (read/write)
-NB. y - path to jdlock file
-lock=: 4 : 0
-f=. jpath y,'/jdlock'
-'lock not a file' assert (2~:ftypex) f
-if. ('x'~:{.x) *. -.fexist f do.'rw'fwrite f[jdcreatefolder y end.
-lf=. (<f) e. {:"1 LOCKED
-select. x
-
-case.'w'do.
- if. lf do. 1 return. end.
- h=. lockopen f
- if. locklock h do.
-  LOCKED_jd_=: LOCKED,h;f
- else. 
-  lockclose h
-  assert 0['lock w failed - another task has database locked'
- end.
-  
-case.'r'do.
- assert 0['lock r not supported'
- 
-case.'x'do.
- if. lf do.
-  i=. ({:"1 LOCKED)i.<f
-  lockclose  ;{.i{LOCKED
-  LOCKED_jd_=: LOCKED-.i{LOCKED
- end.
-
-case. do.
- assert 0['lock not wrx'
-end. 
-)
 
 NB. jdadminlk'' is query on lock state
 NB. adminlk 0 frees all locks

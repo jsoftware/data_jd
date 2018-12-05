@@ -43,6 +43,7 @@ assert 'assertion failure'-:logijfdamage_jd_ etx 'fubar'
 assert de-:(#de){.}.13!:12''
 
 NB. logtxt
+LOGOPS_jd_=: 1
 jdadminx'test'
 jd'createtable f'
 jd'createcol f a int'
@@ -50,7 +51,8 @@ assert 2=+/LF=fread plog
 
 'fubar'logtxt_jd_ 'adsf';i.3 4
 jd'insert f a';i.20000
-assert 8=+/LF=fread plog
+assert 7=+/LF=fread plog
+LOGOPS_jd_=: 0
 
 bld''
 c=. jdgl_jd_'f a'

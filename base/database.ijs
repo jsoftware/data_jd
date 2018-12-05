@@ -1,4 +1,4 @@
-NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
+NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
 coclass 'jddatabase'
 coinsert 'jd'
 
@@ -8,16 +8,16 @@ CHILD =: <'jdtable'
 STATE=: <;._2 ]0 :0
 REPLICATE
 RLOGFOLDER
-RLOGPER
-RLOGN
+RLOGINDEX
 )
 
+NB. initial state values
 REPLICATE =: 0     NB. 1 for source, 2 for sink
 RLOGFOLDER=: ''    NB. folder for log files
-RLOGPER   =: 30000 NB. files per folder
-RLOGN     =: 0     NB. next record 
+RLOGINDEX =: _1    NB. snk db index in file of next record 
 
-NB. RLOGD and RLOGN set by repsrc abd repsnkolder
+NB. values not in state
+RLOGFH    =: 0     NB. src/snk rlog file handle
 
 NB. define aggregation functions
 aggcreate=: 3 : 0
@@ -34,6 +34,7 @@ AGGFCNS=: 0 2$<''
 
 open=: 3 : 0
 readstate''
+if. REPLICATE~:0 do. RLOGFH=: 1!:21<jpath RLOGFOLDER,'rlog' end.
 aggcreate''
 f=. PATH,'/custom.ijs'
 if. fexist f do. load f end.
@@ -47,7 +48,9 @@ aggcreate''
 writestate''
 )
 
-close =: ]
+close =: 3 : 0
+if. RLOGFH~:0 do. 1!:22 RLOGFH end.
+)
 
 addagg=: 2 : 0
  assert. _2~:4!:0&< y NB. right argument (aggregate function name) is not invalid as a j name
@@ -80,7 +83,6 @@ for_n. b do.
  str=. str,((JTYPES i. 3!:0 dat__w){JSIZES)**/}.$dat__w
 end.
 sink=. (rows,+/str)$'u'
-'stitch'logjd DB,' ',a,;' ',each b
 libstitch cd rows,(symdat<'sink'),(#str),(symdat<'str'),symdat<'src'
 sink
 )
@@ -101,7 +103,6 @@ for_i. i.#y do.
  str=. str,((JTYPES i. 3!:0 z~){JSIZES)**/}.$z~
 end.
 sink=. (rows,+/str)$'u'
-'stitchx'logjd DB
 libstitch cd rows,(symdat<'sink'),(#str),(symdat<'str'),symdat<'src'
 sink
 )
@@ -151,4 +152,41 @@ getloc__loc =: ('getloc_',(>LOCALE),'_')~
 r=. Read__loc y
 coerase loc
 r
+)
+
+NB. replicate routines
+
+rops=:      ;:'delete insert update upsert sort ref'
+rops=: rops,;:'createcol createtable createptable'
+rops=: rops,;:'renamecol renametable'
+
+NB. some ops are trouble - createdb table... csv... ???
+
+NB. src db - write next rlog record
+rlog=: 4 : 0
+if. 1~:REPLICATE do. return. end.
+if. -.(<x) e. rops do. return. end.
+a=. 3!:1 y
+d=. 'RLOGRLOG',(3 ic #a),a
+'rlog write failed' assert _1~:d fappend RLOGFH
+setrlogend (RLOGFOLDER,'end');3 ic fsize RLOGFH
+writestate''
+)
+
+NB. snk db - process new log records
+rlogupdate=: 3 : 0
+'not replicated'assert 2=REPLICATE
+m=. getrlogend_jd_ RLOGFOLDER,'end'
+c=. 0
+while. RLOGINDEX<m do.
+ t=. fread RLOGFH;RLOGINDEX,16
+ 'bad rlog record' assert RLOGSIG-:8{.t
+ n=. _3 ic 8}.t
+ r=. fread RLOGFH;(RLOGINDEX+16),n
+ jd 3!:2 r
+ RLOGINDEX=: RLOGINDEX+16+n
+ writestate''
+ c=. >:c
+end.
+c NB. number of commands processed
 )

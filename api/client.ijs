@@ -140,7 +140,7 @@ if. 'intask'-:SERVER do.
  'op'logtxt FEOP
  opx=. ;('x'-:{.OP){OP;'x'
  if. -. (<OP) e. NODBOPS do. 
-  DBL=: getdb'' NB. DBL global and test for damage
+  getdb'' NB. DBL global and test for damage
   r=. dbrow DBPATHS
   'not a db access name' assert r<#DBPATHS
   r=. dbrow DBUPS

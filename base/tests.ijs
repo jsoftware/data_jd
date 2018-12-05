@@ -38,6 +38,7 @@ test/ref_dirty_test.ijs
 test/ref_test.ijs
 test/refx_test.ijs
 test/repair_test.ijs
+test/replicate_test.ijs
 test/rmdir_test.ijs
 test/sandp_test.ijs
 test/sed_test.ijs

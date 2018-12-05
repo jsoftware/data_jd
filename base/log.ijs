@@ -41,6 +41,10 @@ FEER
 13!:12''
 jdlasty
 showmap_jmf_''
+)
+
+NB. previously in logsentences - but can cause loop (Anssi map failure)
+0 : 0
 jd_list'version'
 jd_info'summary'
 jd_info'schema'
@@ -92,19 +96,16 @@ i.0 0
 
 log_size_limit=: 16e6
 
-NB. log_jd_ - there is also a log_jdcsv_
+NB. log to db log.txt or ~temp/jdlog/log.txt
+NB. there is also a log_jdcsv_
 logtxt=: 4 : 0
-if. 0=#DB do. return. end.
-try. f=. dbpath DB catchd. return. end.
-if. -.fexist f,'/jdclass' do. return. end.
-f=. f,'/log.txt'
-
-if. fexist f do.
- if. log_size_limit<fsize f do.
-  ((<.0.5*log_size_limit)}.fread f)fwrite f
- end.
+if. ('op'-:x)*.-.LOGOPS do. return. end.
+try.
+ f=. '/log.txt',~dbpath DB
+catchd.
+ f=. '~temp/jdlog/log.txt'
 end.
-
+logsize f
 t=. (isotimestamp 6!:0''),' : ',12{.x
 if. 0=L.y do.
  t=. t,y,LF
@@ -119,3 +120,22 @@ NB. used by jdtests and other important logs (such as jddamage)
 logjd=: 4 : 0
 ((isotimestamp 6!:0''),' : ',(12{.x),' : ',y,LF)fappend'~temp/jd.txt'
 )
+
+NB. limit log growth
+logsize=: 3 : 0
+if. fexist y do.
+ if. log_size_limit<fsize y do.
+  ((-<.0.5*log_size_limit){.fread y)fwrite y
+ end.
+end.
+)
+
+NB. jdtests log
+logtest=: 4 : 0
+mkdir_j_ '~temp/jdlog'
+fn=. '~temp/jdlog/logtest.txt'
+if. 'test start'-:x do. ''fwrite fn end. NB. kludge to clear test log file
+logsize fn
+((isotimestamp 6!:0''),' : ',(12{.x),' : ',y,LF)fappend fn
+)
+

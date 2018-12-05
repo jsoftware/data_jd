@@ -1,3 +1,5 @@
+NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
+
 REP=: 0 : 0
 #REPLICATION
 
@@ -104,6 +106,8 @@ db state:
 
 coclass 'jd'
 
+RLOGSIG=: 'RLOGRLOG' NB. rlog file record signature
+
 padn=: 3 : 0
 (19j0":y)rplc' ';'0'
 )
@@ -126,10 +130,28 @@ shell 'zip j64-807-user/temp/jnk.zip j64-807-user/temp/jnk.txt'
 fsize 'j64-807-user/temp/jnk.zip'
 )
 
+foldercopy=: 3 : 0
+'snk src'=. jpath each y
+src=. dquote src
+jddeletefolder snkpath
+snk=. dquote snk
+
+if. IFWIN do.
+ r=. shell 'robocopy ',(hostpathsep src),' ',(hostpathsep snk),' *.* /E'
+ if. +/'ERROR' E. r do.
+  smoutput r 
+  assert 0['robocopy failed'
+ end.
+else.
+ shell 'cp -r -v -T ',src,' ',snk
+end.
+'copy folder failed'assert 2=ftypex }.}:snk
+)
+
 NB. blanks in file name are a nuisance
 jd_repsrc=: 3 : 0
 ECOUNT assert 1=#bdnames y NB.! quoted with blanks
- 'already marked as replicate' assert 0=REPLICATE__DBL
+'already marked as replicate' assert 0=REPLICATE__DBL
 fn=. dltb y
 fn=. fn,'/'#~'/'~:{:fn
 jddeletefolder fn
@@ -137,8 +159,13 @@ jdcreatefolder fn
 'jdrlog'fwrite fn,'jdclass' NB. identifies and allows subsequent delete
 REPLICATE__DBL=: 1
 RLOGFOLDER__DBL=: fn
-RLOGN=: 0         NB. next file in current folder
+foldercopy (fn,'base/');'/',~dbpath DB
+NB. remove a few files for rlog base
+ferase 1 dir fn,'base'
+''fwrite RLOGFOLDER__DBL,'rlog'
+(3 ic 0)fwrite RLOGFOLDER__DBL,'end'
 writestate__DBL''
+jd'close' NB. normal open stuff
 JDOK
 )
 
@@ -146,45 +173,53 @@ jd_repsnk=: 3 : 0
 'already marked as replicate' assert 0=REPLICATE__DBL
 fn=. dltb y
 fn=. fn,'/'#~'/'~:{:fn
-jdcreatefolder fn
+'rlog folder does not exist'assert 2=ftype fn
 REPLICATE__DBL=: 2
 RLOGFOLDER__DBL=: fn
-RLOGN__DBL=: 0
+RLOGINDEX__DBL=: 0
+foldercopy ('/',~dbpath DB);fn,'base/'
 writestate__DBL''
+jd_close'' NB. so table etc locales are opened
 JDOK
 )
 
 jd_repupdate=: 3 : 0
-while. 1 do.
- f=. padn RLOGPER__DBL*<.RLOGN__DBL%RLOGPER__DBL
- r=. fread RLOGFOLDER__DBL,f,'.rlogd/',(padn RLOGN__DBL),'.rlogn'
- if. _1=r do. JDOK return. end.
- RLOGN__DBL=: >:RLOGN__DBL
- jd 3!:2 r
- writestate__DBL''
-end. 
-JDOK
+d=. getdb''
+n=. rlogupdate__d''
+,.'commands';n
 )
 
-coclass 'jddatabase'
-coinsert 'jd'
-
-rops=:      ;:'delete insert update upsert sort ref'
-rops=: rops,;:'createcol createtable createptable'
-rops=: rops,;:'renamecol renametable'
-
-NB. some ops are trouble - createdb table... csv... ???
-
-NB. called from database locale - write next rlog record
-rlog=: 4 : 0
-if. 1~:REPLICATE do. return. end.
-if. -.(<x) e. rops do. return. end.
-'rlog write failed' assert _1~:(3!:1 y)fwrite RLOGFOLDER,'rlog'
-a=. padn RLOGN
-c=. padn RLOGPER*<.RLOGN%RLOGPER
-if. 0=RLOGPER|RLOGN do. 1!:5 <jpath RLOGFOLDER,c,'.rlogd' end.
-new=. RLOGFOLDER,c,'.rlogd/',a,'.rlogn'
-'rlog rename failed'assert 1=new frename RLOGFOLDER,'rlog'
-RLOGN=: >:RLOGN
+NB. zip db
+jd_zip=: 3 : 0
+folder=. dquote jpath dbpath DB
+ferase y
+file=. dquote jpath y
+if. UNAME-:'Win' do.
+ zip=. dquote jpath'~tools/zip/zip.exe'
+ 'windows needs work' assert 0
+else.
+ zip=. 'zip'
+ t=. 'cd ',folder,' ; zip ',file,' -r *'
+end.
+echo t
+r=. shell t
 )
 
+NB. unzip zip file to current db
+jd_unzip=: 3 : 0
+'db not empty'assert 0=#>{.{:jd_info'table'
+folder=. dquote jpath dbpath DB
+file=. dquote jpath y
+if. UNAME-:'Win' do.
+ zip=. dquote jpath'~tools/zip/zip.exe'
+ 'windows needs work' assert 0
+else.
+ zip=. 'unzip'
+ t=. 'cd ',folder,' ; unzip -qq -o ',file
+end.
+echo t
+r=. shell t
+NB. kludge to close admin and reopen to get it all set up
+jdadmin 0
+jdadmin }.}:folder NB. quotes gone
+)

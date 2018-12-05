@@ -22,6 +22,7 @@ IFTESTS_jd_=: 1
 OLDALLOC_jd_=: ROWSMIN_jdtable_,ROWSMULT_jdtable_,ROWSXTRA_jdtable_
 'ROWSMIN_jdtable_ ROWSMULT_jdtable_ ROWSXTRA_jdtable_'=: 4 1 0 NB. lots of resizecsvonly=. 'csv'-:y
 OLDMAXROWCOUNT_jd_=: MAXROWCOUNT_jd_
+OLDLOGOPS_jd_=: LOGOPS_jd_
 MAXROWCOUNT_jd_=: _
 fast=. 'fast'-:y
 csvonly=. 'csv'-:y
@@ -31,7 +32,7 @@ t=. t,~each<JDP
 if. -.IFJHS do. t=. t-.<JDP,'tutorial/xtra/server_jhs_tut.ijs' end.
 failed=: ''
 jdt=: i.0 2
-'test start'logjd_jd_''
+'test start'logtest_jd_''
 if. csvonly+.-.fast do.
  start=. 6!:1''
  jd'option sort 1' NB. sort required for now
@@ -59,13 +60,13 @@ jdadmin 0
 start=. 6!:1''
 for_n. i.#t do.
  a=. n{t
- 'test file'logjd_jd_ (#JDP_jd_)}.;a
+ 'test file'logtest_jd_ (#JDP_jd_)}.;a
  jda=. 6!:1''
  if. x do. echo 'loadd''','''',~;a end.
  try.
   load a
  catch.
-  'failed'logjd_jd_ LF,13!:12''
+  'failed'logtest_jd_ LF,13!:12''
   echo LF,('failed: ',;n{t),LF,13!:12''
   failed=: failed,a
  end.
@@ -87,8 +88,9 @@ jdt=: (\:;{."1 jdt){jdt
 IFTESTS_jd_=: 0
 'ROWSMIN_jdtable_ ROWSMULT_jdtable_ ROWSXTRA_jdtable_'=: OLDALLOC_jd_
 MAXROWCOUNT_jd_=: OLDMAXROWCOUNT_jd_
+LOGOPS_jd_=: OLDLOGOPS_jd_
 echo LF,(":<.start-~6!:1''),' seconds to run tests and tutorials'
-'test end'logjd_jd_''
+'test end'logtest_jd_''
 i.0 0
 )
 
