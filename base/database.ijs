@@ -169,14 +169,14 @@ if. -.(<x) e. rops do. return. end.
 a=. 3!:1 y
 d=. 'RLOGRLOG',(3 ic #a),a
 'rlog write failed' assert _1~:d fappend RLOGFH
-setrlogend (RLOGFOLDER,'end');3 ic fsize RLOGFH
+setrlogend''
 writestate''
 )
 
 NB. snk db - process new log records
 rlogupdate=: 3 : 0
 'not replicated'assert 2=REPLICATE
-m=. getrlogend_jd_ RLOGFOLDER,'end'
+m=. getrlogend''
 c=. 0
 while. RLOGINDEX<m do.
  t=. fread RLOGFH;RLOGINDEX,16

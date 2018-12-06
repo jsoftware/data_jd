@@ -70,23 +70,27 @@ end.
 )
 
 NB. replicate get/set end locks
+NB. complications between file names, linux handles, and windows handles
 
 NB. under lock, set value in end file
 setrlogend=: 3 : 0
-'f s'=. y
+f=. RLOGFOLDER,'end'
+s=. 3 ic fsize RLOGFH
 h=. lockopen f
 while. 1 do. if. locklock h do. break. end. 6!:3[0.001 end.
-s fwrite f
+if. IFWIN do. s fwrite h else. s fwrite f end.
 lockfree  h
 lockclose h
 )
 
 NB. under lock, read end file
 getrlogend=: 3 : 0
-h=. lockopen y
+f=. RLOGFOLDER,'end'
+h=. lockopen f
 while. 1 do. if. locklock h do. break. end. 6!:3[0.001 end.
-r=. _3 ic fread y
+r=. _3 ic fread f
+if. IFWIN do. r=. fread h else. r=. fread f end.
 lockfree  h
 lockclose h
-r
+_3 ic r
 )

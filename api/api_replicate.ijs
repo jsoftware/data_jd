@@ -35,8 +35,6 @@ same machine can each serve concurrent requests on copies of the same data.
 
 In addition to replication on the same machine, it is easy to extend so that a replicated
 db could be served from another machine.
-
-
 )
 
 
@@ -103,32 +101,9 @@ db state:
  RLOGN      - rlog file number
 )
 
-
 coclass 'jd'
 
 RLOGSIG=: 'RLOGRLOG' NB. rlog file record signature
-
-padn=: 3 : 0
-(19j0":y)rplc' ';'0'
-)
-
-
-NB.  get rlog file - from record y to end
-NB. getrlog 'rlog folder';30000;123
-getrlog=: 3 : 0
-'folder per n'=: y
-r=. ''
-while. 1 do.
- f=. padn per*<.n%per
- q=. fread folder,f,'.rlogd/',(padn n),'.rlogn'
- if. _1=q do. break. end.
- r=. r,(3 ic #q),q
- n=. >:n
-end.
-r fwrite '~temp/jnk.txt'
-shell 'zip j64-807-user/temp/jnk.zip j64-807-user/temp/jnk.txt'
-fsize 'j64-807-user/temp/jnk.zip'
-)
 
 foldercopy=: 3 : 0
 'snk src'=. jpath each y
@@ -137,7 +112,7 @@ jddeletefolder snkpath
 snk=. dquote snk
 
 if. IFWIN do.
- r=. shell 'robocopy ',(hostpathsep src),' ',(hostpathsep snk),' *.* /E'
+ r=. shell 'robocopy ',(hostpathsep src),' ',(hostpathsep snk),' *.* /E /xf jdlock' NB. can't copy jdlock
  if. +/'ERROR' E. r do.
   smoutput r 
   assert 0['robocopy failed'
@@ -159,7 +134,7 @@ jdcreatefolder fn
 'jdrlog'fwrite fn,'jdclass' NB. identifies and allows subsequent delete
 REPLICATE__DBL=: 1
 RLOGFOLDER__DBL=: fn
-foldercopy (fn,'base/');'/',~dbpath DB
+foldercopy (fn,'base');dbpath DB
 NB. remove a few files for rlog base
 ferase 1 dir fn,'base'
 ''fwrite RLOGFOLDER__DBL,'rlog'
@@ -177,7 +152,7 @@ fn=. fn,'/'#~'/'~:{:fn
 REPLICATE__DBL=: 2
 RLOGFOLDER__DBL=: fn
 RLOGINDEX__DBL=: 0
-foldercopy ('/',~dbpath DB);fn,'base/'
+foldercopy (dbpath DB);fn,'base'
 writestate__DBL''
 jd_close'' NB. so table etc locales are opened
 JDOK
