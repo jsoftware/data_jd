@@ -88,7 +88,6 @@ getrlogend=: 3 : 0
 f=. RLOGFOLDER,'end'
 h=. lockopen f
 while. 1 do. if. locklock h do. break. end. 6!:3[0.001 end.
-r=. _3 ic fread f
 if. IFWIN do. r=. fread h else. r=. fread f end.
 lockfree  h
 lockclose h

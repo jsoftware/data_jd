@@ -129,6 +129,13 @@ ECOUNT assert 1=#bdnames y NB.! quoted with blanks
 'already marked as replicate' assert 0=REPLICATE__DBL
 fn=. dltb y
 fn=. fn,'/'#~'/'~:{:fn
+
+if. IFWIN do.
+ e=. 'rlogfolder file(s) in use'
+ if. fexist fn,'rlog' do. e assert 1=ferase fn,'rlog' end.
+ if. fexist fn,'end'  do. e assert 1=ferase fn,'end'  end.
+end.
+
 jddeletefolder fn
 jdcreatefolder fn
 'jdrlog'fwrite fn,'jdclass' NB. identifies and allows subsequent delete
@@ -140,7 +147,7 @@ ferase 1 dir fn,'base'
 ''fwrite RLOGFOLDER__DBL,'rlog'
 (3 ic 0)fwrite RLOGFOLDER__DBL,'end'
 writestate__DBL''
-jd'close' NB. normal open stuff
+jd_close'' NB. normal open stuff
 JDOK
 )
 

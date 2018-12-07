@@ -34,7 +34,7 @@ AGGFCNS=: 0 2$<''
 
 open=: 3 : 0
 readstate''
-if. REPLICATE~:0 do. RLOGFH=: 1!:21<jpath RLOGFOLDER,'rlog' end.
+if. REPLICATE~:0 do.decho 'open:';RLOGFH=: 1!:21<jpath RLOGFOLDER,'rlog' end.
 aggcreate''
 f=. PATH,'/custom.ijs'
 if. fexist f do. load f end.
@@ -48,8 +48,12 @@ aggcreate''
 writestate''
 )
 
-close =: 3 : 0
-if. RLOGFH~:0 do. 1!:22 RLOGFH end.
+close=: 3 : 0
+if. RLOGFH~:0 do.
+ decho 'close:';RLOGFH
+ 1!:22 RLOGFH
+ RLOGFH=: 0
+end.
 )
 
 addagg=: 2 : 0
