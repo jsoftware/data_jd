@@ -9,6 +9,6 @@ fixtype=: ,@boxopen [ throwif@:(2 ~: 3!:0)
 fixtext=: >@:fixstring_jdcolumn_
 
 fixtypex=: 3 : 0
-ETYPE assert 2=3!:0 y
+ETYPE assert (0 e.$y) +. 2=3!:0 y
 y
 )

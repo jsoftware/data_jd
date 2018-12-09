@@ -11,7 +11,7 @@ utc=: ' '
 
 DATAFILL=: _9223372036854775808 NB. ''$efsx_jd_'1700' NB. invalid
 
-fixinsert=: 3 : 'if. JCHAR=3!:0 y do. efs y else. y end.'
+fixinsert=: 3 : 'if. (0 e. $y) < JCHAR=3!:0 y do. efs y else. y end.'
 
 fixtype=: 3 : ',@boxopen fixtype_num fixinsert y'
 
