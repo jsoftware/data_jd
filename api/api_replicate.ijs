@@ -139,7 +139,7 @@ NB. blanks in file name are a nuisance
 jd_repsrc=: 3 : 0
 fn=. reparg y
 'already marked as replicate' assert 0=REPLICATE__dbl
-'replicate folder is in use' assert -.(<jpath fn,'rlog')e.{:"1[1!:20''
+'replicate folder is in use' assert -.(<hostpathsep jpath fn,'rlog')e.{:"1[1!:20''
 
 if. IFWIN do.
  e=. 'rlogfolder file(s) in use'
@@ -165,7 +165,7 @@ JDOK
 jd_repsnk=: 3 : 0
 fn=. reparg y
 'already marked as replicate' assert 0=REPLICATE__dbl
-'replicate folder is in use'     assert -.(<jpath fn,'rlog')e.{:"1[1!:20''
+'replicate folder is in use'     assert -.(<hostpathsep jpath fn,'rlog')e.{:"1[1!:20''
 'replicate folder does not exist'assert 2=ftype fn
 REPLICATE__dbl=: 2
 RLOGFOLDER__dbl=: fn

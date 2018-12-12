@@ -143,7 +143,7 @@ case. do.
  if. i~:#t do.
   a=. ;{:i{t
   t=. 'rlog',~jpath a
-  ('replicate folder ''',a,''' is in use')assert -.(<t) e. {:1!:20''
+  ('replicate folder ''',a,''' is in use')assert -.(<hostpathsep t) e. {:1!:20''
  end.
  
  d=. }.(y i:'/')}.y
