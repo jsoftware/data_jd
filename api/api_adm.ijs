@@ -18,7 +18,7 @@ db=. dbpath DB
 'not database class'assert 'database'-:jdfread db,'/jdclass'
 i=. db i:'/'
 f=. Open_jd_ jpath i{.db
-DBL=: Open__f (>:i)}.db
+dbl=: Open__f (>:i)}.db
 )
 
 NB. table names,.locales sorted by name
@@ -136,6 +136,16 @@ case. do.
  v=. fread y,'/jdversion'
  v=. (-.v-:_1){3,<.0".":v
  'db version not compatible with this Jd version'assert v=<.".jdversion
+ 
+ NB. if db has RLOGFOLDER make sure it is not already in use
+ t=. 3!:2 fread y,'/jdstate'
+ i=. ({."1 t)i.<'RLOGFOLDER'
+ if. i~:#t do.
+  a=. ;{:i{t
+  t=. 'rlog',~jpath a
+  ('replicate folder ''',a,''' is in use')assert -.(<t) e. {:1!:20''
+ end.
+ 
  d=. }.(y i:'/')}.y
  'x'jdadminlk y NB. remove old lock (if any)
  'w'jdadminlk y
@@ -162,11 +172,7 @@ case. do.
  end.
  NB. default access is for the 1st of the new dans
  jdaccess (;{.c{DBPATHS_jd_),' ',(;{:c{DBUPS_jd_),' intask'
- 
- assertnodamage''
- 
- NB. 'db damaged and not under repair' assert -.1 0-:fexist (<y),each'/jddamage';'/jdrepair'
-
+ getdb''
  i.0 0
 end.
 :

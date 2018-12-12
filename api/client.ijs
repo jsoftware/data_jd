@@ -140,7 +140,7 @@ if. 'intask'-:SERVER do.
  'op'logtxt FEOP
  opx=. ;('x'-:{.OP){OP;'x'
  if. -. (<OP) e. NODBOPS do. 
-  getdb'' NB. DBL global and test for damage
+  getdb'' NB. dbl global and test for damage
   r=. dbrow DBPATHS
   'not a db access name' assert r<#DBPATHS
   r=. dbrow DBUPS
@@ -151,7 +151,7 @@ if. 'intask'-:SERVER do.
   JDE1001 assert +./(OP;,'*')e.bdnames>{:r{DBOPS
   JDE1001 assert 3=nc<'jd_',opx 
  else.
-  DBL=: ''
+  dbl=: ''
  end. 
  start=. 6!:1''
  parts=: _1
@@ -159,11 +159,8 @@ if. 'intask'-:SERVER do.
   lastspace=: 7!:2'r=. (''jd_'',opx)~a' 
  else.
   r=. ('jd_',opx)~a
-  
-  if. (<opx) e. rops_jddatabase_ do.
-    d=. getdb'' NB. some ops change DBL locale
-    opx rlog__d y
-  end. 
+
+  if. (<opx) e. rops_jddatabase_ do. opx rlog__dbl y end. 
   
   lastspace=: _1
  end.

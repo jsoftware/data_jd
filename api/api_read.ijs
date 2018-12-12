@@ -31,16 +31,12 @@ jd_reads '/lr ',y
 
 jd_reads=: 3 : 0
 y=. readstart y
-
 r=. readptable y
 if. -.''-:r do. r return. end.
-
-
-d=. getdb''
 if. option_lr do.
- Read__d y
+ Read__dbl y
 else. 
- Reads__d y
+ Reads__dbl y
 end.
 )
 
@@ -103,8 +99,7 @@ set=. (root,' ',pcol)get where
 parts=: #set
 if. 0=parts do. '' return. end. NB. empty result - just do it on empty base table
 p=. (<root),each PTM,each set
-d=. getdb''
-('no table:',;' ',each p-.NAMES__d) assert 0=#p-.NAMES__d
+('no table:',;' ',each p-.NAMES__dbl) assert 0=#p-.NAMES__dbl
 z=. a,each p,each b
 r=. 0
 for_i. i.#z do.
@@ -209,11 +204,10 @@ i=. 1 i:~' jdtc 'E. blankquoted y
 s=. (6+i)}.y
 y=. i{.y
 tempcol s
-d=. getdb''
 if. option_lr do.
- r=. Read__d y
+ r=. Read__dbl y
 else. 
- r=. Reads__d y
+ r=. Reads__dbl y
 end. 
 tempcolclear''
 r
@@ -230,8 +224,7 @@ tempcol=: 3 : 0
    j=. a i.'_'
    tab=. j{.a
    col=. }.j}.a
-   d=. getdb''
-   ('readtc X not a table'rplc'X';a) assert (<tab)e. NAMES__d
+   ('readtc X not a table'rplc'X';a) assert (<tab)e. NAMES__dbl
    g=. jdgl tab
   
    if. (>:i)<#t do.

@@ -2,6 +2,7 @@ NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
 
 coclass'jd'
 
+NB. should be reworked to not use jd_close
 jd_renametable=: 3 : 0
 a=. bdnames y
 ECOUNT assert 2=#a
@@ -17,10 +18,11 @@ for_i. i.#ns do.
  jd_close''
  new frename old
 end.
-
+getdb'' NB. required because of close
 JDOK
 )
 
+NB. should be reworked to not use jd_close
 jd_renamecol=: 3 : 0
 a=. bdnames y
 ECOUNT assert 3=#a
@@ -38,6 +40,7 @@ for_i. i.#ns do.
  old=. }:PATH__t
  jd_close''
  'file rename failed' assert 1=new frename old
-end. 
+end.
+getdb'' NB. required because of close
 JDOK
 )

@@ -15,8 +15,7 @@ jdtests=: 3 : 0
 :
 NB. assert -.(<'jjd')e. conl 0['jdtests must be run in task that is not acting as a server'
 jdadmin 0
-load JDP,'base/tuts.ijs'
-load JDP,'base/tests.ijs'
+setscriptlists''
 cocurrent'base' NB. defined in jd, but must run in base
 IFTESTS_jd_=: 1
 OLDALLOC_jd_=: ROWSMIN_jdtable_,ROWSMULT_jdtable_,ROWSXTRA_jdtable_

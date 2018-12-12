@@ -5,11 +5,10 @@ coclass'jd'
 0 : 0
 API internal globals
 
- DB - database name - simple name - jdadmin connects to files and access rules
+ DB  - database name - simple name - jdadmin connects to files and access rules
+ dbl - database locale
 
-jd_... verbs typically start with getdb'' that sets:
- FLOC - locale of folder with database
- DLOC - locale of databse
+ jd_... verbs implement a Jd op
 )
 
 NB. 'insert table * col * bad'erf table;col

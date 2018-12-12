@@ -12,6 +12,7 @@ bjdn=: 3 : 0
 ophtmls=: _4}.each(>:#jpath JDP,'doc')}.each 1 dir JDP,'doc/Ops_*'
 
 jdrt=: 3 : 0
+setscriptlists''
 if. (-.IFJHS)*.80607<:0".(fread'~system/config/version.txt')-.CRLF,'.' do.
  require'labs/labs'
  runtut=: lab_z_
@@ -20,32 +21,6 @@ else.
  runtut=: spx_jsp_
 end.
 builddemos''
-load JDP,'base/tuts.ijs'
-if. ''-:y do.
- c=. (tuts i.each'/'){.each tuts
- c=. ~.c
- ;LF,~each(<'   jdrt '''),each c,each''''
-elseif. -.'/'e.y do.
- a=. tuts#~(<y)=(#y){.each tuts
- a=. _8}.each a
- ;LF,~each(<'   jdrt '''),each a,each''''
-elseif. 1 do.
- f=. ;{.tuts#~;+/each(<y,'_tut.ijs')E.each tuts
- 'invalid tutorial name'assert 0~:#f
- runtut JDP,'tutorial/',f
-end.
-)
-
-jdrt=: 3 : 0
-if. (-.IFJHS)*.80607<:0".(fread'~system/config/version.txt')-.CRLF,'.' do.
- require'labs/labs'
- runtut=: lab_z_
-else.
- require'~addons/ide/jhs/sp.ijs'
- runtut=: spx_jsp_
-end.
-builddemos''
-load JDP,'base/tuts.ijs'
 if. ''-:y do.
  c=. (tuts i.each'/'){.each tuts
  c=. ~.c

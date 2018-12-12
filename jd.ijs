@@ -1,18 +1,22 @@
 NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
 
 0 : 0
-production Jd library is ~addons/data/jd
-   load'data/jd' NB. set JDP_z_ as path to production Jd library
+package manager Jd library is ~addons/data/jd
+   load'data/jd' NB. 'data/jd/jd.ijs'
 
-developer Jd library is ~Jddev (~config/folders.cfg)
-  load'~Jddev/jd.ijs' NB. set JDP_z_ as developer Jd library
+production Jd application should run from dedicated folder to avoid pacman updates
+   load'~/production/jd/jd.ijs'
 
-all use is through JDP_z_
+git developer Jd library is ~Jddev (~config/folders.cfg)
+  load'~Jddev/jd.ijs'
+
+all use is through JDP_z_ (set when the library is loaded)
 )
 
 coclass'jd'
-jdversion=: '4.18'
+jdversion=: '4.19'
 
+'Jd requires J807 or later'assert 807<:0".}.4{.9!:14''
 'Jd requires J64'assert IF64=1
 ('Jd not supported on UNAME: ',UNAME) assert (<UNAME)e.'Win';'Linux';'Darwin' 
 'Jd requires addon jfiles'assert fexist '~addons/data/jfiles/jfiles.ijs'
@@ -100,6 +104,7 @@ base/jmfx.ijs
 base/lock.ijs
 base/log.ijs
 base/validate.ijs
+tools/setscriptlists.ijs
 api/api.ijs
 api/api_adm.ijs
 api/api_change.ijs
@@ -137,11 +142,6 @@ jdtests y
 repair=: 3 : 0
 load JDP,'tools/repair.ijs'
 repair''
-)
-
-setscriptlists=: 3 : 0
-load JDP,'tools/setscriptlists.ijs'
-setscriptlists''
 )
 
 3 : 0''

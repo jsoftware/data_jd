@@ -83,9 +83,10 @@ lockfree  h
 lockclose h
 )
 
+NB. y is RLGOFOLDER
 NB. under lock, read end file
 getrlogend=: 3 : 0
-f=. RLOGFOLDER,'end'
+f=. y,'end'
 h=. lockopen f
 while. 1 do. if. locklock h do. break. end. 6!:3[0.001 end.
 if. IFWIN do. r=. fread h else. r=. fread f end.

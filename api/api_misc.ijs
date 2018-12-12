@@ -6,8 +6,7 @@ NB. jdget 'tab col'
 jd_get=: 3 : 0
 a=. bdnames y
 ECOUNT assert 2=#a
-d=. getdb''
-t=. getloc__d {.a
+t=. getloc__dbl {.a
 c=. getloc__t {:a
 select. <typ__c
  case. <'autoindex' do. i.Tlen__t
@@ -27,8 +26,7 @@ elseif. 4=#y do.
 elseif. 1 do.
  ECOUNT assert 0
 end.
-d=. getdb''
-t=. getloc__d tab
+t=. getloc__dbl tab
 snk=. getloc__t col
 'jde: wrong shape' assert ($dat)-:$dat__snk
 'jde: wrong type'  assert (3!:0 dat)=3!:0 dat__snk
@@ -116,23 +114,22 @@ JDOK
 
 NB. run custom db jd_x... op in db locale if it exists
 jd_x=: 3 : 0
-d=. getdb''
-JDE1001 assert 3=nc<'jd_',OP,'__d' 
-('jd_',OP,'__d')~y
+JDE1001 assert 3=nc<'jd_',OP,'__dbl' 
+('jd_',OP,'__dbl')~y
 )
 
 jd_ref=: 3 : 0
 y=. '/left 0'getoptions y
 option_left=: option_left +. FORCELEFT
 ECOUNT assert (4<:#y)*.0=2|#y
-d=. getdb''
+getdb'' NB. necessary! because of how ref is called from csv ops?
 t=. (2,(#y)%2)$y
-0 validtc__d {.t NB. ptable allowed on left
-validtc__d {:t
+0 validtc__dbl {.t NB. ptable allowed on left
+validtc__dbl {:t
 
 NB. verify col pairs match type and shape
-ta=. getloc__d {.{.t
-tb=. getloc__d {.{:t
+ta=. getloc__dbl {.{.t
+tb=. getloc__dbl {.{:t
 a=. }.{.t
 b=. }.{:t
 for_i. i.#a do.
@@ -150,7 +147,7 @@ for_t1. ts do.
  a=. ;t1
  h=. jdgl :: 0: a,' ',n
  if. h-:0 do.
-  loc=. getloc__d a
+  loc=. getloc__dbl a
   c=. Create__loc n;'ref';<($t)$t1,}.,t
   left__c=: option_left
  else.
@@ -182,10 +179,9 @@ end.
 NB. coerase all folder locals for a clean slate
 for_n. conl 1 do.
  if. 'jdfolder'-:;{.copath n do. coerase n end.
-end.get
+end.
 NAMES_jd_=: '' 
 CHILDREN_jd_=: ''
-
 JDOK
 )
 

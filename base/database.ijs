@@ -34,7 +34,7 @@ AGGFCNS=: 0 2$<''
 
 open=: 3 : 0
 readstate''
-if. REPLICATE~:0 do.decho 'open:';RLOGFH=: 1!:21<jpath RLOGFOLDER,'rlog' end.
+if. REPLICATE~:0 do. RLOGFH=: 1!:21<jpath RLOGFOLDER,'rlog' end. 
 aggcreate''
 f=. PATH,'/custom.ijs'
 if. fexist f do. load f end.
@@ -49,11 +49,7 @@ writestate''
 )
 
 close=: 3 : 0
-if. RLOGFH~:0 do.
- decho 'close:';RLOGFH
- 1!:22 RLOGFH
- RLOGFH=: 0
-end.
+if. RLOGFH~:0 do. RLOGFH=: 0[1!:22 RLOGFH end.
 )
 
 addagg=: 2 : 0
@@ -160,8 +156,9 @@ r
 
 NB. replicate routines
 
-rops=:      ;:'delete insert update upsert sort ref'
+rops=:      ;:'delete insert update upsert sort ref intx'
 rops=: rops,;:'createcol createtable createptable'
+rops=: rops,;:'dropcol droptable'
 rops=: rops,;:'renamecol renametable'
 
 NB. some ops are trouble - createdb table... csv... ???
@@ -177,20 +174,3 @@ setrlogend''
 writestate''
 )
 
-NB. snk db - process new log records
-rlogupdate=: 3 : 0
-'not replicated'assert 2=REPLICATE
-m=. getrlogend''
-c=. 0
-while. RLOGINDEX<m do.
- t=. fread RLOGFH;RLOGINDEX,16
- 'bad rlog record' assert RLOGSIG-:8{.t
- n=. _3 ic 8}.t
- r=. fread RLOGFH;(RLOGINDEX+16),n
- jd 3!:2 r
- RLOGINDEX=: RLOGINDEX+16+n
- writestate''
- c=. >:c
-end.
-c NB. number of commands processed
-)

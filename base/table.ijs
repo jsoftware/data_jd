@@ -280,8 +280,7 @@ for_subs. SUBSCR do.
   c=. ;{.subs
   if. '^'={.c do.
    'x t c'=. <;._2 c,'.'
-   w=. getdb''
-   w=. getloc__w t
+   w=. getloc__dbl t
    w=. getcolloc__w c
    a=. 1 NB. right ref
   else.

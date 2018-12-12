@@ -18,8 +18,7 @@ if. 0 = #ord=. cutcommas ord do. JDOK return. end.
 ifdesc=. (<'desc') = _4 {.&.> ord
 ord=. ifdesc (_4 stripsp@}. ])^:[&.> ord
 'duplicate col'assert (#ord)=#~.ord
-d=. getdb''
-1 validtc__d (<FETAB),ord
+1 validtc__dbl (<FETAB),ord
 q=. ''
 for_n. ord do.
  c=. jdgl tab,' ',;n

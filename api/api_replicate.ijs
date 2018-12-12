@@ -123,12 +123,23 @@ end.
 'copy folder failed'assert 2=ftypex }.}:snk
 )
 
+NB. validate rlog arg
+reparg=: 3 : 0
+t=. dltb ;y
+if. '"'={.t do.
+ 'rlog unmatched "'assert '"'={:t
+ t=. }.}:t
+else.
+ 'rlog file name with blanks must be quoted'assert -.' 'e.t
+end. 
+t,'/'#~'/'~:{:t
+)
+
 NB. blanks in file name are a nuisance
 jd_repsrc=: 3 : 0
-ECOUNT assert 1=#bdnames y NB.! quoted with blanks
-'already marked as replicate' assert 0=REPLICATE__DBL
-fn=. dltb y
-fn=. fn,'/'#~'/'~:{:fn
+fn=. reparg y
+'already marked as replicate' assert 0=REPLICATE__dbl
+'replicate folder is in use' assert -.(<jpath fn,'rlog')e.{:"1[1!:20''
 
 if. IFWIN do.
  e=. 'rlogfolder file(s) in use'
@@ -139,37 +150,51 @@ end.
 jddeletefolder fn
 jdcreatefolder fn
 'jdrlog'fwrite fn,'jdclass' NB. identifies and allows subsequent delete
-REPLICATE__DBL=: 1
-RLOGFOLDER__DBL=: fn
+REPLICATE__dbl=: 1
+RLOGFOLDER__dbl=: fn
 foldercopy (fn,'base');dbpath DB
 NB. remove a few files for rlog base
 ferase 1 dir fn,'base'
-''fwrite RLOGFOLDER__DBL,'rlog'
-(3 ic 0)fwrite RLOGFOLDER__DBL,'end'
-writestate__DBL''
+''fwrite RLOGFOLDER__dbl,'rlog'
+(3 ic 0)fwrite RLOGFOLDER__dbl,'end'
+writestate__dbl''
 jd_close'' NB. normal open stuff
 JDOK
 )
 
 jd_repsnk=: 3 : 0
-'already marked as replicate' assert 0=REPLICATE__DBL
-fn=. dltb y
-fn=. fn,'/'#~'/'~:{:fn
-'rlog folder does not exist'assert 2=ftype fn
-REPLICATE__DBL=: 2
-RLOGFOLDER__DBL=: fn
-RLOGINDEX__DBL=: 0
+fn=. reparg y
+'already marked as replicate' assert 0=REPLICATE__dbl
+'replicate folder is in use'     assert -.(<jpath fn,'rlog')e.{:"1[1!:20''
+'replicate folder does not exist'assert 2=ftype fn
+REPLICATE__dbl=: 2
+RLOGFOLDER__dbl=: fn
+RLOGINDEX__dbl=: 0
 foldercopy (dbpath DB);fn,'base'
-writestate__DBL''
+writestate__dbl''
 jd_close'' NB. so table etc locales are opened
 JDOK
 )
 
+NB. needs to be run in jd because ops like renamecol close and open database locale
+NB. snk db - process new log records
 jd_repupdate=: 3 : 0
-d=. getdb''
-n=. rlogupdate__d''
-,.'commands';n
+'not replicated'assert 2=REPLICATE__dbl
+m=. getrlogend RLOGFOLDER__dbl
+c=. 0
+while. RLOGINDEX__dbl<m do.
+ t=. fread RLOGFH__dbl;RLOGINDEX__dbl,16
+ 'bad rlog record' assert RLOGSIG-:8{.t
+ n=. _3 ic 8}.t
+ r=. fread RLOGFH__dbl;(RLOGINDEX__dbl+16),n
+ jd 3!:2 r
+ RLOGINDEX__dbl=: RLOGINDEX__dbl+16+n
+ writestate__dbl''
+ c=. >:c
+end.
+,.'ops';c
 )
+
 
 NB. zip db
 jd_zip=: 3 : 0

@@ -85,8 +85,7 @@ if. #a do.
 end.
 if. option_replace do. jd_droptable FETAB end.
 a=. }:;a,each','
-d=. getdb''
-Create__d t;a;'';alloc   NB. cols;data;alloc
+Create__dbl t;a;'';alloc   NB. cols;data;alloc
 if. df do.
  try.
   jd_insert FETAB;,names,.data
@@ -102,8 +101,7 @@ jd_createptable=: 3 : 0
 a=. bdnames y
 ECOUNT assert 2=#a
 'tab col'=: a
-d=. getdb''
-'not a table'assert NAMES__d e.~<tab
+'not a table'assert NAMES__dbl e.~<tab
 t=. jdgl tab
 'not empty'assert 0=Tlen__t
 'already a ptable'assert 0=S_ptable__t
@@ -181,7 +179,6 @@ JDOK
 NB. not boxed -> no dat : boxed -> dat
 NB. createcol done with default data and then update with col data
 jd_createcol=: 3 : 0
-d=. getdb''
 if. 1<:L.y do.
  NB. boxed assumes has dat
  dat=. >{:y  NB. col values
@@ -202,7 +199,7 @@ end.
 if. 4=#y do. EBTS assert (2{y)-:<'byte' end.
 
 if. #dat do. NB. have column values
- t=. getloc__d FETAB
+ t=. getloc__dbl FETAB
  'ptable data not allowed'assert 0=S_ptable__t
  if. (0=Tlen__t)*.0=#NAMES__t#~-.bjdn NAMES__t do. setTlen__t #dat end.
 end.
@@ -210,7 +207,7 @@ end.
 ns=. getparttables ;{.y
 for_i. i.#ns do.
  if. i=1 do. continue. end. NB. ignore f~
- InsertCols__d (i{ns),< ;' ',~each}.":each y
+ InsertCols__dbl (i{ns),< ;' ',~each}.":each y
 end.
 
 if. #dat do.

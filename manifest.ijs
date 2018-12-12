@@ -185,7 +185,6 @@ types/base.ijs
 types/datetimes.ijs
 types/varbyte.ijs
 base/jmfx.ijs
-base/tuts.ijs
 base/folder.ijs
 base/util_ptable.ijs
 base/util.ijs
@@ -195,7 +194,6 @@ base/keyindex.ijs
 base/log.ijs
 base/pm.ijs
 base/validate.ijs
-base/tests.ijs
 base/database.ijs
 base/util_epoch.ijs
 base/read.ijs
@@ -278,6 +276,6 @@ cd/libjd.dylib
 cd/libjpcre.dylib
 )
 
-RELEASE=: 'j805'
+RELEASE=: 'j807'
 
 FOLDER=: 'data/jd'

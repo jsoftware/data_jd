@@ -18,8 +18,7 @@ t=. bdnames y
 a=. 2{.}.t
 select. {.t
 case. 'agg' do.
- d=. getdb''
- ,.'aggs';>{."1 AGGFCNS__d
+ ,.'aggs';>{."1 AGGFCNS__dbl
 case. 'last' do.
  ,.(;:'cmd time space parts'),:(,:lastcmd);lasttime;lastspace;lastparts
 case. 'schema' do.
@@ -45,8 +44,7 @@ end.
 
 getinfoclocs=: 3 : 0
 if. -.''-:;{.y do. jdclocs y return. end.
-d=. getdb''
-n=. /:~NAMES__d
+n=. /:~NAMES__dbl
 n=. n#~-.;PTM e.each n
 r=. ''
 for_a. n do.
@@ -55,9 +53,8 @@ end.
 )
 
 infotable=: 3 : 0
-d=. getdb''
 t=. ;{.y
-n=. /:~NAMES__d
+n=. /:~NAMES__dbl
 if. 0~:#t do.
  if. (PTM,'*')=_2{.t do.
   n=. getparttables _2}.t
@@ -155,13 +152,11 @@ end.
 
 
 infoad=: 3 : 0
-d=. getdb''
-t=. getloc__d y
+t=. getloc__dbl y
 Tlen__t
 )
 
 infosummary=: 3 : 0
-d=. getdb''
 t=. ;{.y
 if. (PTM,'*')=_2{.t do.
  ts=. getparttables _2}.t
@@ -169,10 +164,10 @@ if. (PTM,'*')=_2{.t do.
  r=. ;infoad each ts
  n=. (<>ts),<,.r
 else.
- ts=. /:~NAMES__d
+ ts=. /:~NAMES__dbl
  if. 0=#ts do. (;:'table rows'),:3#<(0 0$'') return. end.
  if. -.''-:t do.
-  'not a table'assert NAMES__d e.~ <t
+  'not a table'assert NAMES__dbl e.~ <t
   tloc=. jdgl t
   if. S_ptable__tloc do.
    ts=. ts#~(<t)=(#t){.each ts

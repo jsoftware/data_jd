@@ -1,7 +1,7 @@
 NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
 coclass'z'
 
-forcecopy_z_=: a: { ]
+forcecopy_z_=: 15!:15 NB. memu - a: { ]
 
 NB. same as in JHS sp.ijs
 sptable_z_=: 3 : 0

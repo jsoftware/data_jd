@@ -7,7 +7,6 @@ jd_insert=: 3 : 0
 '' jd_insert y
 :
 FETAB=: tab=. ;{.y
-d=. getdb''
 t=. jdgl tab
 'ns vs rows'=. _1 fixpairs__t 1}.y
 bdn=. 3 : 'derived__y' "0 CHILDREN__t NB. derived names
@@ -22,7 +21,7 @@ if. isptable tab do.
 else.
  markderiveddirty__t''
  if. ''-:x do.
-  rows Insert__d  ({.y),<nv
+  rows Insert__dbl  ({.y),<nv
  else. 
   x upsert ({.y),(<ns),<vs
  end.
@@ -119,8 +118,7 @@ if. 0=#w do. JDOK return. end.
 if. isptable tab do.
  deleteptable tab;w
 else.
- d=. getdb''
- Delete__d tab;w
+ Delete__dbl tab;w
 end. 
 JDOK
 )
@@ -236,13 +234,13 @@ JDOK
 NB. x is key
 upsert=: 4 : 0
 tab=. ;{.y
-d=. getdb''
 t=. jdgl tab
 'ns vs'=. }.y
 if. 0=#>{.vs do. JDOK return. end.
 if. 1=#x do.
  ksrc=. >(0{ns i. x){vs
- ksnk=. jd'get ',tab,' ',;x
+ NB. ksnk=. jd'get ',tab,' ',;x
+ ksnk=. jd_get tab,' ',;x
 else.
  ksrc=. stitchx__t (ns i.x){vs
  ksnk=. stitch__t tab;<x
@@ -250,7 +248,7 @@ end.
 r=. ksnk i: ksrc
 b=. r<#ksnk
 if. +/b do.
-  update=. tab;(b#r);,ns,.(<b#i.#ksrc){each vs
+ update=. tab;(b#r);,ns,.(<b#i.#ksrc){each vs
  jd_update update
 end.
 b=. -.b
@@ -267,7 +265,6 @@ ECOUNT assert 2<:#y
 'tab key'=. 2{.y
 FETAB_jd_=: tab
 key=. bdnames key
-d=. getdb''
-0 validtc__d (<tab),key
+0 validtc__dbl (<tab),key
 key jd_insert tab;2}.y
 )
