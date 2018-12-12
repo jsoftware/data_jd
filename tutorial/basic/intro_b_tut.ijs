@@ -1,6 +1,6 @@
 NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
 NB. update/upsert/delete/join
-'new'jdadmin'test' NB. create new db (~tmep/jd/test)
+jdadminnew'test' NB. create new db (~tmep/jd/test)
 d=: (4#2002 2003 2001);(?12$1000);(>12$2#'shoes';'hats');>12$'blue';'red'
 d=: ('year';'sales';'product';'team'),.d
 jd'createtable /pairs t1 ';,d NB. col names, types, shapes from pairs

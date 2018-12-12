@@ -1,5 +1,5 @@
 NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
-'new'jdadmin'tutorial'
+jdadminnew'tutorial'
 jd'gen test f 5'
 jd'key     f';'int';104 102
 jd'key     f';'int';104 102 120

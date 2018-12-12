@@ -1,6 +1,6 @@
 NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
 
-'new'jdadmin'tutorial'
+jdadminnew'tutorial'
 jd'gen test f 2'
 jd'reads from f' NB. labeled cols
 jd'read  from f' NB. labeled rows (same as reads /lr)

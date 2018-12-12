@@ -1,6 +1,6 @@
 NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
 
-'new'jdadmin'tutorial'
+jdadminnew'tutorial'
 jd'createtable f a int,b byte,b4 byte 4'
 jd'insert f';'a';23;'b';'a';'b4';1 4$'abcd'
 jd'reads from f'

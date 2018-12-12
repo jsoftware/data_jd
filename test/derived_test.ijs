@@ -1,6 +1,6 @@
 NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
 
-'new'jdadmin'test'
+jdadminnew'test'
 jd'createtable f'
 jd'createcol f a int';2 3 4
 

@@ -1,7 +1,7 @@
 NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
 
 f=: 3 : 0
-'new'jdadmin'test'
+jdadminnew'test'
 jd'createtable /pairs f';'a';((y?.y){y$i:3);'b';y$'abbcas'
 )
 

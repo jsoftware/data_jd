@@ -1,6 +1,6 @@
 NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
 
-'new'jdadmin'tutorial'
+jdadminnew'tutorial'
 jd'gen test f 5'
 jd'reads from f'
 jd'update f';2 4;'int';200 300      NB. update rows 2 4

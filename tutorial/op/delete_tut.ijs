@@ -1,6 +1,6 @@
 NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
 
-'new'jdadmin'tutorial'
+jdadminnew'tutorial'
 jd'gen test f 10'
 jd'reads from f'
 jd'delete f';3 5

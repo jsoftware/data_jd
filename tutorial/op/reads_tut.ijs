@@ -1,6 +1,6 @@
 NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
 
-'new'jdadmin'tutorial'
+jdadminnew'tutorial'
 jd'gen ref2 a 3 1 b 2'
 jd'reads from a'
 jd'reads from a order by akey desc'

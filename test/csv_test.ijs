@@ -236,7 +236,7 @@ NB ECSVBYTE0 tests - avoid crashes
 CSVFOLDER=: '~temp/jd/csv'
 
 bld=: 3 : 0
-'new'jdadmin'test'
+jdadminnew'test'
 jd'createtable f'
 jd'createcol f a byte 0'
 jd'createcol f b byte 3'

@@ -1,6 +1,6 @@
 NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
 
-'new'jdadmin'tutorial'
+jdadminnew'tutorial'
 jd'droptable f'                                 NB. droptable if it exists
 jd'createtable f'
 'already exists'jdae'createtable f'             NB. accept expected error

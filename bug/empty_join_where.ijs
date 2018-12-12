@@ -1,4 +1,4 @@
-'new'jdadmin'test'
+jdadminnew'test'
 
 bld=: 3 : 0
 jd'createtable a id int,name byte'

@@ -3,7 +3,7 @@ NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
 len=: 10
 bgn=: efs_jd_ '2015-11-20'
 
-'new'jdadmin'test'
+jdadminnew'test'
 
 f=: 3 : 0
 jd 'createtable tab'

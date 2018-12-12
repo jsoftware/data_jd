@@ -1,9 +1,9 @@
 NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
 
-'new'jdadmin'tutorial'
+jdadminnew'tutorial'
 jd'createtable f a int'
 jd'insert f';'a';i.2
-'new'jdadmin'tutorial2'
+jdadminnew'tutorial2'
 jd'createtable g a int'
 jd'insert g';'a';100+i.2
 jdaccess'tutorial'

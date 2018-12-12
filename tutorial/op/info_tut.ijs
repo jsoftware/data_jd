@@ -1,5 +1,5 @@
 NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
-'new'jdadmin'test'
+jdadminnew'test'
 jd'gen ref2 a 3 0 b 2' NB. gen ref2 tables a and b jointed
 jd'reads from a,a.b'
 jd'info table'

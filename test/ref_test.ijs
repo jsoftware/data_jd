@@ -3,7 +3,7 @@ NB. test insert/delete/update vs ref
 NB. test left1 join so same tests work for ref
 
 bld=: 3 : 0
-'new'jdadmin'test'
+jdadminnew'test'
 jd'createtable /pairs f';'a';23 24;'b';'bc';'c';1.5 2.5;'d';2 3$'abcdef'
 jd'createtable /pairs g';'a';23 24;'b';'bc';'c';1.5 2.5;'d';(2 3$'abcdef');'e';2 4$'x'
 )

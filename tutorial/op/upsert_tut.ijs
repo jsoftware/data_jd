@@ -1,6 +1,6 @@
 NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
 
-'new'jdadmin'tutorial'
+jdadminnew'tutorial'
 jd'createtable /pairs f';'a';0 1 2 3 4;'b';23 24 25 26 27
 jd'reads from f'
 NB. upsert based on key a

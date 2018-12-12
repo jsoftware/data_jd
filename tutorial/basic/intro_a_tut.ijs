@@ -1,7 +1,7 @@
 NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
 NB. create db, table, columns
 NB. read - select, where, aggregation
-'new'jdadmin'test' NB. create new db (~temp/jd/test)
+jdadminnew'test' NB. create new db (~temp/jd/test)
 c=: ' year int, sales int, product byte 5,team byte 4'
 jd'createtable t1 ',c
 jd'reads from t1'

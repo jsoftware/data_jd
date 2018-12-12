@@ -1,6 +1,6 @@
 NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
 NB. admin/create/drop
-'new'jdadmin'test' NB. create new db (~temp/jd/test)
+jdadminnew'test' NB. create new db (~temp/jd/test)
 jd'createtable f'
 jd'createcol f a int'
 jd'insert f';'a';i.3
@@ -13,7 +13,7 @@ NB. then start it all up and access the db
 
 jdadmin'test' NB. admin for db test that must already exist
 jd'read from f'
-'new'jdadmin'fubar' NB. create new db (~temp/jd/fubar)
+jdadminnew'fubar' NB. create new db (~temp/jd/fubar)
 jd'createtable /pairs f';'b';'zxcv';'c';i.4
 jd'read from f'
 jdadmin'test' NB. access test again
