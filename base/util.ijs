@@ -463,18 +463,3 @@ else.
  'CSVFOLDER already contains the csv file'
 end.
 )
-
-NB. jdzip file;folder
-jdzip=: 3 : 0
-'file folder'=: jpath each y
-ferase file
-zip=. ;(UNAME-:'Win'){'zip';jpath'~tools/zip/zip.exe'
-t=. '"',zip,'" -r -j "',file,'" "',folder,'"'
-if. UNAME-:'Win' do. t=. '"',t,'"' end.
-echo t
-r=. shell t
-NB. ferase fn
-NB. r,LF,'CSVFOLDER now contains the csv file'
-
-
-)

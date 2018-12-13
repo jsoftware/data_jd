@@ -212,6 +212,20 @@ echo t
 r=. shell t
 )
 
+NB. windows version
+NB. jdzip file;folder
+jd_zip=: 3 : 0
+'file folder'=: jpath each y
+ferase file
+zip=. ;(UNAME-:'Win'){'zip';jpath'~tools/zip/zip.exe'
+t=. '"',zip,'" -r -j "',file,'" "',folder,'"'
+if. UNAME-:'Win' do. t=. '"',t,'"' end.
+echo t
+r=. shell t
+NB. ferase fn
+NB. r,LF,'CSVFOLDER now contains the csv file'
+)
+
 NB. unzip zip file to current db
 jd_unzip=: 3 : 0
 'db not empty'assert 0=#>{.{:jd_info'table'
