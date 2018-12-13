@@ -25,18 +25,17 @@ if. 2=#y do.
 end.
 ECOUNT assert 1=#y
 y=. ;y
-d=. getdb''
-'dropstop' assert (0=ftypex) PATH__d,y,'/jddropstop'
-if. -.(<y) e. NAMES__d do. JDOK return. end.
+'dropstop' assert (0=ftypex) PATH__dbl,y,'/jddropstop'
+if. -.(<y) e. NAMES__dbl do. JDOK return. end.
 assertnoref ;y
 t=. jdgl y
 
 if. S_ptable__t do.
  p=. (<y,PTM),each ;{.getparts y
- Drop__d each p
- EDELETE assert ;(0=ftypex)"0 PATH__d&,each p 
- Drop__d y,PTM
- EDELETE assert (0=ftypex) PATH__d,y,PTM
+ Drop__dbl each p
+ EDELETE assert ;(0=ftypex)"0 PATH__dbl&,each p 
+ Drop__dbl y,PTM
+ EDELETE assert (0=ftypex) PATH__dbl,y,PTM
 end.
 
 if. reset do. NB. we know there are no ref cols
@@ -54,8 +53,8 @@ if. reset do. NB. we know there are no ref cols
  end.
  setTlen__t 0 NB. done at end!
 else. 
- Drop__d y
- EDELETE assert (0=ftypex) PATH__d,y
+ Drop__dbl y
+ EDELETE assert (0=ftypex) PATH__dbl,y
 end. 
 JDOK
 )
@@ -63,9 +62,8 @@ JDOK
 jd_dropcol=: 3 : 0
 y=. bdnames y
 ECOUNT assert 2=#y
-d=. getdb''
 'tab col'=. y
-t=. getloc__d tab
+t=. getloc__dbl tab
 'dropstop' assert (0=ftypex) PATH__t,col,'/jddropstop'
 assertnodynamic y
 
@@ -83,7 +81,7 @@ for_i. i.#ns do.
  t=. jdgl {.a
  f=. PATH__t,'column_create_order.txt'
  if. fexist f do. (;' ',~each (;:fread f)-.{:y)fwrite f end.
- DeleteCols__d a
+ DeleteCols__dbl a
  EDELETE assert (0=ftypex) PATH__t,;{:a
  
  if. 'jdref_'-:6{.col do.
@@ -105,12 +103,10 @@ for_i. i.#ns do.
   writestate__g''
  end.
 end.
-
 JDOK
 )
 
 jd_dropfilesize=: 3 : 0
-getdb''
 p=. jpath dbpath DB
 maps=. mappings_jmf_
 maps=. maps /:1{"1 maps

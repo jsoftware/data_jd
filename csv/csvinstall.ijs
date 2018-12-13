@@ -80,6 +80,7 @@ Create__d table;<csvjdcoldefs csv
 jd_close_jd_''
 csvjd  jd;csv
 (3!:1 [1 2$'Tlen';ROWS) fwrite jd,'/jdstate' NB. writestate TLen essential
+getdb_jd_'' NB. restore dbl after close
 
 NB. int1, int2, int4 need shape fixed
 NB. csv loader creates intx cols as n,x cols

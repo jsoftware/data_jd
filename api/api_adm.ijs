@@ -23,9 +23,8 @@ dbl=: Open__f (>:i)}.db
 
 NB. table names,.locales sorted by name
 jdtables=: 3 : 0
-d=. getdb''
-n=. NAMES__d
-a=. CHILDREN__d
+n=. NAMES__dbl
+a=. CHILDREN__dbl
 (/:n){n,.a
 )
 
@@ -36,18 +35,17 @@ NB. tables  in sorted order
 NB. cols in defaultselection order
 jdclocs=: 3 : 0
 't c'=. ,each y
-d=. getdb''
 r=. ''
-tables=. /:~NAMES__d
+tables=. /:~NAMES__dbl
 if. #t do.
- 'not a table' assert NAMES__d e.~ <t
+ 'not a table' assert NAMES__dbl e.~ <t
  tables=. <t
 end. 
 tablelocs=. ''
 
 NB. table children may not be open - getloc forces open
 for_n. tables do.
- tablelocs=. tablelocs,getloc__d n
+ tablelocs=. tablelocs,getloc__dbl n
 end. 
 
 for_i. i.#tables do.
@@ -73,8 +71,7 @@ r
 
 NB. non-system col names,.locales sorted by name
 jdcols=: 3 : 0
-d=. getdb''
-t=. getloc__d y
+t=. getloc__dbl y
 n=. NAMES__t
 a=. CHILDREN__t
 b=. -.bjdn n
@@ -84,8 +81,7 @@ a=. b#a
 )
 
 jdcolsx=: 3 : 0
-d=. getdb''
-t=. getloc__d y
+t=. getloc__dbl y
 n=. NAMES__t
 a=. CHILDREN__t
 b=. (<'jdindex')~:2{.each n
@@ -93,7 +89,6 @@ n=. b#n
 a=. b#a
 (/:n){n,.a
 )
-
 
 jdserverstop=: 3 : 0
 if. IFJHS do. OKURL_jhs_=: '' end.
@@ -172,7 +167,6 @@ case. do.
  end.
  NB. default access is for the 1st of the new dans
  jdaccess (;{.c{DBPATHS_jd_),' ',(;{:c{DBUPS_jd_),' intask'
- getdb''
  i.0 0
 end.
 :
@@ -207,8 +201,6 @@ end.
 jddeletefolder y
 'w'jdadminlk y
 Create__f d
-jdversion fwrite y,'/jdversion'
-''fwrite y,'/log.txt'
 jdadmin yy
 )
 
@@ -422,12 +414,11 @@ r
 
 NB. get locale for table or table column 
 jdgl=: 3 : 0
-d=. getdb''
 a=. bdnames y
 if. 1=#a do.
- getloc__d ;a
+ getloc__dbl ;a
 else.
- t=. getloc__d ;{.a
+ t=. getloc__dbl ;{.a
  getloc__t ;{:a
 end.
 )

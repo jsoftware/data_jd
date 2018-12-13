@@ -7,12 +7,11 @@ isptable=: 3 : '-.0-:jdgl :: 0: y,PTM' NB. ispatable table_name
 NB. return sorted ptable suffixes ; Tlens
 getparts=: 3 : 0
 a=. y,PTM
-d=. getdb''
-n=. NAMES__d
+n=. NAMES__dbl
 b=. (<a)=(#a){.each n
 b=. b*.(#a)<;#each n NB. remove f~
 n=. b#n
-c=. b#CHILDREN__d
+c=. b#CHILDREN__dbl
 n=. (#a)}.each n
 t=. ;(3 : 'Tlen__y')"0 c
 s=. /:n
@@ -31,8 +30,7 @@ NB. returns single table name if not partition table
 NB. returns single table name if y is already a partition name (has a ~)
 getparttables=: 3 : 0
 if. PTM e.y do. <y return. end.
-d=. getdb''
-ns=. NAMES__d
+ns=. NAMES__dbl
 ns=. /:~ns#~(<,y)=(ns i.each PTM){.each ns
 if. 1<#ns do.
  t=. jdgl ;{.ns

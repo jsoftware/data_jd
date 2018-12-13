@@ -17,8 +17,8 @@ for_i. i.#ns do.
  new=. ((->:#NAME__t)}.PATH__t),(;{:a),part
  jd_close''
  new frename old
+ getdb'' NB. required because of close
 end.
-getdb'' NB. required because of close
 JDOK
 )
 
@@ -40,7 +40,7 @@ for_i. i.#ns do.
  old=. }:PATH__t
  jd_close''
  'file rename failed' assert 1=new frename old
+ getdb'' NB. required because of close
 end.
-getdb'' NB. required because of close
 JDOK
 )

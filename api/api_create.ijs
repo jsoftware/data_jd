@@ -8,6 +8,7 @@ t=. dbpath DB
 'w'jdadminlk t
 'f db'=. getfolder''
 Create__f db
+getdb'' NB. required for new db
 JDOK
 )
 

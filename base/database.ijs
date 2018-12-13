@@ -44,6 +44,10 @@ openallchildren y
 testcreate=: ]
 
 create=: 3 : 0
+jdversion fwrite PATH,'jdversion'
+''fwrite PATH,'log.txt'
+p=. }:PATH
+(defaultadmin rplc 'D';}.(p i: '/')}.p)fwrite PATH,'admin.ijs'
 aggcreate''
 writestate''
 )

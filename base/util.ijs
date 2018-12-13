@@ -221,45 +221,6 @@ end.
 y
 )
 
-NB. routines for partition tables
-
-NB. return sorted ptable suffixes ; Tlens
-getparts=: 3 : 0
-a=. y,PTM
-d=. getdb''
-n=. NAMES__d
-b=. (<a)=(#a){.each n
-b=. b*.(#a)<;#each n NB. remove f~
-n=. b#n
-c=. b#CHILDREN__d
-n=. (#a)}.each n
-t=. ;(3 : 'Tlen__y')"0 c
-s=. /:n
-n=. s{n
-t=. s{t
-n;t
-)
-
-NB. return sorted ptable suffixes for setting setting tab~ pcol
-getpartsx=: 3 : 0
-n=. (>:#y)}.each 2 }.getparttables y
-)
-
-NB. sorted partition table names (f, f~, f~..., ...)
-NB. returns single table name if not partition table
-NB. returns single table name if y is already a partition name (has a ~)
-getparttables=: 3 : 0
-if. PTM e.y do. <y return. end.
-d=. getdb''
-ns=. NAMES__d
-ns=. /:~ns#~(<,y)=(ns i.each PTM){.each ns
-if. 1<#ns do.
- t=. jdgl ;{.ns
- 'table (not a ptable) has partitions' assert S_ptable__t
-end.
-ns
-)
-
 NB. need general mechanism to log progress on long running operations
 NB. this is a crude place holder for what is required
 logprogress=: 3 : 0

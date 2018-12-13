@@ -10,8 +10,7 @@ refs marked dirty if not already dirty
 repair=: 3 : 0
 p=. jdpath''
 jdrepair'fixing it now' NB. insists on damaged
-d=. getdb''
-for_tn. NAMES__d do.
+for_tn. NAMES__dbl do.
  tn=. ;tn
  t=. jdgl tn
  for_c. NAMES__t do.

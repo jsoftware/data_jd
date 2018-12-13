@@ -122,7 +122,6 @@ jd_ref=: 3 : 0
 y=. '/left 0'getoptions y
 option_left=: option_left +. FORCELEFT
 ECOUNT assert (4<:#y)*.0=2|#y
-getdb'' NB. necessary! because of how ref is called from csv ops?
 t=. (2,(#y)%2)$y
 0 validtc__dbl {.t NB. ptable allowed on left
 validtc__dbl {:t
@@ -182,6 +181,7 @@ for_n. conl 1 do.
 end.
 NAMES_jd_=: '' 
 CHILDREN_jd_=: ''
+dbl=: ''
 JDOK
 )
 

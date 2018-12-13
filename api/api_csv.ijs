@@ -70,9 +70,8 @@ if. option_w do.
 else.
  w=. ''
 end.
-d=. getdb''
 csvset ;0{a
-'table does not exist'assert NAMES__d e.~1{a
+'table does not exist'assert NAMES__dbl e.~1{a
 table=. ;1{a
 cols=. 2}.a
 
@@ -110,12 +109,11 @@ JDOK
 csvwr=: 4 : 0
 'w cols new'=. x
 a=. y
-d=. getdb''
 csvset ;0{a
 table=. >1{a
 p=. (csvfp i:'/'){.csvfp
 jdcreatefolder p
-t=. getloc__d table
+t=. getloc__dbl table
 all=. getdefaultselection__t''
 if. 0=#cols do.
  cols=. all
@@ -224,7 +222,6 @@ NB. make following into csvrd routine
 NB. call csvrd routine for the single file or for each of the partition files
 csvrd=: 3 : 0
 'csv table rows flagcdefs'=: y
-d=. getdb''
 csv=.   csv
 cdefs=. (_3}.csv),'cdefs'
 echo^:(-.@:fexist) csv
@@ -238,7 +235,7 @@ end.
 'cdefs file not found'assert _1~:cdefs
 csvdefs_jdcsv_ cdefs
 csvreportclear_jdcsv_''              NB. clear log file of old reports
-path=. PATH__d
+path=. PATH__dbl
 jdfolder=.  path,table
 csvfolder=. jdfolder,'/jdcsv'        NB. folder for csv intermediate files and reports
 csvload_jdcsv_   csvfolder;csv;rows  NB. csvfolder files <- csvfile
@@ -428,7 +425,6 @@ csummary=: 4 : 0
 )
 
 jd_csvreport=: 3 : 0
-d=. getdb''
 a=. '/f 0' getoptions y
 all=. {."1 jdtables''
 if. 0=#a do.
@@ -440,7 +436,7 @@ assert 0=#a-.all['table{s} not found'
 r=. ''
 for_i. i.#a do.
  tab=. ;i{a
- b=. fread PATH__d,tab,'/jdcsv/csvlog.txt'
+ b=. fread PATH__dbl,tab,'/jdcsv/csvlog.txt'
  if. _1=b do. continue. end.
  t=. <;.2 b
  if. option_f do.

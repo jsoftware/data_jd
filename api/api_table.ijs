@@ -7,19 +7,17 @@ y=. ca y
 ECOUNT assert 2 3 e.~#y
 'snkt srct srcdb'=. y
 NB. 'srcdb same as snkdb' assert -.DB-:&filecase_j_ srcdb
-d=. getdb''
-snktloc=. getloc__d snkt
+snktloc=. getloc__dbl snkt
 a=. jdcols snkt
 snkcs=. {:"1 a
 snkns=. {."1 a
 db=. DB
 try.
  jdaccess srcdb NB. possible security implication
- d=. getdb''
  a=. jdcols srct
  srccs=. {:"1 a
  srcns=. {."1 a
- srctloc=. getloc__d srct
+ srctloc=. getloc__dbl srct
  new=. Tlen__srctloc
 catchd.
  jdaccess db
