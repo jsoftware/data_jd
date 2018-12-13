@@ -31,9 +31,9 @@ fixinsert=: 3 : 0
 )
 
 fixtypex=: 3 : 0
-ETYPE assert (0 e.$y) +. 1=L. y
-ETYPE assert (0 e.$y) +. 2=;3!:0 each y
-ETYPE assert (0 e.$y) +. 2>;$@:$each y
+ETYPE assert 1=L. y
+ETYPE assert 2=;3!:0 each y
+ETYPE assert 2>;$@:$each y
 y
 )
 

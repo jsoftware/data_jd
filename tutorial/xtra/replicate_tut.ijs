@@ -2,7 +2,7 @@ NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
 
 0 : 0
 some applications require a db to be always available for
-quick updates and slow queries would interfer with this
+quick updates and slow queries would interfere with this
 
 a solution to this is to replicate the db for the queries
 
