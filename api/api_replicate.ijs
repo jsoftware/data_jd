@@ -113,7 +113,7 @@ jddeletefolder snkpath
 snk=. dquote snk
 
 select. UNAME
-case. 'WIN' do.
+case. 'Win' do.
  r=. shell 'robocopy ',(hostpathsep src),' ',(hostpathsep snk),' *.* /E /xf jdlock' NB. can't copy jdlock
  if. +/'ERROR' E. r do.
   smoutput r 
