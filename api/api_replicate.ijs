@@ -110,6 +110,7 @@ foldercopy=: 3 : 0
 src=. dquote src
 jddeletefolder snkpath
 snk=. dquote snk
+top=. ;('Darwin'-:UNAME){' -T ';' ' NB.maxOS -T vs trailing /
 
 if. IFWIN do.
  r=. shell 'robocopy ',(hostpathsep src),' ',(hostpathsep snk),' *.* /E /xf jdlock' NB. can't copy jdlock
@@ -118,7 +119,7 @@ if. IFWIN do.
   assert 0['robocopy failed'
  end.
 else.
- shell 'cp -r -v -T ',src,' ',snk
+ shell 'cp -R',top,src,' ',snk
 end.
 'copy folder failed'assert 2=ftypex }.}:snk
 )
@@ -170,7 +171,7 @@ fn=. reparg y
 REPLICATE__dbl=: 2
 RLOGFOLDER__dbl=: fn
 RLOGINDEX__dbl=: 0
-foldercopy (dbpath DB);fn,'base'
+foldercopy (dbpath DB);fn,'base/' NB. trailing / required in macOS
 writestate__dbl''
 jd_close'' NB. so table etc locales are opened
 JDOK
