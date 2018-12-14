@@ -107,20 +107,24 @@ RLOGSIG=: 'RLOGRLOG' NB. rlog file record signature
 
 foldercopy=: 3 : 0
 'snk src'=. jpath each y
+src=. src,(UNAME-:'Darwin')#'/' NB. macos requires trailing / (no -T option)
 src=. dquote src
 jddeletefolder snkpath
 snk=. dquote snk
-top=. ;('Darwin'-:UNAME){' -T ';' ' NB.maxOS -T vs trailing /
 
-if. IFWIN do.
+select. UNAME
+case. 'WIN' do.
  r=. shell 'robocopy ',(hostpathsep src),' ',(hostpathsep snk),' *.* /E /xf jdlock' NB. can't copy jdlock
  if. +/'ERROR' E. r do.
   smoutput r 
   assert 0['robocopy failed'
  end.
-else.
- shell 'cp -R',top,src,' ',snk
-end.
+case. 'Linux' do.
+ shell 'cp -R -T ',src,' ',snk
+case. 'Darwin' do.
+ shell 'cp -R '   ,src,' ',snk
+case. do.
+end. 
 'copy folder failed'assert 2=ftypex }.}:snk
 )
 
@@ -171,7 +175,7 @@ fn=. reparg y
 REPLICATE__dbl=: 2
 RLOGFOLDER__dbl=: fn
 RLOGINDEX__dbl=: 0
-foldercopy (dbpath DB);fn,'base/' NB. trailing / required in macOS
+foldercopy (dbpath DB);fn,'base' NB. trailing / required in macOS
 writestate__dbl''
 jd_close'' NB. so table etc locales are opened
 JDOK
