@@ -133,7 +133,7 @@ case. do.
  'db version not compatible with this Jd version'assert v=<.".jdversion
  
  NB. if db has RLOGFOLDER make sure it is not already in use
- t=. 3!:2 fread y,'/jdstate'
+ t=. 3!:2 ::((0 2$'')"_) fread y,'/jdstate'   NB. ok if jdstate is missing
  i=. ({."1 t)i.<'RLOGFOLDER'
  if. i~:#t do.
   a=. ;{:i{t
