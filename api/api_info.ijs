@@ -37,6 +37,8 @@ case. 'ref' do.
  'ref' inforef a
 case. 'derived' do.
  infoderived a
+case. 'replicate' do.
+ (;:'replicate rlog'),:REPLICATE__dbl;RLOGFOLDER__dbl
 case. do.
  'unsupported info command'assert 0
 end. 

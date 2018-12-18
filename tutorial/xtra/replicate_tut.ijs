@@ -4,21 +4,29 @@ NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
 some applications require a db to be always available for
 quick updates and slow queries would interfere with this
 
-a solution to this is to replicate the db for the queries
+a solution is to replicate the src db in a snk db for queries
 
-src db updates append ops to a log
-snk db, a copy of src db, is updated from the log
+src db appends change ops to a log
+snk db applies these to be a copy of the src db
 
-overhead to append the log file is small
-file append is fast compared to insert complexity
+overhead to append an op the log file is small
+and is very fast compared to insert complexity
 
-log access would be faster if on a different ssd drive
+log even faster for src and snk if on ssd on a different drive
 
 src and snk dbs are normally in different Jd tasks
 and this makes good use of multiple cores
 
+there could be more than 1 snk replicated from a src
+
 this tutorial works with src and snk in the same task
 and requires extra steps to avoid conflicts with file handles
+)
+
+0 : 0
+!!! csvrd, csvrestore, and table-table ops
+!!! are NOT recorded in src db rlog folder
+!!! and they will NOT be reflected in the snk db
 )
 
 RLOG=: '~temp/jd/rlog' NB. folder to hold replicate info
@@ -26,6 +34,7 @@ RLOG=: '~temp/jd/rlog' NB. folder to hold replicate info
 jdadmin 0 NB. clean state
 jdadminnew'src'
 jd'repsrc ',RLOG NB. connect rlog folder to record replicate info
+jd'info replicate'
 jd'createtable f'
 jd'createcol f a int'
 jd'insert f';'a';23
@@ -38,6 +47,7 @@ NB. next line gets error as RLOG files are in use by the src
 jdadmin 0 NB. close src db so rlog file handles are closed
 jdadminnew'snk'
 jd'repsnk ',RLOG NB. connect rlog folder
+jd'info replicate'
 jd'repupdate'    NB. update db from rlog
 NB. result is count of Jd ops - that is, createtable, createcol, insert
 jd'reads from f'
@@ -115,3 +125,9 @@ jd'info summary'
 jd'repupdate'
 assert a-:jd'info schema'
 assert b-:jd'info summary'
+
+jd'repkill' NB. no more replication
+'not'jdae'repupdate'
+
+jdadmin'src'
+jd'repkill' NB. no more replication

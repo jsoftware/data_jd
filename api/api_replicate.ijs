@@ -137,14 +137,16 @@ if. '"'={.t do.
 else.
  'rlog file name with blanks must be quoted'assert -.' 'e.t
 end. 
-t,'/'#~'/'~:{:t
+'rlog arg missing'assert 0~:#t
+t=. t,'/'#~'/'~:{:t
+'already marked as replicate' assert 0=REPLICATE__dbl
+'replicate folder is in use' assert -.(<hostpathsep jpath t,'rlog')e.{:"1[1!:20''
+t
 )
 
 NB. blanks in file name are a nuisance
 jd_repsrc=: 3 : 0
 fn=. reparg y
-'already marked as replicate' assert 0=REPLICATE__dbl
-'replicate folder is in use' assert -.(<hostpathsep jpath fn,'rlog')e.{:"1[1!:20''
 
 if. IFWIN do.
  e=. 'rlogfolder file(s) in use'
@@ -169,15 +171,22 @@ JDOK
 
 jd_repsnk=: 3 : 0
 fn=. reparg y
-'already marked as replicate' assert 0=REPLICATE__dbl
-'replicate folder is in use'     assert -.(<hostpathsep jpath fn,'rlog')e.{:"1[1!:20''
-'replicate folder does not exist'assert 2=ftype fn
+'folder does not exist'assert 2=ftype fn
+'not a replicate folder'assert 'jdrlog'-:fread fn,'jdclass'
 REPLICATE__dbl=: 2
 RLOGFOLDER__dbl=: fn
 RLOGINDEX__dbl=: 0
 foldercopy (dbpath DB);fn,'base' NB. trailing / required in macOS
 writestate__dbl''
 jd_close'' NB. so table etc locales are opened
+JDOK
+)
+
+jd_repkill=: 3 : 0
+ECOUNT assert 0=#y
+'not marked as replicate'assert 0~:REPLICATE__dbl
+REPLICATE__dbl=: 0
+if. RLOGFH__dbl~:0 do. RLOGFH__dbl=: 0[1!:22 RLOGFH__dbl end.
 JDOK
 )
 

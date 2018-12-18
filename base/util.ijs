@@ -116,22 +116,33 @@ c=. ;#each y
 )
 
 NB. delete folder
-NB. allowed if jddeleteok
-NB.  not allowed if jddropstop
-NB.   not allowed if too few /s (/abc/def ok and /abc bad)
-NB.    allowed if empty or jdclass or in ~temp
+NB.  err - is a file
+NB.  OK  - not a folder
+NB.  err - locked
+NB.  OK  - empty
+NB.  OK  - deleteok
+NB.  err - dropstop (not deleteok)
+NB.  OK  - jdclass
+NB.  OK  - ~temp
 jddeletefolder=: 3 : 0
-y=. (-'/'={:y)}.y NB. drop trailing /
-y=. jpath y
-('folder (F) locked by Jd'rplc 'F';y) assert -.(<y)e.{:"1 jdadminlk_jd_''
-t=. y,'/' NB. ensure trailing /
-if. -.fexist t,'jddeleteok' do.
- EDROPSTOP assert (0=ftypex) t,'/jddropstop'
- e=. 'delete ',y,' not allowed'
- e assert 3<:+/t='/'
- p=. jpath'~temp/'
- e assert (0=#fdir t,'*')+.(fexist t,'jdclass')+.p-:(#p){.t 
+y=. jpath(-'/'={:y)}.y NB. drop trailing /
+en=. 'delete folder ',y,' not allowed'
+ef=. 'delete folder ',y,' failed'
+en assert 1~:ftype y                     NB. err - it is a file
+if. 2~:ftype y do. y return. end.        NB. OK  - not a folder
+en assert -.(<y)e.{:"1 jdadminlk_jd_''   NB. locked
+
+if. 0=#fdir y,'/*' do.
+ ef assert 1=ferase y                    NB. OK   - empty   
+ return.
 end.
+
+if. -.fexist y,'/jddeleteok' do.
+ EDROPSTOP assert (0=ftypex) y,'/jddropstop'
+ p=. jpath'~temp'
+ en assert (fexist y,'/jdclass')+.p-:(#p){.y 
+end.
+
 r=. rmsub y
 if. 0~:;{.r do.
  echo 'Jd info: jddeletefolder failed: ',y
@@ -146,7 +157,7 @@ if. 0~:;{.r do.
  end.
  echo' failed!'
  'jddeletefolder' logtxt y;r
- 'jddeletefolder failed' assert 0
+ ef assert 0
 end.
 y
 )

@@ -132,7 +132,15 @@ case. do.
  v=. (-.v-:_1){3,<.0".":v
  'db version not compatible with this Jd version'assert v=<.".jdversion
  
- NB. if db has RLOGFOLDER make sure it is not already in use
+ t=. jdadminlk''
+ i=. t i.'[w]';jpath y
+ if. i<#t do. NB. admin already done - just do access to first dan for the db
+  i=. (jpath each {:"1 DBPATHS)i.<jpath y
+  jdaccess (;{.i{DBPATHS_jd_),' ',(;{:i{DBUPS_jd_),' intask'
+  i.0 0
+  return.
+ end. 
+
  t=. 3!:2 ::((0 2$'')"_) fread y,'/jdstate'   NB. ok if jdstate is missing
  i=. ({."1 t)i.<'RLOGFOLDER'
  if. i~:#t do.
@@ -142,9 +150,8 @@ case. do.
  end.
  
  d=. }.(y i:'/')}.y
- 'x'jdadminlk y NB. remove old lock (if any)
  'w'jdadminlk y
- 
+
  NB. remove old admin for this folder
  dan=. (;(<jpath y)=jpath each {:"1 DBPATHS)#{."1 DBPATHS
  DBPATHS=: (-.({."1 DBPATHS)e.dan)#DBPATHS
@@ -201,6 +208,7 @@ end.
 jddeletefolder y
 'w'jdadminlk y
 Create__f d
+'x'jdadminlk y
 jdadmin yy
 )
 
