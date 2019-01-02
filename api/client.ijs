@@ -156,12 +156,20 @@ if. 'intask'-:SERVER do.
  end. 
  start=. 6!:1''
  parts=: _1
- if. optionspace do.
+ if. optionspace do. NB.! this should be fixed or killed off
   lastspace=: 7!:2'r=. (''jd_'',opx)~a' 
  else.
+ 
+  NB. do repupdate if required
+  if. 0~:#dbl do.
+   if. 2=REPLICATE__dbl do.
+    repupdate''
+   end. 
+  end.
+  
   r=. ('jd_',opx)~a
 
-  if. (<opx) e. rops_jddatabase_ do. opx rlog__dbl y end. 
+  if. (<opx) e. rops_jddatabase_ do. opx rlog__dbl a end. 
   
   lastspace=: _1
  end.

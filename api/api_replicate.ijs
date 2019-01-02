@@ -144,8 +144,9 @@ t=. t,'/'#~'/'~:{:t
 t
 )
 
-NB. blanks in file name are a nuisance
-jd_repsrc=: 3 : 0
+NB. make db a replicate src
+jdrepsrc=: 3 : 0
+getdb''
 fn=. reparg y
 
 if. IFWIN do.
@@ -156,7 +157,8 @@ end.
 
 jddeletefolder fn
 jdcreatefolder fn
-'jdrlog'fwrite fn,'jdclass' NB. identifies and allows subsequent delete
+'rlog'fwrite fn,'jdclass' NB. identifies and allows subsequent delete
+''fwrite fn,'jddropstop'  NB. prevent premature delete
 REPLICATE__dbl=: 1
 RLOGFOLDER__dbl=: fn
 foldercopy (fn,'base');dbpath DB
@@ -166,42 +168,52 @@ ferase 1 dir fn,'base'
 (3 ic 0)fwrite RLOGFOLDER__dbl,'end'
 writestate__dbl''
 jd_close'' NB. normal open stuff
-JDOK
+i.0 0
 )
 
-jd_repsnk=: 3 : 0
+jdrepsnk=: 3 : 0
+getdb''
 fn=. reparg y
 'folder does not exist'assert 2=ftype fn
-'not a replicate folder'assert 'jdrlog'-:fread fn,'jdclass'
+'not a replicate folder'assert 'rlog'-:fread fn,'jdclass'
 REPLICATE__dbl=: 2
 RLOGFOLDER__dbl=: fn
 RLOGINDEX__dbl=: 0
 foldercopy (dbpath DB);fn,'base' NB. trailing / required in macOS
 writestate__dbl''
 jd_close'' NB. so table etc locales are opened
-JDOK
+i.0 0
 )
 
-jd_repkill=: 3 : 0
+jdrepkill=: 3 : 0
+getdb''
 ECOUNT assert 0=#y
 'not marked as replicate'assert 0~:REPLICATE__dbl
 REPLICATE__dbl=: 0
+RLOGFOLDER__dbl=: ''
 if. RLOGFH__dbl~:0 do. RLOGFH__dbl=: 0[1!:22 RLOGFH__dbl end.
-JDOK
+writestate__dbl''
+i.0 0
 )
 
+NB. run automatically before any op on a replicated db to do updates
 NB. needs to be run in jd because ops like renamecol close and open database locale
 NB. snk db - process new log records
-jd_repupdate=: 3 : 0
-'not replicated'assert 2=REPLICATE__dbl
+NB. should be in db locale but there were unresolbed problems
+repupdate=: 3 : 0
+if. RLOGINDEX__dbl=fsize RLOGFH__dbl do. return. end.
 m=. getrlogend RLOGFOLDER__dbl
 c=. 0
 while. RLOGINDEX__dbl<m do.
  t=. fread RLOGFH__dbl;RLOGINDEX__dbl,16
  'bad rlog record' assert RLOGSIG-:8{.t
  n=. _3 ic 8}.t
- r=. fread RLOGFH__dbl;(RLOGINDEX__dbl+16),n
- jd 3!:2 r
+ 'opx a'=. 3!:2 fread RLOGFH__dbl;(RLOGINDEX__dbl+16),n
+ try.
+  r=. ('jd_',opx)~a
+ catch.
+  3 logijf 'replicate update';<(opx;<a),:'RLOGINDEX';RLOGINDEX__dbl
+ end.
  RLOGINDEX__dbl=: RLOGINDEX__dbl+16+n
  writestate__dbl''
  c=. >:c
@@ -209,6 +221,10 @@ end.
 ,.'ops';c
 )
 
+jdrepinfo=: 3 : 0
+getdb''
+REPLICATE__dbl;RLOGFOLDER__dbl
+)
 
 NB. zip db
 jd_zip=: 3 : 0

@@ -5,12 +5,23 @@ jdadminx_z_  =: jdadminx_jd_
 
 coclass'jd'
 
+NB. jd... verbs assert expected error (similar to jdae)
+jdadmae_jd_=: 4 : 0
+t=. 13!:12''
+assert 'assertion failure'-:y
+assert +./x E. t
+t=. (t i. LF){.t
+}.(t i:':'){.t
+)
+
 jdpath=: 3 : 'jpath ''/'',~dbpath DB'
 
 assertnodamage=: 3 : 0
 p=. <jdpath''
 'db damaged and not under repair' assert -.1 0-:fexist p,each'jddamage';'jdrepair'
 )
+
+
 
 getdb=: 3 : 0
 assertnodamage''

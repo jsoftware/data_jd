@@ -1,47 +1,62 @@
 NB. Copyright 2015, Jsoftware Inc.  All rights reserved.
 NB. jddeletefolder tests
 
-ae=: 'not allowed'
-de=: 'domain error'
-
-0 : 0
-err - is a file
-OK  - not a folder
-err - locked
-OK  - empty
-OK  - deleteok
-err - dropstop (not deleteok)
-OK  - jdclass
-)
+ae=: 'assertion failure'
 
 jdadmin 0
 
+NB. clean state
 f=. '~/jd_rmdir_test'
-
-jddeletefolderok_jd_ f
-jddeletefolder_jd_ f                 NB. deletefodlerok
-
-jddeletefolder_jd_ f                NB. OK  - not a file or a folder
-
-assert 3='abc' fwrite f
-ae assert jddeletefolder_jd_  etx f NB. err - is a file
-
 ferase f
-jdcreatefolder_jd_ f                NB. not a folder (or a file)
+jddeletefolderok_jd_ f
+jddeletefolder_jd_ f
+
+
+NB. not temp and not database tests
+jddeletefolder_jd_ f NB. OK - not a file or a folder
+
+'' fwrite f
+assert ae-:jddeletefolder_jd_  etx f NB. err - is a file
+ferase f
 
 jdcreatefolder_jd_ f
-jddeletefolder_jd_ f                NB. OK - empty
+jddeletefolder_jd_ f                NB. OK - delete empty folder
 
-jdadminnew f
-ae assert jddeletefolder_jd_ etx f  NB. protect non _temp db
+jdcreatefolder_jd_ f
+'' fwrite f,'/foo'
+assert ae-:jddeletefolder_jd_ etx f NB. err - non-empty - non-database - non temp
 
 jddeletefolderok_jd_ f
-ae assert jddeletefolder_jd_ etx f  NB. locked
+jddeletefolder_jd_ f                NB. OK - deleteok
+
+NB. not temp and database tests
+jdadminnew f
+assert ae-:jddeletefolder_jd_ etx f  NB. locked
 
 jdadmin 0
-jddeletefolder_jd_ etx f            NB. not locked and deleteok
+jddeletefolder_jd_ f            NB. OK - delete database class
 
+jdadminnew f
+jd'createtable a'
+jd'createtable b'
+jd'droptable a'
+
+jdadmin 0
+jddeletefolder_jd_ f,'/b'
+jddeletefolder_jd_ f            NB. OK - delete jd folder
+
+jdadminnew f
+jddropstop_jd_''
+jdadmin 0
+assert ae-:jddeletefolder_jd_ etx f  NB. dropstop
+jdadmin f
+0 jddropstop_jd_''
+jdadmin 0
+jddeletefolder_jd_ f
+
+NB. temp tests
 f=. '~temp/jd/test'
+jddeletefolderok_jd_ f
 
 jdadminnew 'test'
 jdadmin 0
@@ -50,11 +65,17 @@ jddeletefolder_jd_ f                NB. OK - ~temp
 jdadminnew 'test'
 jddropstop_jd_''
 jdadmin 0
-ae assert jddeletefolder_jd_ etx f  NB. protect dropstop
+assert ae-:jddeletefolder_jd_ etx f  NB. dropstop
 jdadmin 'test'
 0 jddropstop_jd_''
 jdadmin 0
 jddeletefolder_jd_ f
+
+jdadminnew '~/jdtest'
+jd'createtable f'
+jd'createtable g'
+jd'droptable f'
+
 
 NB. older test
 f=. '~/jd_rmdir_test'
@@ -66,6 +87,6 @@ jdcreatefolder_jd_ f
 jddeletefolder_jd_ f                 NB. ok empty
 jdcreatefolder_jd_ f
 'abc' fwrite f,'/test'
-ae assert jddeletefolder_jd_ etx f  NB. not empty
+assert ae-:jddeletefolder_jd_ etx f  NB. not empty
 jddeletefolderok_jd_ f
 jddeletefolder_jd_ f

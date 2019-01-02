@@ -1,18 +1,18 @@
 NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
 
 0 : 0
-some applications require a db to be always available for
-quick updates and slow queries would interfere with this
+some dbs must always be available for quick updates
+and slow queries would interfere
 
 a solution is to replicate the src db in a snk db for queries
 
 src db appends change ops to a log
 snk db applies these to be a copy of the src db
 
-overhead to append an op the log file is small
-and is very fast compared to insert complexity
+overhead to append an op ro the log is small
+and is fast compared to insert
 
-log even faster for src and snk if on ssd on a different drive
+log can be on a different drive and could be ssd
 
 src and snk dbs are normally in different Jd tasks
 and this makes good use of multiple cores
@@ -20,51 +20,47 @@ and this makes good use of multiple cores
 there could be more than 1 snk replicated from a src
 
 this tutorial works with src and snk in the same task
-and requires extra steps to avoid conflicts with file handles
+and extra steps avoid conflicts with file handles
 )
 
 0 : 0
 !!! csvrd, csvrestore, and table-table ops
 !!! are NOT recorded in src db rlog folder
-!!! and they will NOT be reflected in the snk db
+!!! and will NOT be reflected in the snk db
 )
 
 RLOG=: '~temp/jd/rlog' NB. folder to hold replicate info
+jddeletefolder_jd_ jddeletefolderok_jd_ RLOG
 
-jdadmin 0 NB. clean state
+jdadmin 0 NB. no locks
 jdadminnew'src'
-jd'repsrc ',RLOG NB. connect rlog folder to record replicate info
-jd'info replicate'
+jdrepsrc_jd_ RLOG NB. mark db as replicate src and set rlog folder
+jdrepinfo_jd_''
 jd'createtable f'
 jd'createcol f a int'
 jd'insert f';'a';23
 jd'reads from f'
 
 jdadminnew'snk'
-NB. next line gets error as RLOG files are in use by the src
-'replicate'jdae'repsnk ',RLOG NB. connect rlog folder - expected error
+'replicate'jdadmae_jd_ jdrepsnk_jd_ etx RLOG NB. rlog in use by src - expected error
 
-jdadmin 0 NB. close src db so rlog file handles are closed
+jdadmin 0 NB. no locks
 jdadminnew'snk'
-jd'repsnk ',RLOG NB. connect rlog folder
-jd'info replicate'
-jd'repupdate'    NB. update db from rlog
-NB. result is count of Jd ops - that is, createtable, createcol, insert
-jd'reads from f'
+jdrepsnk_jd_ RLOG NB. connect rlog folder
+jdrepinfo_jd_''
+jd'reads from f' NB. updated from rlog before read
 
-jdadmin 0 NB. close snk db so rlog file handles are closed
+jdadmin 0 NB. no locks
 jdadmin'src'
 jd'insert f';'a';222 333
 jd'reads from f'
 
-jdadmin 0 NB. close src db so rlog file handles are closed
+jdadmin 0 NB. no locks and src rlog handles closed
 
 jdadmin'snk'
-jd'reads from f' NB. does not have latest
-jd'repupdate'
-jd'reads from f'
+jd'reads from f' NB. updated from rlog before read
 
-13!:12'' [ jdadmin :: 0: 'src' NB. error as rlog is in use by snk db
+'replicate' jdadmae_jd_ jdadmin etx 'src' NB. error as rlog is in use by snk db
 
 jdadmin 0
 jdadmin'src'
@@ -79,7 +75,6 @@ jd'read from g'
 jdadmin 0
 jdadmin'snk'
 jd'info summary'
-jd'repupdate'
 jd'info summary'
 jd'read from f'
 jd'read from g'
@@ -98,7 +93,8 @@ jd'insert f';'a';i.3
 jd'createtable g'
 jd'createcol g t int'
 jd'insert g';'t';23
-jd'repsrc ',RLOG    NB. current db is copied to rlog folder
+jddeletefolderok_jd_ RLOG NB. so that repsrc can delete it
+jdrepsrc_jd_ RLOG   NB. current db is copied to rlog folder
 jd'insert g';'t';777 NB. recorded as new op in rlog folder
 jd'renamecol g t tt'
 jd'renametable g h'
@@ -120,14 +116,48 @@ b=. jd'info summary'
 
 jdadmin 0 
 jdadminnew'snk'
-jd'repsnk ',RLOG
+jdrepsnk_jd_ RLOG
 jd'info summary'
-jd'repupdate'
 assert a-:jd'info schema'
 assert b-:jd'info summary'
 
-jd'repkill' NB. no more replication
-'not'jdae'repupdate'
+jd'droptable f' NB. trigger later error
+
+jdadmin 0
+jdadmin'src'
+jd'insert f';'a';777
+b=. jd'info summary'
+
+jdadmin 0
+jdadmin 'snk'
+'damaged'jdae'reads from a' NB. damaged - rep update insert to table that was droped
+
+jdlogijfshow_jd_ '' NB. logijf info
+jdlogijfshow_jd_ 0  NB. logijf info from record 0
+
+0 : 0
+the above shows the problem was in replicate update
+xtra shows that update command that failed was an insert
+and RLOGINDEX is the position of the failing update in the rlog file
+)
+
+NB. you can drop the damaged snk database and recreate from the src db
+jdadminnew'snk'   NB. get rid of the damaged database
+jdrepsnk_jd_ RLOG NB. recreate from src
+jd'info summary'
+assert a-:jd'info schema'
+assert b-:jd'info summary'
+
+jdrepkill_jd_'' NB. no more replication
+jdrepinfo_jd_''
 
 jdadmin'src'
-jd'repkill' NB. no more replication
+jdrepkill_jd_'' NB. no more replication
+
+NB. hard to know when the RLOG folder is no longer necessary
+NB. it has been marked with jddropstop for protection
+
+'dropstop' jdadmae_jd_ jddeletefolder_jd_ etx RLOG NB. dropstop
+
+jddeletefolderok_jd_ RLOG NB. mark it as ok for delete
+jddeletefolder_jd_ RLOG

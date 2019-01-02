@@ -171,10 +171,9 @@ NB. src db - write next rlog record
 rlog=: 4 : 0
 if. 1~:REPLICATE do. return. end.
 if. -.(<x) e. rops do. return. end.
-a=. 3!:1 y
+a=. 3!:1 x;<y
 d=. 'RLOGRLOG',(3 ic #a),a
 'rlog write failed' assert _1~:d fappend RLOGFH
 setrlogend''
 writestate''
 )
-

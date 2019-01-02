@@ -14,6 +14,7 @@ end.
 assert 0=nc<'CSVFOLDER__'['CSVFOLDER must be defined as path to csv files'
 CSVFOLDER__=: CSVFOLDER__,>('/'={:CSVFOLDER__){'/';''
 jdcreatefolder CSVFOLDER__
+'csv'fwrite CSVFOLDER__,'jdclass'
 if. ''-:y do. return. end.
 ('csv file must be .csv: ',y)assert '.csv'-:_4{.y
 root=: (y i:'.'){.y
@@ -167,9 +168,9 @@ NB. write db tables and script to folder y
 jd_csvdump=: 3 : 0
 y=. '/e 0 /replace 0' getoptions y
 e=. ;option_e{'';'/e '
-csvset''
 if. option_replace do. jddeletefolder CSVFOLDER__ end.
-assert 0=#dir CSVFOLDER__['CSVFOLDER must be empty'
+csvset''
+assert 1=#dir CSVFOLDER__['CSVFOLDER must contain only jdclass'
 tabs=. {."1 jdtables''
 for_t. tabs do.
  NB. jd_csvwr e,'T.csv T'rplc 'T';>t

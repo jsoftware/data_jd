@@ -6,14 +6,13 @@ NB. some stuff copied from replicate_test.ijs
 0 : 0
 usage: src-task creates src db and snk-task replicates
 
-  src-task            snk-task
-writerinit''
-writersrc''
-                    reader 0.01
-writer 100000 0
-NB. finishes
-                    NB. finishes
-repvalidate''                    
+src-task                     snk-task
+  writerinit 1 NB. repsrc
+                               reader'' NB. start just before doing writer
+  writer 100000 0
+  NB. finishes
+                               NB. finishes
+  repvalidate''                    
 )
 
 RLOG=: '~temp/jd/rlog/'
@@ -41,15 +40,15 @@ jd'createcol t g int'
 jd'createcol t h int'
 )
 
+
+NB. y 1 does repsrc
 NB. create src table t with a few rows
 writerinit=: 3 : 0
+jddeletefolderok_jd_ RLOG
+jddeletefolder_jd_ RLOG
 jdadminnew'src'
 setsrc''
-)
-
-NB. mark src db as repsrc
-writersrc=: 3 : 0
-jd'repsrc ',RLOG
+if. y do. jdrepsrc_jd_ RLOG end.
 )
 
 NB. writer rows,delay
@@ -63,20 +62,23 @@ end.
 jd'read count a from t'
 )
 
-NB. reader y - delay bettween update requests
+NB. reader y - delay between update requests
 NB. start delayed 5 seconds to let writer get started
 NB. quit if no new updates in 5 seconds
 reader=: 3 : 0
-6!:3[5 NB. delay start for writerinit
 jdadminnew'snk'
-jd'repsnk ',RLOG
-q=. >.5%y
-n=. q
-while. n do.
- c=. >{:jd'repupdate'
- if. c=0 do. n=. <:n break. end.
- n=. q
- 6!:3[y
+jdrepsnk_jd_ RLOG
+d=. getdb_jd_''
+n=. 0
+while. 1 do.
+ if.  RLOGINDEX__d=fsize RLOGFH__d do.
+  6!:3[1
+  n=. >:n
+  if. n=5 do. break. end.
+ else.
+  n=. 0
+  jd'info summary' NB. trigger update
+ end. 
 end.
 (3!:1 jd'reads from t')fwrite RLOG,'/reader.dat'
 jd'read count a from t'
@@ -90,14 +92,12 @@ NB. y is rows
 report0=: 3 : 0
 r=. 0 2$''
 
-
-writerinit''
-writersrc''
+writerinit 1
 t=. timex'writer y 0'rplc 'y';":y
 echo a=. t;'writer log on'
 r=. r,a
 
-writerinit''
+writerinit 0
 t=. timex'writer y 0'rplc 'y';":y
 echo a=. t;'writer log off'
 r=. r,a

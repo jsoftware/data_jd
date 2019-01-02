@@ -458,6 +458,7 @@ erase 'csvin_jdcsv_' NB. might be '' from empty file
 if. -.appendflag do.
  jddeletefolder_jd_ PATHCSVFOLDER
  jdcreatefolder_jd_ PATHCSVFOLDER
+ NB. 'csv'fwrite PATHCSVFOLDER,'/jdclass'
 end.
 assert fexist PATHCSVFILE
 cset PATHCSVFOLDER

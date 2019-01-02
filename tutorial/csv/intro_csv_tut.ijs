@@ -86,7 +86,7 @@ jd'gen test g 2'
 'test1'fwrite'test1.ijs',~jdpath_jd_'' NB. db related file(s) - copied by dump/restore
 
 jd'csvdump' NB. dump all tables and scripts
-assert 7=#dir F
+assert 8=#dir F
 dir F
 
 jdadminx'test'
