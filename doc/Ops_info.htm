@@ -17,13 +17,14 @@
 <p>info type [...] - info about current DB</p>
 <p><code>agg                         - aggregators</code><br />
 <code>last                        - cmd time space parts</code><br />
+<code>ref         [table[column]] - ref cols</code><br />
+<code>replicate                   - 0/1/2 - not/src/snk </code><br />
 <code>schema      [table[column]] - normal cols (non jd...)</code><br />
-<code>summary     [table]         - active,deleted rows</code><br />
+<code>summary     [table]</code><br />
 <code>table       [table]</code><br />
 <code>validate    [table[column]]</code><br />
 <code>validatebad [table[column]]</code><br />
-<code>varbyte     [table[column]]</code><br />
-<code>ref         [table[column]] - ref cols</code></p>
+<code>varbyte     [table[column]]</code></p>
 <p>Tables are sorted and cols are in default selection order</p>
 <p>Schema and similar types treat ptable as a single table<br />
 validate and validatebad list ptable parts</p>

@@ -18,16 +18,26 @@
 <p><a href="Admin.htm#admin.ijs" title="wikilink">admin.ijs</a>  <a href="Admin.htm#custom.ijs" title="wikilink">custom.ijs</a> </p>
 <p><a href="Admin.htm#jdadminfp" title="wikilink">admin/general utilities in the jd locale</a></p>
 <h2 id="jdadmin">jdadmin</h2>
-<p><code>  jdadmin'' NB. report all locks, DANs, and related info</code></p>
-<p><code>  jdadmin 0 NB. release all locks and close all DANs</code></p>
-<p><code>  'new'jdadmin'...' NB. same as jdadminx '...'</code></p>
-<p><code>  'access'jadmin'' NB. lists jdaccess for available DANS</code></p>
-<p><code>  jdadmin'ab'     NB. make DB ~temp/jd/ab available</code><br />
-<code>  jdadmin'.../ab' NB. make DB .../ab available</code></p>
+<p><code>  jdadmin ''        NB. report all locks, DANs, and related info</code><br />
+<code>  jdadmin 0         NB. release all locks and close all DANs</code><br />
+<code>  jdadmin 'ab'      NB. make DB ~temp/jd/ab available</code><br />
+<code>  jdadmin '.../ab'  NB. make DB .../ab available</code><br />
+<code>  'access'jadmin '' NB. lists jdaccess for available DANS</code></p>
 <p>When a DB is made available its admin.ijs is loaded to set the DAN (db access name) info and does jdaccess for the first DAN.</p>
 <p>The db in a folder is accessed by a DAN. A DAN maps to folder, user/pwds, ops. Different DANs can access the same or different folders.</p>
 <p>A default admin.ijs is created if it does not exist. In the default, DAN is last path folder, and u/p is user/pwd</p>
 <p>The lock on the db folder prevents interference by other tasks</p>
+<h2 id="jdadminnew">jdadminnew</h2>
+<p>Creates a new database, replacing any old database. It deletes any old folder, creates a new db folder, then does jdadmin.</p>
+<p><code>  jdadminnew 'aa'     NB. create new database ~temp/jd/aa</code><br />
+<code>  jdadminnew '.../bb' NB. create new database .../bb</code></p>
+<p>A new database can be created in an empty folder. A new database overwrites an old database unless <a href="Admin.htm#jddropstop" title="wikilink">jddropstop</a> is set.</p>
+<p>Fails if folder:</p>
+<ul>
+<li>is a jd folder but not class database</li>
+<li>is a jd folder with <a href="Admin.htm#jddropstop" title="wikilink">jddropstop</a></li>
+<li>is not a jd folder and is not empty</li>
+</ul>
 <h2 id="jdaccess">jdaccess</h2>
 <p>Set DAN (db access name), user/pwd, and server for jd ops:</p>
 <pre><code>server intask       - op runs in the current J task
@@ -41,18 +51,7 @@ jdaccess &#39;zz me/xx localhost:65002&#39;
 jdaccess &#39;&#39;                          NB. report
 jdaccess 0                           NB. clear access </code></pre>
 <h2 id="jdadminx">jdadminx</h2>
-<p>Creates a new database, replacing any old database. It deletes any old folder, creates a new db folder, then does jdadmin.</p>
-<p><code>  jdadminx'aa'     NB. create new database ~temp/jd/aa</code><br />
-<code>  jdadminx'.../bb' NB. create new database .../bb</code></p>
-<p>A new database can be created in an empty folder. A new database overwrites an old database unless <a href="Admin.htm#jddropstop" title="wikilink">jddropstop</a> is set.</p>
-<p>fails if folder:</p>
-<ul>
-<li>is a jd folder but not class database</li>
-<li>is a jd folder with <a href="Admin.htm#jddropstop" title="wikilink">jddropstop</a></li>
-<li>is not a jd folder and is not empty</li>
-</ul>
-<p>If jdadminx fails, you can force delete of the folder with:</p>
-<pre><code>&#39;force&#39;jddeletefolder_jd_&#39;...&#39;</code></pre>
+<p>Deprecated - same as jdadminnew</p>
 <h2 id="admin.ijs">admin.ijs</h2>
 <p>admin.ijs is a script in the db folder, and is loaded by jdadmin.</p>
 <p>The default contents are:</p>
@@ -123,18 +122,18 @@ jdaccess 0                           NB. clear access </code></pre>
 <h2 id="jddeletefolder">jddeletefolder</h2>
 <p>This deletes a folder, and is used internally by jd drop... ops.</p>
 <pre><code>   jddeletefolder_jd_&#39;~/jd/test&#39;</code></pre>
-<p>See <a href="General.htm#dropdelete" title="wikilink">drop/delete</a>.</p>
 <p>It follows these rules in order:</p>
 <ul>
-<li>allowed if jddeletok exists</li>
-<li>not allowed if jddropstop exists</li>
-<li>not allowed if too few “/” characters (e.g. <code>/abc/def</code> is ok, but <code>/abc</code> fails)</li>
-<li>allowed if empty or a jd folder (jdclass exists) or in ~temp</li>
+<li>error if locked</li>
+<li>error if a file</li>
+<li>OK if jddeletok exists</li>
+<li>error if jddropstop exists</li>
+<li>OK if empty</li>
+<li>OK if jdclass or in ~temp</li>
 <li>otherwise, not allowed</li>
 </ul>
-<p>The <a href="Admin.htm#jddeletefolderok" title="wikilink">jddeletefolderok</a> verb writes jddeleteok to override the rules.</p>
 <h2 id="jddeletefolderok">jddeletefolderok</h2>
-<p>This writes a jddeleteok file to a folder to allow <a href="Admin.htm#jddeletefolder" title="wikilink">jddeletefolder</a>:</p>
+<p>This writes a jddeleteok file to a folder to allow <a href="Admin.htm#jddeletefolder" title="wikilink">jddeletefolder</a>. Result is the arg.</p>
 <pre><code>   jddeletefolderrok_jd_&#39;~/jd/test&#39;</code></pre>
 <h2 id="jddropstop">jddropstop</h2>
 <p>This writes a jddropstop file to a folder:</p>

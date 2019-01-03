@@ -27,12 +27,13 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '4.4.65'
+VERSION=: '4.4.66'
 
 FILES=: 0 : 0
 manifest.ijs
 jd.ijs
 demo/common.ijs
+demo/sed/csv/jdclass
 demo/sed/csv/jdcsvrefs.txt
 demo/sed/csv/r.cdefs
 demo/sed/csv/e.csv
@@ -42,6 +43,7 @@ demo/sed/csv/e.cdefs
 demo/sed/csv/r.csv
 demo/sed/csv/s.csv
 demo/sed/csv/t.cdefs
+demo/sandp/csv/jdclass
 demo/sandp/csv/spj.cdefs
 demo/sandp/csv/jdcsvrefs.txt
 demo/sandp/csv/sp.csv
@@ -53,6 +55,7 @@ demo/sandp/csv/spj.csv
 demo/sandp/csv/sp.cdefs
 demo/sandp/csv/s.csv
 demo/sandp/csv/p.cdefs
+demo/northwind/csv/jdclass
 demo/northwind/csv/jdcsvrefs.txt
 demo/northwind/csv/Shippers.csv
 demo/northwind/csv/Products.csv
@@ -85,6 +88,7 @@ tutorial/xtra/log_tut.ijs
 tutorial/xtra/upsertx_tut.ijs
 tutorial/xtra/link_tut.ijs
 tutorial/xtra/dropstop_tut.ijs
+tutorial/xtra/replicate_tut.ijs
 tutorial/basic/admin_tut.ijs
 tutorial/basic/intro_b_tut.ijs
 tutorial/basic/intro_a_tut.ijs
@@ -124,7 +128,6 @@ csv/csv.ijs
 csv/csvinstall.ijs
 csv/csvtest.ijs
 config/server_default.ijs
-tools/convert.ijs
 tools/setscriptlists.ijs
 tools/repair.ijs
 tools/quandl.ijs
@@ -169,6 +172,7 @@ api/jjd.ijs
 api/api_adm.ijs
 api/api_misc.ijs
 api/api_rename.ijs
+api/api_replicate.ijs
 api/api_gen.ijs
 pm/pm_disk.ijs
 pm/pmc.ijs
@@ -176,6 +180,7 @@ pm/pmb.ijs
 pm/pm_map.ijs
 pm/pm.ijs
 pm/pmx.ijs
+pm/replicate.ijs
 pm/csvtest.ijs
 types/numeric.ijs
 types/epoch.ijs
@@ -186,6 +191,7 @@ types/datetimes.ijs
 types/varbyte.ijs
 base/jmfx.ijs
 base/folder.ijs
+base/lock.ijs
 base/util_ptable.ijs
 base/util.ijs
 base/table.ijs
@@ -219,6 +225,7 @@ test/northwind_test.ijs
 test/shape_test.ijs
 test/droptable_test.ijs
 test/ref_test.ijs
+test/replicate_test.ijs
 test/query_test.ijs
 test/upsert_test.ijs
 test/rmdir_test.ijs

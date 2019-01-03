@@ -13,6 +13,11 @@
 </head>
 <body>
 <p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm" class="act">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
+<h2 id="logs">logs</h2>
+<p>''' DB file log.txt ''' records DB events. By default it records only significant events (e.g., damage). Set LOGOPS_jd_ to 1 to record ops. See <a href="Admin.htm#jdlogtxtshow" title="wikilink">jdlogtxtshow</a>.</p>
+<p>''' DB file log.ijf ''' records DB damage info to an ijf file. See <a href="Admin.htm#jdlogijfshow" title="wikilink">jdlogijfshow</a>.</p>
+<p>''' '~temp/jdlog/log.txt' ''' records events that don't occur within a DB.</p>
+<p>''' ~temp/jdlog/logtest.txt ''' records jdtests events. This can be used to determine which test failed if there is a crash.</p>
 <h2 id="performance">Performance</h2>
 <h3 id="measurement">measurement</h3>
 <p>See tutorial performance and see pmhelp_jd_ for info. Folder pm has some rough scripts for performance measurement.</p>
@@ -99,38 +104,5 @@ save the file, restart system, and verify new ulimit</code></pre>
 <li>change Startup type: to Disabled</li>
 <li>click Apply</li>
 </ol>
-<h2 id="convert-jd3-jd4">convert Jd3-&gt;Jd4</h2>
-<p>Jd4 is incompatible with databases created under previous versions. Jd4 code will not open a Jd3 database and vice versa.</p>
-<p>To continue working with databases created with Jd3 you must:</p>
-<ul>
-<li>rename ~addons/data/jd to ~addons/data/jd3</li>
-</ul>
-<p>And then, when you want to work with a Jd3 database:</p>
-<ul>
-<li>load'~addons/data/jd3/jd.ijs'</li>
-</ul>
-<p>An update will overwrite addons/data/jd with the Jd4 codebase. After that point, update can't give you a jd3 folder. You can create it by downloading the appropriate file from <a href="http://www.jsoftware.com/download/jd3">jd3 zips</a> and unpacking in a temp folder, renaming jd to jd3 and then moving it to your addons folder.</p>
-<p>See <a href="Release.htm" title="wikilink">Release</a> for change details.</p>
-<p>The Jd4 has conversion tools to migrate a Jd3 database to a Jd4. The conversion is done in place and only works in the one direction.</p>
-<p>Conversion:</p>
-<pre><code>start J
-load &#39;jd&#39;
-jd &#39;list version&#39; NB. verify 4.1
-load &#39;~addons/data/jd/tools/convert.ijs&#39;
-dryrun &#39;~temp/jd/test&#39; NB. dry run this db and report details
-   
-DO NOT conrun UNTIL dryrun IS CLEAN!
-BACKUP!
-  
-conrun &#39;~temp/jd/test&#39; NB. convert this db in place and report details</code></pre>
-<p>Conversion summary:</p>
-<ul>
-<li>jdactive col dropped and deleted rows compressed out</li>
-<li>jd... cols (ref/reference/hash/...) dropped</li>
-<li>cols with type time or enum dropped</li>
-<li>jd'ref ...' done for jdref and jdreference cols</li>
-<li>dryrun failure leaves db untouched</li>
-<li>conrun failure probably leaves db damaged - neither jd3 nor jd4 compatible</li>
-</ul>
 </body>
 </html>
