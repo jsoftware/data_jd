@@ -161,3 +161,5 @@ NB. it has been marked with jddropstop for protection
 
 jddeletefolderok_jd_ RLOG NB. mark it as ok for delete
 jddeletefolder_jd_ RLOG
+
+NB. see JDP,'pm/replicate.ijs' for examples with 2 tasks

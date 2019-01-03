@@ -18,6 +18,7 @@ RLOGINDEX =: _1    NB. snk db index in file of next record
 
 NB. values not in state
 RLOGFH    =: 0     NB. src/snk rlog file handle
+RLOGBLOCK =: 0     NB. count lock collisions
 
 NB. define aggregation functions
 aggcreate=: 3 : 0

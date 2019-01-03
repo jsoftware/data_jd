@@ -8,7 +8,7 @@ usage: src-task creates src db and snk-task replicates
 
 src-task                     snk-task
   writerinit 1 NB. repsrc
-                               reader'' NB. start just before doing writer
+                               reader 0.01 NB. start just before writer
   writer 100000 0
   NB. finishes
                                NB. finishes
@@ -59,28 +59,32 @@ while. rows do.
  addsrc'' 
  6!:3[delay
 end.
+d=. dbl_jd_
+echo RLOGBLOCK__d;'RLOGBLOCK'
 jd'read count a from t'
 )
 
 NB. reader y - delay between update requests
-NB. start delayed 5 seconds to let writer get started
+NB. 5 seconds no action before guiting
 NB. quit if no new updates in 5 seconds
 reader=: 3 : 0
 jdadminnew'snk'
 jdrepsnk_jd_ RLOG
 d=. getdb_jd_''
 n=. 0
+t=. 6!:1''
 while. 1 do.
  if.  RLOGINDEX__d=fsize RLOGFH__d do.
-  6!:3[1
-  n=. >:n
-  if. n=5 do. break. end.
+  6!:3[y
+  if. 5<t-~6!:1'' do. break. end.
  else.
-  n=. 0
+  t=. 6!:1''
   jd'info summary' NB. trigger update
  end. 
 end.
 (3!:1 jd'reads from t')fwrite RLOG,'/reader.dat'
+d=. dbl_jd_
+echo RLOGBLOCK__d;'RLOGBLOCK'
 jd'read count a from t'
 )
 
@@ -93,14 +97,14 @@ report0=: 3 : 0
 r=. 0 2$''
 
 writerinit 1
-t=. timex'writer y 0'rplc 'y';":y
-echo a=. t;'writer log on'
+a=. timex'writer y 0'rplc 'y';":y
+NB. echo a=. t;'writer log on'
 r=. r,a
 
 writerinit 0
-t=. timex'writer y 0'rplc 'y';":y
-echo a=. t;'writer log off'
-r=. r,a
+b=. timex'writer y 0'rplc 'y';":y
+NB. echo a=. t;'writer log off'
+(a;'log on'),(b;'log off'),:(<.100*_1+a%b);'percent overhead'
 )
 
 report1=: 3 : 0
