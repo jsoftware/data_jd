@@ -5,8 +5,8 @@ RLOG=: '~temp/jd/rlog/'
 NB. use of J file handles means a Jd task can have only 1 user of RLOG,'rlog'
 
 testerrors=: 3 : 0
-jddeletefolder_jd_ jddeletefolderok_jd_ RLOG
 jdadmin 0
+jddeletefolder_jd_ jddeletefolderok_jd_ RLOG
 'should not be any open handles' assert 0=#1!:20''
 jddeletefolder_jd_ RLOG
 jdcreatefolder_jd_ RLOG
@@ -68,8 +68,8 @@ jdrepsnk_jd_ RLOG
 
 NB. empty db
 test0=: 3 : 0
-jddeletefolder_jd_ jddeletefolderok_jd_ RLOG
 jdadmin 0 NB. clean slate
+jddeletefolder_jd_ jddeletefolderok_jd_ RLOG
 testsrc''
 a=. jd'info summary'
 jdadmin 0 NB. so reader can use rlog
@@ -79,8 +79,8 @@ assert a-:jd'info summary'
 
 NB. db with 1 table and no rows
 test1=: 3 : 0
-jddeletefolder_jd_ jddeletefolderok_jd_ RLOG
 jdadmin 0
+jddeletefolder_jd_ jddeletefolderok_jd_ RLOG
 testsrc''
 setsrc''
 a=. jd'info summary'
@@ -91,8 +91,8 @@ assert a-:jd'info summary'
 
 NB. db with 1 table and some rows
 test2=: 3 : 0
-jddeletefolder_jd_ jddeletefolderok_jd_ RLOG
 jdadmin 0
+jddeletefolder_jd_ jddeletefolderok_jd_ RLOG
 testsrc''
 setsrc''
 2 addsrc 3
@@ -105,8 +105,8 @@ assert a-:jd'reads from t'
 NB. db repsrc with data 
 NB. need to save copy of db in rlog and use it in repupdate
 test3=: 3 : 0
-jddeletefolder_jd_ jddeletefolderok_jd_ RLOG
 jdadmin 0
+jddeletefolder_jd_ jddeletefolderok_jd_ RLOG
 jdadminnew'src'
 setsrc''
 2 addsrc 3

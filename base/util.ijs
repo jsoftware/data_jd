@@ -135,8 +135,8 @@ if. 0~:;{.r do.
  echo 'Jd info: jddeletefolder failed: ',y
  echo IFWIN#' see doc technical|wss'
  echo ' trying again'
- for. i.20 do.
-  6!:3[3
+ for. i.10 do.
+  6!:3[1
   r=. rmsub y
   if. 0=;{.r do.
    echo' succeeded'
@@ -196,16 +196,14 @@ t=. ,&'/'^:('/'~:{:) jpathsep y
 if. (<filecase_j_ t) e. filecase_j_@:((#t)&{.)&.> 1{"1 }.showmap_jmf_ '' do. ('contains mapped files: ',t) assert 0 end.
 if. IFWIN do.
   r=. shell_jtask_ 'rmdir /S /Q ','"','"',~hostpathsep y
+  if. #r do. echo r end.
 else.
-  r=. hostcmd_j_ 'rm -rf ','"','"',~y NB. --preserve-root
+  hostcmd_j_ 'rm -rf ','"','"',~y NB. --preserve-root
 end.
-if. #r do. 1;r return. end.
-6!:3^:(*#1!:0 y) 0.1 NB. sometimes required in windows so next test works
-if. 0=#1!:0 y do.
- 0;''
-else.
- 1;'delete did not complete'
-end.
+if. 0=#1!:0 y do. 0;'' return. end.
+6!:3[0.1 NB. sometimes required in windows so next test works
+if. 0=#1!:0 y do. 0;'' return. end. 
+1;'delete did not complete'
 )
 
 jdcreatefolder=: 3 : 0
