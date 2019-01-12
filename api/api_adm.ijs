@@ -185,6 +185,7 @@ case. do.
  end.
  NB. default access is for the 1st of the new dans
  jdaccess (;{.c{DBPATHS_jd_),' ',(;{:c{DBUPS_jd_),' intask'
+ getdb'' NB. set dbl
  i.0 0
 end.
 :

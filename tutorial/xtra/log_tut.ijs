@@ -60,7 +60,8 @@ damage''
 jdadmin 0
 jdadmin'test'
 'damaged'jdae'validate' NB. detects damage and marks as damaged
-'db damaged'jdae'reads from f'
+'damaged'jdae'reads from f'
+jdadmin 0
 assert 'assertion failure'-:jdadmin etx'test'
 13!:12''
 

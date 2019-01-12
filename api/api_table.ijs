@@ -2,6 +2,11 @@ NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
 
 coclass'jd'
 
+accessx=: 3 : 0
+jdaccess y
+getdb''
+)
+
 jd_tableinsert=: 3 : 0
 y=. ca y
 ECOUNT assert 2 3 e.~#y
@@ -13,17 +18,17 @@ snkcs=. {:"1 a
 snkns=. {."1 a
 db=. DB
 try.
- jdaccess srcdb NB. possible security implication
+ accessx srcdb NB. possible security implication
  a=. jdcols srct
  srccs=. {:"1 a
  srcns=. {."1 a
  srctloc=. getloc__dbl srct
  new=. Tlen__srctloc
 catchd.
- jdaccess db
+ accessx db
  'invalid srcdb'assert 0 
 end.
-jdaccess db
+accessx db
 t=. snkns-.srcns
 if. #t do. throw 'required cols missing in src: ',;' ',each t end.
 for_i. i.#snkns do.
@@ -64,15 +69,15 @@ assert 0=#1!:0<jpath snkpath['snk table already exists'
 
 db=. DB
 try.
- jdaccess srcdb NB. possible security implication
+ accessx srcdb NB. possible security implication
  srcpath=. jpath(dbpath DB),'/',src
  assert 'table'-:jdfread srcpath,'/jdclass'
 catchd.
- jdaccess db
+ accessx db
  'invalid srcdb'assert 0 
 end.
 
-jdaccess db
+accessx db
 snkpath=. '"',snkpath,'"'
 srcpath=. '"',srcpath,'"'
 jd_close''
@@ -99,15 +104,15 @@ assert 0=#1!:0<jpath snkpath['snk table already exists'
 
 db=. DB
 try.
- jdaccess srcdb NB. possible security implication
+ accessx srcdb NB. possible security implication
  srcpath=. jpath(dbpath DB),'/',src
  assert 'table'-:jdfread srcpath,'/jdclass'
 catchd.
- jdaccess db
+ accessx db
  'invalid srcdb'assert 0 
 end.
 
-jdaccess db
+accessx db
 jd_close'' NB. does not release lock
 assert 1=snkpath frename srcpath['frename failed'
 JDOK

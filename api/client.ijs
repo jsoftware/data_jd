@@ -81,7 +81,6 @@ if. -.'intask'-:a do.
  assert (0=#'0123456789.'-.~i{.a)+.-.'255.255.255.255'-:;{:sdgethostbyname_jsocket_ i{.a['bad ip address or hostname'
 end.
 'DB UP SERVER'=: DBX_jd_=: t
-getdb'' NB. jdaccess
 i.0 0
 )
 
