@@ -965,29 +965,17 @@ seejd jt
 )
 
 bldjd=: 3 : 0
-'table cols'=: y
-f=. Open_jd_ jpath'~temp'
-d=. Open__f 'tdb'
-Drop__d :: [ table
-Create__d y NB. ;<tdbdata
-r=. Reads__d 'from ',table
+r=. jd'reads from ',table
 closeall''
-r
 )
 
 seejd=: 3 : 0
-f=: Open_jd_ jpath'~temp'
-d=: Open__f 'tdb'
-r=. Reads__d 'from ',y,' where jdautoid < 10'
-Close__f 'tdb'
-r
+r=. jd'reads from ',y,' where jdautoid < 10'
 )
 
 NB. seejdx 'from DimClientIP where autoid = 1000'
 seejdx=: 3 : 0
-f=. Open_jd_ jpath'~temp'
-d=. Open__f 'tdb'
-r=. Reads__d y
+jd'reads from ',y
 Close_jd_'*'
 r
 )

@@ -61,10 +61,16 @@ end.
 ,.'Jd report csvscan';rep
 )
 
+NB. nasty overlap with read option
+fixoption_e=: 3 : 0
+option_csve=: option_e NB. nasty overlap with read option
+erase'option_e'
+)
+
 jd_csvwr=: 3 : 0
 a=. '/combine 0 /e 0 /h1 0 /w 0' getoptions y
+fixoption_e''
 header=. option_h1
-epoch=. option_e
 if. option_w do.
  w=. >{:a
  a=. }:a
@@ -137,7 +143,7 @@ end.
 b=. (":each b),each' '
 b=. (>0{"1 b),.(>1{"1 b),.>2{"1 b
 c=. ,(' ',.~>":each<"0 >:i.#b),.b,.LF
-c=. c,'options TAB LF NO \ ',(":option_h1),(;option_e{' iso8601-char ';' iso8601-int '),LF
+c=. c,'options TAB LF NO \ ',(":option_h1),(;option_csve{' iso8601-char ';' iso8601-int '),LF
 'create cdefs file failed' assert (#c)=c fwrite csvfpcdefs
 
 if. -.option_combine do. ''fwrite csvfp end.
@@ -151,7 +157,7 @@ if. #w do.
 else.
   rows=. i.Tlen__t
 end.
-WriteCsv__t csvfp;option_h1;cols;rows;option_e;new
+WriteCsv__t csvfp;option_h1;cols;rows;option_csve;new
 )
 
 NB. copyscripts snk;src
@@ -167,13 +173,12 @@ end.
 NB. write db tables and script to folder y
 jd_csvdump=: 3 : 0
 y=. '/e 0 /replace 0' getoptions y
-e=. ;option_e{'';'/e '
+fixoption_e''
 if. option_replace do. jddeletefolder CSVFOLDER__ end.
 csvset''
 assert 1=#dir CSVFOLDER__['CSVFOLDER must contain only jdclass'
 tabs=. {."1 jdtables''
 for_t. tabs do.
- NB. jd_csvwr e,'T.csv T'rplc 'T';>t
  t=. ;t
  option_h1=: option_combine=: 0
  ('';'';1) csvwr (t,'.csv');t 

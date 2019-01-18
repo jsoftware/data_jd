@@ -119,7 +119,6 @@ jdx=: 3 : 0
 if. IFJHS do. assert (<URL_jhs_) e.'jijx';'jijs' end.
 DBX jdx y
 :
-erase'option_'nl_jd_'' NB. jd_... options (globals)
 'DB UP SERVER'=: bdnames x
 USER=: (UP i.'/'){.UP
 'FEOP OP FETAB FECOL FEER FEXTRA'=: <''

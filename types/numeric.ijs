@@ -70,7 +70,7 @@ coclass deftype_jdtnumeric_ 'int1'
 DATASIZE=: 1
 
 ifromi1=: 3 : 'n-(n<128){256 0[n=. a.i.y'
-i1fromi=: 3 : '((2*#y)$;ifintel{0 1;1 0)#1 ic y' NB.! endian !
+i1fromi=: 3 : '((2*#y)$;ifintel{0 1;1 0)#1 ic y'
 
 ". each <;._2 qnumtxt  rplc 'dat';'(ifromi1 dat)'
 qrange=: 3 : (qrangetxt rplc 'dat';'(ifromi1 dat)')

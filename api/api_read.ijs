@@ -2,12 +2,11 @@ NB. Copyright 2016, Jsoftware Inc.  All rights reserved.
 
 coclass'jd'
 
+NB. should use getoptions but there are problems - similar problems in createtable
 readstart=: 3 : 0
 tempcolclear''
 if. 0~:L.y do. y=. ;y[ECOUNT assert 1=#y end.
-if. _1=nc<'option_lr' do. NB. nasty overlap of options - /e in read and in csvwr
- option_e=: option_lr=: option_types=: 0
-end. 
+option_e=: option_lr=: option_types=: 0
 while. '/'={.y do.
  if. '/lr '-:4{.y do.
   y=. dlb 4}.y

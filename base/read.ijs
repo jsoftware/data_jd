@@ -32,7 +32,6 @@ if. MAXROWCOUNT < t do.
 end.
 Query ''
 Order order
-if. _1=nc<'option_e' do. option_e=:0 end. NB. non api access does not do readstart
 
 for_i. i.#cnms do.
  c=. i{cloc
