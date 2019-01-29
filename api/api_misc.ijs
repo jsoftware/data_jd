@@ -1,4 +1,4 @@
-NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
+NB. Copyright 2019, Jsoftware Inc.  All rights reserved.
 
 coclass'jd'
 
@@ -71,19 +71,19 @@ NB. link should cause all activiy to happen on linked drive
 jd_intx=: 3 : 0
 y=. bdnames y
 ECOUNT assert 3=#y
-'FETAB FECOL'=. 2{.y
+'FETAB FECOL'=: 2{.y
 'tab col'=. 2{.y
 newt=. ;2{y
 c=. jdgl 2{.y
 oldt=. typ__c
-co=. fread pco=. PATH__PARENT__c,'column_create_order.txt'
-'new type not intx' assert (<newt)e.;:'int int1 int2 int4 intx'
-'old type not intx' assert 'int'-:3{.oldt
-d=. >{:{:jd_read col,' from ',tab NB. does conversion from intx to int
+if. newt-:oldt do. JDOK return. end.
+ETYPE assert (<newt)e.;:'int int1 int2 int4 intx'
+ETYPE assert 'int'-:3{.oldt
+data=. >{:{:jd_read col,' from ',tab NB. does conversion from intx to int
 
 NB. validate range and pick smallest intx if newt is intx
-min=. <./d
-max=. >./d
+min=. <./data
+max=. >./data
 
 select. newt
 case. 'int1' do. EINT1 assert (min>:i1min)*.max<:i1max
@@ -94,21 +94,46 @@ case. 'intx' do.
  newt=. ;{.b#;:'int1 int2 int4 int'
 end.
 
-if. newt-:oldt do. JDOK return. end.
 assertnodynamic 2{.y
+assertnotptable tab
+newcol tab;col;newt;data
+JDOK
+)
 
-colx=. col,'_temp_col_during_intx' NB. kludge to avoid conflict
+NB. redefine col with new type and/or data - preserve col create order
+newcol=: 3 : 0
+'tab col type data'=. y
+c=. jdgl 2{.y
+co=. fread pco=. PATH__PARENT__c,'column_create_order.txt'
+colx=. col,'_temp_col_during_type_change' NB. kludge to avoid conflict
 jd_renamecol tab;col;colx NB. rename old col out of the way
-
-try.
- jd_createcol tab;col;newt;d
-catchd.
- 'intx conversion failed- should not happen' assert 0
-end.
-
+jd_createcol tab;col;type;data
 jd_dropcol tab;colx
-co fwrite pco
-to keep create order file 
+co fwrite pco NB. to keep create order file 
+)
+
+NB. change col byte trailing shape
+jd_byten=: 3 : 0
+y=. bdnames y
+y=. y,(3=#y)#<' '
+ECOUNT assert 4=#y
+'FETAB FECOL'=: 2{.y
+'tab col s fill'=. y
+c=. jdgl 2{.y
+ETYPE assert (typ__c-:'byte')*.-.''-:shape__c
+
+s=. _1".s
+'bad shape'assert (s<10000)*.s>:0
+
+'bad fill'assert (1=#,fill)*.2=3!:0 fill
+fill=. {.fill
+
+assertnodynamic 2{.y
+assertnotptable tab
+if. shape__c~:s do.
+ data=. ((#dat__c),s){.!.fill dat__c
+ newcol tab;col;('byte ',":s);data
+end.  
 JDOK
 )
 

@@ -205,3 +205,8 @@ assertnodynamic=: 3 : 0
 t=. jdgl ;{.y
 'col has dynamic' assert  -.({:y)e.;{:"1 SUBSCR__t
 )
+
+assertnotptable=: 3 : 0
+t=. jdgl y
+EPTABLE assert 0=S_ptable__t
+)

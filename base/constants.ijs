@@ -52,6 +52,7 @@ EINT2=:      'bad int2 data'
 EINT4=:      'bad int4 data'
 EDERIVED=:   'derived not allowed'
 ECSVBYTE0=:  'byte col trailing shape 0 not allowed'
+EPTABLE=:    'ptable not allowed'
 
 LOCALE=: CLASS=: <'jd'
 CHILD=: <'jdfolder'
