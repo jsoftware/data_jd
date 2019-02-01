@@ -256,6 +256,10 @@ t=. t>. (a~:3)*3+a
 rws=. pointer_to_name 'rws'
 col=. pointer_to_name@> ; 3 :'ExportMap__y $0'&.> <"0 cols
 lib=. LIBJD,' writecsv > n *c x *x *x *c *x x *x'
+
+NB.!!! q__=: f;l;t;et;seputc;ind;rws;col
+NB. return.
+
 empty lib cd f;l;t;et;seputc;ind;rws;col
 )
 

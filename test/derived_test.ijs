@@ -3,50 +3,67 @@ NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
 jdadminnew'test'
 jd'createtable f'
 jd'createcol f a int';2 3 4
+jd'createcol f b4 byte 4';3 4$'abcdabcdabcd'
+jd'createcol f edt edatetime';'2014-01-02T03:04:05','2015-02-03T03:04:05',:'2016-03-04T03:04:05'
 
-cfile=: '~temp/jd/test/custom.ijs'
+jd'createdcol f b int' 
+jd'createdcol f c int'
+jd'createdcol f b4x byte 3'
+jd'createdcol f ex edate'
 
-custom=: 0 : 0 rplc 'RPAREN';')'
-jdderived_b=: 3 : 0
-c=. jdgl NAME__PARENT;'a'
-dat__c+100
-RPAREN
+jd'reads from f' NB. default derived is fill
 
-jdderived_c=: 3 : 0
-c=. jdgl NAME__PARENT;'a'
-dat__c+1000
-RPAREN
+bfile=:   '~temp/jd/test/f/b/derive.ijs'
+cfile=:   '~temp/jd/test/f/c/derive.ijs'
+b4xfile=: '~temp/jd/test/f/b4x/derive.ijs'
+exfile=:  '~temp/jd/test/f/ex/derive.ijs'
+
+bfile fwrite~ 0 : 0 ,')'
+derive=: 3 : 0
+dat__c+1000[c=. jdgl NAME__PARENT;'a'
 )
 
-custom fwrite cfile
-jdadmin'test'[jdadmin 0 NB. kludge to get custom.ijs loaded
-
-
-jd'createdcol f b int b' 
-jd'createdcol f c int c'
-
-'bc'-:,;1{{:jd'info derived'
-
-bc=: jdgl_jd_ 'f b'
-cc=: jdgl_jd_ 'f c'
-
-
-NB. check derived marked dirty
-chkd=: 3 : 0
-assert _1=nc<'dat__bc'
-assert _1=nc<'dat__cc'
+cfile fwrite~ 0 : 0 ,')'
+derive=: 3 : 0
+dat__c+2000[c=. jdgl NAME__PARENT;'a'
 )
 
-NB. check derived values
-chkv=: 3 : 0
-'a b c'=. 3{.{:"1 jd'read from f'
-assert b=100+a
-assert c=1000+a
+b4xfile fwrite~ 0 : 0 ,')'
+derive=: 3 : 0
+3{."1 dat__c[c=. jdgl NAME__PARENT;'b4'
+)
+
+exfile fwrite~ 0 : 0 ,')'
+derive=: 3 : 0 NB. just the year
+efs 4{."1 sfe dat__c[c=. jdgl NAME__PARENT;'edt'
+)
+
+jd'close' NB. close so open will load new defns
+
+jd'reads from f'
+
+'b  c  b4xex '-:,;1{{:jd'info derived'
+
+bc=:   jdgl_jd_ 'f b'
+cc=:   jdgl_jd_ 'f c'
+b4xc=: jdgl_jd_ 'f b4x'
+exc=:  jdgl_jd_ 'f ex'
+
+chkd=: 3 : 0 NB. check derived marked dirty
+assert _1=nc 'dat_bc';'dat_cc';'dat_b4xc';'dat_exc'
+)
+
+chkv=: 3 : 0 NB. check derived values
+'a b4 edt b c b4x ex'=. 7{.{:"1 jd'read /e from f'
+assert b=1000+a
+assert c=2000+a
+assert b4x=3{."1 b4
+assert ex= efs_jd_ 4{."1 sfe_jd_ edt
 )
 
 ''jdae'insert f';'a';23 24 25;'b';1 2 3;'c';3 4 5
 
-jd'insert f';'a';23 24 25
+jd'insert f';'a';23;'b4';'abcd';'edt';'2014-01-02T03:04:05'
 chkd''
 chkv''
 
@@ -63,16 +80,16 @@ jd'update f';'a=9';'a';11
 chkd''
 chkv''
 
-jd'update f';'b=102';'a';666
+jd'update f';'b=1002';'a';666
 chkd''
 chkv''
 
-jd'update f';'b';'a';777;'b';103
+jd'update f';'b';'a';777;'b';1003
 chkd''
 chkv''
 
 jd'createcol f d int';i.Tlen__cc
-jd'upsert f';'a';'a';666 999;'d';777 888
+jd'upsert f';'a';'a';666 999;'d';777 888;'b4';(2 4$'asdf');'edt';2#efs_jd_ '2014-01-02T03:04:05'
 chkd''
 chkv''
 
@@ -84,51 +101,29 @@ jd'sort f a desc'
 chkd''
 chkv''
 
-'' fwrite cfile
-jdadmin'test'[jdadmin 0 NB. kludge to get custom.ijs loaded
-'not defined'jdae'read from f'
+'derive=: 3 : ''i.Tlen-1'''fwrite bfile
+jd'close'
 
-t=. 0 : 0
-jdderived_b=: 3 : 0
-c=. jdgl NAME__PARENT;'a'
-}.dat__c+100 NB. bad Tlen
-)
-
-t fwrite cfile
-jdadmin'test'[jdadmin 0 NB. kludge to get custom.ijs loaded
 'count'jdae'read from f'
 
-t=. 0 : 0
-jdderived_b=: 3 : 0
-c=. jdgl NAME__PARENT;'a'
-i.Tlen,2
-)
+'derive=: 3 : ''i.Tlen,2'''fwrite bfile
+jd'close'
 
-t fwrite cfile
-jdadmin'test'[jdadmin 0 NB. kludge to get custom.ijs loaded
 'shape'jdae'read from f'
 
-t=. 0 : 0
-jdderived_b=: 3 : 0
-c=. jdgl NAME__PARENT;'a'
-1.5+i.Tlen
-)
+'derive=: 3 : ''1.5+i.Tlen'''fwrite bfile
+jd'close'
 
-t fwrite cfile
-jdadmin'test'[jdadmin 0 NB. kludge to get custom.ijs loaded
 'type'jdae'read from f'
 
-t=. 0 : 0
-jdderived_b=: 3 : 0
-c=. jdgl NAME__PARENT;'a'
-'a'+23
-)
+'derive=: 3 : ''i.a.'''fwrite bfile
+jd'close'
 
-t fwrite cfile
-jdadmin'test'[jdadmin 0 NB. kludge to get custom.ijs loaded
-'domain'jdae'read from f'
+'domain error'jdae'read from f'
 
-
-
-
-NB.! need ptable tests for derived cols
+jdadminnew'test'
+jd'createtable f'
+jd'createcol f a int'
+jd'createptable f a'
+'ptable'jdae'createdcol f b int'
+'found'jdae'createdcol w b int'
