@@ -42,6 +42,11 @@ jd'close' NB. close so open will load new defns
 
 jd'reads from f'
 
+CSVFOLDER=: '~temp/jd/csv'
+jd'csvwr f.csv f'
+jd'csvrd f.csv g'
+assert (jd'reads from f')-:jd'reads from g'
+
 'b  c  b4xex '-:,;1{{:jd'info derived'
 
 bc=:   jdgl_jd_ 'f b'

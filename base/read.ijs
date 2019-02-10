@@ -33,12 +33,13 @@ end.
 Query ''
 Order order
 
+n=. (#cnms)-#AGG_jd_ NB. cols before aggs
 for_i. i.#cnms do.
  c=. i{cloc
- NB. edate int converted to string - except for /e and agg count 
+ NB. edate converted to string - except for /e and agg count 
  if. 'edate'-:5{.typ__c do.
   if. -.option_e do.
-   if. (AGG_jd_-:,a:)+.i>:#AGG_jd_ do. b=. 1 else. b=. -.'count'-:;i{AGG_jd_ end.
+   if. i<n do. b=. 1 else. b=. -.'count'-:;(i-n){AGG_jd_ end.
    if. b do.
      t=. sep__c,utc__c,'dtmn'{~(;:'edate edatetime edatetimem edatetimen')i.<typ__c
      read=: (<t sfe,>i{read) i}read
@@ -149,10 +150,10 @@ NB. inds indexes into indices.
 NB. If sel is empty, add all visible columns
 SelBy =: 3 : 0
 'sel by'=.y
-sel=. sel rplc ' ,';',';', ';',' NB. remove blanks aroung ,
+sel=. sel rplc ' ,';',';', ';',' NB. remove blanks around ,
 nt =. #tloc
 if. 0=#sel do. sel =. (1<nt){::'*';'*.*' end.
-'a agg1 path' =. ({. , ' 'sel_split>@{:) ':' sel_split ',' strsplit sel
+'a agg1 path' =. ({. , ' 'sel_split (deb each@>@{:)) ':' sel_split ',' strsplit sel
 
 NB. readtset avg must have count - add if necessary
 if. (OP_jd_-:'readptable') *. (-.(<'count')e.agg1) *. (<'avg')e.agg1 do.
@@ -366,7 +367,6 @@ NB. Perform selection and aggregate, placing the results in read
 Query =: 3 : 0
 indices =: (-. _1"0@{.)&.|: indices
 read =: (inds{indices) readselect cloc
-
 if. nby do. read =: nby (agg aggregate) read
 elseif. #;agg do. read =: agg  4 :'x getagg  y'&.>  read
 end.

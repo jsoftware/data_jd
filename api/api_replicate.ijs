@@ -238,7 +238,6 @@ else.
  zip=. 'zip'
  t=. 'cd ',folder,' ; zip ',file,' -r *'
 end.
-decho t
 r=. shell t
 )
 
@@ -250,7 +249,6 @@ ferase file
 zip=. ;(UNAME-:'Win'){'zip';jpath'~tools/zip/zip.exe'
 t=. '"',zip,'" -r -j "',file,'" "',folder,'"'
 if. UNAME-:'Win' do. t=. '"',t,'"' end.
-decho t
 r=. shell t
 NB. ferase fn
 NB. r,LF,'CSVFOLDER now contains the csv file'
@@ -268,7 +266,6 @@ else.
  zip=. 'unzip'
  t=. 'cd ',folder,' ; unzip -qq -o ',file
 end.
-decho t
 r=. shell t
 NB. kludge to close admin and reopen to get it all set up
 jdadmin 0
