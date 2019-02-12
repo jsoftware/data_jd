@@ -17,7 +17,10 @@ derived
 )
 
 setderiveddirty=: 3 : 0
-if. derived do. erase'dat' end. NB. so next getloc/mapcol will derive new values
+if. derived do.
+ erase'dat'
+ 0 update_subscr__PARENT '' NB. mark refs dirty
+end. NB. so next getloc/mapcol will derive new values
 )
 
 NB. map as required

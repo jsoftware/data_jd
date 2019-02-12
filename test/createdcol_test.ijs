@@ -39,7 +39,6 @@ efs 4{."1 sfe dat__c[c=. jdgl NAME__PARENT;'edt'
 )
 
 jd'close' NB. close so open will load new defns
-
 jd'reads from f'
 
 CSVFOLDER=: '~temp/jd/csv'
@@ -132,3 +131,79 @@ jd'createcol f a int'
 jd'createptable f a'
 'ptable'jdae'createdcol f b int'
 'found'jdae'createdcol w b int'
+
+NB. assert tab ref is dirty
+ardirty=: 3 : 0
+c=. jdgl_jd_'f jdref_d_g_',y
+assert 1=dirty__c
+)
+
+NB. ref derived col to normal col
+jdadminnew'test'
+jd'createtable f'
+jd'createcol f a int'
+jd'createdcol f d int'
+jd'insert f';'a';i.6
+
+dfile=: '~temp/jd/test/f/d/derive.ijs'
+dfile fwrite~ 0 : 0 ,')'
+derive=: 3 : 0
+3|dat__c[c=. jdgl NAME__PARENT;'a'
+)
+
+jd'close'
+
+jd'reads from f'
+assert 0 1 2 0 1 2=>{:{:jd'read d from f'
+
+jd'createtable g'
+jd'createcol g b int'
+jd'createcol g c int'
+jd'insert g';'b';0 1 2;'c';666 777 888
+jd'reads from g'
+
+jd'ref f d g b'
+ardirty'b'
+jd'reads from f,f.g'
+assert 666 777 888 666 777 888=>{:{:jd'read g.c from f,f.g'
+
+jd'insert f';'a';999
+ardirty'b'
+
+assert 666 777 888 666 777 888 666='g.c'jdfrom_jd_ jd'read from f,f.g'
+
+NB. ref derived col to derived col
+jd'dropcol f jdref_d_g_b'
+jd'droptable g'
+
+jd'createtable g'
+jd'createcol g a int'
+jd'createdcol g d int'
+jd'insert g';'a';|.100+i.3
+
+dfile=: '~temp/jd/test/g/d/derive.ijs'
+dfile fwrite~ 0 : 0 ,')'
+derive=: 3 : 0
+3|dat__c[c=. jdgl NAME__PARENT;'a'
+)
+
+jd'close'
+jd'reads from f'
+jd'reads from g'
+assert 0 2 1='d'jdfrom_jd_ jd'read from g'
+
+jd'ref f d g d'
+ardirty'd'
+jd'reads from f,f.g'
+assert 0 1 2 0 1 2 0='g.d'jdfrom_jd_ jd'read from f,f.g'
+
+jd'update g';'d=0';'a';22
+ardirty'd'
+jd'reads from f,f.g'
+assert 0 1 2 0 1 2 0='g.d'jdfrom_jd_ jd'read from f,f.g'
+   
+jd'insert f';'a';123
+ardirty'd'
+jd'reads from f,f.g'
+
+assert 0 1 2 0 1 2 0 0='g.d'jdfrom_jd_ jd'read from f,f.g'
