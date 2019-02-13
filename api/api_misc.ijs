@@ -28,6 +28,7 @@ elseif. 1 do.
 end.
 t=. getloc__dbl tab
 snk=. getloc__t col
+EDERIVED assert 0=derived__snk 
 'jde: wrong shape' assert ($dat)-:$dat__snk
 'jde: wrong type'  assert (3!:0 dat)=3!:0 dat__snk
 if. 'varbyte'-:typ__snk do.
@@ -77,6 +78,7 @@ newt=. ;2{y
 c=. jdgl 2{.y
 oldt=. typ__c
 if. newt-:oldt do. JDOK return. end.
+EDERIVED assert 0=derived__c 
 ETYPE assert (<newt)e.;:'int int1 int2 int4 intx'
 ETYPE assert 'int'-:3{.oldt
 data=. >{:{:jd_read col,' from ',tab NB. does conversion from intx to int
@@ -120,6 +122,7 @@ ECOUNT assert 4=#y
 'FETAB FECOL'=: 2{.y
 'tab col s fill'=. y
 c=. jdgl 2{.y
+EDERIVED assert 0=derived__c 
 ETYPE assert (typ__c-:'byte')*.-.''-:shape__c
 
 s=. _1".s

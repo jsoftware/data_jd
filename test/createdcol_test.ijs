@@ -1,5 +1,7 @@
 NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
 
+der=: EDERIVED_jd_
+
 jdadminnew'test'
 jd'createtable f'
 jd'createcol f a int';2 3 4
@@ -65,16 +67,19 @@ assert b4x=3{."1 b4
 assert ex= efs_jd_ 4{."1 sfe_jd_ edt
 )
 
-''jdae'insert f';'a';23 24 25;'b';1 2 3;'c';3 4 5
+der jdae'insert f';'a';23 24 25;'b';1 2 3;'c';3 4 5
+der jdae'intx f b int2'
+der jdae'byten f b4x 2'
+der jdae'set f b';i.3
 
 jd'insert f';'a';23;'b4';'abcd';'edt';'2014-01-02T03:04:05'
 chkd''
 chkv''
 
-''jdae'update f';3    ;'a';100;'b';200;'c';300
-''jdae'update f';'a=3';'a';100;'b';200;'c';300
-''jdae'update f';'a'  ;'a';23 ;'b';200;'c';300
-''jdae'update f';'b'  ;'a';100;'b';102;'c';300
+der jdae'update f';3    ;'a';100;'b';200;'c';300
+der jdae'update f';'a=3';'a';100;'b';200;'c';300
+der jdae'update f';'a'  ;'a';23 ;'b';200;'c';300
+der jdae'update f';'b'  ;'a';100;'b';102;'c';300
 
 jd'update f';3;'a';9
 chkd''
