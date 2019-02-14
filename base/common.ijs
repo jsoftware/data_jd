@@ -32,7 +32,6 @@ NB. Drop         remove a child object (by locale)
 NB. readstate    read state from the filesystem
 NB. writestate   write state to the filesystem
 NB.
-NB. getloc       get a locale from a name
 
 NB. jd is special because it cannot be instantiated.
 NB. Thus it only contains a few of the globals.
@@ -81,6 +80,8 @@ if. b do.
 end.
 )
 
+getlocx=: 3 : 'c=. (NAMES i. <y){CHILDREN' NB. get col locale - do not map
+
 NB. get locale and open table children and map column files
 getloc=: 3 : 0
 if. -.'/'e.,>y do.
@@ -111,11 +112,6 @@ elseif. 'jdcolumn'-:;CLASS__c do. NB. cols map as required
  colcheck c
 end.
 c
-)
-
-NB. get col locale - do not map (no colcheck)
-getcolloc=: 3 : 0
-c=. (NAMES i. <y){CHILDREN
 )
 
 NB. y is name
@@ -234,7 +230,7 @@ if. 0=L.y do.
     if. ischildfolder y do. jddeletefolder PATH,y end.
     return.
   end.
-  y =. getloc y
+   y=. getlocx y NB. avoid unnecessary map and derived error
 end.
 path =. PATH__y
 Close y

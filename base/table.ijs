@@ -281,11 +281,11 @@ for_subs. SUBSCR do.
   if. '^'={.c do.
    'x t c'=. <;._2 c,'.'
    w=. getloc__dbl t
-   w=. getcolloc__w c
+   w=. getlocx__w c
    a=. 1 NB. right ref
   else.
    if. x do. continue. end. NB. delete left ref - do not mark dirty
-   w=. getcolloc c
+   w=. getlocx c
    a=. 0 NB. left ref
   end.
   setdirty__w 1

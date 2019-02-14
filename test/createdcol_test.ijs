@@ -117,18 +117,18 @@ jd'close'
 
 'derive=: 3 : ''i.Tlen,2'''fwrite bfile
 jd'close'
-
 'shape'jdae'read from f'
 
 'derive=: 3 : ''1.5+i.Tlen'''fwrite bfile
 jd'close'
-
 'type'jdae'read from f'
 
 'derive=: 3 : ''i.a.'''fwrite bfile
 jd'close'
-
 'domain error'jdae'read from f'
+
+jd'dropcol f b' NB. drop is allowed
+jd'reads from f'
 
 jdadminnew'test'
 jd'createtable f'
