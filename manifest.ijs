@@ -32,6 +32,7 @@ VERSION=: '4.4.68'
 FILES=: 0 : 0
 manifest.ijs
 jd.ijs
+todo.txt
 demo/common.ijs
 demo/sed/csv/jdclass
 demo/sed/csv/jdcsvrefs.txt
@@ -107,6 +108,7 @@ tutorial/csv/intro_csv_tut.ijs
 tutorial/csv/xtra_tut.ijs
 tutorial/csv/quandl_ibm_tut.ijs
 tutorial/csv/bus_lic_tut.ijs
+tutorial/op/createdcol_tut.ijs
 tutorial/op/key_tut.ijs
 tutorial/op/info_tut.ijs
 tutorial/op/tableinsert_tut.ijs
@@ -132,6 +134,7 @@ tools/repair.ijs
 tools/quandl.ijs
 tools/tests.ijs
 tools/ptable.ijs
+tools/ts.ijs
 dynamic/ref.ijs
 dynamic/base.ijs
 doc/License.htm
@@ -163,6 +166,7 @@ api/api_csv.ijs
 api/api_table.ijs
 api/api_info.ijs
 api/api_create.ijs
+api/api_createdcol.ijs
 api/api_change.ijs
 api/api_drop.ijs
 api/api_sort.ijs
@@ -207,6 +211,8 @@ base/where.ijs
 base/common.ijs
 base/column.ijs
 base/zutil.ijs
+test/byten_test.ijs
+test/createdcol_test.ijs
 test/valid_data_test.ijs
 test/repair_test.ijs
 test/ptable_read_test.ijs
@@ -260,7 +266,6 @@ test/joinorder_test.ijs
 test/where_test.ijs
 test/csv_test.ijs
 test/sort_test.ijs
-test/derived_test.ijs
 test/user_test.ijs
 bug/empty_join_where.ijs
 bug/csvwr.ijs

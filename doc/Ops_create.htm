@@ -23,6 +23,12 @@ createcol table col byte [trailing-shape] data</p>
 <p>createdb</p>
 <p>valid only after a dropdb<br />
 creates filefolder, initial files, and gets lock</p>
+<h2 id="createdcol">createdcol</h2>
+<p>createdcol verb table col <a href="Ops_common.htm#type-" title="wikilink"> type</a><br />
+createdcol verb table col byte [trailing-shape]<br />
+creates a derived col</br> derived col data is not from a mapped file</br> derived col data is the result of verb derived_verb defined in custom.ijs</p>
+<p>a derived byte 3 col could be derived from the category part of a byte 20 col</br> a derived int col could be derived from the year in an edatetime col</p>
+<p>tutorial createdcol</p>
 <h2 id="createtable">createtable</h2>
 <p>createtable [/a ...] table [coldefs]<br />
 createtable /pairs [/types] [/a ...] table ; <a href="Ops_common.htm#pairs" title="wikilink">pairs</a></p>

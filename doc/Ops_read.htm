@@ -35,11 +35,6 @@ aggregation [by key1[,key2]]</p>
 <p><code>MAXROWCOUNT_jd_      NB. current limit on result rows</code><br />
 <code>MAXROWCOUNT_jd_=: 10 NB. set limit to 10</code></p>
 <p>For ideas on working with reads results, see essay <a href="http://code.jsoftware.com/wiki/Essays/Inverted_Table">Inverted Table</a>.</p>
-<h2 id="readtc">readtc</h2>
-<p>readtc ... jdtc sentence</p>
-<p>Same as reads except for the jdtc clause.</p>
-<p>J sentence is run first to create temp cols.</p>
-<p>See tutorial tempcol.</p>
 <h2 id="parsing">parsing</h2>
 <p>Parsing read ops can be complicated. There are known issues that can cause problems. Keep things simple to avoid unknown problems.</p>
 <p>Clauses where, order by, jdset, jdtc are stripped from the end and must appear, if present, in that order.</p>
@@ -138,15 +133,15 @@ read ... from ... where WHERE
 <code>a,b in (1,2),(3,4) - same as above but uses a,b hash if available</code></p>
 </pre>
 <p>relationals:</p>
-<pre><code> &gt;= &lt;= &lt;&gt; =  &gt;  &lt;&lt;br/&gt;
- ge le ne eq gt lt range&lt;br/&gt;
+<pre><code> &gt;= &lt;= &lt;&gt; =  &gt;  &lt;
+ ge le ne eq gt lt range
  in notin like unlike sample sample.</code></pre>
-<pre><code> sample n returns n random rows&lt;br/&gt;
+<pre><code> sample n returns n random rows
  sample. users ?. instead of ?
 
  non-symbol must be blank delimited
 
- byte data must be in &quot;s and has C escapes (\&quot; \t \n \0 \x09 ...)&lt;br/&gt;
+ byte data must be in &quot;s and has C escapes (\&quot; \t \n \0 \x09 ...)
  numeric data must not be in &quot;s
 
  like/unlike regex applies to all types
@@ -157,7 +152,7 @@ read ... from ... where WHERE
 
  t (no col/relational) selects rows from table t not created by join</code></pre>
 <p>logicals:</p>
-<pre><code> !   &amp;&amp;  ||&lt;br/&gt;
+<pre><code> !   &amp;&amp;  ||
  not and or</code></pre>
 <ul>
 <li>must be blank delimited</li>
