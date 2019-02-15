@@ -165,14 +165,11 @@ jd'insert f a';m
 jd'reads from f'
 jd'createcol f b int _';>:i.10
 
-NB. readtc creates temp col of year from epochdt to sum by
-jd'readtc sum b by year from f jdtc f_year=: 4{."1 sfe_jd_ f_a'
 
 NB. by year from permanent year col
 jd'createcol f y byte 4';4{."1 sfe_jd_ jd'get f a' NB. column of year
 jd'reads from f'
 jd'reads sum b by y from f'
-
 
 NB. get epochdt time and utc offset
 [a=: eofs_jd_ '2014-01-02T03:04:05+05:30',:'2014-02-03T10:11:12-05:30'

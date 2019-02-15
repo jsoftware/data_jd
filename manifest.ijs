@@ -76,7 +76,6 @@ demo/northwind/csv/Orders.csv
 demo/jhs/jdapp1.ijs
 tutorial/xtra/ptable_tut.ijs
 tutorial/xtra/table_table_tut.ijs
-tutorial/xtra/tempcol_tut.ijs
 tutorial/xtra/setget_tut.ijs
 tutorial/xtra/updatex_tut.ijs
 tutorial/xtra/server_zmq_tut.ijs

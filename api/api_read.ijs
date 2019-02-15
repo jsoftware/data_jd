@@ -4,7 +4,6 @@ coclass'jd'
 
 NB. should use getoptions but there are problems - similar problems in createtable
 readstart=: 3 : 0
-tempcolclear''
 if. 0~:L.y do. y=. ;y[ECOUNT assert 1=#y end.
 option_e=: option_lr=: option_types=: 0
 while. '/'={.y do.
@@ -193,78 +192,5 @@ case. 'sum' do.
 case. do.
  'unsupported aggregation'assert 0
 end.
-)
-
-NB. readtc requires jdtc clause and no longer supports :::sentence:::
-jd_readtc=: 3 : 0
-y=. readstart y
-i=. 1 i:~' jdtc 'E. blankquoted y
-'jdtc missing'assert i~:#y
-s=. (6+i)}.y
-y=. i{.y
-tempcol s
-if. option_lr do.
- r=. Read__dbl y
-else. 
- r=. Reads__dbl y
-end. 
-tempcolclear''
-r
-)
-
-tempcol=: 3 : 0
- t=. ;: y
- r=. ''
- for_i. i.#t do.
-  a=. i{t
-  
-  if. (_2~:nc a)*.-.'_jd_'-:_4{.;a do.
-   a=. ;a
-   j=. a i.'_'
-   tab=. j{.a
-   col=. }.j}.a
-   ('readtc X not a table'rplc'X';a) assert (<tab)e. NAMES__dbl
-   g=. jdgl tab
-  
-   if. (>:i)<#t do.
-    if. (<'=:')=(i+1){t do.
-     NB. create temp col
-     ('readtc X already exists'rplc'X';a) assert -.(<col)e.NAMES__g
-     c=. cocreate''
-     CHILDREN__c=: ''
-     Cloc__c=: '_',(;c),'_'
-     LOCALE__c=: c
-     j=. a i.'_'
-     NAME__c=: col
-     NAMES__c=: ''
-     PARENT__c=: g
-     cp=. 2}.18!:2 getloc__g'jdindex' NB. jdtint perhaps not right
-     cp 18!:2 c
-     TEMPCOLS=: TEMPCOLS,(<a),c
-     r=. r,<'dat_',(;c),'_'
-     continue.
-    end.
-   end. 
-    ('readtc X does not exist'rplc'X';a) assert (<col)e.NAMES__g
-    c=. getloc__g col
-    r=. r,<'dat_',(;c),'_'
-  else.
-   'readtc ". not allowed'assert -.(<'".')-:a
-   r=. r,a
-  end. 
- end. 
- ".;r,each' '
- for_i. i.#TEMPCOLS do.
-  c=. {:i{TEMPCOLS
-  shape__c=: }:$dat__c
-  typ__c=: ;(1 4 8 2 i. 3!:0 dat__c){'boolean';'int';'float';'byte'
-  p=. PARENT__c
-  ('readtc X has wrong number of rows'rplc'X';;{.i{TEMPCOLS)assert Tlen__p=countdat__c dat__c
- end.
-)
-
-tempcolclear=: 3 : 0
-coerase{:"1 TEMPCOLS
-TEMPCOLS=: i.0 2
 )
 
