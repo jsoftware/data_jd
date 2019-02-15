@@ -43,11 +43,11 @@ NAMES=: ".'NAMES'
 NB. =========================================================
 NB. utilities
 NB. y is the name of this locale
+NB. assumes later steps will do writestate
 Init=: 3 : 0
 PATH=: termSEP PATH__PARENT, NAME =: >y
 LOCALE=: coname''
 CHILDREN=: NAMES=: ''
-NB. writestate'' NB.!
 )
 
 NewChild =: 3 : 0

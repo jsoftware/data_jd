@@ -6,7 +6,7 @@ NB. 0 shows component 0
 NB. 0 3 shows components 0 and 3
 NB. x selects data row
 jdlogijfshow=: 3 : 0
-f=. 'log.ijf',~jdpath'' NB. ignore damaged or bad jdclass
+f=. jpath jdpath'log.ijf' NB. ignore damaged or bad jdclass
 'log.ijf does not exist'assert fexist f
 t=. jsize_jfiles_ f
 if. -.1 4 e.~ 3!:0 y do.

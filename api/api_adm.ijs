@@ -14,14 +14,13 @@ t=. (t i. LF){.t
 }.(t i:':'){.t
 )
 
-jdpath=: 3 : 'jpath ''/'',~dbpath DB'
+jdpath=:  3 : 'jpath jdpathx y'
+jdpathx=: 3 : '(dbpath DB),''/'',y'
 
 assertnodamage=: 3 : 0
 p=. <jdpath''
 'db damaged and not under repair' assert -.1 0-:fexist p,each'jddamage';'jdrepair'
 )
-
-
 
 getdb=: 3 : 0
 assertnodamage''
@@ -399,7 +398,7 @@ if. IFWIN do.
  r=. b#r
  }:each(>:;r i.each'[')}.each r
 else.
- r=. <;._2 toJ shell 'ls -l -R "P"'rplc 'P';jdpath''
+ r=. <;._2 toJ shell 'ls -l -R "P"'rplc 'P';jpath jdpath''
  r=. ((<'lrw')=3{.each r)#r
  (r i.each'/')}.each r
 end.

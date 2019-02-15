@@ -1,46 +1,34 @@
-NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
+NB. Copyright 2019, Jsoftware Inc.  All rights reserved.
 
 der=: EDERIVED_jd_
 
+custom=: 0 : 0 rplc'RPAREN';')'
+derive_da=: 3 : 0
+1000+jd_get'f a'
+RPAREN
+
+derive_db4=: 3 : 0
+3{."1 jd_get'f b4'
+RPAREN
+
+derive_dedt=: 3 : 0 NB. just the year
+efs 10{."1 sfe jd_get'f edt'
+RPAREN
+
+)
+
 jdadminnew'test'
+
+custom fappend jdpath_jd_'custom.ijs'
+jd'close' NB. force load of custom.ijs
 jd'createtable f'
 jd'createcol f a int';2 3 4
 jd'createcol f b4 byte 4';3 4$'abcdabcdabcd'
 jd'createcol f edt edatetime';'2014-01-02T03:04:05','2015-02-03T03:04:05',:'2016-03-04T03:04:05'
 
-jd'createdcol f b int' 
-jd'createdcol f c int'
-jd'createdcol f b4x byte 3'
-jd'createdcol f ex edate'
-
-jd'reads from f' NB. default derived is fill
-
-bfile=:   '~temp/jd/test/f/b/derive.ijs'
-cfile=:   '~temp/jd/test/f/c/derive.ijs'
-b4xfile=: '~temp/jd/test/f/b4x/derive.ijs'
-exfile=:  '~temp/jd/test/f/ex/derive.ijs'
-
-bfile fwrite~ 0 : 0 ,')'
-derive=: 3 : 0
-dat__c+1000[c=. jdgl NAME__PARENT;'a'
-)
-
-cfile fwrite~ 0 : 0 ,')'
-derive=: 3 : 0
-dat__c+2000[c=. jdgl NAME__PARENT;'a'
-)
-
-b4xfile fwrite~ 0 : 0 ,')'
-derive=: 3 : 0
-3{."1 dat__c[c=. jdgl NAME__PARENT;'b4'
-)
-
-exfile fwrite~ 0 : 0 ,')'
-derive=: 3 : 0 NB. just the year
-efs 4{."1 sfe dat__c[c=. jdgl NAME__PARENT;'edt'
-)
-
-jd'close' NB. close so open will load new defns
+jd'createdcol da   f b  int' 
+jd'createdcol db4  f b3 byte 3'
+jd'createdcol dedt f y  edate'
 jd'reads from f'
 
 CSVFOLDER=: '~temp/jd/csv'
@@ -48,38 +36,32 @@ jd'csvwr f.csv f'
 jd'csvrd f.csv g'
 assert (jd'reads from f')-:jd'reads from g'
 
-'b  c  b4xex '-:,;1{{:jd'info derived'
+'b b3y '-:,;1{{:jd'info derived'
 
-bc=:   jdgl_jd_ 'f b'
-cc=:   jdgl_jd_ 'f c'
-b4xc=: jdgl_jd_ 'f b4x'
-exc=:  jdgl_jd_ 'f ex'
+bc=:  jdgl_jd_ 'f b'
+b3c=: jdgl_jd_ 'f b3'
+yc=:  jdgl_jd_ 'f y'
 
 chkd=: 3 : 0 NB. check derived marked dirty
-assert _1=nc 'dat_bc';'dat_cc';'dat_b4xc';'dat_exc'
+assert _1=nc 'dat_bc';'dat_b3c';'dat_yc'
 )
 
 chkv=: 3 : 0 NB. check derived values
-'a b4 edt b c b4x ex'=. 7{.{:"1 jd'read /e from f'
+'a b4 edt b b3 y'=. 6{.{:"1 jd'read /e from f'
 assert b=1000+a
-assert c=2000+a
-assert b4x=3{."1 b4
-assert ex= efs_jd_ 4{."1 sfe_jd_ edt
+assert b3=3{."1 b4
+assert y= efs_jd_ 10{."1 sfe_jd_ edt
 )
 
-der jdae'insert f';'a';23 24 25;'b';1 2 3;'c';3 4 5
-der jdae'intx f b int2'
-der jdae'byten f b4x 2'
-der jdae'set f b';i.3
-
-jd'insert f';'a';23;'b4';'abcd';'edt';'2014-01-02T03:04:05'
+jd'insert f';'a';23;'b4';'zxcv';'edt';'2017-03-04T03:04:05'
 chkd''
 chkv''
 
-der jdae'update f';3    ;'a';100;'b';200;'c';300
-der jdae'update f';'a=3';'a';100;'b';200;'c';300
-der jdae'update f';'a'  ;'a';23 ;'b';200;'c';300
-der jdae'update f';'b'  ;'a';100;'b';102;'c';300
+der jdae'insert f';'a';23;'b4';'zxcv';'edt';'2017-03-04T03:04:05';'b';123
+der jdae'intx f b int2'
+der jdae'byten f b3 2'
+der jdae'set f b';i.3
+der jdae'update f';'a=3';'b';200
 
 jd'update f';3;'a';9
 chkd''
@@ -97,7 +79,7 @@ jd'update f';'b';'a';777;'b';1003
 chkd''
 chkv''
 
-jd'createcol f d int';i.Tlen__cc
+jd'createcol f d int'
 jd'upsert f';'a';'a';666 999;'d';777 888;'b4';(2 4$'asdf');'edt';2#efs_jd_ '2014-01-02T03:04:05'
 chkd''
 chkv''
@@ -110,32 +92,41 @@ jd'sort f a desc'
 chkd''
 chkv''
 
-'derive=: 3 : ''i.Tlen-1'''fwrite bfile
-jd'close'
 
+NB. check how derive verb errors are handled
+d=. dbl_jd_
+derive_da__d
+derive_da__d=: 3 : '}.1000+jd_get''f a'''
+c=. jdgl_jd_'f b'
+setderiveddirty__c''
 'count'jdae'read from f'
 
-'derive=: 3 : ''i.Tlen,2'''fwrite bfile
-jd'close'
+derive_da__d=: 3 : 'i.(#jd_get''f a''),2'
+setderiveddirty__c''
 'shape'jdae'read from f'
 
-'derive=: 3 : ''1.5+i.Tlen'''fwrite bfile
-jd'close'
+derive_da__d=: 3 : '1.5+jd_get''f a'''
+setderiveddirty__c''
 'type'jdae'read from f'
 
-'derive=: 3 : ''i.a.'''fwrite bfile
-jd'close'
+derive_da__d=: 3 : 'i.a.'
+setderiveddirty__c''
 'domain error'jdae'read from f'
 
-jd'dropcol f b' NB. drop is allowed
+erase'derive_da__d'
+setderiveddirty__c''
+'value error'jdae'read from f'
+
+jd'dropcol f b' NB. drop is allowed- even if derive verb is bad
 jd'reads from f'
 
+NB. other tests and then ref
 jdadminnew'test'
 jd'createtable f'
 jd'createcol f a int'
 jd'createptable f a'
-'ptable'jdae'createdcol f b int'
-'found'jdae'createdcol w b int'
+'ptable'jdae'createdcol dverb f b int'
+'found'jdae'createdcol dverb w b int'
 
 NB. assert tab ref is dirty
 ardirty=: 3 : 0
@@ -145,19 +136,23 @@ assert 1=dirty__c
 
 NB. ref derived col to normal col
 jdadminnew'test'
-jd'createtable f'
-jd'createcol f a int'
-jd'createdcol f d int'
-jd'insert f';'a';i.6
 
-dfile=: '~temp/jd/test/f/d/derive.ijs'
-dfile fwrite~ 0 : 0 ,')'
-derive=: 3 : 0
-3|dat__c[c=. jdgl NAME__PARENT;'a'
+custom=: 0 : 0 rplc'RPAREN';')'
+derive_dverb=: 3 : 0
+3|jd_get'f a'
+RPAREN
+
+derive_g_d=: 3 : 0
+3|jd_get'g a'
+RPAREN
 )
+custom fappend jdpath_jd_'custom.ijs'
 
 jd'close'
-
+jd'createtable f'
+jd'createcol f a int'
+jd'createdcol dverb f d int'
+jd'insert f';'a';i.6
 jd'reads from f'
 assert 0 1 2 0 1 2=>{:{:jd'read d from f'
 
@@ -183,16 +178,8 @@ jd'droptable g'
 
 jd'createtable g'
 jd'createcol g a int'
-jd'createdcol g d int'
+jd'createdcol g_d g d int'
 jd'insert g';'a';|.100+i.3
-
-dfile=: '~temp/jd/test/g/d/derive.ijs'
-dfile fwrite~ 0 : 0 ,')'
-derive=: 3 : 0
-3|dat__c[c=. jdgl NAME__PARENT;'a'
-)
-
-jd'close'
 jd'reads from f'
 jd'reads from g'
 assert 0 2 1='d'jdfrom_jd_ jd'read from g'

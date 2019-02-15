@@ -9,6 +9,16 @@ derived col:
  not currently allowed in a ptable
 )
 
+custom=: 0 : 0 rplc'RPAREN';')'
+derive_dcatg=: 3 : 0
+2{."1 jd_get'f b'
+RPAREN
+
+derive_dyear=: 3 : 0
+0".4{."1 sfe jd_get'f e'
+RPAREN
+)
+
 jdadminnew'test'
 jd'createtable f'
 jd'createcol f b byte 4'
@@ -16,37 +26,19 @@ jd'createcol f e  edate'
 jd'insert f';'b';(3 4$'abcdef');'e';'2014-10-12','2015-10-13',:'2016-10-14'
 jd'reads from f'
 
-jd'createdcol f catg  byte 2' NB. derived col - 2 byte category prefix from b4x col
-jd'createdcol f year int'     NB. derived col - year as int from e col
-jd'reads from f' NB. default verbs to create data return fill
+jd'createdcol dcatg f catg  byte 2' NB. dcatg verb used to derive col
+jd'createdcol dyear f year int'     NB. dyear verb used to derive col
+'value error'jdae'reads from f'     NB. derive verbs not defined
 
-[p=. jdpath_jd_'' NB. path to db folder
-fread p,'f/catg/derive.ijs' NB. catg  derive verb for cat
-fread p,'f/year/derive.ijs' NB. year derive verb for year
+custom fappend jdpath_jd_'custom.ijs'   NB. add derived defns to custom.ijs
 
-NB. getting data from a col
-catgc=. jdgl_jd_'f catg' NB. locale for talbe f, col catg
-NAME__PARENT__catgc  NB. name of the table (avoid hardwiring f)
-bc=. jdgl_jd_ NAME__PARENT__catgc;'b' NB. locale for col b
-dat__bc   NB. col b data
-Tlen__bc  NB. rows in table
-shape__bc NB. trailing shape
+jd'close' NB. open after close will load custom.ijs to get new defns
+jd'reads from f'
 
-NB. define catg derive verb to be 2{."1 from b col data
-(0 : 0,')') fwrite p,'f/catg/derive.ijs' 
-derive=: 3 : 0
-2{."1 dat__c[c=. jdgl NAME__PARENT;'b'
-)
+CSVFOLDER=: '~temp/jd/csv'
+jd'csvwr f.csv f'
+jd'csvrd f.csv g'
+assert (jd'reads from f')-:jd'reads from g'
+jd'info derived f'
+jd'info derived g'
 
-NB. new defn not loaded yet - close and open gets new defn
-jd'close'
-jd'reads from f' NB. catg is 2{."1 from b
-
-NB. define year derive verb to be int year from e col
-(0 : 0,')') fwrite p,'f/year/derive.ijs' 
-derive=: 3 : 0
-0".4{."1 sfe dat__c[c=. jdgl NAME__PARENT;'e'
-)
-
-jd'close'
-jd'reads from f' NB. year is int year from e

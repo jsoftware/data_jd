@@ -1,0 +1,19 @@
+in progress:
+
+zip/unzip ops
+
+*********************************************
+not started:
+
+admin.ijs '<DAN>' - not hardwired
+
+CSVFOLDER parameter
+csvwr colsep,rowsep,quotes,escape parameters
+easier automated csv load
+
+epoch - flag to allow mm/dd/yy order
+
+insert /missing to allow missing cols
+
+read /nub to return only unique rows
+

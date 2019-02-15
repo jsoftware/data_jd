@@ -217,9 +217,6 @@ else.
   pr=. wx#~p=n     NB. ptable rows (includes base)
   dr=. (p=n)#i.#w NB. data rows
   f=. tab,PTM,;n
-  
-  NB.! need to mark table derived dirty
-  
   for_i. i.#ns do.
    c=. jdgl f,' ',;{.i{ns
    d=. >i{vs

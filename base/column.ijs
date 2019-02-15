@@ -9,11 +9,13 @@ CLASS=: <'jdcolumn'
 CHILD=: a:
 
 derived=: 0 NB. normal col vs derived col
+dverb=: ''
 
 STATE=: <;._2 ]0 : 0
 typ
 shape
 derived
+dverb
 )
 
 setderiveddirty=: 3 : 0
@@ -27,9 +29,6 @@ NB. map as required
 open=: 3 : 0
 Cloc=: '_',(>LOCALE),'_'
 coinserttofront 'jdt',typ
-
-if. derived do. load PATH,'derive.ijs' end.
-
 NB. writestate''
 )
 
@@ -76,7 +75,7 @@ if. -.derived do.
  jdmap (,&Cloc ; PATH&,) >y
  NB. consider validation here simliar to derive
 else.
- d=. derive''
+ d=. dverb~''
  'derived bad count'assert Tlen=#d
  'derived bad trailing shape'assert shape-:}.$d
  'derived bad type'assert (3!:0 d)-:3!:0 DATAFILL

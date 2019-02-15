@@ -53,12 +53,14 @@ derived=: 3 : '(Tlen,shape)$DATAFILL
 
 jd_createdcol=: 3 : 0
 q=. bdnames y
-assertnotptable {.q
-jd_createcol y
-c=. jdgl 2{.q
-('derive=: 3 : ''(Tlen,shape)$DATAFILL''')fwrite PATH__c,'derive.ijs'
-load__c PATH__c,'derive.ijs'
+v=. ;{.q
+assertnotptable 1{q
+a=. dltb y
+a=. (a i.' ')}.a
+jd_createcol a
+c=. jdgl 1 2{q
 derived__c=: 1
+dverb__c=: 'derive_',v
 writestate__c'' 
 jdunmap 'dat',Cloc__c
 ferase PATH__c,'dat'
