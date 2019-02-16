@@ -47,10 +47,6 @@ mark dirty is agressive - e.g. in perhaps most case sort would be ok
  sort/dropcol/delete all mark derived dirty
 )
 
-0 : 0
-derived=: 3 : '(Tlen,shape)$DATAFILL
-)
-
 jd_createdcol=: 3 : 0
 q=. bdnames y
 v=. ;{.q
@@ -67,3 +63,22 @@ ferase PATH__c,'dat'
 erase 'dat'
 JDOK
 )
+
+jd_createdcol=: 3 : 0
+a=. dltb y
+i=. a i:' '
+v=. }.i}.a
+a=. i{.a
+q=. bdnames a
+assertnotptable {.q
+jd_createcol a
+c=. jdgl 2{.q
+derived__c=: 1
+dverb__c=: 'derive_',v
+writestate__c'' 
+jdunmap 'dat',Cloc__c
+ferase PATH__c,'dat'
+erase 'dat'
+JDOK
+)
+

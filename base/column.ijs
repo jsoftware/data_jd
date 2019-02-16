@@ -75,6 +75,8 @@ if. -.derived do.
  jdmap (,&Cloc ; PATH&,) >y
  NB. consider validation here simliar to derive
 else.
+ FETAB_jd_=: NAME__PARENT
+ FECOL_jd_=: NAME
  d=. dverb~''
  'derived bad count'assert Tlen=#d
  'derived bad trailing shape'assert shape-:}.$d

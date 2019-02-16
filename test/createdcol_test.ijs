@@ -3,15 +3,15 @@ NB. Copyright 2019, Jsoftware Inc.  All rights reserved.
 der=: EDERIVED_jd_
 
 custom=: 0 : 0 rplc'RPAREN';')'
-derive_da=: 3 : 0
+derive_va=: 3 : 0
 1000+jd_get'f a'
 RPAREN
 
-derive_db4=: 3 : 0
+derive_vb4=: 3 : 0
 3{."1 jd_get'f b4'
 RPAREN
 
-derive_dedt=: 3 : 0 NB. just the year
+derive_vedt=: 3 : 0 NB. just the year
 efs 10{."1 sfe jd_get'f edt'
 RPAREN
 
@@ -26,9 +26,9 @@ jd'createcol f a int';2 3 4
 jd'createcol f b4 byte 4';3 4$'abcdabcdabcd'
 jd'createcol f edt edatetime';'2014-01-02T03:04:05','2015-02-03T03:04:05',:'2016-03-04T03:04:05'
 
-jd'createdcol da   f b  int' 
-jd'createdcol db4  f b3 byte 3'
-jd'createdcol dedt f y  edate'
+jd'createdcol f b  int    va' 
+jd'createdcol f b3 byte 3 vb4'
+jd'createdcol f y  edate  vedt'
 jd'reads from f'
 
 CSVFOLDER=: '~temp/jd/csv'
@@ -95,25 +95,25 @@ chkv''
 
 NB. check how derive verb errors are handled
 d=. dbl_jd_
-derive_da__d
-derive_da__d=: 3 : '}.1000+jd_get''f a'''
+derive_va__d
+derive_va__d=: 3 : '}.1000+jd_get''f a'''
 c=. jdgl_jd_'f b'
 setderiveddirty__c''
 'count'jdae'read from f'
 
-derive_da__d=: 3 : 'i.(#jd_get''f a''),2'
+derive_va__d=: 3 : 'i.(#jd_get''f a''),2'
 setderiveddirty__c''
 'shape'jdae'read from f'
 
-derive_da__d=: 3 : '1.5+jd_get''f a'''
+derive_va__d=: 3 : '1.5+jd_get''f a'''
 setderiveddirty__c''
 'type'jdae'read from f'
 
-derive_da__d=: 3 : 'i.a.'
+derive_va__d=: 3 : 'i.a.'
 setderiveddirty__c''
 'domain error'jdae'read from f'
 
-erase'derive_da__d'
+erase'derive_va__d'
 setderiveddirty__c''
 'value error'jdae'read from f'
 
@@ -125,8 +125,8 @@ jdadminnew'test'
 jd'createtable f'
 jd'createcol f a int'
 jd'createptable f a'
-'ptable'jdae'createdcol dverb f b int'
-'found'jdae'createdcol dverb w b int'
+'ptable'jdae'createdcol f b int dverb'
+'found' jdae'createdcol w b int dverb'
 
 NB. assert tab ref is dirty
 ardirty=: 3 : 0
@@ -151,7 +151,7 @@ custom fappend jdpath_jd_'custom.ijs'
 jd'close'
 jd'createtable f'
 jd'createcol f a int'
-jd'createdcol dverb f d int'
+jd'createdcol f d int dverb'
 jd'insert f';'a';i.6
 jd'reads from f'
 assert 0 1 2 0 1 2=>{:{:jd'read d from f'
@@ -178,7 +178,7 @@ jd'droptable g'
 
 jd'createtable g'
 jd'createcol g a int'
-jd'createdcol g_d g d int'
+jd'createdcol g d int g_d'
 jd'insert g';'a';|.100+i.3
 jd'reads from f'
 jd'reads from g'

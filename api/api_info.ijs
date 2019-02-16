@@ -138,16 +138,17 @@ end.
 
 infoderived=: 3 : 0
 locs=. getinfoclocs y
-ts=. cs=. 0 0$''
+ts=. cs=. vs=. 0 0$''
 r=. 0 3$0
 for_c. locs do.
  if. derived__c do.
   t=. PARENT__c
   ts=. ts,NAME__t
   cs=. cs,NAME__c
+  vs=. vs,7}.dverb__c
  end. 
 end.
-(;:'table column'),:ts;cs
+(;:'table column verb'),:ts;cs;vs
 )
 
 
