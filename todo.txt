@@ -17,3 +17,12 @@ insert /missing to allow missing cols
 
 read /nub to return only unique rows
 
+decorate read result header with type 
+ cola -> cola-edatime
+ colb -> colb-byte 4
+ colc -> colc-int1
+ - _ or blank separator?
+ alias and aggs need thought
+ aggs need thought
+ possibly useful in csvwr as well
+
