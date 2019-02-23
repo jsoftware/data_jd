@@ -5,6 +5,10 @@ zip/unzip ops
 *********************************************
 not started:
 
+derived cols
+ csvwr/csvdump need option to not dump derived cols
+ csvrestore should detect derived cols are missing and do createdcol 
+
 admin.ijs '<DAN>' - not hardwired
 
 CSVFOLDER parameter
