@@ -8,6 +8,7 @@ NB. tests
 p=. JDP
 t=. 1 dir p,'test/*_test.ijs'
 tests=: /:~(#p)}.each t
+tests=: tests-.<'test/derived_test.ijs'
 
 NB. tuts
 d=. {."1 dirtree JDP,'tutorial'
@@ -28,4 +29,5 @@ zd=. zd rplc each <'intro_csv_tut.ijs'; 'aintro_csv_tut.ijs'
 
 d=. d/:_8}.each zd
 tuts=: (#JDP,'tutorial/')}.each d
+tuts=: tuts-.<'xtra/tempcol_tut.ijs'
 )
