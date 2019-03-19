@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="jd.css">
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Replicate.htm" class="act">Replicate</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
+<p>An application can require a DB to be available for quick updates and slow queries would interfere with this. A solution is to replicate the DB for queries.</p>
+<p>Run tutorial for more info:</p>
+<pre><code>   jdrt&#39;replicate&#39;</code></pre>
+<p>The rlog arg is the folder that holds info from the src DB required to replicate the DB in the snk DB.</p>
+<h2 id="jdrepinfo">jdrepinfo</h2>
+<p>jdrepinfo</p>
+<p>report db rep status</p>
+<h2 id="jdrepkill">jdrepkill</h2>
+<p>jdrepkill</p>
+<p>stops db (either src or snk) use of rlog folder</p>
+<h2 id="jdrepsrc">jdrepsrc</h2>
+<p>jdrepsrc_jd_ rlog</p>
+<p>initializes rlog folder with copy of db and sets up for logging new change ops</p>
+<h2 id="jdrepsnk">jdrepsnk</h2>
+<p>jdrepsnk_jd_ rlog</p>
+<p>db ops first update as required from rlog file updates db from folder</p>
+</body>
+</html>

@@ -5,6 +5,9 @@ zip/unzip ops
 *********************************************
 not started:
 
+setsrciptlists kludge derived_test.ijs and tempcol_tut.ijs
+ must write proper list when released to avoid using old ones
+
 derived cols
  csvwr/csvdump need option to not dump derived cols
  csvrestore should detect derived cols are missing and do createdcol 

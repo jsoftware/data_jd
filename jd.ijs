@@ -14,7 +14,7 @@ all use is through JDP_z_ (set when the library is loaded)
 )
 
 coclass'jd'
-jdversion=: '4.21'
+jdversion=: '4.22'
 
 'Jd requires J807 or later'assert 807<:0".}.4{.9!:14''
 'Jd requires J64'assert IF64=1

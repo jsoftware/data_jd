@@ -152,4 +152,6 @@ try the following:
 
    jdadmin''
    jd'reads ProductName from Products'
-) 
+)
+
+jdadmin 0 NB. close that new admin gets default state

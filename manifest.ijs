@@ -79,7 +79,7 @@ tutorial/xtra/ptable_tut.ijs
 tutorial/xtra/table_table_tut.ijs
 tutorial/xtra/setget_tut.ijs
 tutorial/xtra/updatex_tut.ijs
-tutorial/xtra/server_zmq_tut.ijs
+tutorial/xtra/server_jcs_tut.ijs
 tutorial/xtra/custom_tut.ijs
 tutorial/xtra/performance_tut.ijs
 tutorial/xtra/server_jhs_tut.ijs

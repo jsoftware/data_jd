@@ -12,7 +12,7 @@ bjdn=: 3 : 0
 ophtmls=: _4}.each(>:#jpath JDP,'doc')}.each 1 dir JDP,'doc/Ops_*'
 
 jdrt=: 3 : 0
-setscriptlists''
+load JDP,'base/tuts.ijs'
 if. (-.IFJHS)*.80607<:0".(fread'~system/config/version.txt')-.CRLF,'.' do.
  require'labs/labs'
  runtut=: lab_z_
@@ -25,7 +25,7 @@ if. ''-:y do.
  c=. (tuts i.each'/'){.each tuts
  c=. ~.c
  ;LF,~each(<'   jdrt '''),each c,each''''
-elseif. -.5=(;:'basic csv demo op xtra')i.<y do.
+elseif. -.6=(;:'basic csv demo op server xtra')i.<y do.
  a=. tuts#~(<y)=(#y){.each tuts
  a=. _8}.each a
  a=. (>:#y)}.each a
