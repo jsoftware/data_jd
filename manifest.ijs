@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '4.4.70'
+VERSION=: '4.4.71'
 
 FILES=: 0 : 0
 manifest.ijs
@@ -79,16 +79,16 @@ tutorial/xtra/ptable_tut.ijs
 tutorial/xtra/table_table_tut.ijs
 tutorial/xtra/setget_tut.ijs
 tutorial/xtra/updatex_tut.ijs
-tutorial/xtra/server_jcs_tut.ijs
 tutorial/xtra/custom_tut.ijs
 tutorial/xtra/performance_tut.ijs
-tutorial/xtra/server_jhs_tut.ijs
 tutorial/xtra/aggregation_tut.ijs
 tutorial/xtra/log_tut.ijs
 tutorial/xtra/upsertx_tut.ijs
 tutorial/xtra/link_tut.ijs
 tutorial/xtra/dropstop_tut.ijs
 tutorial/xtra/replicate_tut.ijs
+tutorial/server/jcs_tut.ijs
+tutorial/server/jhs_tut.ijs
 tutorial/basic/admin_tut.ijs
 tutorial/basic/intro_b_tut.ijs
 tutorial/basic/intro_a_tut.ijs
@@ -140,6 +140,7 @@ dynamic/base.ijs
 doc/License.htm
 doc/jd.css
 doc/Ops_csv.htm
+doc/Ops_damaged.htm
 doc/Ops_read.htm
 doc/Index.htm
 doc/General.htm
@@ -154,6 +155,7 @@ doc/Ops_table-table.htm
 doc/Ops_raw.htm
 doc/Ops_rename.htm
 doc/Ops.htm
+doc/Replicate.htm
 doc/Admin.htm
 doc/Ops_join.htm
 doc/Ops_drop.htm
@@ -211,6 +213,8 @@ base/where.ijs
 base/common.ijs
 base/column.ijs
 base/zutil.ijs
+base/tests.ijs
+base/tuts.ijs
 test/byten_test.ijs
 test/createdcol_test.ijs
 test/valid_data_test.ijs
