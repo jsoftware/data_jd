@@ -15,7 +15,7 @@ NB. x is error text to signal if validation detects problem
 validatetable=: 4 : 0
 e=. 'validate failed ',x,' ',OP
 if. FORCEVALIDATEAFTER_jd_*.x-:'after' do. logijfdamage e;''[FORCEVALIDATEAFTER_jd_=: 0 end.
-e validateclocs jdclocs y;''
+e validateclocs 1 jdclocs y;''
 )
 
 NB. y is list of column locales to validate
@@ -57,6 +57,6 @@ if. -.x-:'' do. if. +./' '~:;2{r do. logijfdamage x;'' end. end.
 )
 
 jd_validate=: 3 : 0
-'validate failed'validateclocs jdclocs'';''
+'validate failed'validateclocs 1 jdclocs'';''
 JDOK
 )

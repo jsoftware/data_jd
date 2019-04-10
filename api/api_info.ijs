@@ -110,11 +110,11 @@ end.
 )
 
 infovalidate=: 3 : 0
-''validateclocs jdclocs y
+''validateclocs 1 jdclocs y
 )
 
 infovalidatebad=: 3 : 0
-d=.''validateclocs jdclocs y
+d=.''validateclocs 1 jdclocs y
 b=. ' '~:,;2{{:d
 ({.d),:(<b)#each {:d
 )

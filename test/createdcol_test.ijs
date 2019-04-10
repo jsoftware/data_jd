@@ -31,6 +31,15 @@ jd'createdcol f b3 byte 3 vb4'
 jd'createdcol f y  edate  vedt'
 jd'reads from f'
 
+NB. verify that info schema and derived to not derive derived cols
+jd'close'
+getdb_jd_''
+t=. jdgl_jd_'f'
+c=. getlocx__t'b3'
+jd'info schema'
+jd'info derived'
+assert _1=nc<'dat__c'
+
 CSVFOLDER=: '~temp/jd/csv'
 jd'csvwr f.csv f'
 jd'csvrd f.csv g'

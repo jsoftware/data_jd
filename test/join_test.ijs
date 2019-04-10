@@ -201,14 +201,8 @@ jd'createtable g k byte,c byte'
 jd'insert g';'k';'yxy';'c';'qwe'
 )
 
-ver=: -.'3.3'-:;{:jd'list version'
-
 ref=: 3 : 0
-if. ver do.
- jd'ref /left f j g k'
-else.
- jd'reference f j g k'
-end.
+jd'ref /left f j g k'
 )
 
 setc=: 3 : 0
@@ -253,7 +247,7 @@ jd'ref /left g c h w'
 [a=. jd'read from f,f.g,g.h'
 assert 'zyxxy'-:'f.j'jdfrom_jd_ a
 assert ' yxxy'-:'g.k'jdfrom_jd_ a
-assert ' ewwe'-:'h.w'jdfrom_jd_ a
+assert '  ww '-:'h.w'jdfrom_jd_ a
 
 [a=. jd'read from f,f>g,g>h'
 assert 'zyyxxyy'-:'f.j'jdfrom_jd_ a

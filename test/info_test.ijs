@@ -37,8 +37,13 @@ assert 0=f'validatebad'
 
 assert 2=f'varbyte'
 assert 1=f'varbyte gg'
+jd'close'
+assert 2=f'varbyte'
+assert 1=f'varbyte gg'
 
 assert 2=f'ref'
+jd'close'
+assert 2=f'ref' NB. verify works without mapping
 
 jd'dropcol f jdref_x_gg_x'
 jd'dropcol f jdref_boolean_gg_boolean'

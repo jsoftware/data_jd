@@ -61,7 +61,7 @@ b=. stitch 0{subscriptions
 ac=. #a 
 bc=. #b
 if. (bc*8)>getmapsize'dat' do. resizemap 'dat' ; bc*8 end.
-dat=: a i: b
+dat=: a i. b NB. i:
 dat=: _1 ((dat=ac)#i.#dat)}dat
 setdirty 0
 )
@@ -69,7 +69,7 @@ setdirty 0
 NB. setdat for left join
 NB. option /left determines if dat is left or left
 NB. inner derives from left dropping last rows with -1
-NB. left1 derives from left by selecting only last row values
+NB. left1 derives from left by selecting only first row values
 NB. left1 and inner can be easily and efficiently derived from left join dat
 datleft=: 4 : 0
 if. 1=$$x do.
@@ -102,7 +102,7 @@ select =: 3 : 0
 setdat''
 if. left do.
  NB. derive left1 from left dat
- i=. ({.dat)i:i.Tlen
+ i=. ({.dat)i.i.Tlen  NB. i:
  y{{:i{"1 dat
 else. 
  y{dat
@@ -133,7 +133,7 @@ setdat''
 NB. 'join - should not happen' assert 0=#l
 if. left do.
  NB. derive left1 from left
- last=. ({.dat)i:i.Tlen__Tl
+ last=. ({.dat)i.i.Tlen__Tl  NB. i:
  r fixr last{"1 dat
 else.
  r fixr _1 ,. (i.Tlen__Tl) ,: dat

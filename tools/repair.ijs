@@ -14,7 +14,7 @@ for_tn. NAMES__dbl do.
  tn=. ;tn
  t=. jdgl tn
  for_c. NAMES__t do.
-  a=. jdclocs_jd_ tn;''
+  a=. 1 jdclocs_jd_ tn;'' NB. map cols
   count=. ''
   for_aa. a do.
    if. -.'jd'-:2{.NAME__aa do. count=. count,countdat__aa dat__aa end.

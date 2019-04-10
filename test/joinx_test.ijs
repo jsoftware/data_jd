@@ -247,4 +247,4 @@ c=. jd'reads from f,f>g,g>h'
 NB. catch bug where mapped noun was changed because of missing forcecopy
 assert a-:jd'reads from f,f.g,g.h'
 assert b-:jd'reads from f,f-g,g-h'
-assert c-:jd'reads from f,f>g,g>h' NB.! bug!
+assert c-:jd'reads from f,f>g,g>h'

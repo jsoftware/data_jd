@@ -43,7 +43,10 @@ NB. t is '' for all tables  or 'tab' for just that table
 NB. c is '' for all cols    or 'col' for just that col
 NB. tables  in sorted order
 NB. cols in defaultselection order
+NB. x 1 does mapcolfile
 jdclocs=: 3 : 0
+0 jdclocs y
+:
 't c'=. ,each y
 r=. ''
 tables=. /:~NAMES__dbl
@@ -70,12 +73,37 @@ for_i. i.#tables do.
  r=. r,(NAMES__t i. cols){CHILDREN__t
 end.
 
-for_c. r do. NB. do the mapping
- if. _1=nc {.MAP__c,each <'__c' do.
-   mapcolfile__c"0 MAP__c
-   opentyp__c ''
- end.
+if. x do.
+ for_c. r do. NB. do the mapping
+  if. _1=nc {.MAP__c,each <'__c' do.
+    mapcolfile__c"0 MAP__c
+    opentyp__c ''
+  end.
+ end. 
 end. 
+r
+)
+
+NB. get db info from file structure - no locales or mappings
+jdinfo=: 3 : 0
+'t c'=. ,each y
+r=. ''
+tables=. /:~NAMES__dbl
+if. #t do.
+ 'not a table' assert NAMES__dbl e.~ <t
+ tables=. <t
+end. 
+for_i. i.#tables do.
+ t=. i{tablelocs
+ if. #c do.
+  'not a column' assert NAMES__t e.~ <c
+  cols=. <c
+ else. 
+  cols=. getdefaultselection__t''
+  cols=. cols,(bjdn NAMES__t)#NAMES__t
+ end.
+ r=. r,<t,cols)
+end.
 r
 )
 

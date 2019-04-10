@@ -19,6 +19,8 @@ from=. deb from
 (dltb sel);(deb by);from;(dltb where);deb order
 )
 
+AGG_NUMERIC_jd_=: ;:'avg count countunique sum'
+
 Read=: 3 : 0
 'sel by from where order'=. sel_parse y
 From from
@@ -33,31 +35,43 @@ end.
 Query ''
 Order order
 
-n=. (#cnms)-#AGG_jd_ NB. cols before aggs
+NB. cnms has by cols before agg cols
+n=. (#cnms)-#AGG_jd_
+
 for_i. i.#cnms do.
  c=. i{cloc
  NB. edate converted to string - except for /e and agg count 
  if. 'edate'-:5{.typ__c do.
   if. -.option_e do.
-   if. i<n do. b=. 1 else. b=. -.'count'-:;(i-n){AGG_jd_ end.
+   if. i<n do. b=. 1 else. b=. -.((i-n){AGG_jd_)e.AGG_NUMERIC end.
    if. b do.
-     t=. sep__c,utc__c,'dtmn'{~(;:'edate edatetime edatetimem edatetimen')i.<typ__c
+     t=. sep__c,utc__c,'dtmn'{~TYPES_E i.<typ__c
      read=: (<t sfe,>i{read) i}read
    end. 
   end.
  end. 
 end.
 
+NB. complications getting agg type
 if. option_types do.
  t=. ''
  for_i. i.#cnms do.
   c=. i{cloc
   a=. ;i{cnms
-  b=. typ__c
+  b=. typ__c,(-.''-:shape__c)#' ',":shape__c
+  if. -.i<n do.
+   agg=. (i-n){AGG_jd_
+   if. agg e. AGG_NUMERIC do.
+    b=. ;(agg=<'avg'){'int';'float'
+   end. 
+  end. 
   t=. t,<a,'(',b,')'
  end.
  cnms=: t
 end.
+
+
+
 cnms,.read
 )
 

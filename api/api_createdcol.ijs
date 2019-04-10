@@ -48,23 +48,6 @@ mark dirty is agressive - e.g. in perhaps most case sort would be ok
 )
 
 jd_createdcol=: 3 : 0
-q=. bdnames y
-v=. ;{.q
-assertnotptable 1{q
-a=. dltb y
-a=. (a i.' ')}.a
-jd_createcol a
-c=. jdgl 1 2{q
-derived__c=: 1
-dverb__c=: 'derive_',v
-writestate__c'' 
-jdunmap 'dat',Cloc__c
-ferase PATH__c,'dat'
-erase 'dat'
-JDOK
-)
-
-jd_createdcol=: 3 : 0
 a=. dltb y
 i=. a i:' '
 v=. }.i}.a

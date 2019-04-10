@@ -19,10 +19,10 @@ jd'reads from a'
 jd'reads from b'
 
 jd'ref a id b id'
-[t1=. jd'reads from a,a.b' NB. left 1 - only last of matching rows
-assert 'rte rte'-:,'b.name'jdfroms_jd_ t1
+[t1=. jd'reads from a,a.b' NB. left 1 - only first of matching rows
+assert 'wqe wqe'-:,'b.name'jdfroms_jd_ t1
 
-assert 'rr'-:,'b.name'jdfroms_jd_ t=. jd'reads from a,a.b where b.id=1'
+assert 'ww'-:,'b.name'jdfroms_jd_ t=. jd'reads from a,a.b where b.id=1'
 assert 0=#>{.{:t=. jd'reads from a,a.b where b.id=23'
 
 jd'dropcol a jdref_id_b_id'
@@ -39,7 +39,8 @@ assert 0=#>{.{:t
 NB. left1 derived from left
 [t2=. jd'reads from a,a.b'
 assert t1-:t2 NB. left1 same as left1 derived from left
-assert 'rr'-:,'b.name'jdfroms_jd_ t=. jd'reads from a,a.b where b.id=1'
+assert 'ww'-:,'b.name'jdfroms_jd_ t=. jd'reads from a,a.b where b.id=1'
+
 assert 0=#>{.{:t=. jd'reads from a,a.b where b.id=23'
 
 NB. inner dervied from left

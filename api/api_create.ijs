@@ -53,9 +53,9 @@ if. df do.
   i=. ;names i:each '('
   typ=. }:each (>:i)}.each names
   names=. i{.each names
-  tshape=. ":each}.each$each data
-  m=. (typ e. ;:'edate edatetime edatetimem edatetimen')#i.#typ
-  tshape=. (<'') m}tshape
+  i=. typ i. each ' '
+  tshape=. ":each 0".each i}.each typ
+  typ=. i{.each typ
  else.
   typ=. jdtypefromdata each data
   tshape=. ":each}.each$each data
@@ -150,8 +150,9 @@ for_i. i.#ns do.
 end.
 
 if. #dat do.
+ if. 1=L. dat do. dat=. <dat end. NB. assume boxed is varbyte 
  try.
-  jd_update FETAB;_;FECOL;dat 
+  jd_update FETAB;_;FECOL;dat NB. varbyte bug - needs <
  catch.
   e=. 13!:12''
   jd_dropcol FETAB;FECOL
