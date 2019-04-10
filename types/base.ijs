@@ -116,6 +116,7 @@ cd_qlike=: LIBJD_jd_,' qlike > x x x x x'
 
 qlike=: 3 : 0
 b=. (#dat)#0
+y=. y,{.a.
 r=. cd_qlike cd 1,(gethad'b'),(gethad'dat'),gethad'y'
 if. 0~:r do. throw 'C qlike failed with code ',":r end.
 I.b
@@ -123,6 +124,7 @@ I.b
 
 qunlike=: 3 : 0
 b=. (#dat)#0
+y=. y,{.a.
 r=. cd_qlike cd 0,(gethad'b'),(gethad'dat'),gethad'y'
 if. 0~:r do. throw 'C qlike failed with code ',":r end.
 I.b

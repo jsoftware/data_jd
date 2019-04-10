@@ -97,6 +97,7 @@ I.b
 
 call=: 4 : 0
 BC=: #dat
+if. 0=L.y do. y=. y,{.a. end. NB. regex needs trailing null
 x callit (gethad'dat'),(gethad'val'),(gethad'y'),0,0,0,0
 )
 

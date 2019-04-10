@@ -74,7 +74,7 @@ i1fromi=: 3 : '((2*#y)$;ifintel{0 1;1 0)#1 ic y'
 
 ". each <;._2 qnumtxt  rplc 'dat';'(ifromi1 dat)'
 qrange=: 3 : (qrangetxt rplc 'dat';'(ifromi1 dat)')
-qlike=: qunlike=: 3 : '''like/unlink not supported for int1/int2/int4''assert 0'
+qlike=: qunlike=: 3 : '''like/unlike not supported for int1/int2/int4''assert 0'
 
 fixtypex=: 3 : 0
 a=. fixtype_num y
@@ -106,7 +106,7 @@ datcount=: +:
 
 ". each <;._2 qnumtxt  rplc 'dat';'(_1 ic dat)'
 qrange=: 3 : (qrangetxt rplc 'dat';'(_1 ic dat)')
-qlike=: qunlike=: 3 : '''like/unlink not supported for int1/int2/int4''assert 0'
+qlike=: qunlike=: 3 : '''like/unlike not supported for int1/int2/int4''assert 0'
 
 fixtypex=: 3 : 0
 a=. fixtype_num y
@@ -139,7 +139,7 @@ datcount=: +:@+:
 
 ". each <;._2 qnumtxt  rplc 'dat';'(_2 ic dat)'
 qrange=: 3 : (qrangetxt rplc 'dat';'(_2 ic dat)')
-qlike=: qunlike=: 3 : '''like/unlink not supported for int1/int2/int4''assert 0'
+qlike=: qunlike=: 3 : '''like/unlike not supported for int1/int2/int4''assert 0'
 
 fixtypex=: 3 : 0
 a=. fixtype_num y
