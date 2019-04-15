@@ -2,25 +2,9 @@ NB. Copyright 2016, Jsoftware Inc.  All rights reserved.
 
 coclass'jd'
 
-NB. should use getoptions but there are problems - similar problems in createtable
 readstart=: 3 : 0
 if. 0~:L.y do. y=. ;y[ECOUNT assert 1=#y end.
-option_e=: option_lr=: option_types=: 0
-while. '/'={.y do.
- if. '/lr '-:4{.y do.
-  y=. dlb 4}.y
-  option_lr=: 1
- elseif. '/e '-:3{.y do.
-  y=. dlb 3}.y
-  option_e=: 1
- elseif. '/types '-:7{.y do.
-  y=. dlb 7}.y
-  option_types=: 1
- elseif. 1 do.
-  'unknown option'assert 0
- end.
-end.
-y
+'/lr 0 /e 0 /types 0 /table s /file s'getopts y
 )
 
 jd_read=: 3 : 0
@@ -29,13 +13,39 @@ jd_reads '/lr ',y
 
 jd_reads=: 3 : 0
 y=. readstart y
+if. 0~:option_table do.
+ 'must have option /lr'assert option_lr
+ 'must have option /types'assert option_types
+ vtname option_table
+ i=. dbrow DBOPS
+ 'must be able to createtable'assert +./('createtable';,'*')e.bdnames>{:i{DBOPS
+end. 
+
+if. 0~:option_file do.
+ assert 0=nc<'FILEFOLDER__'['FILEFOLDER must be defined as path to files'
+ FILEFOLDER__=: FILEFOLDER__,>('/'={:FILEFOLDER__){'/';''
+ jdcreatefolder FILEFOLDER__
+ 'file'fwrite FILEFOLDER__,'jdclass'
+end. 
+
 r=. readptable y
-if. -.''-:r do. r return. end.
-if. option_lr do.
- Read__dbl y
-else. 
- Reads__dbl y
-end.
+if. ''-:r do.
+ if. option_lr do.
+ r=. Read__dbl y
+ else. 
+ r=. Reads__dbl y
+ end.
+end. 
+if. 0~:option_table do.
+ FETAB=: option_table
+ jd_createtable '/pairs';'/types';'/replace';option_table;,r
+ JDOK
+elseif. 0~:option_file do.
+  (3!:1 r)fwrite FILEFOLDER__,option_file
+  JDOK
+elseif. 1 do.
+ r
+end. 
 )
 
 NB. convert partition read where clause to refer only to ptable

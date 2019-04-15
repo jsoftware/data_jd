@@ -22,51 +22,85 @@ x rplc  ,(,.<"0 t),.,.boxopen y
 
 jd_z_=: jd_jd_
 
-NB. getnext x args from boxed list
-NB. error if too few or too many
-getnext=: 4 : 0
-'invalid number of args'assert x=#y
-y
+optget=: 3 : 0
+if. 0~:L.y do. (<}.y),<{.y  return. end.
+y=. dlb y
+b=. '"'={.y
+if. b do.
+ y=. }.a
+ i=. y i.'"'
+else.
+ i=. y i.' '
+end. 
+v=. i{.y
+a=. b}.i}.y
+i=. y i. ' '
+v=. i{.y
+y=. }.i}.y
+y;v
 )
 
 NB. y is jd_... ... 
-NB. x is list of options and their arg counts
+NB. x is list of options and their type
 NB. result is y with options stripped
 NB. option_name_jd_ set as option value
 NB. options not provided are set to 0
-NB. options provided with count 0 set to 1
-NB. option value(s) must be numeric and non-negative
-NB. a=. '/e 0 /nx 1 /foo 0'getoptions ca '/e /nx 23 abc'
-getoptions=: 4 : 0
-x getoptionsx ca y
-)
-
-NB. allow getoptions without ca y
-getoptionsx=: 4 : 0
+NB. option type 0 set to 1
+NB. option type 1 must be positive integer
+NB. option type a (alloc) must be 3 positive integer/float
+NB. option type s is a string - if string arg it can be in "s
+NB. a=. '/e 0 /nx 1 /a a /s s'getopt '/e /nx 23 /a 1 2 3.5 /s "abc def"'
+getopts=: 4 : 0
 t=. ca x
 t=. (2,~-:#t)$t
 n=. {."1 t
-c=. ;0".each{:"1 t
+c=. {:"1 t
 p=. ;(<'_jd_ '),~each (<'option_'),each}.each n
 (p)=: 0 NB. default value for options not provided
-while. '/'={. ,dltb;{.y do.
- i=. n i. {.y
- ('invalid option: ',;{.y) assert i<#n
- e=. '_jd_',~'option_',}.;{.y
- a=. i{c NB. number of values for option
- if. a=0 do.
-  (e)=: 1
- else.
-  t=. 0+;_".each a{.}.y
-  if. -.e-:'option_a_jd_' do. NB. float allowed for createtable /a
-   ('invalid option value: ',;{.y) assert 4=3!:0 t
+a=. y
+while. '/'={.v[v=. ;v['b v'=. optget a do.
+ a=. b
+ t=. }.v
+ p=. 'option_',(}.v),'_jd_'
+ i=. n i. <v
+ EOPTION assert i < #n
+ v=. ''$;i{c
+ select. v
+ case. '0' do.
+  v=. 1
+ case. '1' do.
+  'a v'=. optget a
+  v=. 0+_".;v
+  EOPTIONV assert 4=3!:0 v
+  EOPTIONV assert 0<:v
+ case. 'a' do. NB. createtable /a - 3 values and float allowed
+  'a v0'=. optget a
+  'a v1'=. optget a
+  'a v2'=. optget a
+  v=. 0+_".(;v0),' ',(;v1),' ',;v2
+  EOPTIONV assert 3=#v
+  EOPTIONV assert 0<:v
+ case. 's' do. NB. string - asdf or "abc def"
+  if. 0~:L.a do.
+   v=. ;{.a
+   a=. }.a
+  else.
+   a=. dltb a
+   if. b=. '"'={.a do.
+    a=. }.a
+    i=. a i.'"'
+   else.
+    i=. a i.' '
+   end. 
+   v=. i{.a
+   a=. b}.i}.a
   end. 
-  ('invalid option value: ',;{.y) assert t>:0 
-  (e)=: ".":t NB. kludge so that single value is scalar - required in jd_csvcdefs use of jd_csvrd
+ case. do.
+  'bad option type' assert 0
  end.
- y=. y}.~>:a
+ (p)=: v
 end.
-y
+a
 )
 
 initserver_z_=: 3 : 0

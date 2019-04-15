@@ -5,6 +5,13 @@ coclass'jd'
 
 BOMUTF8=: 239 187 191{a.
 
+NB. getnext x args from boxed list
+NB. error if too few or too many
+getnext=: 4 : 0
+'invalid number of args'assert x=#y
+y
+)
+
 NB. '' or filename
 csvset=: 3 : 0
 if. IFJHS do.
@@ -68,7 +75,7 @@ erase'option_e'
 )
 
 jd_csvwr=: 3 : 0
-a=. '/combine 0 /e 0 /h1 0 /w 0' getoptions y
+a=. ca'/combine 0 /e 0 /h1 0 /w 0' getopts y
 fixoption_e''
 header=. option_h1
 if. option_w do.
@@ -172,7 +179,7 @@ end.
 
 NB. write db tables and script to folder y
 jd_csvdump=: 3 : 0
-y=. '/e 0 /replace 0' getoptions y
+y=. ca'/e 0 /replace 0' getopts y
 fixoption_e''
 if. option_replace do. jddeletefolder CSVFOLDER__ end.
 csvset''
@@ -193,7 +200,7 @@ i.0 0
 NB. [options] csvfile table 
 jd_csvrd=: 3 : 0
 csvset''
-a=. '/rows 1 /cdefs 0'getoptions y
+a=. ca'/rows 1 /cdefs 0'getopts y
 rows=. option_rows_jd_ NB. scalar required!
 if. option_cdefs_jd_ do.
   'CDEFSFILE not defined' assert 0=nc<'CDEFSFILE__'
@@ -260,7 +267,7 @@ JDOK
 )
 
 jd_csvprobe=: 3 : 0
-a=. '/replace 0'getoptions y
+a=. ca'/replace 0'getopts y
 csvset ;1 getnext a
 jd_csvcdefs (option_replace#'/replace '),'/h 0 /u ',csvf
 jd_droptable'csvprobe'
@@ -272,7 +279,7 @@ r
 
 NB. [options] csvfile
 jd_csvcdefs=: 3 : 0
-a=. '/replace 0 /c 0 /h 1 /u 0 /v 1'getoptions y
+a=. ca'/replace 0 /c 0 /h 1 /u 0 /v 1'getopts y
 csvset ;1 getnext a
 headers=. option_h
 '/h invalid'assert headers<11
@@ -396,7 +403,7 @@ dtbm=: 3 : '>dtb each<"1 y'
 
 NB. restore db from dump folder
 jd_csvrestore=: 3 : 0
-y=. '/replace 0' getoptions y
+y=. ca'/replace 0' getopts y
 csvset''
 csv=. (<CSVFOLDER__),each /:~{."1 [ 1!:0 jpath CSVFOLDER__,'*.csv'
 cdefs=. (_4}.each csv),each <'.cdefs'
@@ -431,7 +438,7 @@ csummary=: 4 : 0
 )
 
 jd_csvreport=: 3 : 0
-a=. '/f 0' getoptions y
+a=. ca'/f 0' getopts y
 all=. {."1 jdtables''
 if. 0=#a do.
  a=. all

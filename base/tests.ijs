@@ -34,6 +34,7 @@ test/ptable_modify_test.ijs
 test/ptable_read_test.ijs
 test/ptable_update_test.ijs
 test/query_test.ijs
+test/read_types_test.ijs
 test/readx_test.ijs
 test/ref_dirty_test.ijs
 test/ref_test.ijs

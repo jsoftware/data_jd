@@ -43,7 +43,7 @@ try.
    b=. HS_jmf_+getmsize_jmf_ om,Cloc__c
    filesize=. filesize,a
    jsize=. jsize,b
-   cx=. cx,(t+.a~:b){' X'
+   cx=. cx,(t+.(a~:b)*.a~:_1){' X'
    r=. (<tabs),(<cols),(<cx),(<type),(<map),(<tlen),(<count),(<filesize),.(<jsize)
   end. 
  end. 

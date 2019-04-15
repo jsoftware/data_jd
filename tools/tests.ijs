@@ -64,6 +64,7 @@ for_n. i.#t do.
  jda=. 6!:1''
  if. x do. echo 'loadd''','''',~;a end.
  try.
+  if. 0 do. return. end. NB. a-:JDP,'one to stop on'
   load a
  catch.
   'failed'logtest_jd_ LF,13!:12''

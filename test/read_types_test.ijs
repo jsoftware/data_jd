@@ -14,9 +14,9 @@ jd'createcol f v varbyte';<'111';'6'
 jd'createcol f d date';19900102 20040203
 jd'createcol f dt datetime';19900102121212 20040203131313
 jd'createcol f ed edate';2 4$'20122013'
-jd'createcol f edt edatetime'
-jd'createcol f edtm edatetimem'
-jd'createcol f edtn edatetimen'
+jd'createcol f edt edatetime';2 4$'20122013'
+jd'createcol f edtm edatetimem';2 4$'20122013'
+jd'createcol f edtn edatetimen';2 4$'20122013'
 
 jd'createtable g'
 jd'createcol g aaa int';t+<.2^33
@@ -28,23 +28,61 @@ jd'ref f i g aaa'
 
 f''
 
+NB. types
 gettypes=: 3 : 0
-t=. {.y
+t=. {."1 y
 }.each}:each(t i:each'(')}.each t
 )
+r=: jd'read /types from f'
+assert 0=#TYPES_jd_-.gettypes r
 
-assert 0=#TYPES_jd_-.gettypes jd'reads /types from f'
-
-[r=: jd'reads /types count i,count d,count ed,first i, first d,first ed by i from f'
+r=: jd'read /types count i,count d,count ed,first i, first d,first ed by i from f'
 assert (;:'int int int int int date edate')-:gettypes r 
 
-[r=: jd'reads /types max ed,min ed,first ed,last ed by i from f'
+r=: jd'read /types max ed,min ed,first ed,last ed by i from f'
 assert (;:'int edate edate edate edate')-:gettypes r 
 
-[r=: jd'reads /types count ed, countunique ed, sum ed, avg ed by i from f'
+r=: jd'read /types count ed, countunique ed, sum ed, avg ed by i from f'
 assert (;:'int int int int float')-:gettypes r
 
 assert ('2012-01-01';'2013-01-01';'2013-01-01';'2012-01-01')-:,each{:"1 jd'read first ed, last ed, max ed, min ed from f'
 assert 378691200000000000 410313600000000000 410313600000000000 378691200000000000=;{:"1 jd'read /e first ed, last ed, max ed, min ed from f'
 
-assert ('int';'edate')-:gettypes jd'reads /types max g.aaa,max g.ccc from f,f.g'
+assert ('int';'edate')-:gettypes jd'read /types max g.aaa,max g.ccc from f,f.g'
+
+NB. /table option
+'/lr'jdae'reads /types /table abc from f'
+'/types'jdae'read /table abc from f'
+'invalid name'jdae'read /types /table abc/abcfrom f'
+i=. dbrow_jd_ DBOPS_jd_
+DBOPS_jd_=: (<'read reads createtable')(<i;1)}DBOPS_jd_
+jd'read  /types /table abc from f'
+DBOPS_jd_=: (<'read reads')(<i;1)}DBOPS_jd_
+'createtable'jdae'read  /types /table abc from f'
+DBOPS_jd_=: (<'*')(<i;1)}DBOPS_jd_
+
+assert (i.0 0)-:jd'read  /types /table abc from f'
+assert (i.0 0)-:jd'reads /lr /types /table def from f'
+a=. jd'read from f'
+assert a-:jd'read from abc'
+assert a-:jd'read from def'
+
+NB. f.b01 vs f__b01
+assert (i.0 0)-:jd'read  /types /table abc from f,f.g'
+assert (i.0 0)-:jd'reads /lr /types /table def from f,f.g'
+a=. {:"1 jd'read from f,f.g'
+assert a-:{:"1 jd'read from abc'
+assert a-:{:"1 jd'read from def'
+
+NB. /file option
+FILEFOLDER=: '~temp'
+assert (i.0 0)-:jd'read /file foo from f'
+assert (jd'read from f')-:3!:2 fread FILEFOLDER,'foo'
+
+assert (i.0 0)-:jd'read /file foo from f,f.g'
+assert (jd'read from f,f.g')-:3!:2 fread FILEFOLDER,'foo'
+
+
+
+
+

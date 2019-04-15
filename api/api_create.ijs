@@ -14,24 +14,13 @@ JDOK
 
 NB. careful: /replace option used in multiple ops
 jd_createtable=: 3 : 0
-if. 0=L.y do. NB. string parse has , and LF in col defs
- a=. bdnames y
- y=. ''
- while. '/'=;{.a do. NB. skip over options to find table and col defs
-  if. '/a'-:;{.a do.
-   y=. y,4{.a
-   a=. 4}.a
-  else.
-   y=. y,{.a
-   a=. }.a
-  end.
- end.
- y=. y,{.a NB. table name
+a=. '/replace 0 /types 0 /pairs 0 /a a'getopts y
+if. 0=L.a do. NB. string has col defs with commas and blanks
+ a=. bdnames a
+ t=. {.a NB. table name
  a=. }.a
- NB. y=. y,<;' ',each a
- y=. y, a:-.~<;._2 LF,LF,~(;a,each' ')rplc',';LF
+ a=. t, a:-.~<;._2 LF,LF,~(;a,each' ')rplc',';LF
 end.
-a=. '/replace 0 /types 0 /pairs 0 /a 3'getoptionsx y
 df=. option_pairs
 if. 3=#option_a do.
  EALLOC assert 0 0 _1<option_a
@@ -41,7 +30,6 @@ else.
 end.
 vtname FETAB=: t=. >0{a NB. table
 a=. }.a
-
 if. df do.
  a=. ,a
  'name data pairs - odd number' assert (2<:#a)*.0=2|#a

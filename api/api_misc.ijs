@@ -50,7 +50,7 @@ JDOK
 )
 
 jd_key=: 3 : 0
-y=. '/in 0'getoptions y
+y=. ca'/in 0'getopts y
 FETAB=: tab=. ;{.y
 (-.option_in) keyindex y
 )
@@ -147,7 +147,7 @@ JDE1001 assert 3=nc<'jd_',OP,'__dbl'
 )
 
 jd_ref=: 3 : 0
-y=. '/left 0'getoptions y
+y=. ca'/left 0'getopts y
 option_left=: option_left +. FORCELEFT
 ECOUNT assert (4<:#y)*.0=2|#y
 t=. (2,(#y)%2)$y
