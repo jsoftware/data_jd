@@ -93,7 +93,7 @@ read ... from A.B , A ...           NB. order does not matter
 read ... from X:A , X.B , X.C ...   NB. X alias used in all subsequent uses</code></pre>
 <p><code>A.B is left1 join</code><br />
 <code> each A row with 1 matching B row or FILLS</code><br />
-<code> if multiple matching B rows, the last one is used</code><br />
+<code> if multiple matching B rows, the first one is used</code><br />
 <code> not a standard join, but is fast and adequate in many cases</code><br />
 <code> same as inner join if 1 and only 1 B row matches</code></p>
 <p><code>A&gt;B is left join</code><br />
