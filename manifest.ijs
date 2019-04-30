@@ -295,4 +295,9 @@ cd/libjpcre.dylib
 
 RELEASE=: 'j807'
 
+DEPENDS=: 0 : 0
+data/jfiles
+data/jmf
+)
+
 FOLDER=: 'data/jd'
