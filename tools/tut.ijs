@@ -1,0 +1,62 @@
+tuts=: <;._2 [ 0 : 0
+basic
+ intro_a         
+ intro_b         
+ intro_c         
+ pairs           
+ stock_data      
+ table_from_pairs
+ epochdt         
+ admin
+op
+ createcol       
+ createdcol      
+ createtable     
+ delete          
+ gen             
+ info            
+ insert          
+ intx            
+ key             
+ read
+ reads
+  reads_basic
+  reads_clauses   
+  reads_from      
+  reads_join
+  reads_aggregation
+  reads_option_table
+ setget          
+ sort            
+ tablecopy       
+ tableinsert     
+ tablemove       
+ update
+  update_basic
+  update_advanced
+ upsert
+  upsert_basic
+  upsert_advanced
+csv
+ intro_csv       
+ bus_lic         
+ quandl_ibm      
+ csv_advanced            
+demo
+ northwind       
+ sandp           
+ sed             
+ vr              
+server
+ jcs             
+ jhs             
+xtra
+ custom          
+ dropstop        
+ link            
+ log             
+ performance     
+ ptable          
+ replicate       
+ table_table     
+)
