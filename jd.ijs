@@ -14,7 +14,7 @@ all use is through JDP_z_ (set when the library is loaded)
 )
 
 coclass'jd'
-jdversion=: '4.23'
+jdversion=: '4.24'
 
 doin=: 4 : '(<x)(4 : ''do__y x'')each<"0 y' NB. run sentence in each locale
 
@@ -172,20 +172,26 @@ ifintel=: 'a'={.2 ic a.i.'a' NB. endian
 )
 
 jdwelcome=: 0 : 0 rplc 'BOOKMARK';(jpath JDP,'doc/Index.htm');'ULIMIT';ULIMIT
-Jd is Copyright 2018 by Jsoftware Inc. All Rights Reserved.
+Jd is Copyright 2019 by Jsoftware Inc. All Rights Reserved.
 Jd is provided "AS IS" without warranty or liability of any kind.
 
-All use must be under a Jd License from Jsoftware:
- http://code.jsoftware.com/wiki/Jd/License
+All use must be under a Jd License:
+https://code.jsoftware.com/wiki/Jd/License
 
-Wiki documentation of the latest version of Jd is at:
- http://code.jsoftware.com/wiki/Jd/Index
+All files in Jd application folder, unless otherwise noted, are:
+Copyright 2019, Jsoftware Inc.  All rights reserved.
+
+Wiki documentation of the latest version is at:
+https://code.jsoftware.com/wiki/Jd/Index
+
+A listing of a run of all the latest tutorials is at:
+https://www.jsoftware.com/jd_tuts.html
 
 Snapshot of the Jd wiki for this release is at: 
- file://BOOKMARK
+file://BOOKMARK
 ULIMIT
 Get started:
-   jdrt''      NB. list tutorials
+   jdrt '' NB. tutorials
 )
 
 echo'   jdwelcome_jd_ NB. run this sentence for important information'

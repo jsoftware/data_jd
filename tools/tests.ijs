@@ -16,7 +16,7 @@ jdtests=: 3 : 0
 NB. assert -.(<'jjd')e. conl 0['jdtests must be run in task that is not acting as a server'
 jdadmin 0
 load JDP,'base/tests.ijs'
-load JDP,'base/tuts.ijs'
+load JDP,'base/testtuts.ijs'
 cocurrent'base' NB. defined in jd, but must run in base
 IFTESTS_jd_=: 1
 OLDALLOC_jd_=: ROWSMIN_jdtable_,ROWSMULT_jdtable_,ROWSXTRA_jdtable_
@@ -26,8 +26,8 @@ OLDLOGOPS_jd_=: LOGOPS_jd_
 MAXROWCOUNT_jd_=: _
 fast=. 'fast'-:y
 csvonly=. 'csv'-:y
-EXCLUDETESTS=: (<'_tut.ijs'),each~(<'tutorial/'),each 'basic/stock_data';'csv/bus_lic';'csv/quandl_ibm'
-t=. ALLTESTS=:  (tests_jd_,((<'tutorial/'),each tuts_jd_))-.EXCLUDETESTS
+EXCLUDETESTS=: (<'_tut.ijs'),each~(<'tutorial/'),each 'stock_data';'bus_lic';'quandl_ibm'
+t=. ALLTESTS=:  (tests_jd_,(testtuts_jd_))-.EXCLUDETESTS
 t=. t,~each<JDP
 if. -.IFJHS do. t=. t-.<JDP,'tutorial/server/jhs_tut.ijs' end.
 failed=: ''

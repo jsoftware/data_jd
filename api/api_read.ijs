@@ -14,19 +14,22 @@ jd_reads '/lr ',y
 jd_reads=: 3 : 0
 y=. readstart y
 if. 0~:option_table do.
- 'must have option /lr'assert option_lr
- 'must have option /types'assert option_types
+ ETABLEFILE assert 0=option_file
+ option_lr=: 1
+ option_types=: 1
  vtname option_table
  i=. dbrow DBOPS
  'must be able to createtable'assert +./('createtable';,'*')e.bdnames>{:i{DBOPS
 end. 
 
 if. 0~:option_file do.
- assert 0=nc<'FILEFOLDER__'['FILEFOLDER must be defined as path to files'
- FILEFOLDER__=: FILEFOLDER__,>('/'={:FILEFOLDER__){'/';''
- jdcreatefolder FILEFOLDER__
- 'file'fwrite FILEFOLDER__,'jdclass'
-end. 
+ ETABLEFILE assert 0=option_table
+ file=. PATH__dbl,'jdfile/'
+ if. -.fexist file do.
+  jdcreatefolder file
+ 'file'fwrite file,'jdclass'
+ end.
+end.
 
 r=. readptable y
 if. ''-:r do.
@@ -41,8 +44,8 @@ if. 0~:option_table do.
  jd_createtable '/pairs';'/types';'/replace';option_table;,r
  JDOK
 elseif. 0~:option_file do.
-  (3!:1 r)fwrite FILEFOLDER__,option_file
-  JDOK
+ (3!:1 r)fwrite file,option_file
+ JDOK
 elseif. 1 do.
  r
 end. 

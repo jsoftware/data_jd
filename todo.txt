@@ -5,30 +5,23 @@ zip/unzip ops
 *********************************************
 not started:
 
-jcs server should have jbin support
+* mark derived col dirty - slow as it walks over all col locales
 
-derived cols
- csvwr/csvdump need option to not dump derived cols
- csvrestore should detect derived cols are missing and do createdcol 
+* jcs server should have jbin support
 
-admin.ijs '<DAN>' - not hardwired
+* derived cols
+  csvwr/csvdump need option to not dump derived cols
+  csvrestore should detect derived cols are missing and do createdcol 
 
-CSVFOLDER parameter
-csvwr colsep,rowsep,quotes,escape parameters
-easier automated csv load
+* admin.ijs '<DAN>' - not hardwired
 
-epoch - flag to allow mm/dd/yy order
+* CSVFOLDER parameter
+  csvwr colsep,rowsep,quotes,escape parameters
+  easier automated csv load
 
-insert /missing to allow missing cols
+* epoch - flag to allow mm/dd/yy order
 
-read /nub to return only unique rows
+* insert /missing to allow missing cols
 
-decorate read result header with type 
- cola -> cola-edatime
- colb -> colb-byte 4
- colc -> colc-int1
- - _ or blank separator?
- alias and aggs need thought
- aggs need thought
- possibly useful in csvwr as well
+* read /nub to return only unique rows
 

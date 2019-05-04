@@ -50,9 +50,7 @@ assert 378691200000000000 410313600000000000 410313600000000000 3786912000000000
 
 assert ('int';'edate')-:gettypes jd'read /types max g.aaa,max g.ccc from f,f.g'
 
-NB. /table option
-'/lr'jdae'reads /types /table abc from f'
-'/types'jdae'read /table abc from f'
+NB. /table option - implies /lr /types
 'invalid name'jdae'read /types /table abc/abcfrom f'
 i=. dbrow_jd_ DBOPS_jd_
 DBOPS_jd_=: (<'read reads createtable')(<i;1)}DBOPS_jd_
@@ -61,26 +59,26 @@ DBOPS_jd_=: (<'read reads')(<i;1)}DBOPS_jd_
 'createtable'jdae'read  /types /table abc from f'
 DBOPS_jd_=: (<'*')(<i;1)}DBOPS_jd_
 
-assert (i.0 0)-:jd'read  /types /table abc from f'
-assert (i.0 0)-:jd'reads /lr /types /table def from f'
+assert (i.0 0)-:jd'read  /table abc from f'
+assert (i.0 0)-:jd'reads /table def from f'
 a=. jd'read from f'
 assert a-:jd'read from abc'
 assert a-:jd'read from def'
 
 NB. f.b01 vs f__b01
-assert (i.0 0)-:jd'read  /types /table abc from f,f.g'
-assert (i.0 0)-:jd'reads /lr /types /table def from f,f.g'
+assert (i.0 0)-:jd'read  /table abc from f,f.g'
+assert (i.0 0)-:jd'reads /table def from f,f.g'
 a=. {:"1 jd'read from f,f.g'
 assert a-:{:"1 jd'read from abc'
 assert a-:{:"1 jd'read from def'
 
 NB. /file option
-FILEFOLDER=: '~temp'
+p=. jdpath_jd_'jdfile/'
 assert (i.0 0)-:jd'read /file foo from f'
-assert (jd'read from f')-:3!:2 fread FILEFOLDER,'foo'
+assert (jd'read from f')-:3!:2 fread p,'foo'
 
-assert (i.0 0)-:jd'read /file foo from f,f.g'
-assert (jd'read from f,f.g')-:3!:2 fread FILEFOLDER,'foo'
+assert (i.0 0)-:jd'read /file "foo boo" from f,f.g'
+assert (jd'read from f,f.g')-:3!:2 fread p,'foo boo'
 
 
 

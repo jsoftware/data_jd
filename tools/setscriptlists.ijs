@@ -19,28 +19,39 @@ t fwrite f
 load f
 
 NB. tuts
-d=. {."1 dirtree JDP,'tutorial'
-
-NB. verify base names are unique
-t=. (>:;d i:each'/')}.each d
-t=. _8}.each t
-t=. (1~:+/t =/ t)#d
-if. 0~:#t do.
- echo >t
- 'duplicate tutorial names'assert 0
-end.  
-
-NB. fix order - guys that don't sort where we want them
-zd=. d rplc each <'epochdt_tut.ijs';'zepochdt_tut.ijs'
-zd=. zd rplc each <'admin_tut.ijs'; 'zzadmin_tut.ijs'
-zd=. zd rplc each <'intro_csv_tut.ijs'; 'aintro_csv_tut.ijs'
-
-d=. d/:_8}.each zd
-d=. (#JDP,'tutorial/')}.each d
-
-d=. ;LF,~each d
-t=. 'tuts=: <;._2 [ 0 : 0',LF,d,')'
-f=. JDP,'base/tuts.ijs'
+t=. 1 dir p,'tutorial/*_tut.ijs'
+t=. /:~(#p)}.each t
+t=. ;t,each LF
+t=. 'testtuts=: <;._2 [ 0 : 0',LF,t,')'
+f=. JDP,'base/testtuts.ijs'
 t fwrite f
 load f
+
+tutchk''
+)
+
+tutcats=: 3 : 0
+load JDP,'tools/tut.ijs'
+a=. ;(' '=each tuts)i.each 0
+>(a<}.a,0)#tuts
+)
+
+tutchk=: 3 : 0
+load JDP,'tools/tut.ijs'
+a=. ;(' '=each tuts)i.each 0
+t=. (a>:}.a,0)#tuts
+t=. dltb each t
+f=. 1 dir'~Jddev/tutorial'
+f=. _8}.each (>:;f i:each'/')}.each f
+if. #t-.f do.
+ echo 'tuts without files'
+ echo >' ',each t-.f
+end. 
+if. #f-.t do. 
+ echo 'files without tuts'
+ echo >' ',each f-.t
+end.
+'tuts files mismatch'assert 0=#(f-.t),t-.f
+'tuts duplicats'assert(#~.dltb each tuts_jd_)=#dltb each tuts_jd_
+i.0 0
 )

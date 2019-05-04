@@ -214,7 +214,7 @@ base/common.ijs
 base/column.ijs
 base/zutil.ijs
 base/tests.ijs
-base/tuts.ijs
+base/testtuts.ijs
 test/byten_test.ijs
 test/createdcol_test.ijs
 test/valid_data_test.ijs

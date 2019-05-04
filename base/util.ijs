@@ -3,7 +3,6 @@ jdrt_z_=:      jdrt_jd_
 
 coclass 'jd'
 
-
 NB. boolean mask - names starting with jd
 bjdn=: 3 : 0
 (<'jd')=2{.each y
@@ -12,8 +11,8 @@ bjdn=: 3 : 0
 ophtmls=: _4}.each(>:#jpath JDP,'doc')}.each 1 dir JDP,'doc/Ops_*'
 
 jdrt=: 3 : 0
-load JDP,'base/tuts.ijs'
-if. (-.IFJHS)*.80607<:0".(fread'~system/config/version.txt')-.CRLF,'.' do.
+load JDP,'tools/tut.ijs'
+if. -.IFJHS do.
  require'labs/labs'
  runtut=: lab_z_
 else.
@@ -22,24 +21,40 @@ else.
 end.
 builddemos''
 if. ''-:y do.
- c=. (tuts i.each'/'){.each tuts
- c=. ~.c
- ;LF,~each(<'   jdrt '''),each c,each''''
-elseif. -.6=(;:'basic csv demo op server xtra')i.<y do.
- a=. tuts#~(<y)=(#y){.each tuts
- a=. _8}.each a
- a=. (>:#y)}.each a
- ;LF,~each(<'   jdrt '''),each a,each''''
-elseif. 1 do.
- f=. ;{.tuts#~;+/each(<y,'_tut.ijs')E.each tuts
- 'invalid tutorial name'assert 0~:#f
- runtut JDP,'tutorial/',f
+ t=.(' '~:;{.each tuts)#tuts
+ ;LF,~each(<'   jdrt '''),each t,each''''
+ return.
 end.
+i=. (dltb each tuts)i.<'>',~dltb y NB. first look for >
+if. i=#tuts do.
+ i=. (dltb each tuts)i.<dltb y
+end.
+'invalid tut'assert i<#tuts
+p=. a=. ;i{tuts
+b=. (a=' ')i.0 NB. count leading blanks
+t=. }.i}.tuts
+c=. ;(t=each' ')i.each 0 NB. count leading blanks
+i=. (b<c)i.0
+t=. i{.t
+a=. ;{.t
+b=. (a=' ')i.0 NB. count leading blanks
+c=. ;(t=each' ')i.each 0 NB. count leading blanks
+t=. (b>:c)#t
+t=. dltb each t
+
+if. 0<#t do.
+ ;LF,~each(<'   jdrt '''),each t,each''''
+ return.
+end.
+f=. JDP,'tutorial/',(dltb p),'_tut.ijs'
+'invalid tutorial name'assert fexist f
+runtut f
 )
 
+NB. '' assumed ok if folders exist - not empty rebuilds from scratch
 builddemos=: 3 : 0
 b=. jdfread each'~temp/jd/northwind/jdclass';'~temp/jd/sandp/jdclass';'~temp/jd/sed/jdclass'
-if. *./b=<'database' do. return. end.
+if. (0=#y)*.*./b=<'database' do. i.0 0 return. end.
 echo'building demos - takes time'
 if. IFQT do. wd'msgs' end.
 load__ JDP,'demo/common.ijs'
@@ -90,7 +105,6 @@ blankquoted_jd_=: 3 : 0
 if. ''-:y do. y return. end. NB. avoid bug in wherequoted
 ' ' (I.wherequoted y)}y
 )
-
 
 NB. =========================================================
 coinserttofront =: 3 : 0
