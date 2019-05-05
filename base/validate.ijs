@@ -43,7 +43,12 @@ try.
    b=. HS_jmf_+getmsize_jmf_ om,Cloc__c
    filesize=. filesize,a
    jsize=. jsize,b
-   cx=. cx,(t+.(a~:b)*.a~:_1){' X'
+   if. (a~:_1)*.0~:s do. NB. J data type agreement
+    ta=. ((typ__c-:'byte')*.(2=3!:0 dat__c))+.((typ__c-:'boolean')*.(1=3!:0 dat__c))+.((typ__c-:'float')*.(8=3!:0 dat__c))+.(((<typ__c)-.@e.;:'byte boolean float')*.(4=3!:0 dat__c))
+   else.
+    ta=. 1
+   end.
+   cx=. cx,((-.ta)+.t+.(a~:b)*.a~:_1){' X'
    r=. (<tabs),(<cols),(<cx),(<type),(<map),(<tlen),(<count),(<filesize),.(<jsize)
   end. 
  end. 
