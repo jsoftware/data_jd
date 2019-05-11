@@ -1,4 +1,3 @@
-
 jdadmin'sandp'
 
 jd'reads from j'
@@ -27,8 +26,14 @@ jd'reads from s where city in ("Athens","London")'
 jd'reads from p where color is "Red"'
 jd'reads from p where color = "Red"'
 jd'reads from p where color eq "Red"'
-jd'reads from p where pname like "C"'   NB. regex
-jd'reads from p where pname unlike "C"' NB. regex
+[r=. jd'reads pname from p where pname like "C"'     NB. regex
+assert 'CamCog'-:' '-.~,>{:r
+[r=. jd'reads pname from p where pname likeci "C"'   NB. regex - case insensitives
+assert 'ScrewScrewCamCog'-:' '-.~,>{:r
+[r=. jd'reads pname from p where pname unlike "C"'   NB. regex
+assert 'NutBoltScrewScrew'-:' '-.~,>{:r
+[r=. jd'reads pname from p where pname unlikeci "C"' NB. regex
+assert 'NutBolt'-:' '-.~,>{:r
 jd'reads from p where weight range (11,14)' NB. In range, inclusive
 jd'reads from p where weight range (11,12,16,18)' NB. Multiple ranges
 

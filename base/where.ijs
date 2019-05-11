@@ -69,7 +69,9 @@ qrange range
 qin in
 qnotin notin
 qlike like
+qlikeci likeci
 qunlike notlike unlike
+qunlikeci notlikeci unlikeci
 qsample sample
 qSample sample.
 )
@@ -177,7 +179,7 @@ if. 1<:L.x do. NB. multicolumn query
   fixtype_where =. cols&fixtype_where_multi
 end.
 select. x
-  case. 'qlike';'qunlike' do.
+  case. 'qlike';'qunlike';'qlikeci';'qunlikeci' do.
     fix1string y
   case. 'qsample';'qSample' do.
     if. #@$ y =. fixnum y do. throw 'Too many numbers for sample: ',":y end.

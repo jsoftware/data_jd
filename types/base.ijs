@@ -114,18 +114,15 @@ qSample=: 3 : 'y?.Tlen'
 
 cd_qlike=: LIBJD_jd_,' qlike > x x x x x'
 
-qlike=: 3 : 0
-b=. (#dat)#0
-y=. y,{.a.
-r=. cd_qlike cd 1,(gethad'b'),(gethad'dat'),gethad'y'
-if. 0~:r do. throw 'C qlike failed with code ',":r end.
-I.b
-)
+qlike=:     1&liker
+qlikeci=:   3&liker
+qunlike=:   0&liker
+qunlikeci=: 2&liker 
 
-qunlike=: 3 : 0
+liker=: 4 : 0
 b=. (#dat)#0
 y=. y,{.a.
-r=. cd_qlike cd 0,(gethad'b'),(gethad'dat'),gethad'y'
+r=. cd_qlike cd x,(gethad'b'),(gethad'dat'),gethad'y'
 if. 0~:r do. throw 'C qlike failed with code ',":r end.
 I.b
 )

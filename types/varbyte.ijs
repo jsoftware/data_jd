@@ -111,7 +111,9 @@ qnotequal=:  0&call
 qin=:        1&call
 qnotin=:     0&call
 qlike=:      1&call
+qlikeci=:    3&call
 qunlike=:    0&call
+qunlikeci=:  2&call
 
 qequalc=:    1&callc
 qnotequalc=: 0&callc

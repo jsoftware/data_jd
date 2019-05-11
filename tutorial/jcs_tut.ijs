@@ -1,71 +1,45 @@
-
-0 : 0
-Jd server based on jcs - assumes familiarity with jcs and Jd
-to learn about jcs, run lab: Client/Server - parallel each - parallel jobs
-from file: ~addons/net/jcs/jcs.ijt
-)
-
+NB. Jd server based on jcs - assumes familiarity with jcs and Jd
+NB. see: Client/Server - parallel each - parallel jobs : ~addons/net/jcs/jcs.ijt
+load JDP,'server/jcs_server.ijs' NB. jcs server utilities
 require'~addons/net/jcs/jcs.ijs'
 version_jcs_''   NB. zmq version - error if problems with zmq installation
-'demo dbs must be available' assert 'database'-:fread'~temp/jd/sandp/jdclass'
 
-jdadmin 0 NB. no local dbs
-'port portjd'=: PORTBASE_jcs_+i.2
-killp_jcs_ port,portjd NB. kill previous use
+f=. '~temp/sa.ijs'
+jcs_start_fix f;65200;'su:1234';'jdadminnew''sa_test'''
+fread f
+NB. 65200 binds localhost - '*:65200' binds any
+jcs_start f
 
-NB. create script to init a server
-'~temp/js.ijs' fwrite~ 0 : 0
-load'~addons/net/jcs/jcs.ijs'
-load'jd'
-jdadmin'sandp'
-SERVER=: jcss 65101    NB. create server locale
-su__SERVER=: 'su:1234' NB. password for su access
-rpc__SERVER=: rpcjd    NB. run args treated as jd args
-echo'next sentence starts server loop'
-runserver__SERVER''
-)
+sa=. jcsc 65200
+jdaccess__sa 'sa_test u/p'
+jd__sa'gen test f 2'
+jd__sa'reads from f'
+'unsupported'jdae__sa'info xxx'
+jdlast
+jdlasty
 
 0 : 0
-server could be started in jconsole with load of js.ijs
-but we use jcs to create a task and then load the script
+start a jconsole task to connect to this server
+   load'~addons/net/jcs/jcs.ijs'
+   sa=. jcsc 65200
+   jdaccess__sa'sa_test u/p'
+   jd__sa'reads from f'
+   destroy__sa''
 )
 
-c=: jcst port
-runa__c'load''~temp/js.ijs'''               NB. runa as runserver never returns
-assert'assertion failure'-:runz__c etx 2000 NB. 2 second timeout is expected 
-destroy__c''
+destroy__sa''
+sa=. jcsc 65200 NB. connect to the server again
+jdaccess__sa 'sa_test u/p'
+jd__sa'reads from f'
 
-c=: jcsc portjd   NB. client locale
-access__c=: 'sandp u/p'
-run__c'info table'   NB. arg to jd on server
-run__c'reads from j'
+su__sa=: 'su:1234' NB. must match su in server  - superuser
+runsu__sa 'jdadminnew''fubar''' NB. create new db in server
 
-assert 'assertion failure'-:run__c etx 'i.5'
-lse__c               NB. i.5 is not valid jd arg
-assert 'assertion failure'-:runsu__c etx 'i.5' NB. password mismatch
-su__c=: 'su:1234'    NB. set superuser password'
-runsu__c 'i.5'
+jdaccess__sa'fubar u/p'
+jd__sa'gen test f 4'
+jd__sa'reads from f'
 
-runsu__c'jdadmin''northwind'''
-access__c=: 'northwind u/p'
-run__c'info table'
-destroy__c''      NB. destroy client local
+jdaccess__sa'sa_test u/p'
+jd__sa'reads from f'
 
-c=: jcsc portjd   NB. create client locale
-access__c=: 'sandp u/p'
-run__c'info table'   NB. arg to jd on server
-
-0 : 0
-the server can serve multiple local and remote clients
-try the following to use the server from a new jconsole task
-
-start Jconsole
-  load'~addons/net/jcs/jcs.ijs'
-  k=. jcsc 65200          NB. create client locale
-  access__k=: 'sandp u/p'
-  run__k'reads from j'
-)  
-
-su__c=: 'su:1234'    NB. set superuser password
-kill__c''            NB. kill server
-6!:3[1               NB. wait for server to die (jdtests runs other stuff immediately)
+kill__sa'' NB. exit server (superuser)

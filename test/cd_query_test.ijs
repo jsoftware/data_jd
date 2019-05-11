@@ -44,9 +44,12 @@ assert (all-.0 8)-:getx r
 NB. varbyte - like/unlike
 r=. jd'reads from tab where varbyte    like "^[Ax]"'
 assert 0 8      -:getx r
+r=. jd'reads from tab where varbyte    likeci "^[aX]"'
+assert 0 8      -:getx r
 r=. jd'reads from tab where varbyte unlike "^[Ax]"'
 assert (all-.0 8)-:getx r
-
+r=. jd'reads from tab where varbyte unlikeci "^[ax]"'
+assert (all-.0 8)-:getx r
 
 NB. varbye - eq/ne
 r=. jd'reads from  tab where varbyte eq "YZabc"'

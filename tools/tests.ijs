@@ -67,6 +67,9 @@ for_n. i.#t do.
   if. 0 do. return. end. NB. a-:JDP,'one to stop on'
   load a
  catch.
+  NB. reset to native Jd after jdc error
+  jd__=: jd_jd_
+  jdaccess__=: jdaccess_jd_
   'failed'logtest_jd_ LF,13!:12''
   echo LF,('failed: ',;n{t),LF,13!:12''
   failed=: failed,a

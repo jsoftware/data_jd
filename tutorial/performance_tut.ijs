@@ -19,11 +19,11 @@ If ram is < 6 times size, performance is probably bad.
 <6 can easily get caught in page thrash that kills performance.
 
 8*100e6 rows is 0.8 gb
-0.8*6 7 is 4.8 5.6 which hints that table(s) with 1006 rows
+0.8*6 7 is 4.8 5.6 which hints that table(s) with 100e6 rows
 would perform badly wtih 4gb ram and OK with 6gb
 
 8*500e6 rows is 4 gb
-4*6 7 is 24 28 which hints that table(s) with 5006 rows
+4*6 7 is 24 28 which hints that table(s) with 500e6 rows
 would perform OK with 24gb ram.
 
 Utilities in this tutorial can be used to run tests of common
