@@ -44,7 +44,7 @@ try.
    filesize=. filesize,a
    jsize=. jsize,b
    if. (a~:_1)*.0~:s do. NB. J data type agreement
-    ta=. ((typ__c-:'byte')*.(2=3!:0 dat__c))+.((typ__c-:'boolean')*.(1=3!:0 dat__c))+.((typ__c-:'float')*.(8=3!:0 dat__c))+.(((<typ__c)-.@e.;:'byte boolean float')*.(4=3!:0 dat__c))
+    ta=. (((<typ__c)e.;:'byte int1 int2 int4')*.(2=3!:0 dat__c))+.((typ__c-:'boolean')*.(1=3!:0 dat__c))+.((typ__c-:'float')*.(8=3!:0 dat__c))+.(((<typ__c)-.@e.;:'byte int1 int2 int4 boolean float')*.(4=3!:0 dat__c))
    else.
     ta=. 1
    end.
