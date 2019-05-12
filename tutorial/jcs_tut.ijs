@@ -2,6 +2,8 @@ NB. Jd server based on jcs - assumes familiarity with jcs and Jd
 NB. see: Client/Server - parallel each - parallel jobs : ~addons/net/jcs/jcs.ijt
 load JDP,'server/jcs_server.ijs' NB. jcs server utilities
 require'~addons/net/jcs/jcs.ijs'
+'~addons/net/jcs must be updated'assert 0~:nct_jcs_ :: 0: ''
+
 version_jcs_''   NB. zmq version - error if problems with zmq installation
 
 f=. '~temp/sa.ijs'
