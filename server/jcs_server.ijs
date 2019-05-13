@@ -27,7 +27,11 @@ i.0 0
 NB. start'~temp/sa.ijs'
 jcs_start=: 3 : 0
 t=. jpath'~temp/jcs_start.txt'
+if. FHS*.UNAME-:'Linux' do.
+fork_jtask_ 'ijconsole "',y,'" > "',t,'"'
+else.
 fork_jtask_ '"',(jpath'~bin/jconsole'),'" "',y,'" > "',t,'"'
+end.
 6!:3[0.5 NB. kludge to let task get started
 fread t
 )
