@@ -70,8 +70,8 @@ qin in
 qnotin notin
 qlike like
 qlikeci likeci
-qunlike notlike unlike
-qunlikeci notlikeci unlikeci
+qunlike unlike
+qunlikeci unlikeci
 qsample sample
 qSample sample.
 )
