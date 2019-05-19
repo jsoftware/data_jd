@@ -34,7 +34,7 @@ else.
  ksnk=. stitch__t tab;<ns
 end.
 if. x do.
- r=. ,ksnk i: ksrc
+ r=. ,ksnk i. ksrc NB. first not last
  _1 ((r=#ksnk)#i.#r)}r
 else.
  if. 1=$$ksrc do.

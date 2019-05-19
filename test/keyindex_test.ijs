@@ -8,6 +8,10 @@ assert kf-:kF
 
 ptablebld'int'
 
+NB. check that i. is used and not i:
+assert 1=jd'key ptab';'val';16
+assert 1=jd'key ptab';'val';16;'b1';'B'
+
 NB. nub - single part
 tst 'p';2015;'val';6
 tst 'p';2015;'val';123       NB. not found
