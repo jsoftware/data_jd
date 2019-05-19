@@ -16,7 +16,7 @@
 <h2 id="key">key</h2>
 <p>key [/in] table <a href="#pairs" title="wikilink">pairs</a></p>
 <p>return rows in table for <a href="#pairs" title="wikilink">pairs</a>.</p>
-<p>/in elided returns last row in table that matches each data row and _1 if no match</p>
+<p>/in elided returns first row in table that matches each data row and _1 if no match</p>
 <p>/in returns all rows (sorted and no _1) in table that match any data row</p>
 <p>col types int1/int2/int4/float/varbyte not allowed</p>
 <p>see <a href="Ops_common.htm#key" title="wikilink">key</a></p>
@@ -136,7 +136,7 @@ read ... from ... where WHERE
 <p>relationals:</p>
 <pre><code> &gt;= &lt;= &lt;&gt; =  &gt;  &lt;
  ge le ne eq gt lt range
- in notin like unlike sample sample.</code></pre>
+ in notin like likeci unlike unlikeci sample sample.</code></pre>
 <pre><code> sample n returns n random rows
  sample. users ?. instead of ?
 
@@ -145,7 +145,7 @@ read ... from ... where WHERE
  byte data must be in &quot;s and has C escapes (\&quot; \t \n \0 \x09 ...)
  numeric data must not be in &quot;s
 
- like/unlike regex applies to all types
+ like/likeci/unlike/unlikeci (ci - case insensitive) regex applies to all types
 
  relationals have implied parens (which must not be present)
  

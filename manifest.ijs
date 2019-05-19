@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '4.4.73'
+VERSION=: '4.4.74'
 
 FILES=: 0 : 0
 manifest.ijs
@@ -218,6 +218,7 @@ base/column.ijs
 base/zutil.ijs
 base/tests.ijs
 base/testtuts.ijs
+server/jcs_server.ijs
 test/byten_test.ijs
 test/createdcol_test.ijs
 test/valid_data_test.ijs

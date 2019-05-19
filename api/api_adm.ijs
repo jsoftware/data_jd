@@ -84,29 +84,6 @@ end.
 r
 )
 
-NB. get db info from file structure - no locales or mappings
-jdinfo=: 3 : 0
-'t c'=. ,each y
-r=. ''
-tables=. /:~NAMES__dbl
-if. #t do.
- 'not a table' assert NAMES__dbl e.~ <t
- tables=. <t
-end. 
-for_i. i.#tables do.
- t=. i{tablelocs
- if. #c do.
-  'not a column' assert NAMES__t e.~ <c
-  cols=. <c
- else. 
-  cols=. getdefaultselection__t''
-  cols=. cols,(bjdn NAMES__t)#NAMES__t
- end.
- r=. r,<t,cols)
-end.
-r
-)
-
 NB. non-system col names,.locales sorted by name
 jdcols=: 3 : 0
 t=. getloc__dbl y
