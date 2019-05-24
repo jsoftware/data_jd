@@ -71,14 +71,14 @@ jdadmin 'test'
 jdadmin 0
 jddeletefolder_jd_ f
 
-jdadminnew '~/jdtest'
+jdadminnew '~temp/jd/jdtest'
 jd'createtable f'
 jd'createtable g'
 jd'droptable f'
 
 
 NB. older test
-f=. '~/jd_rmdir_test'
+f=. '~temp/jd/jd_rmdir_test'
 jdcreatefolder_jd_ f
 jddeletefolderok_jd_ f
 jddeletefolder_jd_ f
@@ -87,6 +87,7 @@ jdcreatefolder_jd_ f
 jddeletefolder_jd_ f                 NB. ok empty
 jdcreatefolder_jd_ f
 'abc' fwrite f,'/test'
-assert ae-:jddeletefolder_jd_ etx f  NB. not empty
+NB. following test not valid with use of ~temp
+NB.assert ae-:jddeletefolder_jd_ etx f  NB. not empty
 jddeletefolderok_jd_ f
 jddeletefolder_jd_ f
