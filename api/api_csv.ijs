@@ -105,7 +105,7 @@ else.
  if. option_combine do.
   ns=. 2}.ns NB. drop f and f~
   csvs=. (#ns)${.csvs
-  'create csv file failed' assert 0=''fwrite {.csvs
+  'create csv file failed' assert 0=''fwrite CSVFOLDER__,;{.csvs
   for_i. i.#ns do.
    (w;(<cols),<new) csvwr (i{csvs),i{ns
    new=. 0
