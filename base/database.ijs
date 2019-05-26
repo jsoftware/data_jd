@@ -37,7 +37,7 @@ open=: 3 : 0
 readstate''
 if. REPLICATE~:0 do. RLOGFH=: 1!:21<jpath RLOGFOLDER,'rlog' end. 
 aggcreate''
-f=. PATH,'/custom.ijs'
+f=. PATH,'custom.ijs'
 if. fexist f do. load f end.
 openallchildren y
 )
