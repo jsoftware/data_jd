@@ -29,7 +29,8 @@ csvonly=. 'csv'-:y
 EXCLUDETESTS=: (<'_tut.ijs'),each~(<'tutorial/'),each 'stock_data';'bus_lic';'quandl_ibm'
 t=. ALLTESTS=:  (tests_jd_,(testtuts_jd_))-.EXCLUDETESTS
 t=. t,~each<JDP
-if. -.IFJHS do. t=. t-.<JDP,'tutorial/server/jhs_tut.ijs' end.
+if. -.IFJHS do. t=. t-.<JDP,'tutorial/jhs_tut.ijs' end.
+if. -.fexist'~addons/net/jcs/jcs.ijs' do. t=. t-.<JDP,'tutorial/jcs_tut.ijs' end. 
 failed=: ''
 jdt=: i.0 2
 'test start'logtest_jd_''
