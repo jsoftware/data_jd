@@ -48,8 +48,7 @@ assert de-:jd etx 'update f';'jdindex in (0,1,2)';'edatetim';,efs_jd_ '2000'
 
 jd'update f';'jdindex in (0,1,2)';'edatetime';0
 
-de-:jd etx'update f';'jdindex in (0,1,2)';'edatetime';'2000-01-01T00:00:00.123456789'
-assert 'extra precision'-:;1{jdlast
+jd'update f';'jdindex in (0,1,2)';'edatetime';'2000-01-01T00:00:00.123456789' NB. extra precision discarded
 
 NB. types
 jd'update f';'jdindex=0';'boolean';1

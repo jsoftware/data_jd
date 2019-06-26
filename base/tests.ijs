@@ -10,6 +10,7 @@ test/csv_test.ijs
 test/delete_test.ijs
 test/drop_rename_test.ijs
 test/droptable_test.ijs
+test/epoch_test.ijs
 test/error_test.ijs
 test/fixpairs_test.ijs
 test/info_test.ijs

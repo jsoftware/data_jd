@@ -359,17 +359,9 @@ int2
 int4
 )
 
-TYPES_E=: <;._2 ]0 :0
-edate
-edatetime
-edatetimem
-edatetimen
-)
+TYPES_E=: ;:'edate edatetime edatetimem edatetimen'
 
-TYPES_D=: <;._2 ]0 :0
-date
-datetime
-)
+TYPES_D=: ;:'date datetime'
 
 NB. 3!:0 TYPES values
 TYPESj=: 1 4 8 2 4 4 4 4 4 4 4 4 4 1 1 1

@@ -1,4 +1,4 @@
-NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
+NB. Copyright 2019, Jsoftware Inc.  All rights reserved.
 coclass 'jd'
 
 NB. datetime epoch
@@ -17,34 +17,39 @@ NB. efs '2014-06-07'
 NB. delimiter (-T:+-Z or blank) ends field, but is not validated
 NB. 7:8:9 treated same as 07:08:09
 NB. x is allow errors, ignore offset, return offset
+
+NB. x is from d039
 efs=: 3 : 0
-0 0 0 efs y
+'9' efs y NB. changed (with 6!:17) to allow errors
 :
 s=. $y
 p=. }:s
 rows=. */p
 cols=. {:s
 y=. (rows,cols) ($,) y
-if. 1=2{x do.  off=. rows$-1 else. off=. <0 end.
-r=. (LIBJD_jd_,' efs x x x *c *x *x x')cd rows;cols;y;(rows$-1);off;1{x
-if. 1~:{.x do. 'invalid iso 8601 datetime' assert 0=>{.r end.
-if. 1={:x do. (p$>4{r);p$>5{r else. p$>4{r end.
+r=. (LIBJD_jd_,' efs x x x *c *x *x x')cd rows;cols;y;(rows$-1);(<0);0
+d=. p$>4{r
+b=. d~:imin NB. don't adjust bad values
+select. x
+case. 'd' do. d=. d-b*(86400*1e9)|d
+case. '0' do. d=. d-b*1e9|d
+case. '3' do. d=. d-b*1e6|d
+case. '9' do.
+end.
+d
 )
-
-efsx=: 1 0 0&efs NB. allow errors, do not ignore offset, do not return offset
-
-eofs=: 0 0 1&efs NB. do not allow errors, do not ignore offset, return offset
 
 NB. s from e - efs invers
 NB. 0{x is ',' or '.' for hh:mm:ss,nnnnnnnnn
 NB. 1{x is 'Z' for a final Z
+NB. 2{x is d for date, t or 0 for time, m or 3 for millis, n or 9 for nanos
 sfe=: 3 : 0
-', n'sfe y
+', 9'sfe y
 :
 s=. $y
 y=. ,y
 r=. #y
-c=. ('Z'=1{x)+10 19 23 29{~'dtmn'i.2{x
+c=. ('Z'=1{x)+10 19 23 29{~'d039'i.'d039d039'{~'d039dtmn'i.2{x NB. old and new style
 
 NB. kludge display of min/max aggregation of epchdt cols
 if. (1=#y)*.+./_ __="0 1 y do.
@@ -54,7 +59,7 @@ end.
 s$>3{(LIBJD_jd_,' sfe x x x *c *x *c')cd r;c;((r,c)$' ');y;x
 )
 
-NB. stuff for old sylte datetime yyyymmddhhmmss
+NB. stuff for old style datetime yyyymmddhhmmss
 
 NB. e from yyyymmddhhmmss
 eft=: 3 : 0
@@ -62,4 +67,8 @@ r=. #y
 t=. 0=$$y
 r=. >2{(LIBJD_jd_,' eft x x *x *x')cd r;(r$2-2);,y
 if. t do. r=. ''$r end.
+)
+
+3 : 0''
+try. load JDP,'base/util_epoch_901.ijs'['d'6!:17'2000' catch. end.
 )

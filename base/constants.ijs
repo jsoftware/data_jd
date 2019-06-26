@@ -29,7 +29,7 @@ RESERVEDWORDS=: ;:'by from where order'
 
 ECOUNT=:     'incorrect arg count'
 EDNONE=:     'bad SUBSCR'
-EPRECISION=: 'extra precision'
+EEPOCH=:     'bad epoch data'
 ESHAPE=:     'bad shape'
 EBTS=:       'bad trailing shape'
 ETALLY=:     'bad count'

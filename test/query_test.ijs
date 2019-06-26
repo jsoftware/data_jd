@@ -82,14 +82,14 @@ NB. read result of type y
 testqueries =: 1 : 0
 old=. 9!:10''
 9!:11[18 NB. kludge because toq assumes this for float
-x=.#dat [ 'y dat' =. y
+q=.#dat [ 'y dat' =. y
 toq_m =. [: ([,',',])&:>/ y&toq(<@)"_1
 assert ((#~ (-:"_1 _{.)) dat) -: u '=',y toq {.dat
 assert ((#~ (-.@-:"_1 _{.)) dat) -: u '<>',y toq {.dat
 assert ((#~ (e.3&{.)) dat) -: u ' in ', toq_m 3{.dat
 assert ((#~ (-.@e.5&{.)) dat) -: u ' notin ', toq_m 5{.dat
-assert (<.@-: x) = # u ' sample ',":<.@-:x
-assert (u-:u) ' sample. ',":<.@-:x
+assert (<.@-: q) = # u ' sample ',":<.@-:q
+assert (u-:u) ' sample. ',":<.@-:q
 if. y -.@e. 'varbyte enum' do.
   assert ((#~ ] (-:/:~)@:({.@],[,}.@])"_1 _ [:/:~3 5&{) dat) -: u ' range ',toq_m /:~3 5{dat
 end.

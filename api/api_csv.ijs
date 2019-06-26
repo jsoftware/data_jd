@@ -366,6 +366,7 @@ varb=. x
 NB. test for is08601
 try.
  v=. efs y
+ assert imin~:v
  if. *./0=(86400*1e9)|v do.'edate'       return. end.
  if. *./0=1e9|v         do. 'edatetime'  return. end.
  if. *./0=1e6|v         do. 'edatetimem' return. end.

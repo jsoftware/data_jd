@@ -165,14 +165,7 @@ for_i. i.-:#y do.
   ESHAPE assert ({:$d)<:shape__c 
   d=. shape__c{."1 d
  end.
- select. typ__c
- case. 'edate' do.
-  EPRECISION assert *./(0=(86400*1e9)|d)+._9223372036854775808=d
- case. 'edatetime' do.
-  EPRECISION assert *./(0=1e9|d)+._9223372036854775808=d
- case. 'edatetimem' do.
-  EPRECISION assert *./(0=1e6|d)+._9223372036854775808=d
- end.
+ if. 'edate'-:5{.typ__c do. EEPOCH assert -._9223372036854775808 e. d  end.
  d=. <d
  vs=. vs,d
  i=. >:i
@@ -247,7 +240,7 @@ if. epoch do.
  et=. (#typ)#0
  seputc=. (2*#typ)$' '
 else.
- et=. 5|>: (;:'edate edatetime edatetimem edatetimen')i.typ
+ et=. 5|>: TYPES_E i.typ
  seputc=. ,3 : 'try.sep__y,utc__y,''''catch.'',Z''end.' "0 cols
 end. 
 ind=. +/\ 0,}:t{1 2 2

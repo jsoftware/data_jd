@@ -1,16 +1,13 @@
-
 NB. Jd epochdt (epoch datetime) is nanoseconds from 2000-01-01
 NB. utilities convert between epochdt and iso 8601 extended format
 
 efs_jd_ '2000-01-01' NB. epochdt 0 is 2000-01-01
 efs_jd_ '2105'       NB. nanoseconds from 2000 to 2105
 efs_jd_ '1970-01-01' NB. negative for nanoseconds before 2000
-assert 'assertion failure'-:efs_jd_ etx '1700'   NB. before 1800 is invalid
-assert 'assertion failure'-:efs_jd_ etx '2300'   NB. after  2200 is invalid
 
-efsx_jd_ '1700'  NB. canonical invalid date rather than error
-efsx_jd_ '2300'  NB. canonical invalid date rather than error
-efsx_jd_ '????'  NB. canonical invalid date rather than error
+assert imin_jd_=efs_jd_ '1700'  NB. canonical invalid date rather than error
+assert imin_jd_=efs_jd_ '2300'  NB. canonical invalid date rather than error
+assert imin_jd_=efs_jd_ '????'  NB. canonical invalid date rather than n_jd_eror
 
 sfe_jd_ efs_jd_ '1970'
 
@@ -38,13 +35,21 @@ sfe_jd_ e NB. convert epochdt to iso 8601
 
 (sfe_jd_ e),.' ',.a NB. epochdt converted to 8601 , original 8601
 
-[eo=: eofs_jd_ a NB. convert iso 8061 to epochdt and also get utc offset in minutes
-(":|:>eo),.' ',.a NB. epochdt , utc offset , original 8601
 
-assert eo-:466324994123456789 466326794123456789 466344794123456789 466344794123456789 466344794123000000 466344794000000000 466344780000000000 466344780000000000 466326000000000000 466344000000000000 466300800000000000 441849600000000000;330 300 0 0 0 0 0 0 300 0 0 0
+'. 9'sfe_jd_ e NB. . instead of , elide Z and nano
+'. 3'sfe_jd_ e NB. milli
 
-'. n'sfe_jd_ e NB. . instead of , elide Z and nano
-'. m'sfe_jd_ e NB. milli
+NB. efs can request different precisions
+e=: efs_jd_ '2014-10-11T12:13:14.123456789'
+assert 466344794123456789=e
+e=: 'd' efs_jd_ '2014-10-11T12:13:14.123456789' NB. date
+assert 466300800000000000=e
+e=: '0' efs_jd_ '2014-10-11T12:13:14.123456789' NB. and time
+assert 466344794000000000=e
+e=: '3' efs_jd_ '2014-10-11T12:13:14.123456789' NB. and millis
+assert 466344794123000000=e
+e=: '9' efs_jd_ '2014-10-11T12:13:14.123456789' NB. and nanos
+assert 466344794123456789=e
 
 [t=. ', d' sfe_jd_ efs_jd_ '2015-01-22T00:00:00+02:00' NB. 2 hours subtracted to give utc
 assert '2015-01-21'-:t
@@ -52,21 +57,14 @@ assert '2015-01-21'-:t
 [t=. ', d' sfe_jd_ efs_jd_ '2015-01-22T00:00:00-02:00' NB. 2 hours added to give utc
 assert '2015-01-22'-:t
 
-NB. efs left arg: allow errors, ignore offset, return offset
-NB. 0 0 0 efs y - signal error, adjust for offset, do not return offset
-
-NB. 1 0 0 efs y - same as efsx - allow error
-assert 'assertion failure'-:efs_jd_ etx '1970a'
-1 0 0 efs_jd_  etx '1970a' NB. 1 0 0 same as efsx
-assert (efsx_jd_ '1970a')-:1 0 0 efs_jd_  etx '1970b'
 
 NB. 0 1 0 efs y - ignore offset
-0 1 0 efs_jd_ '2014-10-11T12:13:14+05'
-assert '2014-10-11T12:13:14'-:', t'sfe_jd_ 0 1 0 efs_jd_ '2014-10-11T12:13:14+05'
+NB. 0 1 0 efs_jd_ '2014-10-11T12:13:14+05'
+NB. assert '2014-10-11T12:13:14'-:', t'sfe_jd_ 0 1 0 efs_jd_ '2014-10-11T12:13:14+05'
 
 NB. 0 1 1 efs y - ignore offset and return offset
-[t=. 0 1 1 efs_jd_ '2014-10-11T12:13:14+05'
-assert t-:466344794000000000;300
+NB. [t=. 0 1 1 efs_jd_ '2014-10-11T12:13:14+05'
+NB. assert t-:466344794000000000;300
 
 NB. verify some edge conditions
 t=. efs_jd_ '1800-01-01'
@@ -170,13 +168,10 @@ jd'createcol f y byte 4';4{."1 sfe_jd_ jd'get f a' NB. column of year
 jd'reads from f'
 jd'reads sum b by y from f'
 
-NB. get epochdt time and utc offset
-[a=: eofs_jd_ '2014-01-02T03:04:05+05:30',:'2014-02-03T10:11:12-05:30'
-
-jdadminx'test'
-jd'createtable f a edatetimen, a_offset int'
-jd'insert f';,(;:'a a_offset'),.a
-[a=: jd'reads from f'
+NB. jdadminx'test'
+NB. jd'createtable f a edatetimen, a_offset int'
+NB. jd'insert f';,(;:'a a_offset'),.a
+NB. [a=: jd'reads from f'
 
 NB. csv
 jdadminx'test'
@@ -198,7 +193,3 @@ adef fwrite F,'a.cdefs'
 
 jd'csvrd a.csv c'
 [a=. jd'reads from c'
-[e=: eofs_jd_ jd'get c dt8601'
-jd'createcol c dta edatetimen _';>{.e
-jd'createcol c offset int _';>{:e
-jd'reads from c'

@@ -9,9 +9,11 @@ STATE=: STATE_jdcolumn_,;:'sep utc'
 sep=: ','
 utc=: ' '
 
-DATAFILL=: _9223372036854775808 NB. ''$efsx_jd_'1700' NB. invalid
+DATAFILL=: _9223372036854775808 NB. efs_jd_'1700' NB. invalid
 
-fixinsert=: 3 : 'if. JCHAR=3!:0 y do. efs y else. y end.'
+fixinsert=: 3 : 0
+if. JCHAR=3!:0 y do. ('d039'{~TYPES_E i.<typ) efs y else. y end.
+)
 
 fixtype=: 3 : ',@boxopen fixtype_num fixinsert y'
 

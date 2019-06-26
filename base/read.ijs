@@ -45,7 +45,7 @@ for_i. i.#cnms do.
   if. -.option_e do.
    if. i<n do. b=. 1 else. b=. -.((i-n){AGG_jd_)e.AGG_NUMERIC end.
    if. b do.
-     t=. sep__c,utc__c,'dtmn'{~TYPES_E i.<typ__c
+     t=. sep__c,utc__c,'d039'{~TYPES_E i.<typ__c
      read=: (<t sfe,>i{read) i}read
    end. 
   end.
