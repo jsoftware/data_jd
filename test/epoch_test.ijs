@@ -11,5 +11,17 @@ jd'insert f edt';'2014-09-10T01:01:01,123456789'
 jd'reads from f'
 assert ( ;{:{:jd'read /e from f')-:463622400000000000 463626061000000000 463626061000000000 463626061000000000
 
-NB. verify bad date is rejected
-'bad epoch'jdae'insert f edt';'1700'
+jdadminx'test'
+jd'createtable f'
+jd'createcol f e edate'
+jd'insert f e';'2000'
+jd'insert f e';'2000'
+jd'reads from f'
+jd'insert f e';0
+jd'insert f e';'1700'   NB. bad allowed from sfe
+jd'insert f e';imin_jd_ NB. bad allowed from imin
+
+NB. bad allowed in csv
+CSVFOLDER=: '~temp/jd/csv'
+jd'csvwr f.csv f'
+jd'csvrd f.csv g'

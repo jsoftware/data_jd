@@ -165,7 +165,7 @@ for_i. i.-:#y do.
   ESHAPE assert ({:$d)<:shape__c 
   d=. shape__c{."1 d
  end.
- if. 'edate'-:5{.typ__c do. EEPOCH assert -._9223372036854775808 e. d  end.
+ NB. if. 'edate'-:5{.typ__c do. EEPOCH assert -.imin e. d  end.
  d=. <d
  vs=. vs,d
  i=. >:i
