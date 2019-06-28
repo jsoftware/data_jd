@@ -26,8 +26,7 @@ s=. $y
 p=. }:s
 rows=. */p
 cols=. {:s
-y=. (rows,cols) ($,) y
-r=. (LIBJD_jd_,' efs x x x *c *x *x x')cd rows;cols;y;(rows$-1);(<0);0
+r=. (LIBJD_jd_,' efs x x x *c *x *x x')cd rows;cols;((rows,cols) ($,) y);(rows$-1);(<0);0
 d=. p$>4{r
 b=. d~:imin NB. don't adjust bad values
 select. x
@@ -47,16 +46,20 @@ sfe=: 3 : 0
 ', 9'sfe y
 :
 s=. $y
-y=. ,y
-r=. #y
+r=. #@,y
 c=. ('Z'=1{x)+10 19 23 29{~'d039'i.'d039d039'{~'d039dtmn'i.2{x NB. old and new style
 
 NB. kludge display of min/max aggregation of epchdt cols
-if. (1=#y)*.+./_ __="0 1 y do.
- y=. ,(_=y){0 6342969599999999999
+if. (1=#@,y) do.
+ if. +./_ __ e. ,y do.
+  s$>3{(LIBJD_jd_,' sfe x x x *c *x *c')cd r;c;((r,c)$' ');(,(_=,y){0 6342969599999999999);x
+ else.
+  s$>3{(LIBJD_jd_,' sfe x x x *c *x *c')cd r;c;((r,c)$' ');y;x
+ end.
+else.
+ s$>3{(LIBJD_jd_,' sfe x x x *c *x *c')cd r;c;((r,c)$' ');y;x
 end.
 
-s$>3{(LIBJD_jd_,' sfe x x x *c *x *c')cd r;c;((r,c)$' ');y;x
 )
 
 NB. stuff for old style datetime yyyymmddhhmmss
