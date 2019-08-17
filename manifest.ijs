@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '4.4.74'
+VERSION=: '4.4.75'
 
 FILES=: 0 : 0
 manifest.ijs
@@ -211,6 +211,7 @@ base/pm.ijs
 base/validate.ijs
 base/database.ijs
 base/util_epoch.ijs
+base/util_epoch_901.ijs
 base/read.ijs
 base/where.ijs
 base/common.ijs
@@ -276,6 +277,7 @@ test/csv_test.ijs
 test/sort_test.ijs
 test/user_test.ijs
 test/read_types_test.ijs
+test/epoch_test.ijs
 bug/empty_join_where.ijs
 bug/csvwr.ijs
 )
