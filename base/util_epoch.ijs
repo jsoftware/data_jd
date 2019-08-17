@@ -48,18 +48,14 @@ sfe=: 3 : 0
 s=. $y
 r=. #@,y
 c=. ('Z'=1{x)+10 19 23 29{~'d039'i.'d039d039'{~'d039dtmn'i.2{x NB. old and new style
+y=. ,y
 
 NB. kludge display of min/max aggregation of epchdt cols
-if. (1=#@,y) do.
- if. +./_ __ e. ,y do.
-  s$>3{(LIBJD_jd_,' sfe x x x *c *x *c')cd r;c;((r,c)$' ');(,(_=,y){0 6342969599999999999);x
- else.
-  s$>3{(LIBJD_jd_,' sfe x x x *c *x *c')cd r;c;((r,c)$' ');y;x
- end.
+if. (1=#y) *. +./_ __ e. y do.
+  s$>3{(LIBJD_jd_,' sfe x x x *c *x *c')cd A__=:  r;c;((r,c)$' ');(,(_=y){0 6342969599999999999);x
 else.
  s$>3{(LIBJD_jd_,' sfe x x x *c *x *c')cd r;c;((r,c)$' ');y;x
 end.
-
 )
 
 NB. stuff for old style datetime yyyymmddhhmmss
