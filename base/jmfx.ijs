@@ -11,11 +11,13 @@ if. -.fexist {.y              do. logijfdamage 'createjmf a';y end.
 if. (fsize {.y)~:HS_jmf_+;1{y do. logijfdamage 'createjmf b';y end.
 )
 
+NB. map ro if ro
 jdmap=: 3 : 0
 0 jdmap y
 :
 cnts_map_jd_=: >:cnts_map_jd_
 'jn fn'=. 2{.y
+y=. y,'';RO
 ('map name invalid: ',jn)assert _1=nc <jn
 ('map file does not exist: ',fn)assert fexist fn
 try.

@@ -15,6 +15,7 @@ h
 )
 
 lockclose=: 3 : 0
+if. 0=y do. return. end.
 if. IFWIN do.
  1!:22 y
 else.
@@ -37,6 +38,7 @@ i.0 0
 NB. type lock file- return 1 success and 0 failure
 NB. x - x (unlock), r (readonly), or w (read/write)
 NB. y - path to jdlock file
+NB. assert error if it fails
 lock=: 4 : 0
 f=. jpath y,'/jdlock'
 'lock not a file' assert (2~:ftypex) f
@@ -45,7 +47,7 @@ lf=. (<f) e. {:"1 LOCKED
 select. x
 
 case.'w'do.
- if. lf do. 1 return. end.
+ if. lf do. return. end.
  h=. lockopen f
  if. locklock h do.
   LOCKED_jd_=: LOCKED,h;f
@@ -55,7 +57,8 @@ case.'w'do.
  end.
   
 case.'r'do.
- assert 0['lock r not supported'
+ if. lf do. 1 return. end.
+ LOCKED_jd_=: LOCKED,0;f
  
 case.'x'do.
  if. lf do.

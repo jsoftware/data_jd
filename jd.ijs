@@ -150,6 +150,7 @@ repair''
 3 : 0''
 IFTESTS=: 0
 if. _1=nc<'OP' do. NB. one time inits
+ RO=: 0
  FEOP=: OP=: 'none'
  TEMPCOLS=: i.0 2
  LOGOPS=: 0 NB. do not log ops

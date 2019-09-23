@@ -2,6 +2,7 @@ NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
 jdadmin_z_   =: jdadmin_jd_
 jdadminnew_z_=: jdadminnew_jd_
 jdadminx_z_  =: jdadminx_jd_
+jdadminro_z_ =: jdadminro_jd_
 
 coclass'jd'
 
@@ -132,6 +133,7 @@ case. '' do.
  t=. (jdadminfp''),(jdadminup''),(jdadminop''),jdadminlk''
  (/:{."1 t){t
 case. 0 do.
+ RO=: 0
  jd'close' 
  jdadminlk 0
  jdadminfp 0
@@ -140,6 +142,7 @@ case. 0 do.
  jdaccess 0
  i.0 0
 case. do.
+ 'RO db already active' assert 0=RO
  y=. adminp y
  'not a folder'assert 2=ftype y
  'not a database'assert 'database'-:jdfread y,'/jdclass'
@@ -164,7 +167,6 @@ case. do.
   ('replicate folder ''',a,''' is in use')assert -.(<hostpathsep t) e. {:1!:20''
  end.
  
- d=. }.(y i:'/')}.y
  'w'jdadminlk y
 
  NB. remove old admin for this folder
@@ -203,6 +205,56 @@ case. 'access' do.
  d=. >(<'   jdaccess'),each m,each d,each''''
 case. do. 'bad x'assert 0
 end.
+)
+
+NB. admin existing db for ro
+NB. only single db allowed
+NB. needs to propogate to do jmf ro for all mappings
+jdadminro=: 3 : 0
+ y=. adminp y
+ 'not a folder'assert 2=ftype y
+ 'not a database'assert 'database'-:jdfread y,'/jdclass'
+ v=. fread y,'/jdversion'
+ v=. (-.v-:_1){3,<.0".":v
+ 'db version not compatible with this Jd version'assert v=<.".jdversion
+
+ t=. jdadminlk''
+ i=. t i.'[r]';jpath y
+ if. i<#t do. NB. admin already done - just do access to first dan for the db
+  i=. (jpath each {:"1 DBPATHS)i.<jpath y
+  jdaccess (;{.i{DBPATHS_jd_),' ',(;{:i{DBUPS_jd_),' intask'
+  i.0 0
+  return.
+ end. 
+
+ 'RO db can be made active only if no other active dbs'assert 0=#DBPATHS
+ 'r'jdadminlk y
+
+ NB. remove old admin for this folder
+ dan=. (;(<jpath y)=jpath each {:"1 DBPATHS)#{."1 DBPATHS
+ DBPATHS=: (-.({."1 DBPATHS)e.dan)#DBPATHS
+ DBUPS=: (-.({."1 DBUPS)e.dan)#DBUPS
+ DBOPS=: (-.({."1 DBOPS)e.dan)#DBOPS
+ 
+ bak=. (<DBPATHS),(<DBUPS),<DBOPS
+ c=. #DBPATHS
+ adminfp=: y
+ fp=. y,'/admin.ijs'
+ if. -.fexist fp do.
+  (defaultadmin rplc 'D';d)fwrite fp NB. create default admin.ijs
+ end.
+ try.
+   load y,'/admin.ijs'
+ catch.
+   'DBPATHS DBUPS DBOPS'=: bak
+   'x'jdadminlk y
+   'load admin.ijs failed'assert 0
+ end.
+ NB. default access is for the 1st of the new dans
+ jdaccess (;{.c{DBPATHS_jd_),' ',(;{:c{DBUPS_jd_),' intask'
+ getdb'' NB. set dbl
+ RO=: 1
+ i.0 0
 )
 
 jdadminnew=: 3 : 0
@@ -307,7 +359,7 @@ NB. lock is on a file in the database folder
 jdadminlk=: 3 : 0
 select. y
 case. '' do.
- (<'[w]'),._7}.each{:"1 LOCKED
+ ((0=;{."1 LOCKED_jd_){'[w]';'[r]'),._7}.each{:"1 LOCKED
 case. 0 do.
  i.0 0['x'jdadminlk each _7}.each{:"1 LOCKED
 case. do.
@@ -322,6 +374,7 @@ NB. serious error (e.g., disk full)
 NB. mark db as damaged - prevent any more ops on db
 NB. signal error
 jddamage=: 3 : 0
+if. RO do. 'RO db serious error - but db not marked as damaged'assert 0 end.
 p=. 'jddamage',~jdpath''
 if. #y do.
  'damage'logtxt y

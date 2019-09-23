@@ -113,6 +113,7 @@ timex 'jd''',y,''''
 )
 
 NODBOPS=: 'close';'createdb';'list';'option' NB. ops without DB
+ROOPS=: 'close';'read';'reads';'info'
 
 NB. jdx always returns a boxed result - jd asserts it is not an error
 jdx=: 3 : 0
@@ -138,6 +139,9 @@ if. 'intask'-:SERVER do.
  pm OP
  'op'logtxt FEOP
  opx=. ;('x'-:{.OP){OP;'x'
+ 
+ if. RO do. 'RO db only allows read type ops' assert (<OP) e. ROOPS end.
+ 
  if. -. (<OP) e. NODBOPS do. 
   getdb'' NB. dbl global and test for damage
   r=. dbrow DBPATHS
@@ -152,6 +156,7 @@ if. 'intask'-:SERVER do.
  else.
   dbl=: ''
  end. 
+
  start=. 6!:1''
  parts=: _1
  if. optionspace do. NB.! this should be fixed or killed off
