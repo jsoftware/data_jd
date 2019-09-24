@@ -19,6 +19,23 @@ JOBS jd benefits from 4 tasks (2.5) (no change if all from f or if from f and g)
 
 )
 
+POLL=: 5000
+
+NB. runit jobs, type, poll, tasks, cnt
+NB. runit 20 0 100 4 1
+runit=: 3 : 0
+'jobs type poll t c'=: y
+pjjobs jobs,type
+POLL=: poll
+pjinit t
+a=. c
+while. c do.
+ echo'now it the time'
+ c=. <:c
+ pjrun''
+end.
+)
+
 
 NB. rows rocreate range
 rocreate=: 3 : 0
@@ -48,11 +65,12 @@ tests=: 2}.each <;._2 [ 0 : 0
 1 jd'reads from f where b=0'
 2 jd'reads from f where c=0'
 3 jd'reads from f where b=0 or b=1 or b=2 or c=0 or b=0 or c=0 or b=0 or c=0 or b=0 or c=0'
-4 6!:3[5
+4 6!:3[0.001
 5 6!:3[?3
 6 jd'reads from f where a=0'
 7 jd'reads from g where a=0'
-8 spinner 5
+8 spinner 0.76
+9 abc
 )
 
 test=: 3 : ';y{tests'
@@ -102,7 +120,7 @@ i. 0 0
 )
 
 necho=: [
-necho =: echo
+NB. necho =: echo
 
 pjcompare=: 3 : 0
 pjinit 1
@@ -119,7 +137,6 @@ for_n. petasks_jcs_ do. runz__n :: 0: 0 end.
 
 NB. run JOBS
 pjrun=: 3 : 0
-echo #petasks_jcs_
 tm=. (2,~#JOBS)$0
 rs=. '' NB. job results
 ns=. '' NB. job numbers
@@ -129,11 +146,14 @@ j=. 0 NB. ended
 c=. #JOBS
 start=. 6!:1''
 while. j<c do.
-  'rc reads writes errors'=. poll_jcs_ 5000;'';<petasks_jcs_
+  'rc reads writes errors'=. poll_jcs_ POLL;'';<petasks_jcs_
+  NB. echo rc;reads;writes;errors
   if.  0=rc do. necho '                               poll 0:' end.
 
   for_n. writes do.
+   echo 'foo'
    if. i<c do.
+    echo 'write'
     t=. ;i{JOBS
     tm=. (6!:1'') (<i,0)} tm
     job__n=: i
@@ -143,6 +163,7 @@ while. j<c do.
   end. 
 
   for_n. reads do.
+   echo 'read'
    try.
      rs=. rs,{.;{:{: runz__n 0
      tm=. (6!:1'') (<job__n,1)} tm
