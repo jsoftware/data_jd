@@ -245,8 +245,9 @@ if. #STATE do.
 end.
 )
 
+NB. state not written for RO db
 writestate=: 3 : 0
-if. #STATE do.
+if. (-.RO)*.#STATE do.
  cnts_writestate_jd_=: >:cnts_writestate_jd_
  (3!:1 pack STATE) jdfwrite PATH,'jdstate'
 end.

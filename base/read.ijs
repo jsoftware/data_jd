@@ -205,6 +205,7 @@ EMPTY
 )
 
 NB. Build indices, a shape (#tloc),len matrix of indices for each table.
+NB.! very slow for cases with lots of indices - might be better to use booleans to do or and avoid /:~
 Where=: 3 : 0
 indices=: /:~@:~.&.|: > ,.&.>/ andqueries&.> toSoP fixwhere_jdtable_ y
 indices
