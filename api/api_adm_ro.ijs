@@ -66,10 +66,15 @@ for_i. i.#tabs do.
   b=. (<p)=(#p){.each 1{"1 m
   b=. 6{"1 b#m
   Tlen__t=: r
-  for_n. b do.
+  for_n. b do. NB. set new */$dat and #dat
    n=. ;n
-   r memw n,40,1,JINT NB. count
-   r memw n,56,1,JINT NB. {.shape
+   r memw n,56,1,JINT             NB. {.$dat
+   c=. getHADR_jmf_ n
+   if. 2=c do.
+    (r*memr n,64,1,JINT) memw n,40,1,JINT
+   else.
+    r memw n,40,1,JINT
+   end. 
   end.
  end. 
 end.

@@ -31,13 +31,13 @@ jdadminx'mtm'
 jd'createtable f'
 jd'createcol f a int'
 jd'createcol f b int'
-d=. i.3
+d=. i.2
 jd'insert f';'a';d;'b';d
 jd'createtable g'
 jd'createcol g a int'
-jd'createcol g b int'
-d=. i.3
-jd'insert g';'a';d;'b';d
+jd'createcol g b byte 2'
+d=. i.2
+jd'insert g';'a';d;'b';2 2$'abcd'
 )
 
 tests=: 2}.each <;._2 [ 0 : 0
