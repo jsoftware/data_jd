@@ -9,6 +9,7 @@ load'~Jddev/mtm/mtm_common.ijs'
 )
 
 mtm_config=: 3 : 0
+'zmq must be version 4.1.4 or later'assert 414<:10#.version_jcs_''
 tlens=: '' NB.!
 DB=: 'mtm'
 PJOBS=: 65220 NB. port for new jobs and results
