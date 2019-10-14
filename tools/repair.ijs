@@ -8,7 +8,7 @@ refs marked dirty if not already dirty
 )
 
 repair=: 3 : 0
-p=. jdpath''
+getdb'' NB. set dbl
 jdrepair'fixing it now' NB. insists on damaged
 for_tn. NAMES__dbl do.
  tn=. ;tn
