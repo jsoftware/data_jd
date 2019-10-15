@@ -28,14 +28,16 @@ r=. t sdsend_jsocket_ S;0
 mrcv=: 3 : 0
 'e reads writes errors'=. sdselect_jsocket_ S;'';'';0
 'select error' assert 0=e
-'no data' assert S e. reads
+'no new data' assert S e. reads
 RS=: RS,;{:sdrecv_jsocket_ S,10000 0
-'need more data for header'assert HLEN<:#RS
-dc=. framelen RS
-'need more data for complete frame'assert dc<:#RS
-rid=: getrid RS
-j=. HLEN}.dc{.RS
-RS=: dc}.RS
-rid;<dec j
+while. #RS do.
+ 'need more data for header'assert HLEN<:#RS
+ dc=. framelen RS
+ 'need more data for complete frame'assert dc<:#RS
+ rid=: getrid RS
+ j=. HLEN}.dc{.RS
+ RS=: dc}.RS
+ echo rid;<dec j
+end. 
 )
 
