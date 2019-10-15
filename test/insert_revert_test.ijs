@@ -5,6 +5,7 @@ jd'gen test f 4'
 a=. jd'read from f'
 FORCEREVERT_jd_=: 1
 'insert failed'jdae'insert f';,a
+jdrepair_jd_'fixing it now'
 repair_jd_''
 jddamage_jd_'' 
 assert 4='count'jdfroms_jd_ jd'reads count:count x from f'
