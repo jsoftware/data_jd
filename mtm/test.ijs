@@ -28,16 +28,24 @@ jdadminro_jd_'ro'
 NB. rows rocreate range
 mtm_test_simple=: 3 : 0
 jdadminx'mtm'
-jd'createtable f'
+jd'createtable /a 2 1 2 f'
 jd'createcol f a int'
 jd'createcol f b int'
 d=. i.2
 jd'insert f';'a';d;'b';d
-jd'createtable g'
+jd'createtable /a 2 1 2 g'
 jd'createcol g a int'
 jd'createcol g b byte 2'
 d=. i.2
 jd'insert g';'a';d;'b';2 2$'abcd'
+)
+
+mtm_test_fa=: 3 : 0
+jdadmin 0
+jdadminx'fa'
+jd'createtable /a 2 1 2 f'
+jd'createcol f a int'
+jd'insert f';'a';1 2
 )
 
 tests=: 2}.each <;._2 [ 0 : 0

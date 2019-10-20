@@ -48,18 +48,23 @@ jdadminro=: 3 : 0
  getdb'' NB. set dbl
  RO=: 1
  jd_info'validate' NB. all locales open
+ ROfsize=: fsize 1{"1 mappings_jmf_ NB. fsize for all mapped files
+ ROtloc=: ''
+ tabs=. deb each,<"1>{:jd'info table'
+ for_t. tabs do.
+  ROtloc=: ROtloc,jdgl_jd_ t
+ end.
  i.0 0
 )
 
+
 NB. RO db header adjustments for new table tlens
-jdadmintlen=: 3 : 0
-tabs=. deb each,<"1>{:jd'info table'
+xxxjdadmintlen=: 3 : 0
 rows=. 0".y
-for_i. i.#tabs do.
- a=. ;i{tabs
+for_i. i.#ROtloc do.
+ t=. i{ROtloc
  r=. ;i{rows
- t=. jdgl a
- echo 'check: ',a,' ',":r
+ echo 'check: ',NAME__t,' ',":r
  m=. mappings_jmf_
  if. r~:Tlen__t do.
   p=. PATH__t
@@ -74,6 +79,52 @@ for_i. i.#tabs do.
     (r*memr n,64,1,JINT) memw n,40,1,JINT
    else.
     r memw n,40,1,JINT
+   end. 
+  end.
+ end. 
+end.
+i.0 0
+)
+
+
+NB. WR task has inserted rows in tables
+NB. remap if fsize has changed
+NB. set new tlen in table locale and mapped file headers
+NB. care taken to avoid fsize race between WR and RO tasks
+jdadmintlen=: 3 : 0
+rows=. 0".y
+
+for_i. i.#ROfsize do.
+ 'name fn'=. 2{.i{mappings_jmf_
+ s=. fsize fn
+ if. s~:i{ROfsize do.
+  echo 'remap: ',name
+  remap_jmf_ name
+  NB. don't set HADM - it is not used (RO) and there is a race in setting it properly
+  ROfsize=: s i}ROfsize
+ end. 
+end.
+
+NB. adjust tlen
+for_i. i.#ROtloc do.
+ t=. i{ROtloc
+ r=. ;i{rows
+ echo 'check: ',NAME__t,' ',":r
+ m=. mappings_jmf_
+ if. r~:Tlen__t do.
+  echo 'adjust: ',NAME__t
+  p=. PATH__t
+  b=. (<p)=(#p){.each 1{"1 m
+  b=. 6{"1 b#m
+  Tlen__t=: r
+  for_n. b do. NB. set new */$dat and #dat
+   n=. ;n
+   r memw n,HADS_jmf_,1,JINT             NB. {.$dat
+   c=. getHADR_jmf_ n
+   if. 2=c do.
+    (r*memr n,(8+HADS_jmf_),1,JINT) memw n,HADN_jmf_,1,JINT
+   else.
+    r memw n,HADN_jmf_,1,JINT
    end. 
   end.
  end. 
