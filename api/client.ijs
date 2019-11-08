@@ -113,7 +113,7 @@ timex 'jd''',y,''''
 )
 
 NODBOPS=: 'close';'createdb';'list';'option' NB. ops without DB
-ROOPS=: 'close';'read';'reads';'info'
+ROOPS=: 'close';'read';'reads';'info';'list';'rspin'
 
 NB. jdx always returns a boxed result - jd asserts it is not an error
 jdx=: 3 : 0
@@ -140,7 +140,7 @@ if. 'intask'-:SERVER do.
  'op'logtxt FEOP
  opx=. ;('x'-:{.OP){OP;'x'
  
- if. RO do. 'RO db only allows read type ops' assert (<OP) e. ROOPS end.
+ 'MTRO db only allows read type ops' assert (JDMT~:MTRO_jmf_)+.(<OP) e. ROOPS
  
  if. -. (<OP) e. NODBOPS do. 
   getdb'' NB. dbl global and test for damage

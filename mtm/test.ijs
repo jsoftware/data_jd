@@ -40,12 +40,13 @@ d=. i.2
 jd'insert g';'a';d;'b';2 2$'abcd'
 )
 
-mtm_test_fa=: 3 : 0
+test_simple=: 3 : 0
 jdadmin 0
-jdadminx'fa'
+jdadminx'mtm'
 jd'createtable /a 2 1 2 f'
 jd'createcol f a int'
 jd'insert f';'a';1 2
+jdadmin 0
 )
 
 tests=: 2}.each <;._2 [ 0 : 0
@@ -77,9 +78,4 @@ while. (6!:1'')<s+x do.
  cnt=. >:cnt
 end.
 cnt%x
-)
-
-spinner=: 3 : 0
-s=. 6!:1''
-while. y>s-~6!:1'' do. end.
 )

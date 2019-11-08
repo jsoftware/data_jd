@@ -128,13 +128,11 @@ NB. jdadmin dbpath - simple name treated as ~temp/jd/name
 NB. existing db - set rules
 NB. new db in ~temp is created
 jdadmin=: 3 : 0
-yy=. y
-select. y
-case. '' do.
+if. ''-:y do.
  t=. (jdadminfp''),(jdadminup''),(jdadminop''),jdadminlk''
  (/:{."1 t){t
-case. 0 do.
- RO=: 0
+elseif. 0-:y do.
+ JDMT=: 0
  jd'close' 
  jdadminlk 0
  jdadminfp 0
@@ -142,24 +140,42 @@ case. 0 do.
  jdadminop 0
  jdaccess 0
  i.0 0
-case. do.
- 'RO db already active' assert 0=RO
+elseif. 1 do.
+ adminopen y
+end.
+:
+select. x
+case. 'new' do. jdadminx y
+case. 'access' do.
+ 'bad y'assert ''-:y
+ d=. {."1 jdadmin''
+ d=. /:~~.d#~;'['~:;{.each d
+ m=. (d=<DB){' ''';'['''
+ d=. >(<'   jdaccess'),each m,each d,each''''
+case. do. 'bad x'assert 0
+end.
+)
+
+adminopen=: 3 : 0
+ if. 0=L.y do. mt=. 0 else. 'y mt'=. y end.
  y=. adminp y
  'not a folder'assert 2=ftype y
  'not a database'assert 'database'-:jdfread y,'/jdclass'
  v=. fread y,'/jdversion'
  v=. (-.v-:_1){3,<.0".":v
  'db version not compatible with this Jd version'assert v=<.".jdversion
- 
- t=. jdadminlk''
- i=. t i.'[w]';jpath y
- if. i<#t do. NB. admin already done - just do access to first dan for the db
+ 'invalid map type' assert mt e. i.3
+ locktype=. mt{'wrc'
+ t=. {:"1 jdadminlk''
+ i=. t i. <jpath y
+ if. i<#t do. NB. already open - just do access to first dan for the db
+  'reopen must have same map type' assert JDMT=mt
   i=. (jpath each {:"1 DBPATHS)i.<jpath y
   jdaccess (;{.i{DBPATHS_jd_),' ',(;{:i{DBUPS_jd_),' intask'
   i.0 0
   return.
  end. 
-
+ 'multiple open dbs must all be MTRW' assert (0=#DBPATHS)+.(mt=0)*.JDMT=0
  t=. 3!:2 ::((0 2$'')"_) fread y,'/jdstate'   NB. ok if jdstate is missing
  i=. ({."1 t)i.<'RLOGFOLDER'
  if. i~:#t do.
@@ -168,7 +184,7 @@ case. do.
   ('replicate folder ''',a,''' is in use')assert -.(<hostpathsep t) e. {:1!:20''
  end.
  
- 'w'jdadminlk y
+ locktype jdadminlk y
 
  NB. remove old admin for this folder
  dan=. (;(<jpath y)=jpath each {:"1 DBPATHS)#{."1 DBPATHS
@@ -193,19 +209,8 @@ case. do.
  NB. default access is for the 1st of the new dans
  jdaccess (;{.c{DBPATHS_jd_),' ',(;{:c{DBUPS_jd_),' intask'
  getdb'' NB. set dbl
+ JDMT=: mt
  i.0 0
-end.
-:
-select. x
-case. 'new' do. jdadminx y
-case. 'access' do.
- 'bad y'assert ''-:y
- d=. {."1 jdadmin''
- d=. /:~~.d#~d~:<'[w]'
- m=. (d=<DB){' ''';'['''
- d=. >(<'   jdaccess'),each m,each d,each''''
-case. do. 'bad x'assert 0
-end.
 )
 
 jdadminnew=: 3 : 0
@@ -234,34 +239,9 @@ jdadmin yy
 dbrow=: 3 : '({."1 y)i.<DB'
 
 admind=: 4 : 0
-if. LF={:y do.
- t=. ' '-.~each<;._2 y
-else.
- t=. bdnames y
-end. 
-db=. x-.' '
-assert 0~:#db['DB empty'
-db;<t
-)
-
-admind=: 4 : 0
 db=. x-.' '
 assert 0~:#db['DB empty'
 db;<deb y rplc LF,' '
-)
-
-adminy=: 3 : 0
-if. LF={:y do.
- t=. ' '-.~each<;._2 y
-else.
- t=. bdnames y
-end. 
-)
-
-adminx=: 3 : 0
-db=. y-.' '
-assert 0~:#db['DB empty'
-<db
 )
 
 adminm=: 4 : 0
@@ -301,7 +281,6 @@ DBOPS=: (b#DBOPS),((0~:#>{:t),2)$t
 i.0 0
 )
 
-
 NB. jdadminlk'' is query on lock state
 NB. adminlk 0 frees all locks
 NB. type adminlk path
@@ -310,7 +289,7 @@ NB. lock is on a file in the database folder
 jdadminlk=: 3 : 0
 select. y
 case. '' do.
- ((0=;{."1 LOCKED_jd_){'[w]';'[r]'),._7}.each{:"1 LOCKED
+ ((0=;{."1 LOCKED_jd_){'[w]';JDMT{'[w]';'[r]';'[c]'),._7}.each{:"1 LOCKED
 case. 0 do.
  i.0 0['x'jdadminlk each _7}.each{:"1 LOCKED
 case. do.
@@ -325,7 +304,7 @@ NB. serious error (e.g., disk full)
 NB. mark db as damaged - prevent any more ops on db
 NB. signal error
 jddamage=: 3 : 0
-if. RO do. 'RO db serious error - but db not marked as damaged'assert 0 end.
+if. 0~:JDMT do. 'RO/CW db serious error - but db not marked as damaged'assert 0 end.
 p=. 'jddamage',~jdpath''
 if. #y do.
  'damage'logtxt y
@@ -461,7 +440,7 @@ jdfrom=:  4 : '>{:(({."1 y)i.<,x){y'
 
 jdfroms=: 4 : '>(({.y)i.<,x){"1{:y'
 
-NB. if jd'close' or jdadmin 0 fail, things are messes up, so try this
+NB. if jd'close' or jdadmin 0 fail, things are messed up, so try this
 jdforce_clean=: 3 : 0
 'NAMES_jd_'=: ''
 unmapall_jmf_''

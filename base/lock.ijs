@@ -56,10 +56,14 @@ case.'w'do.
   assert 0['lock w failed - another task has database locked'
  end.
   
-case.'r'do.
+case.'r' do.
  if. lf do. 1 return. end.
  LOCKED_jd_=: LOCKED,0;f
- 
+
+case.'c' do.
+ if. lf do. 1 return. end.
+ LOCKED_jd_=: LOCKED,0;f
+
 case.'x'do.
  if. lf do.
   i=. ({:"1 LOCKED)i.<f
@@ -68,7 +72,7 @@ case.'x'do.
  end.
  
 case. do.
- assert 0['lock not wrx'
+ assert 0['lock not wrcx'
 end. 
 )
 

@@ -55,14 +55,15 @@ end.
 infotable=: 3 : 0
 t=. ;{.y
 n=. /:~NAMES__dbl
+if. 0=#n do.
+ 'invalid table arg'assert 0=#t
+ ,.'table';0 0$''
+ return.
+end.
 if. 0~:#t do.
- if. (PTM,'*')=_2{.t do.
+ if. -.(PTM,'*')-:_2{.t do. 'not a ptable' assert 0 end.
   n=. getparttables _2}.t
   'not a ptable' assert 1<#n
- else.
-  'not a table'assert (<t)e.n  
-  n=. <t
- end. 
 else.
  n=. n#~-.;PTM e.each n
 end. 
@@ -159,14 +160,18 @@ Tlen__t
 
 infosummary=: 3 : 0
 t=. ;{.y
+ts=. /:~NAMES__dbl
+if. 0=#ts do.
+ 'invalid table arg'assert 0=#t
+ (;:'table rows'),:2#<(0 0$'')
+ return.
+end.
 if. (PTM,'*')=_2{.t do.
  ts=. getparttables _2}.t
  'not a ptable' assert 1<#ts
  r=. ;infoad each ts
  n=. (<>ts),<,.r
 else.
- ts=. /:~NAMES__dbl
- if. 0=#ts do. (;:'table rows'),:3#<(0 0$'') return. end.
  if. -.''-:t do.
   'not a table'assert NAMES__dbl e.~ <t
   tloc=. jdgl t

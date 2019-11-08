@@ -2,7 +2,7 @@ JdMTM
 
 *** usage
 1. create mtm DB
-   start j
+   start new j session
    load'~Jddev/jd.ijs'
    load'~Jddev/mtm/test.ijs'
    mtm_test_simple''
@@ -12,67 +12,24 @@ JdMTM
    jdadmin 0
    
 2. start mtm server
-   start jconsole
+   start new jconsole sessopm
    load'~Jddev/mtm/mtm.ijs'
-   mtm_init'' NB. initialize and run mtm_config
-   mtm_run''  NB. start server
+   init config'' NB. run mtm
    
 3. start mtm client (same machine as server for testing)
-   start jconsole
+   start new jconsole session
    load'~Jddev/mtm/mtm_client.ijs'
-   client_init''
+   init''
    
-   msnd'info summary' NB. returns request id (rid)
-   mrcv''
-   msnd'reads from f' NB. returns rid
-   mrcv''
-   msnd'insert f';'a';12;'b';13 NB. runs in CW task
-   mrcv''                       NB. returns rid and new table rows
-   msnd'reads from f'           NB. tlens updated to get new rows
-   mrcv''
-   
-*** todo
-1. insert remap when col grows is not handled and could be
-2. left1 join needs work - inserts to left table do not need to mark dirty
-3. wr ops other than insert could be handled - quiet RO tasks and then restart
-  
-
-*** overview
-
-*** multiple tasks accessing same DB
-1 task  WO (write only)
-n tasks RO
-
-*** mtm init
-starts WO task and opens all tables and cols
- jdadmin DB
- jd'info validate' - open all locales, map all files, validate
-
-starts RO tasks and opens all tables and cols 
- RO tasks gets header info from WO header
-  jam ref count???
-
-close not allowed - except for remap
-
-*** restrictions
-no new tables (delete etc)
-insert only (no update etc)
-insert not allowed to col used as join target
-no close (except for remap?)
-
-*** insert
-WO op - returns Tlens
- needs to update ref col
-
-*** read
-RO op - starts with op to set new Tlens
- sets table Tlen and count for each map header
-
-new op - set Tlen for table
-
-
- 
-
-
-
-
+   msr'info summary'           NB. runs in first available CRS task             
+   msr'reads from f'           NB. runs in first available CRS task             
+   msr'insert f';'a';12;'b';13 NB. runs in CW task - insert result to update CRS tasks
+   msr'reads from f'           NB. tables updated for insert
+   msnd'reads from f'          NB. result if RId (request ID)
+   mrcv''                      NB. last result
+   msnd'info summary'
+   msnd'info schema'
+   mrcv''                      NB. last result
+   rids                        NB. rids for results
+   results                     NB. results in rids order
+   get 2                       NB. result for rid 2

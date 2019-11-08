@@ -223,3 +223,19 @@ case.         do. assert 0['unsupported option'
 end.
 JDOK
 )
+
+NB. mtm read type op that spins for y seconds
+jd_rspin=: 3 : 0
+n=. 0 ". y
+s=. 6!:1''
+while. n>s-~6!:1'' do. end.
+JDOK
+)
+
+NB. mtm write type op that spins for y seconds
+jd_wspin=: 3 : 0
+n=. 0 ". y
+s=. 6!:1''
+while. n>s-~6!:1'' do. end.
+JDOK
+)

@@ -359,12 +359,11 @@ int2
 int4
 )
 
+TYPES_SIZES=: 1 8 8 1 8 8 8 8 8 8 8 1 2 4
+
 TYPES_E=: ;:'edate edatetime edatetimem edatetimen'
 
 TYPES_D=: ;:'date datetime'
-
-NB. 3!:0 TYPES values
-TYPESj=: 1 4 8 2 4 4 4 4 4 4 4 4 4 1 1 1
 
 jdfread=: 3 : 0
 t=. fread y

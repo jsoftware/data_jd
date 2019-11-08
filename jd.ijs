@@ -109,7 +109,6 @@ base/validate.ijs
 tools/setscriptlists.ijs
 api/api.ijs
 api/api_adm.ijs
-api/api_adm_ro.ijs
 api/api_change.ijs
 api/api_create.ijs
 api/api_createdcol.ijs
@@ -151,7 +150,7 @@ repair''
 3 : 0''
 IFTESTS=: 0
 if. _1=nc<'OP' do. NB. one time inits
- RO=: 0
+ JDMT=: MTRW_jmf_
  FEOP=: OP=: 'none'
  TEMPCOLS=: i.0 2
  LOGOPS=: 0 NB. do not log ops

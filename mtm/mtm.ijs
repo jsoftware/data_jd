@@ -1,59 +1,129 @@
 NB. Copyright 2019, Jsoftware Inc.  All rights reserved.
 
-require'~addons/net/jcs/jcs.ijs'
-require'~Jddev/mtm/mtm_common.ijs'
+0 : 0
+Jd multi task manager
 
+CJ  - task for request/response zmq_raw
+CW  - task for write ops
+CRS - tasks for read ops
+
+w init
+ R tasks all idle (not even started)
+ winit'' NB. mtm_server.ijs
+ fails if refs or varbyte
+
+R init
+ W idle
+ rinit'' NB. mtm_serv.ijs
+ 
+W run
+ insert runs concurrently with CRS - result sets info-summary as arg for CRS runs
+ other ops - run only when CRS all idle and runs rinit in each CRS task
+ 
+R run
+ mtmfix info-summary
+  remap files that have changed size
+  tlen set in table locale and any mapped headers
+ 
+todo:
+varbyte not supported (server init fails) but it could work with more work
+ dat is easy (just like normal cols) but val needs mtmfix support
+ 
+refs not supported (server init fails)
+ insert to left cols could be supported with some work (insert should avoid marking dirty)
+ insert to right col is more complicated and needs thought and work (probably needs to run W exclusive)
+)
+
+require'~addons/net/jcs/jcs.ijs'
+require'~Jddev/mtm/mtm_util.ijs'
+
+NB. force load of development
 ld=: 3 : 0
 load'~Jddev/mtm/mtm.ijs'
-load'~Jddev/mtm/mtm_common.ijs'
+load'~Jddev/mtm/mtm_util.ijs'
 )
 
-mtm_config=: 3 : 0
-'zmq must be version 4.1.4 or later'assert 414<:10#.version_jcs_''
-tlens=: '' NB.!
+config=: 3 : 0
 DB=: 'mtm'
-PJOBS=: 65220 NB. port for new jobs and results
+BASE=: 65220 NB. base port for mtm ports
+NCRS=:  2     NB. numbers of CRS tasks (concurrent read tasks) 
+Serverijs=: 'load ''~Jddev/mtm/mtm_server.ijs''' NB. script to load in servers
 )
 
-NB. P... are ports
-NB. C... are locales for ports
-mtm_init=: 3 : 0
-killp_jcs_''
-mtm_config''
-
-CJ=: jcssraw_jcs_ PJOBS
-
-CW=: jcst PJOBS+1
-
-run__CW 'load''~Jddev/jd.ijs'''
-run__CW 'jdadmin''',DB,''''
-
-d=. run__CW'jd''info summary'''
-tlens=: ":,>{:{:d
-
-d=. run__CW 'jd''info schema'''
-'varbyte not supported'assert -.(<'varbyte')e.deb each<"1>2{"1{:d
-
-CRS=: jcst PJOBS+2+i.2
-for_c. CRS do.
- run__c 'load''~Jddev/jd.ijs'''
- run__c 'jdadminro''',DB,''''
-end. 
-
-NB. mtm_run''
+NB. R server sentence to run with CMD
+rsen=: 3 : 0
+(('jd''',y,''''),'[mtmfix jcs_p0');<info_summary
 )
 
-POLL=: 1e6 NB.!
+NB. W server sentence to run with CMD
+wsen=: 3 : 0
+'jd''info summary''[jd jcs_p0';<y
+)
 
+NB. run JOBS
+run=: 3 : 0
+RJOBS__CJ=: WJOBS__CJ=: JOBSTREAM__CJ=: OUT__CJ=: BUSY=: ''
+pjclean''
+while. 1 do.
+  NB.         CJ              CW                               CRS
+  e=. 1 + 2* (0~:#OUT__CJ), ((0~:#WJOBS__CJ)*.-.CW e. BUSY) , (0~:#RJOBS__CJ)*.-.CRS e. BUSY
+  'rc reads writes errors'=. poll_jcs_ POLL;e;<CJ,CW,CRS
+  if.  0=rc do. continue. end.
+  getjobs__CJ reads NB. get jobs from client stream and move to JOBS
+  runWjob''
+  runRjobs''        NB. runa R jobs in idle CRS tasks
+  runzjobs reads    NB. runz to get results from completed jobs
+  sendrs__CJ writes NB. send OUT to client
+end.
+)
 
-necho=: [
-NB. necho =: echo
+NB. routines common to different kinds of mtm (insert/all/...)
+
+POLL=: 60000
 
 pjclean=: 3 : 0
 for_n. CW,CRS do. runz__n :: 0: 0 end.
 )
 
-NB. get JOBS stream and move complete jobs to JOBS
+init=: 3 : 0
+'zmq must be version 4.1.4 or later'assert 414<:10#.version_jcs_''
+killp_jcs_''
+
+CJ=: jcssraw_jcs_ BASE
+
+CW=: jcst BASE+1
+run__CW Serverijs
+run__CW 'winit ''',DB,''''
+
+CRS=: jcst BASE+2+i.NCRS
+for_c. CRS do.
+ run__c Serverijs
+ run__c 'rinit ''',DB,''''
+end.
+
+info_summary=: ''
+run''
+)
+
+log=: 3 : 0
+'task type data'=. y
+a=. task i.~ CJ,CW,CRS
+a=. 6j0 3j0 ": rid__task,a
+a=. a,' ',type,' '
+d=. ;(0~:L.data){data;{.data
+echo a,d
+)
+
+NB. 0 if op is read type, 1 if op is insert, 2 if other
+wcheck=: 3 : 0
+t=. dlb;(L.y){y;{.y
+t=. <t{.~t i. ' '
+if. t e. 'read';'reads';'info';'rspin' do. 0 return. end.
+if. t=<'insert' do. 1 return. end.
+2
+)
+
+NB. get JOBS stream and move complete jobs to WJOBS and RJOB queues
 NB. runs in JOBS task locale
 getjobs_jcs_=: 3 : 0
 if. -.y e.~ coname'' do. return. end.
@@ -71,10 +141,10 @@ while. HLEN__<:#JOBSTREAM do.
  if. dc>#JOBSTREAM do. break. end.
   rid=. getrid JOBSTREAM
   j=. dec HLEN__}.dc{.JOBSTREAM
-  if. 32=3!:0 j do.
-   WJOBS=: WJOBS,<rid;<j  
-  else.
+  if. 0=wcheck__ j do.
    RJOBS=: RJOBS,<rid;j
+  else. 
+   WJOBS=: WJOBS,<rid;<j  
   end. 
   JOBSTREAM=: dc}.JOBSTREAM
 end.
@@ -86,37 +156,54 @@ while. (#RJOBS__CJ)*.#CRS-.BUSY do.
  tasks=. CRS -. BUSY
  n=. {.tasks
  rid__n=: ''$;{.>{.RJOBS__CJ
- echo rid
  t=. ;{:>{.RJOBS__CJ
- echo 'runa: ',(;n),' ',t
  RJOBS__CJ=: }.RJOBS__CJ
  BUSY=: BUSY,n
- runa__n ('jd''',t,''''),'[jdadmintlen_jd_ ''',(":tlens),''''
+ log n;'a';<t
+ runa__n rsen t
 end.
 )
 
-NB. run WJOBS in idle CW task
-NB. insert ops return new info summary
-runWjobs=: 3 : 0
-while. (#WJOBS__CJ)*.#CW-.BUSY do.
+NB. run WJOB in idle CW task
+runWjob=: 3 : 0
+if. (#WJOBS__CJ)*.-.CW e. BUSY do.
  rid__CW=: ''$;{.>{.WJOBS__CJ
  t=. ;{:>{.WJOBS__CJ
- echo 'WJOB: ';t
  WJOBS__CJ=: }.WJOBS__CJ
- BUSY=: BUSY,CW
- runa__CW '":,>{:{:jd''info summary''[jd jcs_p0';<t
-end.
+ if. 1=wcheck t do.
+  BUSY=: BUSY,CW
+  log CW;'a';<t
+  runa__CW wsen t
+ else.
+  NB. write op other than insert is special
+  while. #BUSY do. NB. CW already added
+   'rc reads writes errors'=. poll_jcs_ 60000;(1#~#BUSY);<BUSY NB. wait for BUSY tasks to complete
+   if.  0=rc do. 'W2 op blocked' assert 0 end.
+   runzjobs reads 
+  end.
+  BUSY=: BUSY,CW
+  log CW;'a';<t
+  runa__CW wsen t
+  'rc reads writes errors'=. poll_jcs_ 60000;1;<CW NB. wait for op to complete
+  if.  0=rc do. assert 0 end.
+  runzjobs'' 
+  for_n. CRS do.
+   run__n 'rinit ''',DB,'''' NB. CRS task initialized while CW is idle
+  end.
+  info_summary=: '' NB. R tasks are current
+ end.
+end. 
 )
 
 NB. get results from completed jobs
 runzjobs=: 3 : 0
 for_n. BUSY do.
  if. n e. y do.
-  echo 'runz: ',;n
+  log n;'z';''
   BUSY=: BUSY-.n
   try.
    rs=. runz__n 0
-   if. n=CW do. tlens=: rs end.
+   if. n=CW do. info_summary=: rs end.
   catch.
    rs=. lse__n
   end.
@@ -128,23 +215,7 @@ end.
 NB. send OUT to client
 sendrs_jcs_=: 3 : 0
 if. -.y e.~ coname'' do. return. end.
-echo 'send result to client'
 send S;SROUTE;(#SROUTE);ZMQ_SNDMORE
 r=. send S;OUT;(#OUT);0
 OUT=: r}.OUT
-)
-
-NB. run JOBS
-mtm_run=: 3 : 0
-RJOBS__CJ=: WJOBS__CJ=: JOBSTREAM__CJ=: OUT__CJ=: BUSY=: ''
-pjclean''
-while. 1 do.
-  'rc reads writes errors'=. poll_jcs_ POLL;((1+2*0~:#OUT__CJ),1#~#BUSY);<CJ,BUSY
-  if.  0=rc do. continue. end.
-  getjobs__CJ reads NB. get jobs from client stream and move to JOBS 
-  runWjobs''        NB. runa W jobs in idle CJ tasks
-  runRjobs''        NB. runa R jobs in idle CRS tasks
-  runzjobs reads    NB. runz to get results from completed jobs
-  sendrs__CJ writes NB. send OUT to client
-end.
 )
