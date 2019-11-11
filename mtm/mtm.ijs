@@ -1,39 +1,5 @@
 NB. Copyright 2019, Jsoftware Inc.  All rights reserved.
 
-0 : 0
-Jd multi task manager
-
-CJ  - task for request/response zmq_raw
-CW  - task for write ops
-CRS - tasks for read ops
-
-w init
- R tasks all idle (not even started)
- winit'' NB. mtm_server.ijs
- fails if refs or varbyte
-
-R init
- W idle
- rinit'' NB. mtm_serv.ijs
- 
-W run
- insert runs concurrently with CRS - result sets info-summary as arg for CRS runs
- other ops - run only when CRS all idle and runs rinit in each CRS task
- 
-R run
- mtmfix info-summary
-  remap files that have changed size
-  tlen set in table locale and any mapped headers
- 
-todo:
-varbyte not supported (server init fails) but it could work with more work
- dat is easy (just like normal cols) but val needs mtmfix support
- 
-refs not supported (server init fails)
- insert to left cols could be supported with some work (insert should avoid marking dirty)
- insert to right col is more complicated and needs thought and work (probably needs to run W exclusive)
-)
-
 require'~addons/net/jcs/jcs.ijs'
 require'~Jddev/mtm/mtm_util.ijs'
 

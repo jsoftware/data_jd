@@ -36,6 +36,9 @@ show''
 jd'insert g';'b';5
 show''
 
+jd'insert f';'a';5
+show''
+
 bld''
 jd'ref /left f a g b'
 

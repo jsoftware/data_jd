@@ -23,14 +23,15 @@ RS=: ''
 RID=: 1
 rids=: ''
 results=: ''
-ridrcv=: ridsnd=: ''
 i.0 0
 )
 
+NB. send reqest, wait for result, return result
+msr=: 3 : 'mgetw msnd y'
+
+NB. send request
 msnd=: 3 : 0
-if. 'delay'-:(y i.' '){.y do. _1[6!:3[1{0".y return. end. 
 t=. RID streamframe y
-ridsnd=: ridsnd,RID
 RID=: >:RID
 r=. t sdsend_jsocket_ S;0
 'send error' assert 0=>{.r
@@ -38,42 +39,53 @@ r=. t sdsend_jsocket_ S;0
 <:RID
 )
 
-NB. result is last result
+NB. recv result stream and update rids and results
+NB. y - 0 for no timeout and n for timeout
 mrcv=: 3 : 0
-'e reads writes errors'=. sdselect_jsocket_ S;'';'';1000
-'select error' assert 0=e
-'no new data' assert S e. reads
+'e reads writes errors'=. sdselect_jsocket_ S;'';'';y
+'mrcv select error' assert 0=e
+'mrcv timeout' assert (0=y)+.S e. reads
+if. -.S e. reads do. i.0 0 return. end.
 RS=: RS,;{:sdrecv_jsocket_ S,10000 0
 while. #RS do.
- if. HLEN>#RS do.
-  echo 'need more data for header'
-  break.
- end. 
+ if. HLEN>#RS do. i.0 0 break. end. NB. need more data for header
  dc=. framelen RS
- if. dc>#RS do.
-  echo 'need more data for complete frame'
-  break.
- end.
+ if. dc>#RS do. i.0 0 break. end.   NB. need more data for complete frame
  rid=: getrid RS
- ridrcv=: ridrcv,rid
  j=. HLEN}.dc{.RS
  RS=: dc}.RS
  rids=: rids,rid
  results=: results,<dec j
 end.
->{:results
+i.0 0
 )
 
-msr=: 3 : 0
-msnd y
-'e reads writes errors'=. sdselect_jsocket_ S;'';'';20000
-mrcv''
+NB. get rid result
+mget=: 3 : 0
+'mget rid invalid' assert (y>0)*.y<RID
+mrcv 0
+'mget rid not available'assert y e. rids
+mgx y
 )
 
-get=: 3 : 0
-'invalid rid'assert y e. rids
->results{~rids i. y
+NB. get rid result (wait for it)
+mgetw=: 3 : 0
+'mget rid invalid' assert (y>0)*.y<RID
+while. 1 do.
+ if. y e. rids do. mgx y return. end.
+ mrcv 20000
+end.
 )
+
+mgx=: 3 : 0
+r=. >(rids i. y){results
+b=. y~:rids
+rids=: b#rids
+results=: b#results
+r
+)
+
+NB. tests
 
 test=: 3 : 0
 init''
@@ -97,14 +109,20 @@ msr'createtable g'
 assert'fg'-:,>{:msr'info table'
 msr'droptable g'
 assert(,'f')-:,>{:msr'info table'
-'snd/rcv mismatch' assert ridsnd-:ridrcv NB. these should be in order
 
 a=. 10 10 10 2 #i.4
 a=. a{~(#a)?#a
 d=: 0
-msnd each ".each a{jobs
-msnd'droptable done'
-6!:3[2
-mrcv''
-'snd/rcv mismatch' assert ridsnd-:/:~ridrcv NB. the new ones will be out of order
+mgetw each ;msnd each ".each a{jobs
+mgetw msnd'droptable done'
+assert 0=#rids
+assert 0=#results
+i.0 0
+)
+
+jobs=: <;._2 [0 : 0
+'info summary'
+'read count a from f'
+'insert f';'a';d[d=: >:d
+'update f';'jdindex=1';'a';23
 )
