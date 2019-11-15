@@ -18,7 +18,7 @@ Serverijs=: 'load ''~Jddev/mtm/mtm_server.ijs''' NB. script to load in servers
 
 NB. R server sentence to run with CMD
 rsen=: 3 : 0
-(('jd''',y,''''),'[mtmfix jcs_p0');<info_summary
+(('jd''',y,''''),'[mtmfix_jd_ jcs_p0');<mtinfo
 )
 
 NB. W server sentence to run with CMD
@@ -67,7 +67,7 @@ for_c. CRS do.
  run__c 'rinit ''',DB,''''
 end.
 
-info_summary=: ''
+mtinfo=: ''
 run''
 )
 
@@ -156,7 +156,7 @@ if. (#WJOBS__CJ)*.-.CW e. BUSY do.
   for_n. CRS do.
    run__n 'rinit ''',DB,'''' NB. CRS task initialized while CW is idle
   end.
-  info_summary=: '' NB. R tasks are current
+  mtinfo=: '' NB. R tasks are current
  end.
 end. 
 )
@@ -169,7 +169,10 @@ for_n. BUSY do.
   BUSY=: BUSY-.n
   try.
    rs=. runz__n 0
-   if. n=CW do. info_summary=: rs end.
+   if. n=CW do.
+    't r'=. {:rs
+    mtinfo=: (deb each<"1 t);<,r
+   end.
   catch.
    rs=. lse__n
   end.

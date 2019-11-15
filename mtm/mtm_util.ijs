@@ -47,6 +47,7 @@ jd'createcol g a int'
 jd'createcol g b byte 2'
 d=. i.2
 jd'insert g';'a';d;'b';2 2$'abcd'
+jdadmin 0
 )
 
 jd_mtm_overview_jman_=:  0 : 0

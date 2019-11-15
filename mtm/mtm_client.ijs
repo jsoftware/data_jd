@@ -96,7 +96,7 @@ for_a. t do. msr'droptable ',a end.
 msr'createtable f'
 msr'createcol f a int'
 msr'insert f';'a';i.5
-assert (i.5)-:>{:{:msr'read from f'
+assert (i.5)-:>{:{:q=:msr'read from f'
 msr'delete f';'jdindex < 3'
 assert 3 4-:>{:{:msr'read from f'
 msr'delete f';'jdindex ge 0'

@@ -1,4 +1,4 @@
-NB. Copyright 2016, Jsoftware Inc.  All rights reserved.
+NB. Copyright 2019, Jsoftware Inc.  All rights reserved.
 coclass 'jd'
 
 NB. Each folder which is handled by JD contains files:
@@ -63,7 +63,7 @@ CHILDREN =: CHILDREN-.y
 NAMES=: NAMES-.<NAME__y
 )
 
-NB. mark db damaged is col y has incorrect Tlen
+NB. mark db damaged if col y has incorrect Tlen
 colcheck=: 3 : 0
 if. 'jdindex'-:NAME__y do. return. end.
 if. typ__y-:'ref' do.
@@ -108,8 +108,9 @@ elseif. 'jdcolumn'-:;CLASS__c do. NB. cols map as required
  if. _1=nc {.MAP__c,each <'__c' do. NB. assumed mapped if defined
    mapcolfile__c"0 MAP__c
    opentyp__c ''
+   if. JDMT=MTRO_jmf_ do. mtmfixcount c end.
  end.
- colcheck c
+ colcheck c NB. colcheck only run when mapped
 end.
 c
 )

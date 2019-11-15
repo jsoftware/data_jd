@@ -151,6 +151,7 @@ repair''
 IFTESTS=: 0
 if. _1=nc<'OP' do. NB. one time inits
  JDMT=: MTRW_jmf_
+ JDMTMRO=: 0 NB. not an mtm ro task
  FEOP=: OP=: 'none'
  TEMPCOLS=: i.0 2
  LOGOPS=: 0 NB. do not log ops

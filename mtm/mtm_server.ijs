@@ -8,7 +8,10 @@ NB. RW task init - y is DB
 winit=: 3 : 0
 jdadmin 0
 jdadmin y
-'varbyte not allowed'assert -.(<'varbyte')e.deb each<"1>2{"1{:jd'info schema'
+d=. deb each<"1>2{"1{:jd'info schema'
+'varbyte not allowed'assert -.(<'varbyte')e.d
+'int2 not allowed'   assert -.(<'int2')e.d
+'int4 not allowed'   assert -.(<'int4')e.d
 'ref not allowed'    assert 0 0=>$each {.{:jd'info ref'
 jd'info summary'
 )
@@ -17,21 +20,20 @@ NB. RO task init - y is DB
 rinit=: 3 : 0
 jdadmin 0
 jdadmin y;MTRO_jmf_
-jd'info summary'
+JDMTMRO_jd_=: 1 NB. mark as mtm ro task
+jd'info summary' NB. critical that RO tasks has correct and stable locale info
 )
 
 NB. WR task may have inserted rows in tables
 NB. remap if fsize has changed
 NB. set new tlen in table locale and mapped file headers
 NB. care taken to avoid fsize race between WR and RO tasks
-mtmfix=: 3 : 0
+mtmfix_jd_=: 3 : 0
 if. ''-:y do. return. end. 
-'t r'=. {:y
-t=. deb each<"1 t
-r=. ,r
+'t r'=. y
 
-NB. remap cols that have changed filesize
-a=. (fsize MAPFN_jmf_{"1 mappings_jmf_)=>MAPFSIZE_jmf_{"1 mappings_jmf_
+NB. remap cols that have changed filesize - does not touch header
+a=. (fsize MAPFN_jmf_{"1 mappings_jmf_)~:>MAPFSIZE_jmf_{"1 mappings_jmf_
 remap_jmf_ each a#MAPNAME_jmf_{"1 mappings_jmf_
 
 NB. adjust table locale tlen and headers for mapped files
@@ -58,4 +60,23 @@ for_n. conl 1  do.
   end. 
  end. 
 end. 
+)
+
+NB. y is table locale
+NB. MTM ro task has good Tlen from table locale that it should use
+NB. mapping col file could have header with new rows from insert
+NB.  need to adjust header
+mtmfixcount_jd_=: 3 : 0
+p=. PATH__y,'dat' NB.! only does dat for now
+i=. (1{"1 mappings_jmf_)i.<p
+had=. >MAPHEADER_jmf_{i{mappings_jmf_
+s=. Tlen__y
+if. s=memr had,HADS_jmf_,1,JINT do. return. end. NB. it is OK
+s memw had,HADS_jmf_,1,JINT             NB. {.$dat
+c=. getHADR_jmf_ had
+if. 2=c do.
+ (s*memr had,(8+HADS_jmf_),1,JINT) memw had,HADN_jmf_,1,JINT
+else.
+ s memw had,HADN_jmf_,1,JINT
+end.
 )
