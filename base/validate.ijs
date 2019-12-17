@@ -24,6 +24,7 @@ NB. x 'err' - if validate detects error, db marked damaged and error signaled
 validateclocs=: 4 : 0
 types=. TYPES,;:'ref reference hash unique smallrange'
 'tabs cols bad cx tlen map type count filesize jsize'=. <0 1$''
+r=. <0 9$''
 try.
  for_c. y do.
   for_m. MAP__c do.
