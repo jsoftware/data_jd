@@ -71,6 +71,7 @@ if. typ__y-:'ref' do.
   b=. 0 NB. could be anything
  else.
   b=. (Tlen~:#dat__y)*.-.dirty__y 
+NB.   if. b do. b=. 0 [ setdirty__y 1 end.
  end. 
 else.  
  b=. Tlen~:countdat__y dat__y
