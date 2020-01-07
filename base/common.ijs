@@ -80,6 +80,12 @@ if. b do.
 end.
 )
 
+colcheck=: 3 : 0
+if. Tlen~:countdat__y'' do.
+ if. -.fexist '/jdrepair',~dbpath DB do. jddamage 'Tlen wrong for col ',NAME__y,' in table ',NAME__PARENT__y end.
+end.
+)
+
 getlocx=: 3 : 'c=. (NAMES i. <y){CHILDREN' NB. get col locale - do not map
 
 NB. get locale and open table children and map column files
@@ -110,7 +116,7 @@ elseif. 'jdcolumn'-:;CLASS__c do. NB. cols map as required
    opentyp__c ''
    if. JDMT=MTRO_jmf_ do. mtmfixcount c end.
  end.
- colcheck c NB. colcheck only run when mapped
+ colcheck c
 end.
 c
 )

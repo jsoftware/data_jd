@@ -4,7 +4,6 @@ coinsert 'jdtbase'
 
 DATAFILL=: -~2
 DATASIZE=: 8
-countdat=: #
 datcount=: ]
 
 qnumtxt=: 0 : 0
@@ -101,7 +100,7 @@ dat=: (fixinsert y) x} dat
 NB. int2 =========================================================
 coclass deftype_jdtnumeric_ 'int2'
 DATASIZE=: 2
-countdat=: -:@#
+countdat=: 3 : '-:@#dat'
 datcount=: +:
 
 ". each <;._2 qnumtxt  rplc 'dat';'(_1 ic dat)'
@@ -134,7 +133,7 @@ dat=: (fixinsert y) ((,(2*x),.1+2*x))} dat
 NB. int4 =========================================================
 coclass deftype_jdtnumeric_ 'int4'
 DATASIZE=: 4
-countdat=: -:@-:@#
+countdat=: 3 : '-:@-:@#dat'
 datcount=: +:@+:
 
 ". each <;._2 qnumtxt  rplc 'dat';'(_2 ic dat)'

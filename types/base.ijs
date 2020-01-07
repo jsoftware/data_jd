@@ -11,8 +11,8 @@ MAP =: ;:'dat'
 DATASIZE =: 8 NB. default 8 bytes
 DATAFILL =: 0
 
-countdat=: #
-datcount=: ]
+countdat=: 3 : '#dat'
+datcount=: ] NB. used in repair
 
 testcreate=: ]
 opentyp=: ]
@@ -61,7 +61,7 @@ dat=: y x} dat
 
 Insert=: 3 : 0
 if. 0=#MAP do. return. end.
-t=. Tlen-countdat dat
+t=. Tlen-countdat''
 if. t~:#y do. y=. (t,shape)$y end. 
 if. typ-:'varbyte' do.
  y=.   fixinsert fixtype y

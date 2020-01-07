@@ -9,6 +9,7 @@ shape=: ''
 visible =: 0
 MAP =: 0$a:
 
+countdat=: 3 : 'Tlen'
 select =: ]
 
 NB. read jdindex from part table returns index to full table
