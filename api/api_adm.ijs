@@ -133,7 +133,7 @@ if. ''-:y do.
  (/:{."1 t){t
 elseif. 0-:y do.
  JDMT=: 0
- jd'close' 
+ jd_close''
  jdadminlk 0
  jdadminfp 0
  jdadminup 0

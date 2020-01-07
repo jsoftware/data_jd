@@ -21,6 +21,7 @@ jd_xsum=: 3 : 0
 ECOUNT assert 0=#y
 r=. jd_read'cola,colb from f'
 ,:'xsum';+/>{:"1 r
+RPAREN
 )
 
 jdadminx'test'                               NB. new admin, new db, no custom.ijs
