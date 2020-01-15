@@ -27,7 +27,7 @@ GROWS=: 1000   NB. rows in join table
 
 NB. build all tables and read everything so it is all in ram 
 build=: 3 : 0
-jdadminnew'bench'
+'new'jdadmin'bench'
 
 jd'createtable e'
 jd'createcol e a int'

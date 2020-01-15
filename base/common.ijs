@@ -63,24 +63,6 @@ CHILDREN =: CHILDREN-.y
 NAMES=: NAMES-.<NAME__y
 )
 
-NB. mark db damaged if col y has incorrect Tlen
-colcheck=: 3 : 0
-if. 'jdindex'-:NAME__y do. return. end.
-if. typ__y-:'ref' do.
- if. left__y do.
-  b=. 0 NB. could be anything
- else.
-  b=. (Tlen~:#dat__y)*.-.dirty__y 
-NB.   if. b do. b=. 0 [ setdirty__y 1 end.
- end. 
-else.  
- b=. Tlen~:countdat__y dat__y
-end. 
-if. b do.
- if. -.fexist '/jdrepair',~dbpath DB do. jddamage 'Tlen wrong for col ',NAME__y,' in table ',NAME__PARENT__y end.
-end.
-)
-
 colcheck=: 3 : 0
 if. Tlen~:countdat__y'' do.
  if. -.fexist '/jdrepair',~dbpath DB do. jddamage 'Tlen wrong for col ',NAME__y,' in table ',NAME__PARENT__y end.
