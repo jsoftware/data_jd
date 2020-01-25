@@ -10,7 +10,7 @@ load'~Jddev/mtm/mtm_util.ijs'
 )
 
 config=: 3 : 0
-DB=: 'mtm'
+DB=: y
 BASE=: 65220 NB. base port for mtm ports
 NCRS=:  2     NB. numbers of CRS tasks (concurrent read tasks) 
 Serverijs=: 'load ''~Jddev/mtm/mtm_server.ijs''' NB. script to load in servers

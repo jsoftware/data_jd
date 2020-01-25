@@ -92,7 +92,8 @@ if. -.fexist benchfile do. jcreate benchfile end.
 
 NB. y is test number to run
 runpm=: 3 : 0
-s=. ;y{tests
+s=. y
+if. 4=3!:0 s do. s=. ;y{tests end.
 echo s
 build''
 start_jpm_''
