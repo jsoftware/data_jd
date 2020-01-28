@@ -82,7 +82,8 @@ NB.  col  like/unlike regexp
 NB.  col1 eq/ne col2 
 NB.  col1 eq/ne foreign col
 
-varbyte=: LIBJD_jd_,' varbyte > x x x x x x x x x x'
+varbyte=: LIBJD_jd_,' varbyte > x x x x x x x x x x x' NB. jdt
+
 
 NB. dat val y 0    0    0 0
 NB. dat val 0 daty valy 0 0
@@ -90,7 +91,7 @@ NB. dat val 0 daty valy u v
 NB.! BC global arg ugly
 callit=: 4 : 0
 b=. BC#0
-r=. varbyte cd x,(gethad'b'),y
+r=. varbyte cd JDT,x,(gethad'b'),y
 if. 0~:r do. throw 'C varbyte failed with code ',":r end.
 I.b
 )

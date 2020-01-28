@@ -79,12 +79,13 @@ q=. q,~JDP,'cd/'
 'Jd pcre library missing'assert fexist q
 
 LIBJD=: '"',t,'"'
-r=. (LIBJD,' jdinit >x *c') cd <jpath'~config'
+JDT=: (LIBJD,' jdinit >x') cd '' NB. get jdt
+r=. (LIBJD,' jdlicense >x x *c') cd JDT;<jpath'~config'
 if. _1=r do. assert 0[echo invalidkey end.
 NB. if. _2=r do. assert 0[echo evalkey end.
 if. _3=r do. assert 0[echo updatekey end.
 'Jd binary and J code mismatch - bad install'assert r=8 NB. 7 - jd3 and 8 -jd4
-'Jd regexinit failed'assert 0=(LIBJD,' regexinit >x *c') cd <q 
+'Jd regexinit failed'assert 0=(LIBJD,' regexinit >x x *c') cd JDT;<q 
 )
 
 load@:(JDP&,);._2 ]0 :0

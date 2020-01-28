@@ -112,17 +112,17 @@ qnotin        -.@e.
 qsample=: 3 : 'y?Tlen'
 qSample=: 3 : 'y?.Tlen'
 
-cd_qlike=: LIBJD_jd_,' qlike > x x x x x'
+cd_qlike=: LIBJD_jd_,' qlike > x x x x x x' NB. jdt
 
 qlike=:     1&liker
 qlikeci=:   3&liker
 qunlike=:   0&liker
 qunlikeci=: 2&liker 
 
-liker=: 4 : 0
+liker=: 4 : 0,
 b=. (#dat)#0
 y=. y,{.a.
-r=. cd_qlike cd x,(gethad'b'),(gethad'dat'),gethad'y'
+r=. cd_qlike cd JDT,x,(gethad'b'),(gethad'dat'),gethad'y'
 if. 0~:r do. throw 'C qlike failed with code ',":r end.
 I.b
 )
