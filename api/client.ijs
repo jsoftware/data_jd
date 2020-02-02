@@ -279,7 +279,7 @@ h;d
 )
 
 RECVBUFSIZE=: 50000
-SENDBUFSIZE=: 50000
+SENDTIMEOUT=: 50000 NB. seconds for send timeout
 TIMEOUT=: 20*60*1000 NB. 20 minutes for a response
 
 jwget=: 3 : 0
@@ -293,7 +293,7 @@ try.
  sk=. >0{sdcheck_jsocket_ sdsocket_jsocket_''
  NB. sdcheck_jsocket_ sdioctl_jsocket_ sk,FIONBIO_jsocket_,1
  sdcheck_jsocket_ sdconnect_jsocket_ sk;AF_INET_jsocket_;ip;port
- t putdata sk,SENDBUFSIZE
+ t putdata sk,SENDTIMEOUT
  hd=. getdata sk,RECVBUFSIZE,TIMEOUT
 catch.
  sdclose_jsocket_ sk
