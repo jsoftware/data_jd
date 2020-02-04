@@ -14,15 +14,15 @@ jd'insert g';'b';>:i.3
 )
 
 show=: 3 : 0
-echo jd'read from f'
-echo jd'read from g'
-echo jd'read from f,f.g'
+NB. decho jd'read from f'
+NB. decho jd'read from g'
+NB. decho jd'read from f,f.g'
 c=. jdgl_jd_ 'f jdref_a_g_b'
 if. 2=#dat__c do.
-echo jd'read from f,f>g'
-echo jd'read from f,f-g'
+NB. decho jd'read from f,f>g'
+NB. decho jd'read from f,f-g'
 end.
-echo dat__c
+NB. decho dat__c
 i.0 0
 )
 

@@ -102,29 +102,22 @@ t=. bdnames y
 ECOUNT assert 2=#t
 'tab n'=. t
 n=. 0".n
+a=. i.n
 jd_droptable tab
 jd_createtable tab
-jd_createcol tab,' byte4 byte 4'
-jd_insert tab;'byte4';(n,4)$'a'
-for_t. TYPES do.
+b=. 'boolean';'int';'int1';'int2';'int4';'float'
+c=. (n$0 1) ;(a+70000);(a+15);(a+523);(a+60000);a+0.5
+
+b=. b,'date';'datetime';'edate';'edatetime';'edatetimem';'edatetimen';'byte';'byte 4';'varbyte'
+c=. c,(n#19551212);(n#19551212105812);(n#0);(n#0);(n#0);(n#0);(n$'abc');((n,4)$'abc');<n$'abc';'ab';'a'
+
+q__=: b
+'type problem'assert (/:~TYPES)-:/:~b-.<'byte 4'
+
+for_t. b do.
  t=. ;t
- jd_createcol tab,' ',t,' ',t 
+ jd_createcol tab,' ',(t-.' '),' ',t 
 end.
-jd_set tab;'int';n#70000
-jd_set tab;'float';n#0.5
-jd_set tab;'byte';n#'a'
-jd_update tab;'jdindex<100';'varbyte';<n$'abc';'ab';'a'
-jd_set tab;'date';n#19551212
-jd_set tab;'datetime';n#19551212105812
-jd_set tab;'edate';n#2-2
-jd_set tab;'edatetime';n#2-2
-jd_set tab;'edatetimem';n#2-2
-jd_set tab;'edatetimen';n#2-2
-jd_set tab;'int1';n#15{a.
-jd_set tab;'int2';n#15 15{a.
-jd_set tab;'int4';n#15 15 15 15{a.
-
-
-
+jd_insert tab;,(b-.each' '),.c
 JDOK
 )

@@ -1,4 +1,5 @@
 tests=: <;._2 [ 0 : 0
+test/admin_test.ijs
 test/alloc_test.ijs
 test/basic_test.ijs
 test/byten_test.ijs
@@ -19,6 +20,7 @@ test/insert_test.ijs
 test/intx_test.ijs
 test/jdindex_test.ijs
 test/join_test.ijs
+test/join_type_test.ijs
 test/joinorder_test.ijs
 test/joinx_test.ijs
 test/keyindex_test.ijs
@@ -49,6 +51,7 @@ test/shape_test.ijs
 test/sort_test.ijs
 test/stress_test.ijs
 test/table_append_test.ijs
+test/types_test.ijs
 test/update_test.ijs
 test/upsert_test.ijs
 test/user_test.ijs
