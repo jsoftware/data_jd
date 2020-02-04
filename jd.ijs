@@ -64,7 +64,8 @@ elseif. 1 do.
  if. _1=nc<'DLLDEBUG__' do.
   t=. t,'jd.dll'
  else.
-  t=. '/users/eric/gitdev/addons/data/jd/cdsrc/makevs/x64/debug64/jddll.dll' NB. ms visual studio debug
+  t=. '/users/eric/git/jd-cdsrc/makevs/x64/debug64/jddll.dll' NB. ms visual studio debug
+  echo t
  end.
 end.
 'Jd share library missing'assert fexist t

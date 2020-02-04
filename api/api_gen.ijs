@@ -7,6 +7,8 @@ y=. bdnames y
 select. ;{.y
 case. 'test' do.
  gentest }.y
+case. 'types' do.
+ gentypes }.y
 case. 'ref2' do.
  'atab arows acols btab brows'=. }.y
  arows=. 0".arows
@@ -92,5 +94,37 @@ if. 0~:n do.
  t=. (0,}:+/\t),.t
  jd_set tab;'varbyte';t;(+/{:"1 t)$AlphaNum_j_
 end. 
+JDOK
+)
+
+gentypes=: 3 : 0
+t=. bdnames y
+ECOUNT assert 2=#t
+'tab n'=. t
+n=. 0".n
+jd_droptable tab
+jd_createtable tab
+jd_createcol tab,' byte4 byte 4'
+jd_insert tab;'byte4';(n,4)$'a'
+for_t. TYPES do.
+ t=. ;t
+ jd_createcol tab,' ',t,' ',t 
+end.
+jd_set tab;'int';n#70000
+jd_set tab;'float';n#0.5
+jd_set tab;'byte';n#'a'
+jd_update tab;'jdindex<100';'varbyte';<n$'abc';'ab';'a'
+jd_set tab;'date';n#19551212
+jd_set tab;'datetime';n#19551212105812
+jd_set tab;'edate';n#2-2
+jd_set tab;'edatetime';n#2-2
+jd_set tab;'edatetimem';n#2-2
+jd_set tab;'edatetimen';n#2-2
+jd_set tab;'int1';n#15{a.
+jd_set tab;'int2';n#15 15{a.
+jd_set tab;'int4';n#15 15 15 15{a.
+
+
+
 JDOK
 )
