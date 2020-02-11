@@ -439,21 +439,38 @@ csummary=: 4 : 0
 )
 
 jd_csvreport=: 3 : 0
-a=. ca'/f 0' getopts y
+a=. ca'/f 0 /errors 0' getopts y
 all=. {."1 jdtables''
 if. 0=#a do.
  a=. all
 else.
- a=.  ;getparttables_jd_ each a
-end. 
-assert 0=#a-.all['table{s} not found'
+ b=.  getparttables_jd_ each a
+ a=. ;b
+ 'table not found'assert 0~:;#each b
+end.
+a=. ~.a
+
 r=. ''
+if. option_errors do.
+ r=. ,:;:'table col error # row position text' 
+ for_i. i.#a do.
+  tab=. ;i{a
+  d=. fread PATH__dbl,tab,'/jdcsv/csverror.dat'
+  if. _1=d do. continue. end.
+   d=. 3!:2 d
+   d=. }.(,.'table';tab),.d
+   r=. r,d
+  end.
+ r
+ return.
+end. 
+
 for_i. i.#a do.
  tab=. ;i{a
  b=. fread PATH__dbl,tab,'/jdcsv/csvlog.txt'
  if. _1=b do. continue. end.
  t=. <;.2 b
- if. option_f do.
+ if. -.option_f do.
   b=. ''
   b=. b,'src: '   csummary t 
   b=. b,'start: ' csummary t 

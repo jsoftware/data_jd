@@ -536,6 +536,8 @@ log 'rows: ',":ROWS-oldrows
 log ''
 csverror_z_=: csverrs''
 csverrorcount_z_=: #}.csverror
+(3!:1 csverror) fwrite PATHCSVFOLDER,'/csverror.dat'
+(3!:1 csverrorcount) fwrite PATHCSVFOLDER,'/csverrorcount.dat'
 if. csverrorcount do.
  log ,LF,.~'error: ',"1 sptable csverror
 end.
