@@ -20,7 +20,7 @@ qSample       =: 3 : 'y?.Tlen'
 )
 
 qrangetxt=: 0 : 0
-y=. y, (2|#y)#imax NB. odd extends last range to end
+y=. y, (2|#y)#IMAX NB. odd extends last range to end
 r=. (dat>:{.y)*.dat<:1{y
 y=. 2}.y
 while. #y do.

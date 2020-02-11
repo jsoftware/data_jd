@@ -5,9 +5,9 @@ efs_jd_ '2000-01-01' NB. epochdt 0 is 2000-01-01
 efs_jd_ '2105'       NB. nanoseconds from 2000 to 2105
 efs_jd_ '1970-01-01' NB. negative for nanoseconds before 2000
 
-assert imin_jd_=efs_jd_ '1700'  NB. canonical invalid date rather than error
-assert imin_jd_=efs_jd_ '2300'  NB. canonical invalid date rather than error
-assert imin_jd_=efs_jd_ '????'  NB. canonical invalid date rather than n_jd_eror
+assert IMIN_jd_=efs_jd_ '1700'  NB. canonical invalid date rather than error
+assert IMIN_jd_=efs_jd_ '2300'  NB. canonical invalid date rather than error
+assert IMIN_jd_=efs_jd_ '????'  NB. canonical invalid date rather than n_jd_eror
 
 sfe_jd_ efs_jd_ '1970'
 

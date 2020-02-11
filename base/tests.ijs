@@ -8,6 +8,7 @@ test/createcol_test.ijs
 test/createdcol_test.ijs
 test/createtable_test.ijs
 test/csv_test.ijs
+test/csv_types_test.ijs
 test/delete_test.ijs
 test/drop_rename_test.ijs
 test/droptable_test.ijs
@@ -51,7 +52,6 @@ test/shape_test.ijs
 test/sort_test.ijs
 test/stress_test.ijs
 test/table_append_test.ijs
-test/types_test.ijs
 test/update_test.ijs
 test/upsert_test.ijs
 test/user_test.ijs

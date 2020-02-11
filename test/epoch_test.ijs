@@ -19,7 +19,7 @@ jd'insert f e';'2000'
 jd'reads from f'
 jd'insert f e';0
 jd'insert f e';'1700'   NB. bad allowed from sfe
-jd'insert f e';imin_jd_ NB. bad allowed from imin
+jd'insert f e';IMIN_jd_ NB. bad allowed
 
 NB. bad allowed in csv
 CSVFOLDER=: '~temp/jd/csv'

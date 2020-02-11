@@ -76,29 +76,29 @@ assert 22 23 24 25=,;{:jd'reads from f where jdindex=0'
 
 NB. invalid data errors
 e=. 'bad int'
-  jd  'update f';'jdindex=0';'i1';i1max_jd_
-  jd  'update f';'jdindex=0';'i1';i1min_jd_
-e jdae'update f';'jdindex=0';'i1';>:i1max_jd_
-e jdae'update f';'jdindex=0';'i1';<:i1min_jd_
+  jd  'update f';'jdindex=0';'i1';I1MAX_jd_
+  jd  'update f';'jdindex=0';'i1';I1MIN_jd_
+e jdae'update f';'jdindex=0';'i1';>:I1MAX_jd_
+e jdae'update f';'jdindex=0';'i1';<:I1MIN_jd_
 
-  jd  'update f';'jdindex=0';'i2';i2max_jd_
-  jd  'update f';'jdindex=0';'i2';i2min_jd_
-e jdae'update f';'jdindex=0';'i2';>:i2max_jd_
-e jdae'update f';'jdindex=0';'i2';<:i2min_jd_
+  jd  'update f';'jdindex=0';'i2';I2MAX_jd_
+  jd  'update f';'jdindex=0';'i2';I2MIN_jd_
+e jdae'update f';'jdindex=0';'i2';>:I2MAX_jd_
+e jdae'update f';'jdindex=0';'i2';<:I2MIN_jd_
 
-  jd  'update f';'jdindex=0';'i4';i4max_jd_
-  jd  'update f';'jdindex=0';'i4';i4min_jd_
-e jdae'update f';'jdindex=0';'i4';>:i4max_jd_
-e jdae'update f';'jdindex=0';'i4';<:i4min_jd_
+  jd  'update f';'jdindex=0';'i4';I4MAX_jd_
+  jd  'update f';'jdindex=0';'i4';I4MIN_jd_
+e jdae'update f';'jdindex=0';'i4';>:I4MAX_jd_
+e jdae'update f';'jdindex=0';'i4';<:I4MIN_jd_
 
 NB. csv tests
 
 CSVFOLDER=: '~temp/jd/csv/intx'
 
-d1=: i1min_jd_,23,i1max_jd_
-d2=: i2min_jd_,23,i2max_jd_
-d4=: i4min_jd_,23,i4max_jd_
-d8=: imin_jd_,23,imax_jd_
+d1=: I1MIN_jd_,23,I1MAX_jd_
+d2=: I2MIN_jd_,23,I2MAX_jd_
+d4=: I4MIN_jd_,23,I4MAX_jd_
+d8=: IMIN_jd_,23,IMAX_jd_
 
 f=: 3 : 0
 jdadminx'test'
@@ -141,37 +141,37 @@ assert 'int1'-:typ__c[c=. jdgl_jd_'t1 c1'
 jd'intx t1 c1 int'
 
 jd'intx t1 c1 int'
-jd'update t1';'jdindex=0';'c1';>:i4max_jd_
+jd'update t1';'jdindex=0';'c1';>:I4MAX_jd_
 e jdae'intx t1 c1 int4'
 e jdae'intx t1 c1 int2'
 e jdae'intx t1 c1 int1'
 
 jd'intx t1 c1 int'
-jd'update t1';'jdindex=0';'c1';<:i4min_jd_
+jd'update t1';'jdindex=0';'c1';<:I4MIN_jd_
 e jdae'intx t1 c1 int4'
 e jdae'intx t1 c1 int2'
 e jdae'intx t1 c1 int1'
 
 jd'intx t1 c1 int'
-jd'update t1';'jdindex=0';'c1';>:i2max_jd_
+jd'update t1';'jdindex=0';'c1';>:I2MAX_jd_
 jd     'intx t1 c1 int4'
 e jdae'intx t1 c1 int2'
 e jdae'intx t1 c1 int1'
 
 jd'intx t1 c1 int'
-jd'update t1';'jdindex=0';'c1';<:i2min_jd_
+jd'update t1';'jdindex=0';'c1';<:I2MIN_jd_
   jd  'intx t1 c1 int4'
 e jdae'intx t1 c1 int2'
 e jdae'intx t1 c1 int1'
 
 jd'intx t1 c1 int'
-jd'update t1';'jdindex=0';'c1';>:i1max_jd_
+jd'update t1';'jdindex=0';'c1';>:I1MAX_jd_
   jd  'intx t1 c1 int4'
   jd  'intx t1 c1 int2'
 e jdae'intx t1 c1 int1'
 
 jd'intx t1 c1 int'
-jd'update t1';'jdindex=0';'c1';<:i1min_jd_
+jd'update t1';'jdindex=0';'c1';<:I1MIN_jd_
   jd  'intx t1 c1 int4'
   jd  'intx t1 c1 int2'
 e jdae'intx t1 c1 int1'

@@ -28,7 +28,7 @@ rows=. */p
 cols=. {:s
 r=. (LIBJD_jd_,' efs x x x *c *x *x x')cd rows;cols;((rows,cols) ($,) y);(rows$-1);(<0);0
 d=. p$>4{r
-b=. d~:imin NB. don't adjust bad values
+b=. d~:IMIN NB. don't adjust bad values
 select. x
 case. 'd' do. d=. d-b*(86400*1e9)|d
 case. '0' do. d=. d-b*1e9|d

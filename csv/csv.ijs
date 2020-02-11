@@ -537,7 +537,6 @@ log ''
 csverror_z_=: csverrs''
 csverrorcount_z_=: #}.csverror
 if. csverrorcount do.
- if. 0<+/'ECROWSEP' E. ,;1{"1 csverror do. echo ECROWSEPMSG end.
  log ,LF,.~'error: ',"1 sptable csverror
 end.
 
@@ -612,7 +611,7 @@ end.
 
 ECCOLS=: 3 NB. cols in errors for each row (count,p,row)
 
-'ECUNUSED ECTOOMUCH ECTRUNCATE ECBADNUM ECCRLF ECROWSEP EC01 ECEARLY ECESCAPE ECEPOCHP ECEPOCH ECMAX'=: i.12
+'ECUNUSED ECTOOMUCH ECTRUNCATE ECBADNUM ECCRLF ECMISSING EC01 ECEARLY ECESCAPE ECEPOCHP ECEPOCH ECMAX'=: i.12
 
 ecodes=: <;._2[0 : 0
 ECUNUSED    not used
@@ -620,7 +619,7 @@ ECTOOMUCH   end-of-file before end-of-col
 ECTRUNCATE  truncate
 ECBADNUM    bad number
 ECCRLF      CRLF missing LF
-ECROWSEP    not used
+ECMISSING   empty or all blank field
 EC01        CVARX 0 1 mapped
 ECEARLY     not used
 ECESCAPE    not used - was escape not 0 n t " or \

@@ -4,17 +4,21 @@ coclass'jd'
 
 JDOK=: ,.<'Jd OK'
 
-imax=: 9223372036854775807
-imin=: (-imax)-1
+IMAX=:  9223372036854775807
+IMIN=:  _1+-IMAX
+IBAD=: IMIN
 
-i1max=: <:<.2^7
-i1min=: <:-i1max
+I1MAX=: <:<.2^7
+I1MIN=: _1+-I1MAX
+I1BAD=: I1MIN
 
-i2max=: <:<.2^15
-i2min=: <:-i2max
+I2MAX=: <:<.2^15
+I2MIN=: _1+-I2MAX
+I2BAD=: I2MIN
 
-i4max=: <:<.2^31
-i4min=: <:-i4max
+I4MAX=: <:<.2^31
+I4MIN=: _1+-I4MAX
+I4BAD=: I4MIN
 
 MAXROWCOUNT=: _
 

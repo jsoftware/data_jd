@@ -88,11 +88,11 @@ min=. <./data
 max=. >./data
 
 select. newt
-case. 'int1' do. EINT1 assert (min>:i1min)*.max<:i1max
-case. 'int2' do. EINT2 assert (min>:i2min)*.max<:i2max
-case. 'int4' do. EINT4 assert (min>:i4min)*.max<:i4max
+case. 'int1' do. EINT1 assert (min>:I1MIN)*.max<:I1MAX
+case. 'int2' do. EINT2 assert (min>:I2MIN)*.max<:I2MAX
+case. 'int4' do. EINT4 assert (min>:I4MIN)*.max<:I4MAX
 case. 'intx' do.
- b=. (min>:i1min,i2min,i4min,imin)*.max<:i1max,i2max,i4max,imax
+ b=. (min>:I1MIN,I2MIN,I4MIN,IMIN)*.max<:I1MAX,I2MAX,I4MAX,IMAX
  newt=. ;{.b#;:'int1 int2 int4 int'
 end.
 

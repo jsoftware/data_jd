@@ -62,7 +62,13 @@ jdfolder=: '~temp/jd/tdb/j',n
 csvfolder=: jpath jdfolder,'/jdcsv'
 csvdefs_jdcsv_ ".'cdef',n
 R=: csvload_jdcsv_ csvfolder;csvfile;0
-".'valid',n,' 0'
+try. ".'valid',n,' 0'
+catch.
+ echo csverror
+ echo 'valid',n,' failed'
+ echo csvfolder
+ echo jdfolder
+end.
 if. x do. R return. end.
 jdfromcsv_jdcsv_ jdfolder;csvfolder
 r=. jd'read from j',n
@@ -152,7 +158,7 @@ validjd2=: 3 : 0
 )
 
 csv3=: 0 : 0
-pvid0 -1 -1.1 2.2 3.3
+pvid0 1 -1.1 2.2 3.3
 pvid1 0 4.4 5.5 6.6
 )
 
@@ -248,8 +254,10 @@ options  , LF NO NO 0
 )
 
 valid7=: 3 : 0
-assert 0=csverrorcount
-assert c_a__csv-:7 3$1 2 3 4 0 0 7 8 9 0 11 0 13 14 15 0 0 0 19 20 21
+assert 0~:csverrorcount
+d=. 1 2 3 4 0 0 7 8 9 0 11 0 13 14 15 0 0 0 19 20 21
+d=. IMIN_jd_ ((d=0)#i.#d)}d
+assert c_a__csv-:7 3$d
 )
 
 NB. test CDOUBLE (used to test fast CDOUBLEX)
@@ -311,15 +319,10 @@ options  , LF NO NO 0
 
 valid10=: 3 : 0
 assert c_a__csv-:3 5$' '
-assert c_b__csv-:0 0 0
-assert c_c__csv-:0 0 0
-assert c_d__csv-:0 0 0
-assert c_e__csv-:0 0 0
-
-NB. elided datetime loads as 0
-NB. csvwr will write a 0 and csvrd will load as IBAD
-NB. jam original csv values to bad so we match result of wr/rd
-c_e__csv=: 3#_9223372036854775808 NB. !
+assert c_b__csv=IMIN_jd_
+assert c_c__csv=__
+assert c_d__csv=__
+assert c_e__csv=IMIN_jd_
 )
 
 NB. CI8X shift decimal
@@ -563,9 +566,9 @@ csv23=: 0 : 0
 f,f,f
 F,F,F
 1,1,1
-2,2,2
 t,t,t
 T,T,T
+2,2,2
 a,a,a
 )
 
@@ -577,9 +580,9 @@ options  , LF NO NO 0
 )
 
 valid23=: 3 : 0
-assert c_jb1__csv-:0 0 0 1 1 1 1 1
-assert c_jb2__csv-:0 0 0 1 1 1 1 1
-assert c_jb3__csv-:0 0 0 1 1 1 1 1
+assert c_jb1__csv-:0 0 0 1 1 1 0 0
+assert c_jb2__csv-:0 0 0 1 1 1 0 0
+assert c_jb3__csv-:0 0 0 1 1 1 0 0
 )
 
 csv24=: 0 : 0

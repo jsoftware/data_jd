@@ -58,7 +58,7 @@ dat I.@:(e."_1 _) y
 NB. same routine as in numeric.ijs
 qrange=: 3 : 0
 dat=. (getbase'')+i.Tlen
-y=. y, (2|#y)#imax NB. odd extends last range to end
+y=. y, (2|#y)#IMAX NB. odd extends last range to end
 r=. (dat>:{.y)*.dat<:1{y
 y=. 2}.y
 while. #y do.
