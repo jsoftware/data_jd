@@ -115,6 +115,7 @@ api/api_change.ijs
 api/api_create.ijs
 api/api_createdcol.ijs
 api/api_csv.ijs
+api/api_csvcdefs.ijs
 api/api_drop.ijs
 api/api_gen.ijs
 api/api_info.ijs
