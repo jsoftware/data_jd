@@ -1,5 +1,7 @@
 NB. Copyright 2020, Jsoftware Inc.  All rights reserved.
 
+NB. csvrd types from explicit cdefs
+
 CSVFOLDER=: '~temp/csv/'
 fn=: CSVFOLDER,'f.csv'
 fncdef=: CSVFOLDER,'f.cdefs'
@@ -11,11 +13,12 @@ missing=:  'ECMISSING'
 init=: 4 : 0
 'new'jdadmin'test'
 jd'createtable f'
-jd'createcol f ',x,' ',x
+jd'createcol f ',(x-.' '),' ',x
 jd'csvwr /h1 f.csv f'
 (y,LF) fappend fn
 )
 
+NB. numeric types
 test=: 3 : 0
 'type arg val'=. y
 tps=. ;:'boolean int int1 int2 int4 float edate edatetime edatetimem edatetimen date datetime'
@@ -38,6 +41,17 @@ else.
 end. 
 60{.v
 )
+
+NB. byte types - does all at once, not one at a time 
+testb=: 3 : 0
+'type arg'=. y
+type init arg NB. empty at end
+jd'droptable g'
+jd'csvrd f.csv g'
+jd'reads from g'
+)
+
+
 
 NB. 'int' run ints
 run=: 4 : 0
@@ -117,7 +131,56 @@ edates=: 0 : 0
 '2001  23' ; badepoch
 )
 
+byte6s=: 0 : 0
+a
+
+ab
+    
+abc
+abcd
+abcde
+abcdef
+abcdefghijk
+)
+
+testbyte=: 3 : 0
+testb 'byte';byte6s
+a=. jd'read from g'
+a=. ;{:"1 a
+b=. ,>1{.each<;._2 byte6s,LF
+assert a-:b
+assert 10=>{:{:jd'info summary g'
+assert 2=#jd'csvreport /errors g'
+'ECTRUNCATE'-:10{.,;2{{:jd'csvreport /errors'
+)
+
+
+testbyteN=: 3 : 0
+testb ('byte ',":y);byte6s
+a=. jd'read from g'
+a=. ;{:"1 a
+b=.>y{.each<;._2 byte6s,LF
+assert a-:b
+assert 10=>{:{:jd'info summary g'
+assert 2=#jd'csvreport /errors g'
+'ECTRUNCATE'-:10{.,;2{{:jd'csvreport /errors'
+)
+
+testvarbyte=: 3 : 0
+testb 'varbyte';byte6s
+a=. jd'read from g'
+a=. >,>{:"1 a
+assert a-:><;._2 byte6s,LF
+assert 10=>{:{:jd'info summary g'
+assert 1=#jd'csvreport /errors g'
+)
+
+
 runall=: 3 : 0
+testbyte''  NB. byte
+testbyteN 1 NB. byte 6
+testbyteN 6 NB. byte 1
+testvarbyte''
 r=. 'boolean' run booleans
 r=. r,'int'   run ints
 r=. r,'int1'  run int1s
@@ -132,4 +195,4 @@ checkall=: 3 : 0
 'runall has bad result' assert ' '=,2{."1 runall''
 )
 
-checkall''
+NB.! checkall''

@@ -333,6 +333,7 @@ if. option_errors do.
   d=. fread PATH__dbl,tab,'/jdcsv/csverror.dat'
   if. _1=d do. continue. end.
    d=. 3!:2 d
+   if. 1=#d do. continue. end.
    d=. }.(,.'table';tab),.d
    r=. r,d
   end.
