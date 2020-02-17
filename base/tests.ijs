@@ -8,6 +8,7 @@ test/createcol_test.ijs
 test/createdcol_test.ijs
 test/createtable_test.ijs
 test/csv_test.ijs
+test/csvcdefs_test.ijs
 test/csvrd_types_test.ijs
 test/delete_test.ijs
 test/drop_rename_test.ijs

@@ -88,42 +88,45 @@ end.
 )
 
 NB. return jd type of char matrix
+NB. csvrd has permissive conversions - 'abc123def' -> int 123
+NB. csvcdefs has strict conversions  - 'abc123def' -> byte 9 
+NB. varbyte if varb <width
+NB. byte width if width>29 (efs max len)
+NB. byte if all fields empty or missing
+NB. remove all missing/empty fields as these do not determine type
+NB. byte if no fields
+NB. boolean if all fields (lowercase) are 0, f, false, 1, t, or true
+NB. int/float if __".y conversion has no __
+NB. efs if efs conversion has no errors
 gettype=: 4 : 0
 varb=. x
 
+w=. {:$y
+if. varb<w do. 'varbyte' return. end.
+if. 29<w   do. 'byte ',":w return. end. NB. efs max len is 29
+a=. dlb each <"1 y NB. trailing blanks have already been dropped
+a=. (0~:;#each a)#a
+if. 0=#a do. 'byte' return. end.
+NB. a is dltb boxed items with empties removed
+
+NB. boolean
+b=. tolower each a
+b=. b e. ,each '0';'f';'false';'1';'t';'true'
+if. *./b do. 'boolean' return. end.
+
+NB. int/float
+t=. ;__".each a
+if. -.__ e. t do. ;(2 4 i. 3!:0[t){'boolean';'int';'float' return. end.
+
 NB. test for is08601
-try.
- v=. efs y
- assert IMIN~:v
+v=. ;efs each a
+if. *./IMIN~:v do.
  if. *./0=(86400*1e9)|v do. 'edate'      return. end.
  if. *./0=1e9|v         do. 'edatetime'  return. end.
  if. *./0=1e6|v         do. 'edatetimem' return. end.
  'edatetimen' return.
-catch.
 end.
-
-if. 19={:$y do.
- if. 4 7 10 13 16 dtcheck y do. 'datetime'  return. end.
- if. 2 5 10 13 16  dtcheck y do. 'datetimex' return. end.
-end.
-
-if. 10={:$y do.
- if. 4 7 dtcheck y do. 'date'  return. end.
- if. 2 5 dtcheck y do. 'datex' return. end.
-end.
-
-n=. _".y
-t=. (_ e. ,n)+.-.(,{.$y)-:$n NB. 1 if not numeric
-
-if. t do.
- s=. {:$y
- if.      1=s do.  'byte' return.
- elseif.  varb<s do. 'varbyte' return.
- elseif. 1     do. 'byte      ',":s return.
- end.
-else.
- t=. 3!:0 n
- jt=. >(1 4 8 i. 3!:0 n){'boolean';'int';'float'
- return.
-end.
+'byte ',":w
 )
+
+
