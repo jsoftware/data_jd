@@ -28,7 +28,7 @@ NB. chars not allowed in Jd names because they are used as file names
 NB. also to avoid parsing problems
 NB. ` unix shell script
 NB. ~ vi etc. temp file
-RESERVEDCHARS=: '/\ *.,:?<>|"''`~' NB. illegal chars in dan/table/col names
+RESERVEDCHARS=: '/\ *.,:?<>|"''`~-=' NB. illegal in dan/table/col names - -= conflict with joins
 RESERVEDWORDS=: ;:'by from where order'
 
 ECOUNT=:     'incorrect arg count'
