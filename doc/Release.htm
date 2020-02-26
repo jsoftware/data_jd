@@ -17,6 +17,23 @@
 <p>A snapshot of Jd wiki is converted to html and included in a release.</p>
 <p>For the latest on Jd, use the wiki. For details relevant to your release, use the release html.</p>
 <h2 id="beta---version-4.28">beta - version 4.28</h2>
+<ul>
+<li>Jd shared library - thread safe except for csv load routines
+<ul>
+<li>load routines could be threadsafe with a bit more work</li>
+</ul></li>
+<li>csvcdefs - changes to improve guesses on col types
+<ul>
+<li>will not set types date/datex/datetime/datetimex due to efs confusion</li>
+<li>csvcdefs is called from csvrd to create cdefs file if there isn't one</li>
+</ul></li>
+<li>csvrd - changes for bad or missing data for numeric types</li>
+<li>csvreport /errors option for table of csvrd errors</li>
+<li>csvreport /f option had opposite effect - fixed</li>
+<li>gen types table rows</li>
+<li>Jd windows shared library now uses same C runtime as J (/MT)</li>
+<li>Jd shared library - localtime changed to localtime_r to be threadsafe</li>
+</ul>
 <h2 id="january-2020---version-4.27">7 January 2020 - version 4.27</h2>
 <ul>
 <li>pm/bench improvements</li>

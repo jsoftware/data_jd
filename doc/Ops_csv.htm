@@ -69,7 +69,45 @@ options colsep rowsep quoted escaped headers [epoch]<br />
 <p>csvrd [options] csvfile table<br />
   /rows n - read n rows - default all<br />
   /cdefs - read cdefs from implicit arg CDEFSFILE<br />
-</p>
+Prior to release 4.28 the numeric conversion rules were inconsistent and did not handle missing data.</p>
+<p>Missing data (empty field or all blanks) and bad data converts to the minimum value for the type.</p>
+<p>csvreport gives info on the load and errors.</p>
+<p><code>jd'csvreport'           NB. summary of last csvrd for all tables</code><br />
+<code>jd'csvreport /errors h' NB. error table for for table h</code></p>
+<p>The definition of bad data varies across types as some are more or less permissive.</p>
+<ul>
+<li>boolean</li>
+</ul>
+<p>1st non-blank must be 0fF or 1tT and later chars ignored</br> missing/bad - 0</p>
+<ul>
+<li>int</li>
+</ul>
+<p>leading chars other than +-digit ignored</br> bad unless at least 1 digit</br> chars after last digit are ignored</br> missing/bad - IMIN_jd_</p>
+<ul>
+<li>int1</li>
+</ul>
+<p>same rules as int</br> bad if not in range I1MIN to I1MAX</br> missing/bad - I1MIN_jd_</p>
+<ul>
+<li>int2</li>
+</ul>
+<p>same rules as int</br> bad if not in range I2MIN to I2MAX</br> missing/bad - I2MIN_jd_</p>
+<ul>
+<li>int4</li>
+</ul>
+<p>same rules as int</br> bad if not in range I4MIN to I4MAX</br> missing/bad - I4MIN_jd_</p>
+<ul>
+<li>float</li>
+</ul>
+<p>leading chars other than +-.digit ignored</br> strtod rules</br> missing/bad - __ (float negative infinity)</p>
+<p>csvwr writes empty field for __</p>
+<ul>
+<li>edate, edatetime, edatetimem, edatetimen</li>
+</ul>
+<p>leading and trailing blanks ignored</br> efs rules</br> mising/bad - IMIN_jd_</p>
+<ul>
+<li>date, datetime (yyyymmdd and ddmmyyyy)</li>
+</ul>
+<p>leading blanks ignored</br> non-digit OK between y m d parts</br> mm and dd can have 1 or 2 digits if separated by non-digit</br> extra non-blank chars are bad</br> missing/bad - IMIN_jd_</p>
 <h2 id="csvprobe">csvprobe</h2>
 <p>csvprobe [options] csvfile<br />
   /replace - replace existing cdefs file<br />
@@ -79,8 +117,8 @@ options colsep rowsep quoted escaped headers [epoch]<br />
 examine table to determine /h parameter to use for csvcdefs and make sure rowsep, colsep, etc. make sense</p>
 <h2 id="csvreport">csvreport</h2>
 <p>csvreport [options] [0 or more tables]<br />
-  /f - does full report rather than summary<br />
-  report results of last csvrd for tables<br />
+  /errors - table with csvrd error info</br>   /f - full report rather than summary<br />
+</br>   report results of last csvrd for tables<br />
 </p>
 <h2 id="csvrestore">csvrestore</h2>
 <p>csvrestore<br />

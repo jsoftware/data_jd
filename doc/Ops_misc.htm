@@ -29,12 +29,13 @@ but the chance of corrupted disk data is significantly reduced</p>
 <p>Windows: FlushViewOfFile and FlushFileBuffers<br />
 Unix: fsync</p>
 <h2 id="gen">gen</h2>
-<p>gen test table rows<br />
+<p>gen types table rows</br> gen test table rows<br />
 gen ref2 table1 rows1 cols table2 rows2<br />
 gen one table rows cols<br />
 gen two table1 rows1 table2 [rows2]</p>
 <p>generate test table(s)</p>
-<p>test - table with all col types<br />
+<p>types - table with all col types<br />
+test - table with some col types<br />
 ref2 - reference table1 aref table2 bref - extra cols<br />
 one - table with extras cols<br />
 two - default rows2 is &lt;.rows1%10 - suitable for many to one join</p>
