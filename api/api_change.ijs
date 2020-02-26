@@ -156,8 +156,7 @@ FETAB_jd_=. ;tab
 t=. jdgl FETAB
 if. 2=3!:0 w do.
  NB. read where clause or col(s)
- if. *./(;:w)e.NAMES__t do.
-  
+ if. *./(;: ::0:w)e.NAMES__t do. NB. where clause could contain unmatched quote
   NB. key update 
  'name data pairs - odd number' assert (2<:#y)*.0=2|#y
   ns=. ,each(2*i.-:#y){y NB. list of names
