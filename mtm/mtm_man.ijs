@@ -3,7 +3,7 @@ NB. Copyright 2020, Jsoftware Inc.  All rights reserved.
 echo 0 : 0
 man pages:
    jd_mtm_overview_jman_
-   jd_mtm_usage_jman_
+   jd_mtm_demo_jman_
 )
 
 jd_mtm_overview_jman_=:  0 : 0
@@ -12,6 +12,11 @@ Jd multi task manager
 CJ  - task  for jobs (request/response zmq_raw)
 CW  - task  for write ops
 CRS - tasks for read ops
+
+
+SCJ  - socket jobs (request/response)
+SCW  - socket for CW task
+SCRn - socket(s) for CRS tasks
 
 CW init  - CRS tasks not started ; winit'' ; fails if refs or varbyte
 
@@ -36,23 +41,27 @@ refs not supported (server init fails)
 
 )
 
-jd_mtm_usage_jman_=: 0 : 0
-1. create mtm DB
+jd_mtm_demo_jman_=: 0 : 0
+1. create mtm demo DB - only run once to create a new mtm db
    start new j session
-   load'~Jddev/jd.ijs'
-   load'~Jddev/mtm/test.ijs'
+   load'jd'
+   load'~addons/mtm/demo/createmtmdb.ijs'
    createmtmdb''
    
 2. start mtm server
-   start new jconsole sessopm
-   load'~Jddev/mtm/test.ijs'
-   runserver''
-   
+   start new jconsole session
+   load'~addons/mtm/mtm.ijs'
+   init '~temp/jd/mtm'
+
    
 3. start mtm client (same machine as server for testing)
    start new jconsole session
-   load'~Jddev/mtm/test.ijs'
+   load'~addons/mtm/mtm_client.ijs'
+   init 65220
+   msr'info summary'
+   
+   
+   load'~addons/mtm/demo/test.ijs'
    runclient''
-
 )
 

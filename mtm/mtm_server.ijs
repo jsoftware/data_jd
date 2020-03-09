@@ -1,6 +1,6 @@
 NB. Copyright 2019, Jsoftware Inc.  All rights reserved.
 
-NB. mtm insert server routines
+NB. mtm insert server initialization routines
 
 require'~Jddev/jd.ijs'
 
