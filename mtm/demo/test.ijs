@@ -69,7 +69,5 @@ for. i.y do.
  end.
  echo msr'read count a from f'
 end.
-thispid=. ":+/pid=;{:{:msr'read from f'
-'this pid wrote ',thispid,' records out of total of ',":;{:{:msr'read count a from f'
 )
 

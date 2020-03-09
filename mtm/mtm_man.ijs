@@ -54,14 +54,25 @@ jd_mtm_demo_jman_=: 0 : 0
    init '~temp/jd/mtm'
 
    
-3. start mtm client (same machine as server for testing)
+3. start mtm client
    start new jconsole session
    load'~addons/mtm/mtm_client.ijs'
-   init 65220
+   init 65220 NB. port reported by mtm server
    msr'info summary'
    
    
    load'~addons/mtm/demo/test.ijs'
-   runclient''
+   test''
+   drive 10
+   
+ 4. start another mtm client
+    start new jconsole session
+    load'~addons/mtm/mtm_client.ijs'
+    init 65220 NB. port reported by mtm server
+    msr'info summary'
+   
+    in mtm client started in step 3 do:
+    drive 10000 NB. keep busy with request
+   
+    msr'info schema'
 )
-
