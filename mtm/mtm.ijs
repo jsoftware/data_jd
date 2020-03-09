@@ -125,10 +125,11 @@ if. 0=#d do.
   'route closed'logmtm ":sr
   SRS=:   b#SRS
   SDATA=: b#SDATA
-  for_c. CRS__,CW__ do.
+  for_c. BUSY__ do.
    if. sr=sr__c do.
     'result not wanted' logmtm ":sr
-    sr__c=: 0
+    srold__c=: sr NB. for later discarded logmtm
+    sr__c=: _1
     break.
    end.
   end.
@@ -221,7 +222,7 @@ for_n. BUSY do.
   NB. have result to send to a client - send it right now
   NB.! OUT__CJ=: OUT__CJ,rid__CJ streamframe rs
   
-  if. 0=sr__n do.
+  if. _1=sr__n do.
    'result discarded' logmtm ":srold__n
   else.
    rs=. rid__CJ streamframe rs
@@ -238,7 +239,8 @@ for_n. BUSY do.
    catch.
     'send result failed' logmtm ":sr__n
    end.
-  end. 
+  end.
+  sr__n=: _1 NB. do not use again
  end.
 end.
 )
