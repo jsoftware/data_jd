@@ -59,7 +59,12 @@ jd_mtm_demo_jman_=: 0 : 0
    load'~addons/mtm/mtm_client.ijs'
    init 65220 NB. port reported by mtm server
    msr'info summary'
-   
+   msr'json info summary'
+   msr'read from f'
+   msr'json read from f'
+   msr'insert f';'a';23
+   msr'json ',enc_pjson_'insert f';'a';123
+   msr'json info nope'
    
    load'~addons/mtm/demo/test.ijs'
    test''

@@ -13,6 +13,7 @@ jd_reads '/lr ',y
 
 jd_reads=: 3 : 0
 y=. readstart y
+option_lr=: option_lr+.JSONFLAG
 if. 0~:option_table do.
  ETABLEFILE assert 0=option_file
  option_lr=: 1
@@ -46,7 +47,9 @@ if. 0~:option_table do.
 elseif. 0~:option_file do.
  (3!:1 r)fwrite file,option_file
  JDOK
-elseif. 1 do.
+elseif. JSONFLAG do.
+ enc_pjson_ r
+elseif. 1 do. 
  r
 end. 
 )

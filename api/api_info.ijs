@@ -14,6 +14,15 @@ end.
 )
 
 jd_info=: 3 : 0
+r=. info y
+if. JSONFLAG do.
+ enc_pjson_ each |:r
+else.
+ r
+end. 
+)
+
+info=: 3 : 0
 t=. bdnames y
 a=. 2{.}.t
 select. {.t

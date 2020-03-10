@@ -160,9 +160,13 @@ for_i. i.-:#y do.
  d=. fixtypex__c >(>:j){y
  if. -.''-:shape__c do.
   'fixpairs: bad shape'assert 'byte'-:typ__c
+  if. JSONFLAG do.
+   ESHAPE assert 0=shape__c|#d
+   d=. d$~(shape__c,~shape__c%~#d)
+  end.
   if. 0=$$d do. d=. ,d end.
   if. 1=$$d do. d=. ,:d end.
-  ESHAPE assert ({:$d)<:shape__c 
+  'bad shape (data trailing shape greater than col trailing shape)' assert ({:$d)<:shape__c 
   d=. shape__c{."1 d
  end.
  NB. if. 'edate'-:5{.typ__c do. EEPOCH assert -.IMIN e. d  end.

@@ -101,8 +101,10 @@ echo a,d
 log=: 3 : 'i.0 0'
 
 NB. 0 if op is read type, 1 if op is insert, 2 if other
+NB. json support - drop leading 'json '
 wcheck=: 3 : 0
-t=. dlb;(L.y){y;{.y
+t=. ;(L.y){y;{.y
+t=. dlb(5*'json '-:5{.t)}.t
 t=. <t{.~t i. ' '
 if. t e. 'read';'reads';'info';'rspin' do. 0 return. end.
 if. t=<'insert' do. 1 return. end.

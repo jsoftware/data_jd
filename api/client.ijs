@@ -85,6 +85,7 @@ i.0 0
 )
 
 jd=: 3 : 0
+JSONFLAG=: 0
 jdlasty_z_=: y
 jdlast_z_=: jdx y
 t=. ;{.{.jdlast
@@ -126,6 +127,14 @@ USER=: (UP i.'/'){.UP
 try.
 if. 'intask'-:SERVER do.
  'jde: jd not loaded'assert 0=nc<'DBPATHS'
+ 
+ JSONFLAG=: 0
+ if. 'json '-:5{.y do.
+   y=. 5}.y
+   if. '['={.y do. y=. dec_pjson_ y end.
+   JSONFLAG=: 1
+ end.
+ 
  if. 0=L.y do.
   t=. dlb y
   i=. t i.' '

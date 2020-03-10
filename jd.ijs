@@ -24,6 +24,7 @@ doin=: 4 : '(<x)(4 : ''do__y x'')each<"0 y' NB. run sentence in each locale
 'Jd requires addon jfiles'assert fexist '~addons/data/jfiles/jfiles.ijs'
 require'jfiles'
 require'data/jmf'
+require'convert/pjson'
 
 missingkey=: '!!! Jd key: non-commercial key automatically installed'
 noncomkey=:  '!!! Jd key: non-commercial use only!'
