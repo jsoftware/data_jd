@@ -5,6 +5,7 @@ NB. following code needs to be implemented on a per thread basis for the mtm ser
 
 require'socket'
 require'~Jddev/mtm/mtm_util.ijs' NB.! ~Jddev
+require'~addons/convert/pjson/pjson.ijs'
 
 close=: 3 : 'sdclose_jsocket_ S'
 

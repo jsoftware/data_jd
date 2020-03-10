@@ -2,6 +2,7 @@ NB. Copyright 2019, Jsoftware Inc.  All rights reserved.
 
 require'~addons/net/jcs/jcs.ijs'
 require'~Jddev/mtm/mtm_util.ijs'
+require'~addons/convert/pjson/pjson.ijs'
 
 NB. force load of development
 ld=: 3 : 0
