@@ -151,7 +151,7 @@ while. HLEN__<:#data do.
  dc=. framelen__ data
  if. dc>#data do. break. end.
   rid=: getrid data NB. !!!! no more rid
-  j=. dec HLEN__}.dc{.data
+  j=. mtmdec HLEN__}.dc{.data
   if. 0=wcheck__ j do.
    RJOBS=: RJOBS,<sr;j
   else. 

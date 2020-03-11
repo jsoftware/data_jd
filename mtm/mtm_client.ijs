@@ -43,7 +43,7 @@ try.
   if. dc>#r do. continue. end.   NB. need more data for complete frame
   'bad recv count'assert dc=#r
   rid=: getrid r
-  dec HLEN}.r
+  mtmdec HLEN}.r
   break.
  end.
 catch.

@@ -2,13 +2,13 @@ NB. Copyright 2019, Jsoftware Inc.  All rights reserved.
 NB. mtm server/client common routines
 
 NB. define n z perhaps not the best solution
-enc_z_=: 3!:1
-dec_z_=: 3!:2
+mtmenc_z_=: 3 : 'if. 0=L.y do. y else. y=. 3!:1 y end.'
+mtmdec_z_=: 3 : 'if. 227=a.i.{.y do. 3!:2 y else. y end.' 
 
 streamframe=: 3 : 0
 0 streamframe y
-: 
-t=. enc y
+:
+t=. mtmenc y
 t,~'JdMTMfrm',(((8#256)#:HLEN+#t){a.),((8#256)#:x){a.
 )
 
