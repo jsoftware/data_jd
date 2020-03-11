@@ -49,7 +49,8 @@ demo
  vr              
 server
  jcs             
- jhs             
+ jhs
+ json
 xtra
  custom          
  dropstop        

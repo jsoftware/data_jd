@@ -19,6 +19,7 @@ tutorial/intro_csv_tut.ijs
 tutorial/intx_tut.ijs
 tutorial/jcs_tut.ijs
 tutorial/jhs_tut.ijs
+tutorial/json_tut.ijs
 tutorial/key_tut.ijs
 tutorial/link_tut.ijs
 tutorial/log_tut.ijs

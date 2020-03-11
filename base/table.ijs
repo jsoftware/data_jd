@@ -157,13 +157,11 @@ for_i. i.-:#y do.
  ns=. ns,n
  c=. 0{CHILDREN{~NAMES i. n
  ts=. ts,<shape__c
- d=. fixtypex__c >(>:j){y
+ d=. >(>:j){y
+ if. JSONFLAG *. -.''-:shape__c do. d=. >d end.
+ d=. fixtypex__c d
  if. -.''-:shape__c do.
   'fixpairs: bad shape'assert 'byte'-:typ__c
-  if. JSONFLAG do.
-   ESHAPE assert 0=shape__c|#d
-   d=. d$~(shape__c,~shape__c%~#d)
-  end.
   if. 0=$$d do. d=. ,d end.
   if. 1=$$d do. d=. ,:d end.
   'bad shape (data trailing shape greater than col trailing shape)' assert ({:$d)<:shape__c 
