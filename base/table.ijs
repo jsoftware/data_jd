@@ -159,6 +159,7 @@ for_i. i.-:#y do.
  ts=. ts,<shape__c
  d=. >(>:j){y
  if. JSONFLAG *. -.''-:shape__c do. d=. >d end.
+ if. isJson *. -.''-:shape__c do. d=. >d end.
  d=. fixtypex__c d
  if. -.''-:shape__c do.
   'fixpairs: bad shape'assert 'byte'-:typ__c

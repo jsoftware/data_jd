@@ -218,6 +218,7 @@ for_n. BUSY do.
    if. n=CW do.
     't r'=. {:rs
     mtinfo=: (deb each<"1 t);<,r
+    rs=. '[]'
    end.
   catch.
    rs=. lse__n
