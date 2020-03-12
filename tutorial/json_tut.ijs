@@ -39,7 +39,7 @@ d=. enc_pjson_ 'insert f';'i';23;'b';'x';'b4';'abc';'v';<<'abc'
 jd'json ',d
 jd'read from f'
 
-d=: enc_pjson_ 'insert f';'i';23 24;'b';'xy';'b4';(2 3$'abcdef');'v';<'qwer';'asdfasdf'
+d=. enc_pjson_ 'insert f';'i';23 24;'b';'xy';'b4';(2 3$'abcdef');'v';<'qwer';'asdfasdf'
 jd'json ',d
 jd'read from f'
 

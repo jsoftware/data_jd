@@ -45,18 +45,18 @@ jd_mtm_demo_jman_=: 0 : 0
 1. create mtm demo DB - only run once to create a new mtm db
    start new j session
    load'jd'
-   load'~addons/mtm/demo/createmtmdb.ijs'
+   load'~Jddev/mtm/demo/createmtmdb.ijs'
    createmtmdb''
    
 2. start mtm server
    start new jconsole session
-   load'~addons/mtm/mtm.ijs'
+   load'~Jddev/mtm/mtm.ijs'
    init '~temp/jd/mtm'
 
    
 3. start mtm client
    start new jconsole session
-   load'~addons/mtm/mtm_client.ijs'
+   load'~Jddev/mtm/mtm_client.ijs'
    init 65220 NB. port reported by mtm server
    msr'info summary'
    msr'json info summary'
@@ -72,7 +72,7 @@ jd_mtm_demo_jman_=: 0 : 0
    
  4. start another mtm client
     start new jconsole session
-    load'~addons/mtm/mtm_client.ijs'
+    load'~Jddev/mtm/mtm_client.ijs'
     init 65220 NB. port reported by mtm server
     msr'info summary'
    
