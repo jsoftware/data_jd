@@ -113,7 +113,7 @@ else.
  end.
 end.
 FETAB=: tab
-if. 2=3!:0 w do. w=. ;{:{:jd_read'jdindex from ',tab,' where ',w end. 
+if. 2=3!:0 w do. w=. ;{:{:jd_read_internal 'jdindex from ',tab,' where ',w end. 
 if. 0=#w do. JDOK return. end.
 if. isptable tab do.
  deleteptable tab;w
@@ -172,7 +172,7 @@ if. 2=3!:0 w do.
   ns=. b#ns
   vs=. b#vs
  else.
-  w=. ;{:,old=. jd_read'jdindex from ',tab,' where ',w NB. ; always a list so 1 n$'abc' works
+  w=. ;{:,old=. jd_read_internal 'jdindex from ',tab,' where ',w NB. ; always a list so 1 n$'abc' works
   'ns vs rows'=. (#w) fixpairs__t 2}.y
  end. 
 else.

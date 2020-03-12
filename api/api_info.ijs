@@ -15,7 +15,7 @@ end.
 
 jd_info=: 3 : 0
 r=. info y
-if. JSONFLAG do.
+if. isJson do.
  enc_pjson_ |:r
 else.
  r

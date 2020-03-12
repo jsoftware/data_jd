@@ -85,28 +85,16 @@ i.0 0
 )
 
 jd=: 3 : 0
-JSONFLAG=: 0
+isJson=: 0
 jdlasty_z_=: y
-isJson=: isInfo=. 0
-if. 2=3!:0 y do.
- if. 'json '-:5{.y do.
-  y=. dlb 5}.y
-  isJson=: 1
-  isInfo=. ('info '-:5{.y)
-  if. ('reads '-:6{.y)>('reads /lr '-:10{.y) do.
-   y=. 'read ',6}.y
-  end.
-  y=. dec_pjson_^:('['={.) y
- end.
-end.
 jdlast_z_=: jdx y
 t=. ;{.{.jdlast
 if. 'Jd error'-:t do.
  t=. _2}.;jdlast,each <': '
  13!:8&3 t
 elseif. 'Jd report '-:10{.t do. ;{:jdlast 
-elseif. 'Jd OK'-:t          do. if. isJson do. '[]' else. i.0 0 end.
-elseif. 1                   do. if. isJson do. enc_pjson_ |:^:isInfo jdlast else. jdlast end.
+elseif. 'Jd OK'-:t          do. if. isJson do. '{}' else. i.0 0 end.
+elseif. 1                   do. jdlast
 end.
 )
 
@@ -140,11 +128,11 @@ try.
 if. 'intask'-:SERVER do.
  'jde: jd not loaded'assert 0=nc<'DBPATHS'
  
- JSONFLAG=: 0
+ isJson=: 0
  if. 'json '-:5{.y do.
    y=. 5}.y
    if. '['={.y do. y=. dec_pjson_ y end.
-   JSONFLAG=: 1
+   isJson=: 1
  end.
  
  if. 0=L.y do.

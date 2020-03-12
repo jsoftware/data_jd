@@ -7,10 +7,18 @@ jd'createcol f b4 byte 4'
 d=. 'insert f';'i';2;'b';'z';'b4';'abc'
 jd d
 jd'read from f'
-enc_pjson_ d
-jd'json ',enc_pjson_ d NB. string starting with json assumes arg is json string
-jd'read from f'
+[r=. jd'json read from f'
+assert '{'={.r NB. json string result
+[r=. jd'json reads from f'
+assert '{'={.r NB. json string result
+[r=. jd'json info summary'
+assert '{'={.r NB. json string result
 
+enc_pjson_ d
+[r=. jd'json ',enc_pjson_ d NB. string starting with json assumes arg is json string
+assert '{}'-:r NB. json string result
+
+jd'read from f'
 d=. 'insert f';'i';2;'b';'z';'b4';'abcde'
 'bad shape'jdae d
 enc_pjson_ d
@@ -51,16 +59,23 @@ NB. a dictionary can be converted to a list
 NB. sometimes you need the list encoding and not the dictionary
 NB. e.g if you want to feed the json result of a read to an insert
 
-NB. convert json dictionary to list
-lfromp=: 3 : 0
+NB. json - list from dictionary
+lfromd=: 3 : 0
 d=. }.}:<;.2 y,LF
-for_i. i.#d do.
- a=. >i{d
- d=. (<',' (a i.':')}a) i}d
-end.
-;d
+;(d i.each ':') (','"_`[`])} each d
 )
 
-[t=. '[',LF,']',~(enc_pjson_ 'insert f'),',',LF,lfromp jd'json read from f'
+[t=. '[',LF,']',~(enc_pjson_ 'insert f'),',',LF,lfromd jd'json read from f'
 jd'json ',t
 jd'read from f'
+
+NB. check json results for other ops
+assert (i.0 0)-:jd'update f';'i=3';'b';'+'
+assert '{}'-:jd'json ',enc_pjson_ 'update f';'i=23';'b';'+'
+assert '{}'-:jd'json ',enc_pjson_ 'delete f';'i=23'
+
+
+
+
+
+

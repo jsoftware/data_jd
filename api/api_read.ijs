@@ -7,13 +7,30 @@ if. 0~:L.y do. y=. ;y[ECOUNT assert 1=#y end.
 '/lr 0 /e 0 /types 0 /table s /file s'getopts y
 )
 
+jd_read_internal=: 3 : 0
+f=. isJson
+isJson=: 0
+r=. jd_read y
+isJson=: f
+r
+)
+
+jd_reads_internal=: 3 : 0
+f=. isJson
+isJson=: 0
+r=. jd_reads y
+isJson=: f
+r
+)
+
+
 jd_read=: 3 : 0
 jd_reads '/lr ',y
 )
 
 jd_reads=: 3 : 0
 y=. readstart y
-option_lr=: option_lr+.JSONFLAG
+option_lr=: option_lr+.isJson
 if. 0~:option_table do.
  ETABLEFILE assert 0=option_file
  option_lr=: 1
@@ -47,7 +64,7 @@ if. 0~:option_table do.
 elseif. 0~:option_file do.
  (3!:1 r)fwrite file,option_file
  JDOK
-elseif. JSONFLAG do.
+elseif. isJson do.
  enc_pjson_ r
 elseif. 1 do. 
  r
@@ -118,7 +135,7 @@ z=. a,each p,each b
 r=. 0
 for_i. i.#z do.
  FETAB=: ;i{p
- a=. jd_read ;i{z
+ a=. jd_read_internal ;i{z
  d=. {:"1 a
  t=. ;i{set
  sc=. <((#>{.d),#t)$t

@@ -1,17 +1,13 @@
 NB. Copyright 2019, Jsoftware Inc.  All rights reserved.
 
-require'~addons/net/jcs/jcs.ijs'
-require'~Jddev/mtm/mtm_util.ijs'
-require'~addons/convert/pjson/pjson.ijs'
-
-NB. force load of development
-ld=: 3 : 0
-load'~Jddev/mtm/mtm.ijs'
 load'~Jddev/mtm/mtm_util.ijs'
-)
+require'~addons/net/jcs/jcs.ijs'
+require'~addons/convert/pjson/pjson.ijs'
 
 NB. script to load in RW and RO servers when they are started
 Serverijs=: 'load ''~Jddev/mtm/mtm_server.ijs'''
+
+NOLOG=: 1
 
 srcode_z_=:   256#.a.i.]
 srdecode_z_=: a.{~256 256 256 256 256#:]
@@ -24,6 +20,21 @@ rsen=: 3 : 0
 NB. W server sentence to run with CMD
 wsen=: 3 : 0
 'jd''info summary''[jd jcs_p0';<y
+)
+
+NB. W server sentence to run with CMD
+wsen=: 3 : 0
+'(<jd''info summary''),<jd jcs_p0';<y
+)
+
+log=: 3 : 0
+if. NOLOG do. return. end.
+'task type data'=. y
+a=. task i.~ CJ,CW,CRS
+a=. 10j0 3j0 ": sr__task,a
+a=. a,' ',type,' '
+d=. ;(0~:L.data){data;{.data
+echo a,d
 )
 
 logmtm_z_=: 4 : 0
@@ -89,19 +100,8 @@ SDATA__CJ=: '' NB. client route data
 run''
 )
 
-log=: 3 : 0
-'task type data'=. y
-a=. task i.~ CJ,CW,CRS
-a=. 6j0 3j0 ": sr__task,a
-a=. a,' ',type,' '
-d=. ;(0~:L.data){data;{.data
-echo a,d
-)
-
-log=: 3 : 'i.0 0'
-
 NB. 0 if op is read type, 1 if op is insert, 2 if other
-NB. json support - drop leading 'json '
+NB. json support - ignore leading 'json '
 wcheck=: 3 : 0
 t=. ;(L.y){y;{.y
 t=. dlb(5*'json '-:5{.t)}.t
@@ -216,9 +216,10 @@ for_n. BUSY do.
   try.
    rs=. runz__n 0
    if. n=CW do.
-    't r'=. {:rs
+    'a b'=. rs 
+    't r'=. {:a
     mtinfo=: (deb each<"1 t);<,r
-    rs=. '[]'
+    rs=. b NB. {} or i.0 0
    end.
   catch.
    rs=. lse__n
