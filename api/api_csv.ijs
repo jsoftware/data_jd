@@ -191,7 +191,7 @@ for_t. tabs do.
  ('';'';1) csvwr (t,'.csv');t 
 end.
 NB. create jdcsvrefs.txt file (used by csvresore to create ref cols)
-'a b'=. {:jd_info'ref'
+'a b'=. {:jdi_info'ref'
 ((,LF,.~a,.5}."1 b)rplc"1 '_';' ')fwrite CSVFOLDER__,'jdcsvrefs.txt'
 copyscripts CSVFOLDER__;jdpath_jd_''
 i.0 0

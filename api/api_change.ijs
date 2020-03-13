@@ -75,7 +75,7 @@ part=. (>:i)}.y
 t=. jdgl :: 0: y
 if. 0~:t do. i.0 0 return. end. NB. already exists
 jd_createtable y
-s=. {:jd_info'schema ',tab
+s=. {:jdi_info'schema ',tab
 for_i. i.ttally s do.
  d=. i tfrom s
  n=. }.d
@@ -84,7 +84,7 @@ for_i. i.ttally s do.
  d=. ;' ',each(<(;{.d),PTM,part),(1{d),<(;2{d),' ',":shape
  jd_createcol d
 end.
-s=. {:jd_info'ref ',tab
+s=. {:jdi_info'ref ',tab
 for_i. i.ttally s do.
  d=. i tfrom s
  t=. (;{.d),PTM,part

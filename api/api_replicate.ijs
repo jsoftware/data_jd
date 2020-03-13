@@ -256,7 +256,7 @@ NB. r,LF,'CSVFOLDER now contains the csv file'
 
 NB. unzip zip file to current db
 jd_unzip=: 3 : 0
-'db not empty'assert 0=#>{.{:jd_info'table'
+'db not empty'assert 0=#>{.{:jdi_info'table'
 folder=. dquote jpath dbpath DB
 file=. dquote jpath y
 if. UNAME-:'Win' do.

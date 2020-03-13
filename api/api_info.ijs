@@ -13,6 +13,14 @@ case.           do. assert 0['unsupported list command'
 end. 
 )
 
+jdi_info=: 3 : 0
+f=. isJson
+isJson=: 0
+r=. jd_info y
+isJson=: f
+r
+)
+
 jd_info=: 3 : 0
 r=. info y
 if. isJson do.

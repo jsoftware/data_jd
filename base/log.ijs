@@ -43,16 +43,6 @@ jdlasty
 showmap_jmf_''
 )
 
-NB. previously in logsentences - but can cause loop (Anssi map failure)
-0 : 0
-jd_list'version'
-jd_info'summary'
-jd_info'schema'
-jd_info'ref'
-jd_info'validate'
-jd_info'validatebad'
-)
-
 NB. log and mark db as damaged
 logijfdamage=: 3 : 0
 3 logijf y
