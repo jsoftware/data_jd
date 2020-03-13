@@ -7,7 +7,7 @@ if. 0~:L.y do. y=. ;y[ECOUNT assert 1=#y end.
 '/lr 0 /e 0 /types 0 /table s /file s'getopts y
 )
 
-jd_read_internal=: 3 : 0
+jdi_read=: 3 : 0
 f=. isJson
 isJson=: 0
 r=. jd_read y
@@ -15,14 +15,13 @@ isJson=: f
 r
 )
 
-jd_reads_internal=: 3 : 0
+jdi_reads=: 3 : 0
 f=. isJson
 isJson=: 0
 r=. jd_reads y
 isJson=: f
 r
 )
-
 
 jd_read=: 3 : 0
 jd_reads '/lr ',y
@@ -135,7 +134,7 @@ z=. a,each p,each b
 r=. 0
 for_i. i.#z do.
  FETAB=: ;i{p
- a=. jd_read_internal ;i{z
+ a=. jdi_read ;i{z
  d=. {:"1 a
  t=. ;i{set
  sc=. <((#>{.d),#t)$t

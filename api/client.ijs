@@ -12,9 +12,10 @@ lastspace_jd_  =: _1
 lastparts_jd_  =: _1
 
 jdaccess_z_=: jdaccess_jd_
-jd_z_  =: jd_jd_
-jdae_z_=: jdae_jd_
-jdtx_z_=: jdtx_jd_
+jd_z_  =:   jd_jd_
+jdae_z_=:   jdae_jd_
+jdtx_z_=:   jdtx_jd_
+jdjson_z_=: jdjson_jd_
 
 coclass'jd'
 
@@ -90,8 +91,12 @@ jdlasty_z_=: y
 jdlast_z_=: jdx y
 t=. ;{.{.jdlast
 if. 'Jd error'-:t do.
- t=. _2}.;jdlast,each <': '
- 13!:8&3 t
+ if. isJson do.
+  enc_pjson_ ('Jd-error';'Jd-extra'),.}.jdlast
+ else. 
+  t=. _2}.;jdlast,each <': '
+  13!:8&3 t
+ end. 
 elseif. 'Jd report '-:10{.t do. ;{:jdlast 
 elseif. 'Jd OK'-:t          do. if. isJson do. '{}' else. i.0 0 end.
 elseif. 1                   do. jdlast
@@ -113,6 +118,11 @@ jdtx=: 3 : 0
 timex 'jd''',y,''''
 )
 
+NB. jd op with json list arg and json dictionary result
+jdjson=: 3 : 0
+jd'json ',enc_pjson_ y
+)
+
 NODBOPS=: 'close';'createdb';'list';'option' NB. ops without DB
 ROOPS=: 'close';'read';'reads';'info';'list';'rspin'
 
@@ -128,12 +138,8 @@ try.
 if. 'intask'-:SERVER do.
  'jde: jd not loaded'assert 0=nc<'DBPATHS'
  
- isJson=: 0
- if. 'json '-:5{.y do.
-   y=. 5}.y
-   if. '['={.y do. y=. dec_pjson_ y end.
-   isJson=: 1
- end.
+ isJson=: 'json '-:5{.y
+ if. isJson do. y=. dec_pjson_ 5}.y end.
  
  if. 0=L.y do.
   t=. dlb y

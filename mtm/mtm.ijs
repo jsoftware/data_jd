@@ -1,11 +1,9 @@
 NB. Copyright 2019, Jsoftware Inc.  All rights reserved.
 
-load'~Jddev/mtm/mtm_util.ijs'
 require'~addons/net/jcs/jcs.ijs'
-require'~addons/convert/pjson/pjson.ijs'
 
 NB. script to load in RW and RO servers when they are started
-Serverijs=: 'load ''~Jddev/mtm/mtm_server.ijs'''
+Serverijs=: 'load ''',JDP,'mtm/mtm_server.ijs'''
 
 NOLOG=: 1
 
@@ -15,11 +13,6 @@ srdecode_z_=: a.{~256 256 256 256 256#:]
 NB. R server sentence to run with CMD
 rsen=: 3 : 0
 (('jd''',y,''''),'[mtmfix_jd_ jcs_p0');<mtinfo
-)
-
-NB. W server sentence to run with CMD
-wsen=: 3 : 0
-'jd''info summary''[jd jcs_p0';<y
 )
 
 NB. W server sentence to run with CMD

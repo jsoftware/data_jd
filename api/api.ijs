@@ -8,7 +8,8 @@ API internal globals
  DB  - database name - simple name - jdadmin connects to files and access rules
  dbl - database locale
 
- jd_... verbs implement a Jd op
+ jd_...  verbs implement a Jd op
+ jdi_... verbs cover ops so they can be used interally by other ops (manage state)
 )
 
 NB. 'insert table * col * bad'erf table;col

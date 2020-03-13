@@ -61,7 +61,7 @@ jdadmin 0
 start=. 6!:1''
 for_n. i.#t do.
  a=. n{t
- 'test file'logtest_jd_ (#JDP_jd_)}.;a
+ 'test file'logtest_jd_ (#JDP)}.;a
  jda=. 6!:1''
  if. x do. echo 'loadd''','''',~;a end.
  try.

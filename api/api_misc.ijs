@@ -81,7 +81,7 @@ if. newt-:oldt do. JDOK return. end.
 EDERIVED assert 0=derived__c 
 ETYPE assert (<newt)e.;:'int int1 int2 int4 intx'
 ETYPE assert 'int'-:3{.oldt
-data=. >{:{:jd_read_internal col,' from ',tab NB. does conversion from intx to int
+data=. >{:{:jdi_read col,' from ',tab NB. does conversion from intx to int
 
 NB. validate range and pick smallest intx if newt is intx
 min=. <./data

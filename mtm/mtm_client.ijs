@@ -3,10 +3,6 @@ NB. mtm client - normal socket connection to mtm server ZMQ_STREAM socket
 
 NB. following code needs to be implemented on a per thread basis for the mtm server side
 
-require'socket'
-require'~Jddev/mtm/mtm_util.ijs' NB.! ~Jddev
-require'~addons/convert/pjson/pjson.ijs'
-
 close=: 3 : 'sdclose_jsocket_ S'
 
 init=: 3 : 0
@@ -50,4 +46,8 @@ catch.
  close S NB. notify server so it can reset
  'failure in send/recv - init required'assert 0
 end.
+)
+
+msrjson=: 3 : 0
+msr'json ',enc_pjson_ y
 )

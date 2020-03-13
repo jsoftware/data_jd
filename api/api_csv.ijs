@@ -157,7 +157,7 @@ if. -.option_combine do. ''fwrite csvfp end.
 
 if. #w do.
  try.
-  rows=. ,>{:jd_reads_internal'jdindex from ',table,' where ',w
+  rows=. ,>{:jdi_reads'jdindex from ',table,' where ',w
  catchd.
   assert 0['where clause failed'
  end. 
@@ -272,7 +272,7 @@ csvset ;1 getnext a
 jd_csvcdefs (option_replace#'/replace '),'/h 0 /u ',csvf
 jd_droptable'csvprobe'
 jd_csvrd'/rows 12 ',csvf,' csvprobe'
-r=. jd_reads_internal'from csvprobe'
+r=. jdi_reads'from csvprobe'
 jd_droptable'csvprobe'
 r
 )

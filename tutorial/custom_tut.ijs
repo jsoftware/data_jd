@@ -7,7 +7,7 @@ NB. custom ops are usually patterned after jd_... ops
 custom=: 0 : 0 rplc 'RPAREN';')'
 jd_xra=: 3 : 0
 ECOUNT assert 0=#y
-jd_read_internal'cola from f'
+jdi_read'cola from f'
 RPAREN
 
 jd_xins=: 3 : 0
@@ -18,7 +18,7 @@ RPAREN
 
 jd_xsum=: 3 : 0
 ECOUNT assert 0=#y
-r=. jd_read_internal'cola,colb from f'
+r=. jdi_read'cola,colb from f'
 ,:'xsum';+/>{:"1 r
 RPAREN
 )

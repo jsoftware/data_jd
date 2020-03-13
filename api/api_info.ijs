@@ -7,7 +7,7 @@ jd_list=: 3 : 0
 t=. bdnames y
 ECOUNT assert 1=#t
 select. ;t
-case. 'version' do. jdversion
+case. 'version' do. if. isJson do. enc_pjson_ ,:'Jd-version';jdversion else. jdversion end.
 case. 'open'    do. ,.'open';<>opened''
 case.           do. assert 0['unsupported list command'
 end. 
