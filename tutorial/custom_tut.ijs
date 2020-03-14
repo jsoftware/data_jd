@@ -1,7 +1,7 @@
 NB. custom.ijs contains db custom ops (ops specific to the db)
 NB. custom ops are of the form jd_x...
 NB. custom ops can call any jd_... op 
-NB. custom ops must NOI call jd'...' - won't work with jjd server
+NB. custom ops must NOT call jd'...' - won't work with jjd server
 NB. custom ops are usually patterned after jd_... ops
 
 custom=: 0 : 0 rplc 'RPAREN';')'

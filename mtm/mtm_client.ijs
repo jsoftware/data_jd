@@ -27,7 +27,7 @@ try.
  r=. t sdsend_jsocket_ S;0
  'send error' assert 0=>{.r
  'send truncated' assert (#t)=>{:r
- <:RID
+NB.  <:RID
  r=. ''
  while. 1 do.
   'e reads writes errors'=. sdselect_jsocket_ S;'';'';x

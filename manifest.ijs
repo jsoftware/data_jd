@@ -313,6 +313,7 @@ cd/libjpcre.dylib
 RELEASE=: 'j807'
 
 DEPENDS=: 0 : 0
+convert/pjson
 data/jfiles
 data/jmf
 )
