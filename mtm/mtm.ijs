@@ -5,6 +5,7 @@ require'~addons/net/jcs/jcs.ijs'
 NB. script to load in RW and RO servers when they are started
 Serverijs=: 'load ''',JDP,'mtm/mtm_server.ijs'''
 
+HTTPSVR_jcs_=: 0    NB. acts as http server
 NOLOG=: 1
 
 srcode_z_=:   256#.a.i.]
@@ -90,6 +91,9 @@ mtinfo=: ''
 
 SRS__CJ=:    '' NB. client zmqraw routes
 SDATA__CJ=: '' NB. client route data
+NB. only used in http server
+SHEADER__CJ=: '' NB. client route header ending position
+SCONTENTLEN__CJ=: '' NB. client route content length
 run''
 )
 
@@ -117,10 +121,14 @@ if. 0=#d do.
   'route opened'logmtm ":sr
   SRS=: SRS,sr
   SDATA=: SDATA,<''
+  SHEADER=: SHEADER,_1
+  SCONTENTLEN=: SCONTENTLEN,0
  else.
   'route closed'logmtm ":sr
   SRS=:   b#SRS
   SDATA=: b#SDATA
+  SHEADER=: b#SHEADER
+  SCONTENTLEN=: b#SCONTENTLEN
   for_c. BUSY__ do.
    if. sr=sr__c do.
     'result not wanted' logmtm ":sr
@@ -140,6 +148,45 @@ data=. (;i{SDATA),d
 NB. if data is complete    - it is moved to a job queue
 NB. if data i not complete - it is added to SDATA wait for completion
 
+if. 1=HTTPSVR_jcs_ do.
+
+hi=. i{SHEADER
+cl=. i{SCONTENTLEN
+while. do.
+ if. _1=hi do. NB. get headers
+  j=. (data E.~ CRLF,CRLF)i.1 NB. headers CRLF delimited with CRLF at end
+  if. j<#data do. NB. have headers
+   hi=. j=. 4+j
+   h=. j{.data NB. headers
+   j=. ('Content-Length:'E. h)i.1
+   if. j=#h do. j=. ('Content-length:'E. h)i.1 end.
+   if. j<#h do.
+    t=. (15+j)}.h
+    t=. (t i.CR){.t
+    cl=. _1".t
+    assert _1~:cl
+   else.
+    cl=._1
+   end.
+   SHEADER=: hi i}SHEADER
+   SCONTENTLEN=: cl i}SCONTENTLEN
+  end.
+ end.
+
+ if. (_1=hi) +. (hi+cl)>#data do. break. end.
+ j=. mtmdec cl{.hi}.data
+ if. 0=wcheck__ j do.
+  RJOBS=: RJOBS,<sr;j
+ else.
+  WJOBS=: WJOBS,<sr;<j
+ end.
+ data=. (hi+cl)}.data
+ SHEADER=: (hi=. _1) i}SHEADER
+ SCONTENTLEN=: (cl=. 0) i}SCONTENTLEN
+end.
+
+else.
+
 while. HLEN__<:#data do.
  dc=. framelen__ data
  if. dc>#data do. break. end.
@@ -151,6 +198,8 @@ while. HLEN__<:#data do.
    WJOBS=: WJOBS,<sr;<j  
   end.
   data=. ''
+end.
+
 end.
 SDATA=: (<data) i}SDATA
 )
@@ -223,7 +272,11 @@ for_n. BUSY do.
   if. _1=sr__n do.
    'result discarded' logmtm ":srold__n
   else.
+   if. 1=HTTPSVR_jcs_ do.
+   rs=. 'HTTP/1.0 200 OK',CRLF,'Content-Length: ',(":#rs),CRLF,'Content-Type: text/plain',CRLF,CRLF,rs
+   else.
    rs=. rid__CJ streamframe rs
+   end.
    sr=. srdecode sr__n
    try.
     r=. send_jcs_ S__CJ;sr;(#sr);ZMQ_SNDMORE_jcs_
@@ -233,6 +286,16 @@ for_n. BUSY do.
     r=. send_jcs_ S__CJ;rs;(#rs);0
     if. r~:#rs do.
      'send sr data failed' assert 0
+    end.
+    if. 1=HTTPSVR_jcs_ do.
+NB. close socket by sending 0 byte to remote http client
+NB. ZMQ_STREAM requires identity frame for each send
+    r=. send_jcs_ S__CJ;sr;(#sr);ZMQ_SNDMORE_jcs_
+    if. r~:#sr do.
+     'send sr failed' assert 0
+    end.
+    send_jcs_ S__CJ;(<0);(0);0
+    'route closed'logmtm ":sr__n
     end.
    catch.
     'send result failed' logmtm ":sr__n
