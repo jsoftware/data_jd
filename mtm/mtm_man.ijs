@@ -39,32 +39,52 @@ refs not supported (server init fails)
  insert to left cols could be supported with some work
  insert to right col is more complicated and needs thought
 
+***
+
+mtm server requests come in as http requests from mtm clients
+
+Jd task verb jdserver handles http requests
+
+mtm gets string args from http request (may include json/bin encoded array)
+passes the request to the appropriate Jd task (read/insert/write)
+and resturn json/jbin formated result
+
+all encoding/decoding is done in mtm client or Jd task
+mtm server does not do any encoding/decoding
 )
 
 jd_mtm_demo_jman_=: 0 : 0
+
+note: ~Jddev vs distributed to addons
+note: mtmx.ijs - helpers
+
 1. create mtm demo DB - only run once to create a new mtm db
    start new j session
    load'jd'
-   load'~Jddev/mtm/demo/createmtmdb.ijs'
-   createmtmdb''
+   load'~Jddev/mtm/mtmx.ijs'
+   create_mtm_db''
    
 2. start mtm server
    start new jconsole session
-   load'~Jddev/mtm/mtm.ijs'
-   init '~temp/jd/mtm'
-
+   load'~Jddev/mtm/mtmx.ijs'
+   ldserver''
+   init_server''
    
 3. start mtm client
    start new jconsole session
-   load'~Jddev/mtm/mtm_client.ijs'
-   init 65220 NB. port reported by mtm server
+   load'~Jddev/mtm/mtmx.ijs
+   ldclient''
+   client_config''
+   msr'info table'
    msr'info summary'
-   msr'json info summary'
+   msr'droptable f'
+   msr'createtable f'
+   msr'createcol f a int'
+   msr'insert f';'a';2 3
    msr'read from f'
-   msr'json read from f'
-   msr'insert f';'a';23
-   msr'json ',enc_pjson_'insert f';'a';123
-   msr'json info nope'
+   msr'delete from f';'jdindex>2'
+   
+*** steps after here have not been updated for latest version
    
    load'~addons/mtm/demo/test.ijs'
    test''

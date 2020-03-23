@@ -158,7 +158,7 @@ for_i. i.-:#y do.
  c=. 0{CHILDREN{~NAMES i. n
  ts=. ts,<shape__c
  d=. >(>:j){y
- if. isJson *. -.''-:shape__c do. d=. >d end.
+ if. -.''-:shape__c do. d=. >d end. NB. json needs this
  d=. fixtypex__c d
  if. -.''-:shape__c do.
   'fixpairs: bad shape'assert 'byte'-:typ__c

@@ -20,6 +20,7 @@ NB. RO task init - y is DB
 rinit=: 3 : 0
 jdadmin 0
 jdadmin y;MTRO_jmf_
+NB. (;{.{.jdadminop_jd_'')jdadminop_jd_ 'read reads info list' NB. only allow read type ops
 JDMTMRO_jd_=: 1 NB. mark as mtm ro task
 jd'info summary' NB. critical that RO tasks has correct and stable locale info
 )

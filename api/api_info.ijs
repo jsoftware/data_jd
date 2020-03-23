@@ -7,30 +7,17 @@ jd_list=: 3 : 0
 t=. bdnames y
 ECOUNT assert 1=#t
 select. ;t
-case. 'version' do. if. isJson do. enc_pjson_ ,:'Jd-version';jdversion else. jdversion end.
-case. 'open'    do. ,.'open';<>opened''
+case. 'version' do. jdversion
 case.           do. assert 0['unsupported list command'
 end. 
 )
 
+NB. jdi ops allow manageing state before and after an internal call
 jdi_info=: 3 : 0
-f=. isJson
-isJson=: 0
-r=. jd_info y
-isJson=: f
-r
+jd_info y
 )
 
 jd_info=: 3 : 0
-r=. info y
-if. isJson do.
- enc_pjson_ |:r
-else.
- r
-end. 
-)
-
-info=: 3 : 0
 t=. bdnames y
 a=. 2{.}.t
 select. {.t

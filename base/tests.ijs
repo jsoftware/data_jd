@@ -21,6 +21,7 @@ test/insert_revert_test.ijs
 test/insert_test.ijs
 test/intx_test.ijs
 test/jdindex_test.ijs
+test/jdserver_test.ijs
 test/join_test.ijs
 test/join_type_test.ijs
 test/joinorder_test.ijs

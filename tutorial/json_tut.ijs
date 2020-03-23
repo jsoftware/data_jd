@@ -1,23 +1,26 @@
-0 : 0
-Jd op can take argument as json list and return result as json dictionary
-Jd op that is a string that starts with 'json ' has json arg and result
+echo jd_jdserver_jman_
+
+jdjson=: 3 : 0
+if. L.y do.
+ jdserver'json json;',(;{.y),';',jsonenc}.y
+else.
+ jdserver'json json;',y
+end.
 )
 
 'new'jdadmin'json'
+jdjson 'createtable f' NB. {} json empty dictionary - instead of J empty array i.0 0
+jdjson 'createcol f i int'
+jdjson 'createcol f b byte'
+jdjson 'createcol f b4 byte 4'
 
-jdjson_jd_ NB. 
+jdjson 'insert f';'i';2;'b';'z';'b4';'abc'
+jdjson 'read from f'
 
-jdjson'createtable f' NB. {} json empty dictionary - instead of J empty array i.0 0
-jdjson'createcol f i int'
-jdjson'createcol f b byte'
-jdjson'createcol f b4 byte 4'
-
-[d=. 'insert f';'i';2;'b';'z';'b4';'abc'
-[enc_pjson_ d
-jdjson d
-jd'read from f'
-jdjson'read from f'
-jdjson'reads from f' NB. json always returns dictionary - reads is the same as read
+jdjson 'insert f';'i';2;'b';'z';'b4';'abc'
+jdjson 'insert f';'i';3 4 5;'b';'abc';'b4';3 4$'abcdefghijkl'
+jdjson 'read from f'  NB. json always returns a dictionary
+jdjson 'reads from f' NB. reads is an error
 
 jdjson'insert f';'i';2;'b';'z';'b4';'abcde' NB. error returned as json dictionary
 jdlast
@@ -37,22 +40,24 @@ jdjson'insert f';'i';23 24;'b';'xy';'b4';(2 3$'abcdef');'v';<'qwer';'asdfasdf'
 jdjson'read from f'
 jdjson'info summary'
 
+jdjson'createtable g'
+jdjson'read from g'
+
 NB. json result is a dictionary
-NB. a dictionary can be converted to a list
+NB. dictionary can be converted to a list
 NB. sometimes you need the list encoding and not the dictionary
 NB. e.g if you want to feed the json result of a read to an insert
 
-NB. json - list from dictionary
-lfromd=: 3 : 0
+lfromd=: 3 : 0 NB. json - list from dictionary
 d=. }.}:<;.2 y,LF
-;(d i.each ':') (','"_`[`])} each d
+'[',']',~;(d i.each ':') (','"_`[`])} each d
 )
 
-[d=. jdjson'read from f'
-[t=. lfromd d
-[d=. '[',']',~('"insert f",'),LF,t
-jd'json ',d NB. already json encoded
-jdjson'read from f'
+d=. jdjson 'read from f'
+t=. 'insert f;',lfromd d
+NB. t already has the json encoded pairs so can't use jdjson helper verb
+jdserver 'json json;',t
+jdjson 'read from f'
 
 jdjson'update f';'i=23';'b';'+'
 jdjson'read from f'

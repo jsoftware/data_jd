@@ -15,11 +15,16 @@ jdaccess_z_=: jdaccess_jd_
 jd_z_  =:   jd_jd_
 jdae_z_=:   jdae_jd_
 jdtx_z_=:   jdtx_jd_
-jdjson_z_=: jdjson_jd_
+jdserver_z_=:    jdserver_jd_
 
 coclass'jd'
 
 JDE1001=: 'jde: not an op'
+
+jbinenc_z_=: 3 !: 1
+jbindec_z_=: 3 !: 2
+jsonenc_z_=: enc_pjson_
+jsondec_z_=: dec_pjson_
 
 fmtx=: 4 : 0
 if. 0=#y do. '' else. x,':',(}:;,&','@":&>boxxopen y),' ' end.
@@ -85,20 +90,70 @@ end.
 i.0 0
 )
 
+jd_jdserver_jman_=: 0 : 0
+jdserver y
+y is a string
+context ; op [; arg]
+fin fout [dan user pswd] ; op [; arg]
+fin  - arg encoding    - json or jbin
+fout - result encoding - json or jbin
+dan user pswd - not currently used and must be elided
+)
+
+jdserver=: 3 : 0
+try.
+ i=. y i. ';'
+ 'fin fout dan user pswd'=: 5{.;:i{.y
+ 'bad fin' assert (<fin) e.'jbin';'json' 
+ 'bad fout'assert (<fout)e.'jbin';'json'
+ 'bad dan/user/pswd'assert 0=#dan,user,pswd
+ opstring=. a=. dlb y}.~>:i
+ op=. a{.~a i.' '
+ if. -.(<op)e.'read';'reads' do.  NB. read/reads can have ; in where clause
+  i=. a i.';'
+  b=. a}.~>:i NB. boxed part
+  opstring=. a=. i{.a
+  if. #b do.
+   select. fin
+   case. 'jbin' do. a=. a;jbindec b
+   case. 'json' do. a=. a;jsondec b
+   end.
+  end.
+ end.
+ 'json reads not supported'assert -.(op-:'reads')*.fout-:'json'
+  
+ jdlasty_z_=: y
+ jdlast_z_=: jdx a
+ a=. jdlast
+ t=. ;{.{.a
+ if. 'Jd error'-:t do. a=. ('Jd error';'Jd extra'),.}.a
+ elseif. JDOK-:a do. a=. ,:'Jd OK';0
+ elseif. 'Jd report '-:10{.t do. a=. ,a
+ elseif. 0=*/$a do. a=. ,:'Jd empty';''
+ elseif. 0=L.a  do. a=. ,:'Jd version';a
+ end.
+ select. fout
+ case. 'jbin' do. jbinenc a
+ case. 'json' do.
+  if. op-:'info' do. a=. |:a end.  
+  jsonenc a
+ end.
+catch.
+ t=. 13!:12''
+ t=. ('Jd server error';'Jd extra'),.(}.(t i.':'){.t);opstring
+ if. fout-:'jbin' do. jbinenc t else. jsonenc t end.
+end.
+)
+
 jd=: 3 : 0
-isJson=: 0
 jdlasty_z_=: y
 jdlast_z_=: jdx y
 t=. ;{.{.jdlast
 if. 'Jd error'-:t do.
- if. isJson do.
-  enc_pjson_ ('Jd-error';'Jd-extra'),.}.jdlast
- else. 
   t=. _2}.;jdlast,each <': '
   13!:8&3 t
- end. 
 elseif. 'Jd report '-:10{.t do. ;{:jdlast 
-elseif. 'Jd OK'-:t          do. if. isJson do. '{}' else. i.0 0 end.
+elseif. 'Jd OK'-:t          do. i.0 0
 elseif. 1                   do. jdlast
 end.
 )
@@ -118,11 +173,6 @@ jdtx=: 3 : 0
 timex 'jd''',y,''''
 )
 
-NB. jd op with json list arg and json dictionary result
-jdjson=: 3 : 0
-jd'json ',enc_pjson_ y
-)
-
 NODBOPS=: 'close';'createdb';'list';'option' NB. ops without DB
 ROOPS=: 'close';'read';'reads';'info';'list';'rspin'
 
@@ -137,10 +187,6 @@ USER=: (UP i.'/'){.UP
 try.
 if. 'intask'-:SERVER do.
  'jde: jd not loaded'assert 0=nc<'DBPATHS'
- 
- isJson=: 'json '-:5{.y
- if. isJson do. y=. dec_pjson_ 5}.y end.
- 
  if. 0=L.y do.
   t=. dlb y
   i=. t i.' '
