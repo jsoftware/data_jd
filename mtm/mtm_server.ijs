@@ -9,7 +9,6 @@ winit=: 3 : 0
 jdadmin 0
 jdadmin y
 d=. deb each<"1>2{"1{:jd'info schema'
-'varbyte not allowed'assert -.(<'varbyte')e.d
 'int2 not allowed'   assert -.(<'int2')e.d
 'int4 not allowed'   assert -.(<'int4')e.d
 'ref not allowed'    assert 0 0=>$each {.{:jd'info ref'

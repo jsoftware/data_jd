@@ -187,7 +187,8 @@ NB. mtm stuff to adjust RO task for changes made in RW task
 NB. RD task runs this before read to handle insets
 NB. WR task may have inserted rows in tables
 NB. remap if fsize has changed
-NB. set new tlen in table locale and mapped file headers
+NB. set new tlen in table locale and mapped dat file headers
+NB. set filesize in mapped val file headers (easier than calculating from dat)
 NB. care taken to avoid fsize race between WR and RO tasks
 mtmfix_jd_=: 3 : 0
 if. ''-:y do. return. end. 
@@ -208,10 +209,15 @@ for_tab. conl 1  do.
   NB. table has new rows - files have been remapped - adjust headers
   p=. PATH__tab
   b=. (<p)=(#p){.each 1{"1 mappings_jmf_
-  b=. 6{"1 b#mappings_jmf_
+  b=. b#mappings_jmf_
+  mt=. ;(<'dat')=3{.each{."1 b
+  dats=. mt#b     NB. dat headers to adjust
+  vals=. (-.mt)#b NB. val headers to adjust. 
   Tlen__tab=: s
-  for_n. b do. NB. set new */$dat and #dat
-   n=. ;n
+  
+  NB. adjust dat headers with new */$dat and #dat
+  for_n. dats do. NB. set new */$dat and #dat
+   n=. ;6{n
    s memw n,HADS_jmf_,1,JINT             NB. {.$dat
    c=. getHADR_jmf_ n
    if. 2=c do.
@@ -220,6 +226,15 @@ for_tab. conl 1  do.
     s memw n,HADN_jmf_,1,JINT
    end.
   end.
+  
+  NB. adjust vals with new len -jam to file size as exact calc from dat no necessary
+  for_n. vals do.
+   s=. fsize 1{n
+   n=. ;6{n
+   s memw n,HADS_jmf_,1,JINT             NB. {.$dat
+   s memw n,HADN_jmf_,1,JINT
+  end.
+  
   NB. table has new rows - mark derived cols dirty
   for_c. CHILDREN__tab do.
    setderiveddirty__c''
