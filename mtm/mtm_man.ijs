@@ -82,7 +82,7 @@ note: mtmx.ijs - helpers
    msr'createcol f a int'
    msr'insert f';'a';2 3
    msr'read from f'
-   msr'delete from f';'jdindex>2'
+   msr'delete f';'jdindex>2'
    
 *** steps after here have not been updated for latest version
    
@@ -101,24 +101,30 @@ note: mtmx.ijs - helpers
    
     msr'info schema'
 
- 5. start mtm server as a web server
-   start new jconsole session (shutdown previous mtm server if necessary)
-   HTTPSVR_jcs_=: 1 [ load'mtm/mtm.ijs mtm/mtm_util.ijs'
-   init '~temp/jd/mtm'
+ 5. send http POST requests via browser or other client.
 
-  send http POST requests via browser or other client.
+$ wget -O- -q http://127.0.0.1:65220/ --post-data 'json json;insert f;["a",[2,3,4,5,6,7,8,9]]'
+{
+"Jd OK":0
+}
 
-$ curl http://127.0.0.1:65220/ --data-raw 'json "info summary"'
+$ wget -O- -q http://127.0.0.1:65220/ --post-data 'json json;delete f;"jdindex>5"'
+response body
+{
+"Jd OK":0
+}
+
+$ curl http://127.0.0.1:65220/ --data-raw 'json json;info summary'
 response body
 {
 "table":["f","g"],
-"rows":[[45003],[4]]
+"rows":[[6],[4]]
 }
 
-$ wget -O- -q http://127.0.0.1:65220/ --post-data 'json "read from f where jdindex<5"'
+$ wget -O- -q http://127.0.0.1:65220/ --post-data 'json json;read from f where jdindex<3'
 response body
 {
-"a":[0,23,2,0,1]
+"a":[4,0,1]
 }
 
 )
