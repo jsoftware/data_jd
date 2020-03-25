@@ -84,29 +84,22 @@ note: mtmx.ijs - helpers
    msr'read from f'
    msr'delete from f';'jdindex>2'
    
-*** steps after here have not been updated for latest version
-   
-   load'~addons/mtm/demo/test.ijs'
    test''
    drive 10
    
- 4. start another mtm client
-    start new jconsole session
-    load'~Jddev/mtm/mtm_client.ijs'
-    init 65220 NB. port reported by mtm server
-    msr'info summary'
-   
-    in mtm client started in step 3 do:
-    drive 10000 NB. keep busy with request
-   
-    msr'info schema'
+4. start another mtm client
+   start new jconsole session
+   load'~Jddev/mtm/mtmx.ijs
+   ldclient''
+   client_config''
+   msr'info table'
 
- 5. start mtm server as a web server
-   start new jconsole session (shutdown previous mtm server if necessary)
-   HTTPSVR_jcs_=: 1 [ load'mtm/mtm.ijs mtm/mtm_util.ijs'
-   init '~temp/jd/mtm'
+   drive 10000
+   
+   in mtm client started in step 3 do:
+   drive 10000
 
-  send http POST requests via browser or other client.
+5. send http POST requests via browser or other client.
 
 $ curl http://127.0.0.1:65220/ --data-raw 'json "info summary"'
 response body

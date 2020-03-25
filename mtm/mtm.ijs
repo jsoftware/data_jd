@@ -27,20 +27,13 @@ if. NOLOG do. return. end.
 data=. data}.~>:data i.';'
 a=. ":task i.~ CJ,CW,CRS
 logit (type,' ',a);data;sr__task
-return.
-
-a=. task i.~ CJ,CW,CRS
-a=. 10j0 3j0 ": sr__task,a
-a=. a,' ',type,' '
-d=. 60{.data
-echo a,d
 )
 
 logit_z_=: 3 : 0
 'type data route'=. y
 m=. (10{.type),' : ',(24{.data),' : ',(10{.":route),' : ',isotimestamp 6!:0''
 echo m
-m fappend LOGFILE
+(m,LF) fappend LOGFILE
 )
 
 NB. run JOBS
@@ -71,7 +64,6 @@ for_n. CW,CRS do. runz__n :: 0: 0 end.
 init_server=: 3 : 0
 config_server''
 'not a path to a db'assert 'database'-: fread DB,'/jdclass'
-LOGFILE_z_=: y,'/mtm_log.txt'
 'zmq must be version 4.1.4 or later'assert 414<:10#.version_jcs_''
 killp_jcs_''
 
@@ -98,7 +90,7 @@ SDATA__CJ=: '' NB. client route data
 run''
 )
 
-ROPS_z_=: ;:'read reads info list'
+ROPS_z_=: ;:'read reads info list rspin'
 IOPS_z_=: ;:'insert'
 
 NB. riw depending on op (read vs insert vs otherupdate)
@@ -124,7 +116,7 @@ if. 0=#d do.
   SRS=: SRS,sr
   SDATA=: SDATA,<''
  else.
-  logit 'close';'';sr
+  logit 'closex';'';sr NB. closed before we got complete request
   SRS=:   b#SRS
   SDATA=: b#SDATA
   for_c. BUSY__ do.
@@ -156,6 +148,10 @@ assert _1~:cl
 if. (hi+cl)<#data do. return. end.
 
 NB. data complete - move to job queue - class determines queue
+b=. sr~:SRS
+SRS=:   b#SRS
+SDATA=: b#SDATA
+
 j=. cl{.hi}.data
 if. 'r'=getopclass j do.
  RJOBS=: RJOBS,<sr;<j
@@ -236,16 +232,19 @@ for_n. BUSY do.
    try.
     r=. send_jcs_ S__CJ;sr;(#sr);ZMQ_SNDMORE_jcs_
     if. r~:#sr do.
+     logit 'bad snd sr';'';sr
      'send sr failed' assert 0
     end.
     r=. send_jcs_ S__CJ;rs;(#rs);0
     if. r~:#rs do.
+     logit 'bad snd data';'';sr__n
      'send sr data failed' assert 0
     end.
 NB. close socket by sending 0 byte to remote http client
 NB. ZMQ_STREAM requires identity frame for each send
     r=. send_jcs_ S__CJ;sr;(#sr);ZMQ_SNDMORE_jcs_
     if. r~:#sr do.
+     logit'bad snd sr close';'';sr__n
      'send sr failed' assert 0
     end.
     send_jcs_ S__CJ;(<0);(0);0

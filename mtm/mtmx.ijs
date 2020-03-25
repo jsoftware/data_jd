@@ -18,13 +18,15 @@ config_server=: 3 : 0
 NOLOG=: 0
 DB=: '~temp/jd/mtm'
 BASE=: 65220 NB. base port for mtm ports
-NCRS=: 2     NB. numbers of CRS tasks (concurrent read tasks) 
+NCRS=: 2     NB. numbers of CRS tasks (concurrent read tasks)
+LOGFILE_z_=: DB,'/mtm_log.txt'
 )
 
 NB. client utils
 
 ldclient=: 3 : 0
 load JDP,'mtm/mtm_client.ijs'
+load JDP,'mtm/demo/test.ijs'
 )
 
 NB. create initial db utils

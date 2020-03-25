@@ -11,6 +11,14 @@ jbindec_z_=: 3 !: 2
 jsonenc_z_=: enc_pjson_
 jsondec_z_=: dec_pjson_
 
+LOGFN=: '~temp/mtm_client.log'
+
+logit=: 3 : 0
+(y,LF)fappend LOGFN
+)
+
+logit=: [
+
 close=: 3 : 'sdclose_jsocket_ S'
 
 connect=: 3 : 0
@@ -54,10 +62,16 @@ get_response=: 3 : 0
 data=. ''
 hi=. _1
 while. 1 do.
+ logit 'before select'
  'e reads writes errors'=. sdselect_jsocket_ S;'';'';TIMEOUT NB. timeout
+ logit 'after select'
  'mrcv select error' assert 0=e
+ logit 'no error'
  'mrcv timeout' assert S e. reads
+ logit 'read ready'
  data=. data,;{:sdrecv_jsocket_ S,10000 0
+ logit 'bytes: ',":#data
+
  if. _1=hi do. NB. get headers
   j=. (data E.~ CRLF,CRLF)i.1 NB. headers CRLF delimited with CRLF at end
   if. j<#data do. NB. have headers
@@ -75,6 +89,8 @@ while. 1 do.
  end.
  if. (hi+cl)=#data do. break. end.
 end.
+logit'have data'
+
 hi}.data
 )
 
