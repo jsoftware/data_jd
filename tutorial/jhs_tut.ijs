@@ -11,16 +11,14 @@ jd'reads from j'
 load JDP,'api/jjd.ijs' NB. provide Jd service to http clients
 
 NB. J client (J does http post request to server)
-''[0 : 0
+''[0 : 0 rplc 'JDP';JDP
 this task is now a server to http clients
 follow the manual steps in other tasks carefully
 first we'll see a J client access this server from a jconsole task
 
-note: adjust following load if you are working with Jd from another folder
-
 start jconsole task
 
-load '~addons/data/jd/api/client.ijs' NB. just client.ijs
+load JDP,'api/client.ijs' NB. just client.ijs
 jdaccess 'sandp u/p localhost:65001'
 jd'reads from j'
 jd'read  from j'
@@ -110,9 +108,9 @@ demonstration of this capability is beyond the scope of this tutorial
 )
 
 NB. create a new server at port 65011
-''[0 : 0
+''[0 : 0 rplc 'JDP';JDP
 start new jconsole task
-load'data/jd'
+load JDP
 initserver''        NB. list server configs
 initserver'default' NB. default config
 
@@ -120,7 +118,7 @@ resume tutorial
 )
 
 NB. access this server from a J client
-''[0 : 0
+''[0 : 0 rplc 'JDP';JDP
 the task just started is a server on port 65011 to Jd http clients
 follow the manual steps in other tasks carefully
 first we'll see a J client access this server from a jconsole task
@@ -128,9 +126,7 @@ first we'll see a J client access this server from a jconsole task
 start a new jconsole task to use as a client
 or use the one you started as a client in a previous step
 
-note: adjust following load if you are working with Jd from another folder
-
-load '~addons/data/jd/api/client.ijs'   NB. not necessary if already loaded
+load JDP,'api/client.ijs'   NB. not necessary if already loaded
 jdaccess'northwind u/p localhost:65011' NB. northwind at port 65011
 jd'reads ProductName from Products'
 
