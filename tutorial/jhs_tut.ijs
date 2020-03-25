@@ -16,6 +16,8 @@ this task is now a server to http clients
 follow the manual steps in other tasks carefully
 first we'll see a J client access this server from a jconsole task
 
+note: adjust following load if you are working with Jd from another folder
+
 start jconsole task
 
 load '~addons/data/jd/api/client.ijs' NB. just client.ijs
@@ -125,6 +127,8 @@ first we'll see a J client access this server from a jconsole task
 
 start a new jconsole task to use as a client
 or use the one you started as a client in a previous step
+
+note: adjust following load if you are working with Jd from another folder
 
 load '~addons/data/jd/api/client.ijs'   NB. not necessary if already loaded
 jdaccess'northwind u/p localhost:65011' NB. northwind at port 65011
