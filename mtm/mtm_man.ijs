@@ -94,15 +94,12 @@ note: mtmx.ijs - helpers
    client_config''
    msr'info table'
 
-<<<<<<< HEAD
    drive 10000
    
    in mtm client started in step 3 do:
    drive 10000
 
 5. send http POST requests via browser or other client.
-=======
- 5. send http POST requests via browser or other client.
 
 $ wget -O- -q http://127.0.0.1:65220/ --post-data 'json json;insert f;["a",[2,3,4,5,6,7,8,9]]'
 {
@@ -114,7 +111,6 @@ response body
 {
 "Jd OK":0
 }
->>>>>>> a16e6104c5bcc941acb9a5b671c5a1477613d445
 
 $ curl http://127.0.0.1:65220/ --data-raw 'json json;info summary'
 response body
