@@ -1,9 +1,37 @@
 NB. Copyright 2019, Jsoftware Inc.  All rights reserved.
 
+require'~addons/net/jcs/jcs.ijs'
+
+NB. http://api.zeromq.org/4-1:zmq-socket - zmq http server
+
 NB.! all asserts should be tested and handled
 NB.! all logits should be tested 
 
-require'~addons/net/jcs/jcs.ijs'
+0 : 0
+CJ locale (jobs locale) handles client request/response (zmq_stream socket)
+
+http complete requests are put on R or W job queue
+
+when job is finished the result is put on the CJ result queue
+
+sr indicates encoded (int) socket route - srx is decoded 
+
+client open connection adds sr to SRS__CJ
+client close connectin removes it
+
+request with bad format (not POST, bad counts, short) has response added to CJ result queue
+and the connection sr is removed from SRS__CJ to prevent future requests on that route
+response starts with ({.a.) to differ from jbin or json
+client on getting {.a. should do connect to help ensure things are clean
+
+client that gets BAD_REQUEST response must do connect again
+
+request that does is not connected (sr not in SRS) is ignored
+)
+
+POLL=: 60000
+
+WTIMEOUT=: 60000 NB. W (non-insert) - wait for other tasks to finish and wait for the W op to finish
 
 NB. script to load in RW and RO servers when they are started
 Serverijs=: 'load ''',JDP,'mtm/mtm_server.ijs'''
@@ -31,7 +59,7 @@ logit (type,' ',a);data;sr__task
 
 logit_z_=: 3 : 0
 'type data route'=. y
-m=. (10{.type),' : ',(24{.data),' : ',(10{.":route),' : ',isotimestamp 6!:0''
+m=. (16{.type),' : ',(36{.data),' : ',(10{.":route),' : ',_4}._12{.isotimestamp 6!:0''
 echo m
 (m,LF) fappend LOGFILE
 )
@@ -42,26 +70,25 @@ RJOBS__CJ=: WJOBS__CJ=: JOBSTREAM__CJ=: OUT__CJ=: BUSY=: ''
 pjclean''
 while. 1 do.
   NB.         CJ              CW                               CRS
-  e=. 1 + 2* (0~:#OUT__CJ), ((0~:#WJOBS__CJ)*.-.CW e. BUSY) , (0~:#RJOBS__CJ)*.-.CRS e. BUSY
+  e=. 1 + 2* (0~:#SRSOUT__CJ), ((0~:#WJOBS__CJ)*.-.CW e. BUSY) , (0~:#RJOBS__CJ)*.-.CRS e. BUSY
   'rc reads writes errors'=. poll_jcs_ POLL;e;<CJ,CW,CRS
   if.  0=rc do. continue. end.
   getjobs__CJ reads NB. get jobs from client stream and move to JOBS
   runWjob''
   runRjobs''        NB. runa R jobs in idle CRS tasks
   runzjobs reads    NB. runz to get results from completed jobs
-  sendrs__CJ writes NB. send OUT to client
+  sendrs__CJ writes NB. send responses to client stream
 end.
 )
 
 NB. routines common to different kinds of mtm (insert/all/...)
 
-POLL=: 60000
 
 pjclean=: 3 : 0
 for_n. CW,CRS do. runz__n :: 0: 0 end.
 )
 
-init_server=: 3 : 0
+init=: 3 : 0
 config_server''
 'not a path to a db'assert 'database'-: fread DB,'/jdclass'
 'zmq must be version 4.1.4 or later'assert 414<:10#.version_jcs_''
@@ -70,14 +97,17 @@ killp_jcs_''
 logit 'start';(":BASE);0
 
 CJ=: jcssraw_jcs_ BASE
+coinsert__CJ 'jobs'
 
 CW=: jcst BASE+1
+runicount__CW=: runwcount__CW=: 0
 sr__CW=: 0 NB. no route for result
 run__CW Serverijs
 run__CW 'winit ''',DB,''''
 
 CRS=: jcst BASE+2+i.NCRS
 for_c. CRS do.
+ runrcount__c=: 0
  sr__c=: 0 NB. no route for result
  run__c Serverijs
  run__c 'rinit ''',DB,''''
@@ -85,11 +115,14 @@ end.
 
 mtinfo=: ''
 
-SRS__CJ=:    '' NB. client zmqraw routes
-SDATA__CJ=: '' NB. client route data
+SRS__CJ=:      '' NB. client zmqraw routes
+SDATA__CJ=:    '' NB. client data
+SRSOUT__CJ=:   '' NB. client route out
+SDATAOUT__CJ=: '' NB. client data out
 run''
 )
 
+MOPS_z_=: <'mtm'
 ROPS_z_=: ;:'read reads info list rspin'
 IOPS_z_=: ;:'insert'
 
@@ -99,65 +132,8 @@ op=. dlb y}.~>:y i. ';'
 op=. <op{.~op i. ' '
 if. op e. ROPS do. 'r' return. end.
 if. op e. IOPS do. 'i' return. end.
+if. op e. MOPS do. 'm' return. end.
 'w'
-)
-
-NB. get jobs and move complete jobs to WJOBS and RJOB queues
-NB. runs in JOBS task locale
-getjobs_jcs_=: 3 : 0
-if. -.y e.~ coname'' do. return. end.
-sr=. srcode recv S;(256#' ');256;0
-d=. recv S;(20000#' ');20000;0
-
-if. 0=#d do.
- b=. sr~:SRS
- if. *./b do.
-  logit 'open';'';sr
-  SRS=: SRS,sr
-  SDATA=: SDATA,<''
- else.
-  logit 'closex';'';sr NB. closed before we got complete request
-  SRS=:   b#SRS
-  SDATA=: b#SDATA
-  for_c. BUSY__ do.
-   if. sr=sr__c do.
-    logit 'unwanted';'';sr
-    srold__c=: sr NB. for later discarded logit
-    sr__c=: _1
-    break.
-   end.
-  end.
- end.
- return.
-end.  
-
-i=. SRS i. sr
-data=. (;i{SDATA),d
-SDATA=: (<data) i}SDATA
-
-j=. (data E.~ CRLF,CRLF)i.1 NB. headers CRLF delimited with CRLF at end
-if. j>#data do. return. end. NB. do not have headers
-hi=. j=. 4+j
-h=. j{.data NB. headers
-j=. ('Content-Length:'E. h)i.1
-assert j<#h NB. must have 
-t=. (15+j)}.h
-t=. (t i.CR){.t
-cl=. _1".t
-assert _1~:cl
-if. (hi+cl)<#data do. return. end.
-
-NB. data complete - move to job queue - class determines queue
-b=. sr~:SRS
-SRS=:   b#SRS
-SDATA=: b#SDATA
-
-j=. cl{.hi}.data
-if. 'r'=getopclass j do.
- RJOBS=: RJOBS,<sr;<j
-else.
- WJOBS=: WJOBS,<sr;<j
-end.
 )
 
 NB. run RJOBS in idle CRS task
@@ -170,11 +146,16 @@ while. (#RJOBS__CJ)*.#CRS-.BUSY do.
  RJOBS__CJ=: }.RJOBS__CJ
  BUSY=: BUSY,n
  log n;'a';<t
+ runrcount__n=: >:runrcount__n
  runa__n rsen t
 end.
 )
 
 NB. run WJOB in idle CW task
+NB. W insert can run while other tasks are running
+NB. W (non-insert) can not run while other tasks are runnin
+NB. W (non-insert) can run only when all other tasks are idle
+NB. W (non-insert) task running blocks starting any other task
 runWjob=: 3 : 0
 if. (#WJOBS__CJ)*.-.CW e. BUSY do.
  sr__CW=: ''$;{.>{.WJOBS__CJ
@@ -183,20 +164,23 @@ if. (#WJOBS__CJ)*.-.CW e. BUSY do.
  if. 'i'=getopclass t do.
   BUSY=: BUSY,CW
   log CW;'a';<t
+  runicount__CW=: >:runicount__CW
   runa__CW wsen t
  else.
-  NB. write op other than insert is special
   while. #BUSY do. NB. CW already added
-   'rc reads writes errors'=. poll_jcs_ 60000;(1#~#BUSY);<BUSY NB. wait for BUSY tasks to complete
-   if.  0=rc do. 'W2 op blocked' assert 0 end.
-   runzjobs reads 
+   logit 'W blocked';'';0
+   'rc reads writes errors'=. poll_jcs_ WTIMEOUT;(1#~#BUSY);<BUSY NB. wait for BUSY tasks to complete
+   if.  0=rc do. 'W block timeout' assert 0 end.
   end.
   BUSY=: BUSY,CW
   log CW;'a';<t
+  runwcount__CW=: >:runwcount__CW
   runa__CW wsen t
-  'rc reads writes errors'=. poll_jcs_ 60000;1;<CW NB. wait for op to complete
-  if.  0=rc do. assert 0 end.
-  runzjobs'' 
+  'rc reads writes errors'=. poll_jcs_ WTIMEOUT;1;<CW NB. wait for op to complete
+  if.  0=rc do.
+   logit'W run timeout';t;0
+   'W run timeout'assert 0
+  end.
   for_n. CRS do.
    run__n 'rinit ''',DB,'''' NB. CRS task initialized while CW is idle
   end.
@@ -222,48 +206,155 @@ for_n. BUSY do.
   catch.
    rs=. lse__n
   end.
+  if. _1=sr__n do. logit'discarded';'';srold__n continue. end.
+  
+  NB. add response to out queue
+  rs=. 'HTTP/1.0 200 OK',CRLF,'Content-Length: ',(":#rs),CRLF,'Content-Type: application/jdserver',CRLF,CRLF,rs
+  SRSOUT__CJ=: SRSOUT__CJ,sr__n
+  SDATAOUT__CJ=: SDATAOUT__CJ,<rs
 
-  NB. have result to send to a client - send it right now
-  if. _1=sr__n do.
-   logit'discarded';'';srold__n
-  else.
-   rs=. 'HTTP/1.0 200 OK',CRLF,'Content-Length: ',(":#rs),CRLF,'Content-Type: application/jdserver',CRLF,CRLF,rs
-   sr=. srdecode sr__n
-   try.
-    r=. send_jcs_ S__CJ;sr;(#sr);ZMQ_SNDMORE_jcs_
-    if. r~:#sr do.
-     logit 'bad snd sr';'';sr
-     'send sr failed' assert 0
-    end.
-    r=. send_jcs_ S__CJ;rs;(#rs);0
-    if. r~:#rs do.
-     logit 'bad snd data';'';sr__n
-     'send sr data failed' assert 0
-    end.
-NB. close socket by sending 0 byte to remote http client
-NB. ZMQ_STREAM requires identity frame for each send
-    r=. send_jcs_ S__CJ;sr;(#sr);ZMQ_SNDMORE_jcs_
-    if. r~:#sr do.
-     logit'bad snd sr close';'';sr__n
-     'send sr failed' assert 0
-    end.
-    send_jcs_ S__CJ;(<0);(0);0
-    logit'close';'';sr__n
-   catch.
-    logit 'snd bad';'';sr__n
-   end.
-  end.
   sr__n=: _1 NB. do not use again
  end.
 end.
 )
 
-NB. not used anymore
-NB. send OUT to client
-sendrs_jcs_=: 3 : 0
+NB. CJ locale manages zmq_stream connections with clients
+NB. jobs locale is coinsert in CJ local
+coclass'jobs'
+
+NB. get jobs and move complete jobs to WJOBS and RJOB queues
+getjobs=: 3 : 0
+sr=. rcv_job y
+if. sr=_1 do. return. end.
+i=. SRS i. sr
+if. i=#SRS do.
+ logit'no connection';'';sr
+ return.
+end. NB. no connection for this route - ignore it 
+data=. ;i{SDATA
+if. 4>#data do. return. end.
+
+try. 
+ assert 'POST'-:4{.data
+ j=. (data E.~ CRLF,CRLF)i.1 NB. headers CRLF delimited with CRLF at end
+ if. j>:#data do. return. end. NB. do not have headers
+ hlen=. j+4
+ j=. ('Content-Length:'E. data)i.1
+ assert j<#data NB. must have 
+ t=. (15+j)}.data
+ t=. (t i.CR){.t
+ clen=. _1".t
+ assert _1~:clen
+ if. (hlen+clen)>#data do. return. end.
+catch.
+ logit 'bad request';'';sr
+ SDATA=: a: (SRS i. sr)}SDATA NB. do not use old data - best if client does new connect
+ rs=. 'request has bad format',~{.a.
+ rs=. 'HTTP/1.0 200 OK',CRLF,'Content-Length: ',(":#rs),CRLF,'Content-Type: application/jdserver',CRLF,CRLF,rs
+ SRSOUT=: SRSOUT,sr
+ SDATAOUT=: SDATAOUT,<rs
+ return.
+end.
+
+NB. data complete - move to job queue - class determines queue
+i=. SRS i. sr
+SDATA=: a: i}SDATA NB. remove old data so next request starts fresh
+data=. clen{.hlen}.data
+
+select. getopclass data
+case. 'r' do. RJOBS=: RJOBS,<sr;<data
+case. 'm' do.
+ logit 'mtm';((>:data i.';')}.data);sr
+ rs=. 0 2$0
+ c=. CW_base_
+ rs=. rs,'#W 1';runwcount__c
+ rs=. rs,'#I 1';runicount__c
+ for_n. CRS_base_ do.
+  rs=. rs,('#R ',":2+CRS_base_ i. n);runrcount__n
+ end.
+ rs=. rs,'#WJOBS';#WJOBS
+ rs=. rs,'#RJOBS';#RJOBS
+ rs=. rs,'SRS';SRS
+ rs=. rs,'SRSOUT';SRSOUT
+ rs=. 3!:1 rs
+ rs=. 'HTTP/1.0 200 OK',CRLF,'Content-Length: ',(":#rs),CRLF,'Content-Type: application/jdserver',CRLF,CRLF,rs
+ SRSOUT=: SRSOUT,sr
+ SDATAOUT=: SDATAOUT,<rs
+case. do. WJOBS=: WJOBS,<sr;<data
+end.
+)
+
+NB. result is sr or _1
+rcv_job=: 3 : 0
 if. -.y e.~ coname'' do. return. end.
-s=. srdecode {.SRS NB. invalide if more than 1 route
-send S;s;(#s);ZMQ_SNDMORE
-r=. send S;OUT;(#OUT);0
-OUT=: r}.OUT
+sr=. srcode recv S;(256#' ');256;0
+d=. recv S;(20000#' ');20000;0
+if. 0=#d do.
+ b=. sr~:SRS
+ if. *./b do.
+  logit 'open';'';sr
+  SRS=: SRS,sr
+  SDATA=: SDATA,a:
+ else.
+  logit 'close';'';sr
+  SRS=:   b#SRS
+  SDATA=: b#SDATA
+  for_c. BUSY__ do.
+   if. sr=sr__c do.
+    logit 'unwanted';'';sr
+    srold__c=: sr NB. for later discarded logit
+    sr__c=: _1
+    break.
+   end.
+  end.
+ end.
+ _1 return. NB. end of open/close handling
+end.
+
+i=. SRS i. sr
+if. i=#SRS do.
+ logit'invalid connection';'';sr
+ _1 return.
+end.
+data=. (;i{SDATA),d
+SDATA=: (<data) i}SDATA
+sr
+)
+
+NB. send responses to clients
+sendrs=: 3 : 0
+if. -.y e.~ coname'' do. return. end.
+if. 0=#SRSOUT do. return. end.
+sr=. {.SRSOUT
+data=. ;{.SDATAOUT
+srx=. srdecode sr
+r=. send S;srx;(#srx);ZMQ_SNDMORE
+if. r~:#srx do.
+ logit 'bad snd sr';'';sr
+ 'send sr failed' assert 0
+end. 
+
+r=. send S;data;(#data);ZMQ_SNDMORE
+if. r=#data do.
+ SRSOUT=:   }.SRSOUT
+ SDATAOUT=: }.SDATAOUT
+else.
+ logit'short snd short';'';sr
+ SDATAOUT=: (<r}.;{.SDATAOUT) 0}SDATAOUT
+end. 
+)
+
+NB. unused
+NB. close sr 
+NB. close socket by sending 0 byte to http client
+NB. ZMQ_STREAM requires identity frame for each send
+xxxclosesr=: 3 : 0
+t=. srdecode y 
+r=. send S;t;(#t);ZMQ_SNDMORE
+if. r~:#t do.
+ logit'bad snd sr close';'';y
+else. 
+ send S;(<0);(0);ZMQ_SNDMORE NB.!!! ??? 0
+end. 
+logit'snd close';'';y
 )

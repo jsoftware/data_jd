@@ -1,5 +1,5 @@
 NB. Copyright 2019, Jsoftware Inc.  All rights reserved.
-NB. mtm server/client helpers
+NB. mtm server/client helpers - used in mtm_man.ijs demo examples
 
 JDP_z_=: 3 : 0''
 n=. '/addons/data/jd/'
@@ -41,6 +41,7 @@ RPAREN
 
 NB. createmtmdb portbase;crscount
 create_mtm_db=: 3 : 0
+require JDP,'jd.ijs'
 'new'jdadmin'mtm'
 custom fappend jdpath_jd_'custom.ijs'
 jdadmin 0

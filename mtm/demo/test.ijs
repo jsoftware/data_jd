@@ -78,3 +78,23 @@ for. i.y do.
 end.
 )
 
+drive2=: 3 : 0
+i=. 0
+for. i.y do.
+ NB. echo msr'update f';'jdindex=1';'a';i
+ logit":i
+ echo msr'read a from f where jdindex=',":i
+ i=. >:i
+end.
+)
+
+drive3=: 3 : 0
+for_i. i.y do.
+ echo i
+ logit":i
+ connect''
+end.
+)
+
+ 
+

@@ -6,25 +6,31 @@ NB. following code needs to be implemented on a per thread basis for the mtm ser
 require'socket'
 require'convert/pjson'
 
+3 : 0''
+if. _1=nc<'S' do. PORT=: S=: _1 end.
+)
+
 jbinenc_z_=: 3 !: 1
 jbindec_z_=: 3 !: 2
 jsonenc_z_=: enc_pjson_
 jsondec_z_=: dec_pjson_
 
-LOGFN=: '~temp/mtm_client.log'
+LOGFN=: '~temp/mtm_client_',(":2!:6''),'.log'
+LOGFN=: '~temp/mtm.log'
 
 logit=: 3 : 0
 (y,LF)fappend LOGFN
 )
 
-logit=: [
+NB. logit=: [
 
-close=: 3 : 'sdclose_jsocket_ S'
+close=: 3 : 'S=: _1[sdclose_jsocket_ S'
 
 connect=: 3 : 0
 close S
 S=: >{:sdsocket_jsocket_''
-sdconnect_jsocket_ S;AF_INET_jsocket_;'127.0.0.1';PORT
+rc=. sdconnect_jsocket_ S;AF_INET_jsocket_;'127.0.0.1';PORT
+'connect failed' assert 0=rc
 )
 
 http=: 0 : 0 rplc LF;CRLF
@@ -36,69 +42,98 @@ Content-Length: XX
 Content-Type: application/x-www-form-urlencoded
 )
 
-client_config=: 3 : 0
+config=: 3 : 0
 PORT=: 65220
 TIMEOUT=: 5000
+BUFSIZE=: 50000
 CONTEXT=: 'json json;'
 PORT;TIMEOUT;CONTEXT
 )
 
+init=: 3 : 0
+config''
+)
+
+NB. send http request and get response - must be connected and does not close
 msr=: 3 : 0
-if. L.y do. y=. CONTEXT,(;{.y),';',jsonenc}.y else. y=. CONTEXT,y end.
-
- connect''
- t=. http 
- t=. t,CRLF,y NB. already have 1 CRLF
- t=. t rplc 'XX';":#y
- r=. t sdsend_jsocket_ S;0
- 'send error' assert 0=>{.r
- 'send truncated' assert (#t)=>{:r
- data=. get_response''
- close S NB. notify server so it can reset
- data
+try.
+ if. PORT=_1 do. config''  end.
+ if. S=_1    do. connect'' end.
+ if. L.y do. y=. CONTEXT,(;{.y),';',jsonenc}.y else. y=. CONTEXT,y end.
+ snd_request (http rplc'XX';":#y),CRLF,y
+ rcv_response''
+catch.
+ S=: _1 NB. ensure clean new start
+ 'failed'assert 0
+end.
 )
 
-get_response=: 3 : 0
+snd_request=: 3 : 0
+while. #y do.
+ 'e c'=. y sdsend_jsocket_ S;0
+ 'send error' assert 0=e
+ y=. c}.y
+end.
+)
+
+rcv_response=: 3 : 0
 data=. ''
-hi=. _1
 while. 1 do.
- logit 'before select'
- 'e reads writes errors'=. sdselect_jsocket_ S;'';'';TIMEOUT NB. timeout
- logit 'after select'
- 'mrcv select error' assert 0=e
- logit 'no error'
- 'mrcv timeout' assert S e. reads
- logit 'read ready'
- data=. data,;{:sdrecv_jsocket_ S,10000 0
- logit 'bytes: ',":#data
-
- if. _1=hi do. NB. get headers
-  j=. (data E.~ CRLF,CRLF)i.1 NB. headers CRLF delimited with CRLF at end
-  if. j<#data do. NB. have headers
-   hi=. j=. 4+j
-   h=. j{.data NB. headers
-   j=. ('Content-Length:'E. h)i.1
-   if. j=#h do. j=. ('Content-length:'E. h)i.1 end.
-   if. j<#h do.
-    t=. (15+j)}.h
-    t=. (t i.CR){.t
-    cl=. _1".t
-    assert _1~:cl
-   end.
-  end.
- end.
- if. (hi+cl)=#data do. break. end.
+ 'e reads writes errors'=. sdselect_jsocket_ S;'';'';TIMEOUT
+ 'select error' assert 0=e
+ 'timeout' assert S e. reads
+ D=: data=. data,;{:sdrecv_jsocket_ S,BUFSIZE,0
+ r=. chk_response data
+ if. -.0-:r do. break.  end.
 end.
-logit'have data'
-
-hi}.data
+if. ({.a.)={.r do. connect'' end.
+r
 )
 
+NB. return data if response is complete otherwise 0
+chk_response=: 3 : 0
+j=. (y E.~ CRLF,CRLF)i.1 NB. headers CRLF delimited with CRLF at end
+if. j<#y do. NB. have headers
+ k=. 4+j
+ h=. k{.y NB. headers
+ j=. ('Content-Length:'E. h)i.1
+ 'header without content-length'assert j~:#h
+ t=. (15+j)}.h
+ c=. _1".(t i.CR){.t
+ 'bad content-length'assert _1~:cl
+ if. (k+c)=#y do. k}.y return. end.
+end.
+0
+)
 
-msrjson=: 3 : 0
-if. L.y do.
- msr CONTEXT,(;{.y),';',jsonenc}.y
-else.
- msr CONTEXT,y
+NB. version that breaks sends into parts with delays for testing
+xxxsnd_request=: 3 : 0
+while. #y do.
+ d=. (50<.#y){.y
+ 'e c'=. d sdsend_jsocket_ S;0
+ 'send error' assert 0=e
+ y=. c}.y
+ 6!:3[1
 end.
 )
+
+NB. send bad http request and get response - must be connected and does not close
+msrbad=: 3 : 0
+if. PORT=_1 do. config''  end.
+if. S=_1    do. connect'' end.
+if. L.y do. y=. CONTEXT,(;{.y),';',jsonenc}.y else. y=. CONTEXT,y end.
+bad=. http rplc'POST';'POSx'
+snd_request (bad rplc'XX';":#y),CRLF,y
+rcv_response''
+)
+
+NB. mtm request
+msrmtm=: 3 : 0
+if. PORT=_1 do. config''  end.
+if. S=_1    do. connect'' end.
+CONTEXT=. 'jbin jbin;'
+if. L.y do. y=. CONTEXT,(;{.y),';',jsonenc}.y else. y=. CONTEXT,y end.
+snd_request (http rplc'XX';":#y),CRLF,y
+jbindec rcv_response''
+)
+
