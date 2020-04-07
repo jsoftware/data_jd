@@ -2,7 +2,7 @@ NB. Copyright 2019, Jsoftware Inc.  All rights reserved.
 
 require'~addons/net/jcs/jcs.ijs'
 
-NB. http://api.zeromq.org/4-1:zmq-socket - zmq http server
+NB. http://api.zeromq.org/4-1:zmq-socket - zmq http server - zmq_stream
 
 NB.! all asserts should be tested and handled
 NB.! all logits should be tested 
@@ -31,7 +31,7 @@ request that does is not connected (sr not in SRS) is ignored
 
 POLL=: 60000
 
-WTIMEOUT=: 60000 NB. W (non-insert) - wait for other tasks to finish and wait for the W op to finish
+WTIMEOUT=: 60000 NB. W (non-insert) - wait for other tasks to finish - wait for the W op to finish
 
 NB. script to load in RW and RO servers when they are started
 Serverijs=: 'load ''',JDP,'mtm/mtm_server.ijs'''
@@ -167,10 +167,11 @@ if. (#WJOBS__CJ)*.-.CW e. BUSY do.
   runicount__CW=: >:runicount__CW
   runa__CW wsen t
  else.
-  while. #BUSY do. NB. CW already added
-   logit 'W blocked';'';0
+  if. #BUSY do. logit 'W blocked';'';0 end.
+  while. #BUSY do.
    'rc reads writes errors'=. poll_jcs_ WTIMEOUT;(1#~#BUSY);<BUSY NB. wait for BUSY tasks to complete
-   if.  0=rc do. 'W block timeout' assert 0 end.
+   if.  0=rc do. 'W blocked timeout' assert 0 end.
+   runzjobs reads
   end.
   BUSY=: BUSY,CW
   log CW;'a';<t
@@ -181,6 +182,7 @@ if. (#WJOBS__CJ)*.-.CW e. BUSY do.
    logit'W run timeout';t;0
    'W run timeout'assert 0
   end.
+  runzjobs reads
   for_n. CRS do.
    run__n 'rinit ''',DB,'''' NB. CRS task initialized while CW is idle
   end.
@@ -274,8 +276,8 @@ case. 'm' do.
  end.
  rs=. rs,'#WJOBS';#WJOBS
  rs=. rs,'#RJOBS';#RJOBS
- rs=. rs,'SRS';SRS
- rs=. rs,'SRSOUT';SRSOUT
+ rs=. rs,'#SRS';#SRS
+ rs=. rs,'#SRSOUT';#SRSOUT
  rs=. 3!:1 rs
  rs=. 'HTTP/1.0 200 OK',CRLF,'Content-Length: ',(":#rs),CRLF,'Content-Type: application/jdserver',CRLF,CRLF,rs
  SRSOUT=: SRSOUT,sr

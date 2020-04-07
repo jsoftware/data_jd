@@ -227,7 +227,7 @@ for_tab. conl 1  do.
    end.
   end.
   
-  NB. adjust vals with new len -jam to file size as exact calc from dat no necessary
+  NB. adjust vals with new len -jam to file size as exact calc from dat not necessary
   for_n. vals do.
    s=. fsize 1{n
    n=. ;6{n
@@ -247,13 +247,23 @@ NB. getloc calls to adjust RO header
 NB. y is col locale
 NB. MTM ro task has good Tlen from table locale that it should use
 NB. mapping col file could have header with new rows from insert
-NB.  need to adjust header
+NB. need to adjust header - adjust required for dat and val
 mtmfixcount_jd_=: 3 : 0
 if. derived__y do. return. end.
-p=. PATH__y,'dat' NB.! only does dat for now
+s=. Tlen__y
+if. 'varbyte'-:typ__y do. NB. adjust val
+ p=. PATH__y,'val'
+ i=. (1{"1 mappings_jmf_)i.<p
+ n=. i{mappings_jmf_
+ had=. >MAPHEADER_jmf_{n
+ decho had
+ fs=. fsize 1{n
+ fs memw had,HADS_jmf_,1,JINT NB. jam header to fsize - exact calc no necessary
+ fs memw had,HADN_jmf_,1,JINT
+end. 
+p=. PATH__y,'dat'
 i=. (1{"1 mappings_jmf_)i.<p
 had=. >MAPHEADER_jmf_{i{mappings_jmf_
-s=. Tlen__y
 if. s=memr had,HADS_jmf_,1,JINT do. return. end. NB. it is OK
 s memw had,HADS_jmf_,1,JINT             NB. {.$dat
 c=. getHADR_jmf_ had
@@ -263,4 +273,3 @@ else.
  s memw had,HADN_jmf_,1,JINT
 end.
 )
-

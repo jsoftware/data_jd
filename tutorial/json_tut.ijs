@@ -1,4 +1,4 @@
-echo jd_jdserver_jman_
+NB. see: jd_jdserver_jman_
 
 jdjson=: 3 : 0
 if. L.y do.

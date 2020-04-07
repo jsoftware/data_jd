@@ -69,14 +69,12 @@ note: mtmx.ijs - helpers
 2. start mtm server
    start new jconsole session
    load'~W/w.ijs'
-   ldserver''
-   init''
+   lds''
    
 3. start mtm client
    start new jconsole session
    load'~W/w.ijs'
-   ldclient''
-   init''
+   ldc
    
    msr'info table'
    msr'info summary'
@@ -99,8 +97,6 @@ note: mtmx.ijs - helpers
    drive 10000
 
 5. send http POST requests via browser or other client.
-=======
- 5. send http POST requests via browser or other client.
 
 $ wget -O- -q http://127.0.0.1:65220/ --post-data 'json json;insert f;["a",[2,3,4,5,6,7,8,9]]'
 {

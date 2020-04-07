@@ -10,8 +10,9 @@ d{.~(1 i.~n E.d)+#n
 
 NB. server utils
 
-ldserver=: 3 : 0
+lds=: 3 : 0
 load JDP,'mtm/mtm.ijs'
+init''
 )
 
 config_server=: 3 : 0
@@ -24,9 +25,10 @@ LOGFILE_z_=: DB,'/mtm_log.txt'
 
 NB. client utils
 
-ldclient=: 3 : 0
+ldc=: 3 : 0
 load JDP,'mtm/mtm_client.ijs'
 load JDP,'mtm/demo/test.ijs'
+init''
 )
 
 NB. create initial db utils

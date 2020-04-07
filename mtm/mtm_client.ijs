@@ -44,9 +44,9 @@ Content-Type: application/x-www-form-urlencoded
 
 config=: 3 : 0
 PORT=: 65220
-TIMEOUT=: 5000
+TIMEOUT=: 20000
 BUFSIZE=: 50000
-CONTEXT=: 'json json;'
+CONTEXT=: 'jbin jbin;'
 PORT;TIMEOUT;CONTEXT
 )
 
@@ -54,16 +54,17 @@ init=: 3 : 0
 config''
 )
 
+NB. jbin jbin version
 NB. send http request and get response - must be connected and does not close
 msr=: 3 : 0
 try.
  if. PORT=_1 do. config''  end.
  if. S=_1    do. connect'' end.
- if. L.y do. y=. CONTEXT,(;{.y),';',jsonenc}.y else. y=. CONTEXT,y end.
+ if. L.y do. y=. CONTEXT,(;{.y),';',jbinenc }.y else. y=. CONTEXT,y end.
  snd_request (http rplc'XX';":#y),CRLF,y
- rcv_response''
+ jbindec rcv_response''
 catch.
- S=: _1 NB. ensure clean new start
+ close''
  'failed'assert 0
 end.
 )
