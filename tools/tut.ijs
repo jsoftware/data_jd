@@ -52,6 +52,7 @@ server
  jhs
  json
 xtra
+ blob
  custom          
  dropstop        
  link            

@@ -112,6 +112,7 @@ base/validate.ijs
 tools/setscriptlists.ijs
 api/api.ijs
 api/api_adm.ijs
+api/api_blob.ijs
 api/api_change.ijs
 api/api_create.ijs
 api/api_createdcol.ijs

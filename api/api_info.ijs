@@ -41,6 +41,8 @@ case. 'ref' do.
  'ref' inforef a
 case. 'derived' do.
  infoderived a
+case. 'blob' do.
+ infoblob a
 case. do.
  'unsupported info command'assert 0
 end. 
@@ -156,6 +158,17 @@ end.
 (;:'table column verb'),:ts;cs;vs
 )
 
+infoblob=: 3 : 0
+d=. dirtree (dbpath_jd_ DB_jd_),'/*.blob'
+if. 0=#d do. (;:'name date size'),:3#<0 0$'' return. end.
+n=. {."1 d
+n=. _5}.each (#jpath dbpath_jd_ DB_jd_)}.each n
+n=. }.each ;each (<;.1 each n)-.each <<'/jdblob'
+n=. >n rplc each <'/';' '
+ts=. >isotimestamp each 1{"1 d
+size=. ,.>2{"1 d
+(;:'name date size'),:n;ts;size
+)
 
 infoad=: 3 : 0
 t=. getloc__dbl y

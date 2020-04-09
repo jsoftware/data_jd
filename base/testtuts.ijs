@@ -1,5 +1,6 @@
 testtuts=: <;._2 [ 0 : 0
 tutorial/admin_tut.ijs
+tutorial/blob_tut.ijs
 tutorial/bus_lic_tut.ijs
 tutorial/createcol_tut.ijs
 tutorial/createdcol_tut.ijs

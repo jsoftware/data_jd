@@ -30,6 +30,7 @@ NB. ` unix shell script
 NB. ~ vi etc. temp file
 RESERVEDCHARS=: '/\ *.,:?<>|"''`~-=' NB. illegal in dan/table/col names - -= conflict with joins
 RESERVEDWORDS=: ;:'by from where order'
+MAXNAMECHARS=: 201 NB. includes terminating blank
 
 ECOUNT=:     'incorrect arg count'
 EDNONE=:     'bad SUBSCR'

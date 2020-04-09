@@ -1,10 +1,36 @@
 NB. Copyright 2019, Jsoftware Inc.  All rights reserved.
+NB. mtm jbin/jbin client example
 NB. mtm client - normal socket connection to mtm server ZMQ_STREAM socket
-
-NB. following code needs to be implemented on a per thread basis for the mtm server side
 
 require'socket'
 require'convert/pjson'
+
+HTTP=: 0 : 0 rplc LF;CRLF
+POST /fubar HTTP/1.1
+Host: 127.0.0.1:65220
+User-Agent: curl/7.47.0
+Accept: */*
+Content-Length: XX
+Content-Type: application/x-www-form-urlencoded
+)
+
+NB. config context
+NB. config 'json json;'
+NB. config 'jbin jbin;'
+config=: 3 : 0
+CONTEXT=: y
+PORT=: 65220
+TIMEOUT=: 20000
+BUFSIZE=: 50000
+'a b'=. 2{.;:CONTEXT
+if. 'json'-:a do. in=:  jsonenc else. in=:  jbinenc  end.
+if. 'json'-:b do. out=: [       else. out=: jbindec end.
+PORT;TIMEOUT;CONTEXT
+)
+
+init=: 3 : 0
+config 'jbin jbin;'
+)
 
 3 : 0''
 if. _1=nc<'S' do. PORT=: S=: _1 end.
@@ -15,15 +41,6 @@ jbindec_z_=: 3 !: 2
 jsonenc_z_=: enc_pjson_
 jsondec_z_=: dec_pjson_
 
-LOGFN=: '~temp/mtm_client_',(":2!:6''),'.log'
-LOGFN=: '~temp/mtm.log'
-
-logit=: 3 : 0
-(y,LF)fappend LOGFN
-)
-
-NB. logit=: [
-
 close=: 3 : 'S=: _1[sdclose_jsocket_ S'
 
 connect=: 3 : 0
@@ -33,26 +50,6 @@ rc=. sdconnect_jsocket_ S;AF_INET_jsocket_;'127.0.0.1';PORT
 'connect failed' assert 0=rc
 )
 
-http=: 0 : 0 rplc LF;CRLF
-POST /fubar HTTP/1.1
-Host: 127.0.0.1:65220
-User-Agent: curl/7.47.0
-Accept: */*
-Content-Length: XX
-Content-Type: application/x-www-form-urlencoded
-)
-
-config=: 3 : 0
-PORT=: 65220
-TIMEOUT=: 20000
-BUFSIZE=: 50000
-CONTEXT=: 'jbin jbin;'
-PORT;TIMEOUT;CONTEXT
-)
-
-init=: 3 : 0
-config''
-)
 
 NB. jbin jbin version
 NB. send http request and get response - must be connected and does not close
@@ -60,9 +57,9 @@ msr=: 3 : 0
 try.
  if. PORT=_1 do. config''  end.
  if. S=_1    do. connect'' end.
- if. L.y do. y=. CONTEXT,(;{.y),';',jbinenc }.y else. y=. CONTEXT,y end.
- snd_request (http rplc'XX';":#y),CRLF,y
- jbindec rcv_response''
+ if. L.y do. y=. CONTEXT,(;{.y),';',in }.y else. y=. CONTEXT,y end.
+ snd_request (HTTP rplc'XX';":#y),CRLF,y
+ out rcv_response''
 catch.
  close''
  'failed'assert 0
@@ -123,7 +120,7 @@ msrbad=: 3 : 0
 if. PORT=_1 do. config''  end.
 if. S=_1    do. connect'' end.
 if. L.y do. y=. CONTEXT,(;{.y),';',jsonenc}.y else. y=. CONTEXT,y end.
-bad=. http rplc'POST';'POSx'
+bad=. HTTP rplc'POST';'POSx'
 snd_request (bad rplc'XX';":#y),CRLF,y
 rcv_response''
 )
