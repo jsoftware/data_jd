@@ -55,27 +55,17 @@ mtm server does not do any encoding/decoding
 
 jd_mtm_demo_jman_=: 0 : 0
 
-note: ~Jddev vs distributed to addons
-note: mtmx.ijs - helpers
-
-0. for less typing, add ~W to folder.cfg
-   ~W git/addons/data/jd/mtm
-
-1. create mtm demo DB - only run once to create a new mtm db
-   start new j session
-   load'~W/w.ijs'
-   create_mtm_db''
+start J as control task
+   load jd (from git or ~addons)
+   load JDP,'mtm/mtmx.ijs' NB. utils
    
-2. start mtm server
-   start new jconsole session
-   load'~W/w.ijs'
-   lds''
+   create_mtm_db'' NB. only need to do this the first time
+    
+   jconsole server NB. start server task
+   jconsole client NB. start client task
+   jconsole client NB. start second client task - optional
    
-3. start mtm client
-   start new jconsole session
-   load'~W/w.ijs'
-   ldc
-   
+in client task(s)
    msr'info table'
    msr'info summary'
    msr'droptable f'
@@ -84,42 +74,13 @@ note: mtmx.ijs - helpers
    msr'insert f';'a';2 3
    msr'read from f'
    msr'delete f';'jdindex>2'
-   
    test''
    drive 10
    
-4. start another mtm client (same as 3)
-
-   msr'info table'
-   drive 10000
+wget/curl from control task
+   wget'info summary'
+   wget'read count a from f'
+   wget 'update f;',jsonenc 'a=4444';'a';666
    
-   in mtm client started in step 3 do:
-   drive 10000
-
-5. send http POST requests via browser or other client.
-
-$ wget -O- -q http://127.0.0.1:65220/ --post-data 'json json;insert f;["a",[2,3,4,5,6,7,8,9]]'
-{
-"Jd OK":0
-}
-
-$ wget -O- -q http://127.0.0.1:65220/ --post-data 'json json;delete f;"jdindex>5"'
-response body
-{
-"Jd OK":0
-}
-
-$ curl http://127.0.0.1:65220/ --data-raw 'json json;info summary'
-response body
-{
-"table":["f","g"],
-"rows":[[6],[4]]
-}
-
-$ wget -O- -q http://127.0.0.1:65220/ --post-data 'json json;read from f where jdindex<3'
-response body
-{
-"a":[4,0,1]
-}
-
+   curl'info schema'
 )

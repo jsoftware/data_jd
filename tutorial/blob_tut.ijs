@@ -31,4 +31,29 @@ jd'blobread  f a crudstuff'
 
 jd'info blob'
 
+0 : 0
+use custom ops to connect a blob to a table row
+see jd_myblobread_jd_ below
+)
 
+'new'jdadmin'test'
+jd'createtable f'
+jd'createcol f num int'
+jd'createcol f name byte 5'
+jd'insert f';'num';44 55 66;'name';3 5$'abc  de   fghi '
+jd'read from f'
+
+jd'blobwrite f abc*this is the data for name abc'
+jd'blobwrite f de*dededede'
+jd'blobwrite f fghi*yet another blob'
+
+jd_myblobread_jd_=: 3 : 0
+a=. jdi_read'from f where num=',y
+d=. 'name' jdfrom_jd_ a
+'can only read on blob at a time'assert 1=#d
+a,jd_blobread'f ',,d
+)
+
+jd'myblobread 44'
+jd'myblobread 55'
+jd'myblobread 55'

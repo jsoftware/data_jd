@@ -59,7 +59,8 @@ logit (type,' ',a);data;sr__task
 
 logit_z_=: 3 : 0
 'type data route'=. y
-m=. (16{.type),' : ',(36{.data),' : ',(10{.":route),' : ',_4}._12{.isotimestamp 6!:0''
+data=. 36{.(data i. ';'){.data
+m=. (16{.type),' : ',data,' : ',(10{.":route),' : ',_4}._12{.isotimestamp 6!:0''
 echo m
 (m,LF) fappend LOGFILE
 )
