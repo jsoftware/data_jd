@@ -12,11 +12,13 @@ t=. i{.y
 )
 
 jd_blobwrite=: 3 : 0
-'d data'=. bdn y
-'bad arg count'assert (#d)e.1 2 3
-name=. ;{:d
+'must be boxed'assert 1=L.y
+ECOUNT assert (#y)e.2 3 4
+data=. >{:y
+h=. }:y
+name=. ;{:h
 vcname name
-d=. }:d
+d=. }:h
 p=. (dbpath DB),'/',;d,each'/'
 'not a jd folder' assert fexist p,'jdstate'
 p=. p,'jdblob'

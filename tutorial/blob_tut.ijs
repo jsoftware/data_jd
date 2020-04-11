@@ -10,22 +10,22 @@ jd'createtable f'
 jd'createcol f a int'
 
 NB. blobs in the DB folder
-jd'blobwrite name*db data'
-jd'blobwrite crudstuff*db different data'
+jd'blobwrite name';'db data'
+jd'blobwrite crudstuff';'db different data'
 jd'blobread  name'
 jd'blobread  crudstuff'
 jd'bloberase name'
 'failed'jdae'blobread  name'
 
 NB. blobs in the table folder
-jd'blobwrite f name*table data'
-jd'blobwrite f crudstuff*table different data'
+jd'blobwrite f name';'table data'
+jd'blobwrite f crudstuff';'table different data'
 jd'blobread  f name'
 jd'blobread  f crudstuff'
 
 NB. blobs in the col folder
-jd'blobwrite f a name*col data'
-jd'blobwrite f a crudstuff*col different data'
+jd'blobwrite f a name';'col data'
+jd'blobwrite f a crudstuff';'col different data'
 jd'blobread  f a name'
 jd'blobread  f a crudstuff'
 
@@ -43,9 +43,9 @@ jd'createcol f name byte 5'
 jd'insert f';'num';44 55 66;'name';3 5$'abc  de   fghi '
 jd'read from f'
 
-jd'blobwrite f abc*this is the data for name abc'
-jd'blobwrite f de*dededede'
-jd'blobwrite f fghi*yet another blob'
+jd'blobwrite f abc';'this is the data for name abc'
+jd'blobwrite f de';'dededede'
+jd'blobwrite f fghi';'yet another blob'
 
 jd_myblobread_jd_=: 3 : 0
 a=. jdi_read'from f where num=',y
