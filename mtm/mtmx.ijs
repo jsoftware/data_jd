@@ -40,6 +40,11 @@ spawn_jtask_ 'wget -O- -q http://127.0.0.1:65220/ --post-data ''json json;JDOP''
 fread'foo.txt'
 )
 
+wgetfork=: 3 : 0
+fork_jtask_ 'wget -O- -q http://127.0.0.1:65220/ --post-data ''json json;JDOP'' 'rplc'JDOP';y
+)
+
+
 curl=: 3 : 0
 spawn_jtask_ 'curl http://127.0.0.1:65220/ --data-raw ''json json;JDOP'' > foo.txt'rplc'JDOP';y
 fread'foo.txt'

@@ -1,4 +1,6 @@
 0 : 0
+preliminary support for blobs - subject to change!
+
 blob - binary large object
 a blob is stored as a file in the database folder structure
 a blob can be stored at DB folder, table folder, or column folder

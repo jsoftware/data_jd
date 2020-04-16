@@ -24,6 +24,7 @@ tutorial/json_tut.ijs
 tutorial/key_tut.ijs
 tutorial/link_tut.ijs
 tutorial/log_tut.ijs
+tutorial/mtm_tut.ijs
 tutorial/northwind_tut.ijs
 tutorial/pairs_tut.ijs
 tutorial/performance_tut.ijs

@@ -77,6 +77,11 @@ in client task(s)
    test''
    drive 10
    
+   msr'mtm report'
+   msr'mtm stop'   NB. stop serving request and flush job queues
+   msr'mtm start'  NB. start serving again
+   msr'mtm kill'   NB. kill tasks
+   
 wget/curl from control task
    wget'info summary'
    wget'read count a from f'

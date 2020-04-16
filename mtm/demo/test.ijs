@@ -46,7 +46,10 @@ msrx'read from g'
 msrx'update g';'a="ijkl"';'a';'qqqq'
 msrx'read from g'
 assert 'abefqqzz'-:;;{:{: msr'read b from g'
-
+assert 8 2=$msr'mtm report'
+assert 'mtm stop'-:;{.{:msr'mtm stop'
+assert 'mtm error'-:;{.{:msr'info blob'
+msrx'mtm start'
 
 a=. 10 10 10 2 #i.4
 a=. a{~(#a)?#a

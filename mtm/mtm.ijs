@@ -21,6 +21,9 @@ client close connectin removes it
 
 request with bad format (not POST, bad counts, short) has response added to CJ result queue
 and the connection sr is removed from SRS__CJ to prevent future requests on that route
+
+
+
 response starts with ({.a.) to differ from jbin or json
 client on getting {.a. should do connect to help ensure things are clean
 
@@ -30,8 +33,8 @@ request that does is not connected (sr not in SRS) is ignored
 )
 
 POLL=: 60000
-
 WTIMEOUT=: 60000 NB. W (non-insert) - wait for other tasks to finish - wait for the W op to finish
+SHUTDOWN=: 0 NB. mtm shutdown sets to stop serving new or queue requests
 
 NB. script to load in RW and RO servers when they are started
 Serverijs=: 'load ''',JDP,'mtm/mtm_server.ijs'''
@@ -70,7 +73,6 @@ run=: 3 : 0
 RJOBS__CJ=: WJOBS__CJ=: JOBSTREAM__CJ=: OUT__CJ=: BUSY=: ''
 pjclean''
 while. 1 do.
-  NB.         CJ              CW                               CRS
   e=. 1 + 2* (0~:#SRSOUT__CJ), ((0~:#WJOBS__CJ)*.-.CW e. BUSY) , (0~:#RJOBS__CJ)*.-.CRS e. BUSY
   'rc reads writes errors'=. poll_jcs_ POLL;e;<CJ,CW,CRS
   if.  0=rc do. continue. end.
@@ -117,9 +119,8 @@ end.
 mtinfo=: ''
 
 SRS__CJ=:      '' NB. client zmqraw routes
-SDATA__CJ=:    '' NB. client data
-SRSOUT__CJ=:   '' NB. client route out
-SDATAOUT__CJ=: '' NB. client data out
+SDATA__CJ=:    '' NB. client zmqraw data
+SRSOUT__CJ=:   '' NB. list of route;data
 run''
 )
 
@@ -210,12 +211,7 @@ for_n. BUSY do.
    rs=. lse__n
   end.
   if. _1=sr__n do. logit'discarded';'';srold__n continue. end.
-  
-  NB. add response to out queue
-  rs=. 'HTTP/1.0 200 OK',CRLF,'Content-Length: ',(":#rs),CRLF,'Content-Type: application/jdserver',CRLF,CRLF,rs
-  SRSOUT__CJ=: SRSOUT__CJ,sr__n
-  SDATAOUT__CJ=: SDATAOUT__CJ,<rs
-
+  addout__CJ sr__n;rs
   sr__n=: _1 NB. do not use again
  end.
 end.
@@ -224,6 +220,14 @@ end.
 NB. CJ locale manages zmq_stream connections with clients
 NB. jobs locale is coinsert in CJ local
 coclass'jobs'
+
+RHDR=: 'HTTP/1.0 200 OK',CRLF,'Content-Length: LENGTH',CRLF,'Content-Type: application/jdserver',CRLF,CRLF
+
+NB. add route;data to out q
+addout=: 3 : 0
+'sr rs'=. y
+SRSOUT=: SRSOUT,<sr;(RHDR rplc 'LENGTH';":#rs),rs
+)
 
 NB. get jobs and move complete jobs to WJOBS and RJOB queues
 getjobs=: 3 : 0
@@ -252,10 +256,8 @@ try.
 catch.
  logit 'bad request';'';sr
  SDATA=: a: (SRS i. sr)}SDATA NB. do not use old data - best if client does new connect
- rs=. 'request has bad format',~{.a.
- rs=. 'HTTP/1.0 200 OK',CRLF,'Content-Length: ',(":#rs),CRLF,'Content-Type: application/jdserver',CRLF,CRLF,rs
- SRSOUT=: SRSOUT,sr
- SDATAOUT=: SDATAOUT,<rs
+ rs=. 3!:1 ,:'mtm error';'bad request'
+ addout sr;rs
  return.
 end.
 
@@ -264,27 +266,55 @@ i=. SRS i. sr
 SDATA=: a: i}SDATA NB. remove old data so next request starts fresh
 data=. clen{.hlen}.data
 
+if. SHUTDOWN__ do.
+ if. 'm'~:getopclass data do.
+  logit 'stopped';'';sr
+  SDATA=: a: (SRS i. sr)}SDATA NB. do not use old data - best if client does new connect
+  rs=. 3!:1 ,:'mtm error';'stopped'
+  addout sr;rs
+  return.
+ end.
+end. 
+
 select. getopclass data
 case. 'r' do. RJOBS=: RJOBS,<sr;<data
-case. 'm' do.
- logit 'mtm';((>:data i.';')}.data);sr
- rs=. 0 2$0
- c=. CW_base_
- rs=. rs,'#W 1';runwcount__c
- rs=. rs,'#I 1';runicount__c
- for_n. CRS_base_ do.
-  rs=. rs,('#R ',":2+CRS_base_ i. n);runrcount__n
- end.
- rs=. rs,'#WJOBS';#WJOBS
- rs=. rs,'#RJOBS';#RJOBS
- rs=. rs,'#SRS';#SRS
- rs=. rs,'#SRSOUT';#SRSOUT
- rs=. 3!:1 rs
- rs=. 'HTTP/1.0 200 OK',CRLF,'Content-Length: ',(":#rs),CRLF,'Content-Type: application/jdserver',CRLF,CRLF,rs
- SRSOUT=: SRSOUT,sr
- SDATAOUT=: SDATAOUT,<rs
+case. 'm' do. mtm_op data;sr
 case. do. WJOBS=: WJOBS,<sr;<data
 end.
+)
+
+mtm_op=: 3 : 0
+'data sr'=. y
+ d=. dltb (>:data i.';')}.data
+ logit 'mtm';d;sr
+ rs=. ,:d;''
+ select. d
+ case.'mtm report' do.
+  rs=. 0 2$0
+  c=. CW_base_
+  rs=. rs,'#W 1';runwcount__c
+  rs=. rs,'#I 1';runicount__c
+  for_n. CRS_base_ do.
+   rs=. rs,('#R ',":2+CRS_base_ i. n);runrcount__n
+  end.
+  rs=. rs,'#WJOBS';#WJOBS
+  rs=. rs,'#RJOBS';#RJOBS
+  rs=. rs,'#SRS';#SRS
+  rs=. rs,'#SRSOUT';#SRSOUT
+ case.'mtm stop' do. NB. stop serving new requests and flush job queues
+  SHUTDOWN__=: 1
+  NB.!!! need to flush job queues
+ case.'mtm start' do. NB. start serving new requests
+  SHUTDOWN__=: 0
+ case.'mtm kill' do. NB. kill tasks
+  SRSOUT=: WJOBS=: RJOBS=: BUSY=:''
+  addout sr;3!:1 rs
+  'rc reads writes errors'=. poll_jcs_ WTIMEOUT__;2;<CJ__ NB. wait for op to complete
+  sendrs writes
+  killp_jcs_''
+  exit''
+ end.
+ addout sr;3!:1 rs
 )
 
 NB. result is sr or _1
@@ -328,8 +358,7 @@ NB. send responses to clients
 sendrs=: 3 : 0
 if. -.y e.~ coname'' do. return. end.
 if. 0=#SRSOUT do. return. end.
-sr=. {.SRSOUT
-data=. ;{.SDATAOUT
+'sr data'=. >{.SRSOUT
 srx=. srdecode sr
 r=. send S;srx;(#srx);ZMQ_SNDMORE
 if. r~:#srx do.
@@ -340,10 +369,9 @@ end.
 r=. send S;data;(#data);ZMQ_SNDMORE
 if. r=#data do.
  SRSOUT=:   }.SRSOUT
- SDATAOUT=: }.SDATAOUT
 else.
  logit'short snd short';'';sr
- SDATAOUT=: (<r}.;{.SDATAOUT) 0}SDATAOUT
+ SRSOUT=: (<sr;r}.data) 0}SRSOUT
 end. 
 )
 

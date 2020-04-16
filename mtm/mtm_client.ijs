@@ -122,16 +122,6 @@ if. S=_1    do. connect'' end.
 if. L.y do. y=. CONTEXT,(;{.y),';',jsonenc}.y else. y=. CONTEXT,y end.
 bad=. HTTP rplc'POST';'POSx'
 snd_request (bad rplc'XX';":#y),CRLF,y
-rcv_response''
-)
-
-NB. mtm request
-msrmtm=: 3 : 0
-if. PORT=_1 do. config''  end.
-if. S=_1    do. connect'' end.
-CONTEXT=. 'jbin jbin;'
-if. L.y do. y=. CONTEXT,(;{.y),';',jsonenc}.y else. y=. CONTEXT,y end.
-snd_request (http rplc'XX';":#y),CRLF,y
-jbindec rcv_response''
+out rcv_response''
 )
 
