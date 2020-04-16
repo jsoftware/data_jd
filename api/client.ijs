@@ -91,13 +91,21 @@ i.0 0
 )
 
 jd_jdserver_jman_=: 0 : 0
+jdserver is similar to jd - except:
+ arg is a string (boxed data jbin/json encoded)
+ result is a jbin/json dictionary
+ jdaccess args are in context
+
 jdserver y
 y is a string
 context ; op [; arg]
-fin fout [dan user pswd] ; op [; arg]
-fin  - arg encoding    - json or jbin
-fout - result encoding - json or jbin
+fin fout [dan user pswd] ; op [; fin_encoded_arg]
+fin  - arg encoding    - json/jbin
+fout - result encoding - json/jbin
 dan user pswd - not currently used and must be elided
+
+jdserver can be used by http and similar clients that require json/jbin strings
+jdserver is used by mtm (see jdrt'mtm')
 )
 
 jdserver=: 3 : 0

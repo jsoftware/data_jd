@@ -50,6 +50,7 @@ demo
 server
  jcs             
  jhs
+ jdserver
  mtm
  json
 xtra
