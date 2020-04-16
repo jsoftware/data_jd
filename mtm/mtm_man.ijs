@@ -1,6 +1,6 @@
 NB. Copyright 2020, Jsoftware Inc.  All rights reserved.
 
-echo 0 : 0
+0 : 0
 man pages:
    jd_mtm_overview_jman_
    jd_mtm_demo_jman_
