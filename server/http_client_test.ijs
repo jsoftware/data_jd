@@ -70,8 +70,29 @@ jobs=: <;._2 [0 : 0
 'update f';'jdindex=1';'a';23
 )
 
-NB. drive 1000
+msrpid=: 3 : 0
+msr y rplc'PID';PID
+)
+
 drive=: 3 : 0
+echo PID=: ":2!:6''
+msrpid'droptable PID'
+msrpid'createtable PID'
+msrpid'createcol PID  i int'
+msrpid('insert ',PID,' ');'i';100000$i.1000
+msrpid'read count i from PID where i=',":?1000
+for. i.y do.
+ msrpid 'read count a from f'
+ msrpid('insert ',PID,' ');'i';?1000
+ msrpid 'read count a from f'
+ msrpid 'read count a from f'
+ msrpid 'read count a from f'
+ msrpid('insert ',PID,' ');'i';?1000
+end.
+)
+
+NB. drive 1000
+drive1=: 3 : 0
 pid=. 2!:6''
 for. i.y do.
  for. i.10 do.

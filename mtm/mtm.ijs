@@ -1,4 +1,4 @@
-NB. Copyright 2019, Jsoftware Inc.  All rights reserved.
+NB. Copyright 2020, Jsoftware Inc.  All rights reserved.
 
 require'~addons/net/jcs/jcs.ijs'
 
@@ -30,6 +30,10 @@ client on getting {.a. should do connect to help ensure things are clean
 client that gets BAD_REQUEST response must do connect again
 
 request that does is not connected (sr not in SRS) is ignored
+)
+
+reload=: 3 : 0
+load JDP,'mtm/mtm.ijs'
 )
 
 POLL=: 60000
@@ -70,7 +74,7 @@ echo m
 
 NB. run JOBS
 run=: 3 : 0
-RJOBS__CJ=: WJOBS__CJ=: JOBSTREAM__CJ=: OUT__CJ=: BUSY=: ''
+RJOBS__CJ=: WJOBS__CJ=: OUT__CJ=: BUSY=: ''
 pjclean''
 while. 1 do.
   e=. 1 + 2* (0~:#SRSOUT__CJ), ((0~:#WJOBS__CJ)*.-.CW e. BUSY) , (0~:#RJOBS__CJ)*.-.CRS e. BUSY
@@ -92,12 +96,12 @@ for_n. CW,CRS do. runz__n :: 0: 0 end.
 )
 
 init=: 3 : 0
-config_server''
 'not a path to a db'assert 'database'-: fread DB,'/jdclass'
 'zmq must be version 4.1.4 or later'assert 414<:10#.version_jcs_''
 killp_jcs_''
 
-logit 'start';(":BASE);0
+logit 'start mtm';(":BASE);0
+logit 'database';DB;0
 
 CJ=: jcssraw_jcs_ BASE
 coinsert__CJ 'jobs'

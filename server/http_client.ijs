@@ -14,22 +14,9 @@ Content-Length: XX
 Content-Type: application/x-www-form-urlencoded
 )
 
-NB. config context
-NB. config 'json json;'
-NB. config 'jbin jbin;'
-config=: 3 : 0
-CONTEXT=: y
-PORT=: 65220
-TIMEOUT=: 20000
-BUFSIZE=: 50000
-'a b'=. 2{.;:CONTEXT
-if. 'json'-:a do. in=:  jsonenc else. in=:  jbinenc  end.
-if. 'json'-:b do. out=: [       else. out=: jbindec end.
-PORT;TIMEOUT;CONTEXT
-)
-
-init=: 3 : 0
-config 'jbin jbin;'
+reload=: 3 : 0
+load JDP,'server/http_client.ijs'
+load JDP,'server/http_client_test.ijs'
 )
 
 3 : 0''
@@ -50,6 +37,12 @@ rc=. sdconnect_jsocket_ S;AF_INET_jsocket_;'127.0.0.1';PORT
 'connect failed' assert 0=rc
 )
 
+fixconfig=: 3 : 0
+'a b'=. 2{.;:CONTEXT
+if. 'json'-:a do. in=:  jsonenc else. in=:  jbinenc  end.
+if. 'json'-:b do. out=: [       else. out=: jbindec end.
+i.0 0
+)
 
 NB. jbin jbin version
 NB. send http request and get response - must be connected and does not close
