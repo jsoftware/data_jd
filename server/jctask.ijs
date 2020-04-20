@@ -6,6 +6,10 @@ coclass'jctask'
 PID=: 2!:6''
 PIDC=: ":PID
 PATH=: jpath'~temp/jctask/'
+JC=: jpath'~bin/',('/usr/share/j/'-:13{.jpath'~install'){::'jconsole';'ijconsole'
+HDR=: 0 : 0
+(":2!:6'')fwrite 'DIR/pid.txt'
+)
 
 mktmpdir=: 3 : 0
 if. _1=nc<'unique' do. unique=: _1 end.
@@ -13,9 +17,6 @@ unique=: >:unique
 PATH,(":2 !:6''),'-',":unique
 )
 
-hdr=: 0 : 0
-(":2!:6'')fwrite 'DIR/pid.txt'
-)
 
 NB. [opt] jctask sentences
 NB. opt is t for terminal or r for redirect
@@ -26,8 +27,7 @@ if. 0=L. y do. y=. 't';y end.
 dir=. mktmpdir''
 mkdir_j_ dir
 start=. dir,'/start.ijs'
-d=. d,~hdr rplc 'DIR';dir
-d fwrite start
+(d,~HDR rplc 'DIR';dir)fwrite start
 if. 'Linux'-:UNAME do.
  if. 't'={.opt do.
   c=. 'x-terminal-emulator -e "\"/home/eric/j901/bin/jconsole\" \"START\""'
@@ -38,6 +38,20 @@ if. 'Linux'-:UNAME do.
  echo c
  fork_jtask_ c 
 end.
+
+if. 'Darwin'-:UNAME do.
+ if. 't'={.opt do.
+  ('#!/bin/sh',LF,'"',JC,'" "',start,'"')fwrite dir,'/launch.command'
+  shell'chmod +x ',dir,'/launch.command'
+  c=. 'open -a /Applications/Utilities/Terminal.app "DIR/launch.command"'
+ else.
+  c=. '"JC" "START" > "DIR/out.txt"'
+ end.
+ c=.  c rplc 'JC';JC;'START';start;'DIR';dir
+ echo c
+ fork_jtask_ c 
+end.
+
 _1".(>: dir i:'-')}.dir
 )
 
@@ -49,10 +63,13 @@ getpid=: 3 : 0
 fread PATH,PIDC,'-',(":y),'/pid.txt'
 )
 
-getoutput=: 3 : 0
+getout=: 3 : 0
 fread PATH,PIDC,'-',(":y),'/out.txt'
 )
 
+kill=: 3 : 0
+shell 'kill ',":getpid y
+)
 
 NB. stuff from jcs
 
