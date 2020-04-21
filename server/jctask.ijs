@@ -4,6 +4,25 @@ NB. utils for starting jconsole tasks
 coclass'jctask'
 
 0 : 0
+usage:
+
+jconsole terminal task:
+   id=. jctask__JC 't';'test1'echo 444'
+   id get__JC 'pid'
+   id get__JC 'start'
+   id get__JC 'description'
+   kill__JC id
+   
+jconsole redirect task (no terminal):
+   id=. jctask__JC 'r';'echo 444'
+   id get__JC 'pid'
+   id get__JC 'start'
+   id get__JC 'description'
+   id get__JC 'out'
+   kill__JC id NB. fails because task will have already terminated
+)   
+
+0 : 0
 host differences:
 
 kill 't' task:
@@ -24,6 +43,7 @@ ps:
  win   - tasklist /FI "IMAGENAME" eq jconsole.exe
 )
 
+JC__=: <'jctask'
 PID=: 2!:6''
 PIDC=: ":PID
 PATH=: jpath'~temp/jctask/'
@@ -41,15 +61,15 @@ unique=: >:unique
 PATH,(":2 !:6''),'-',":unique
 )
 
-NB. jctask opt;sentences
-NB. opt is t for terminal or r for redirect
+NB. jctask type;description;sentences
+NB. type is t for terminal or r for redirect
 jctask=: 3 : 0
-if. 0=L. y do. y=. 't';y end.
-'opt d'=. y
-'option must be t (terminal) or r (redirect)'assert opt e. 'tr'
-term=. 't'={.opt
+'type description d'=. y
+'type must be t (terminal) or r (redirect)'assert type e. 'tr'
+term=. 't'=type
 dir=. mktmpdir''
 mkdir_j_ dir
+(type,' ',description)fwrite dir,'/description.txt'
 start=. dir,'/start.ijs'
 ((TAIL#~-.term),~d,~HEAD rplc 'DIR';dir)fwrite start
 
@@ -86,16 +106,9 @@ end.
 _1".(>: dir i:'-')}.dir
 )
 
-getstart=: 3 : 0
-fread PATH,PIDC,'-',(":y),'/start.ijs'
-)
 
-getpid=: 3 : 0
-fread PATH,PIDC,'-',(":y),'/pid.txt'
-)
-
-getout=: 3 : 0
-fread PATH,PIDC,'-',(":y),'/out.txt'
+get=: 4 : 0
+fread PATH,PIDC,'-',(":x),'/',y,;(y-:'start'){'.txt';'.ijs'
 )
 
 NB. return 1 for success
@@ -111,10 +124,12 @@ end.
 NB. stuff from jcs/jum modified
 
 3 : 0''
-CloseHandle=: 'kernel32 CloseHandle i x'&cd"0
-CreateProcess=: 'kernel32 CreateProcessW i x *w x x i  i x x *c *c'&cd
-CREATE_NO_WINDOW=:   16b8000000
-CREATE_NEW_CONSOLE=: 16b00000010
+if. 'Win'-:UNAME do.
+ CloseHandle=: 'kernel32 CloseHandle i x'&cd"0
+ CreateProcess=: 'kernel32 CreateProcessW i x *w x x i  i x x *c *c'&cd
+ CREATE_NO_WINDOW=:   16b8000000
+ CREATE_NEW_CONSOLE=: 16b00000010
+end. 
 )
 
 NB. x 1 for terminal 
