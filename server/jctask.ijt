@@ -1,0 +1,40 @@
+NB. Lab: run jconsole tasks
+
+require JDP,'server/jctask.ijs'
+
+NB. jconsole terminal task
+NB. the new jconsole task will have focus - click tutorial window to recover focus
+id=. run_jctask_ 't';'test1';'echo i.3 4' NB. type;description;sentences
+id get_jctask_ 'start'
+id get_jctask_ 'description'
+id get_jctask_ 'pid'
+id get_jctask_ 'exit' NB. _1 indicates task exit file does not exist
+killid_jctask_ id
+
+id=: run_jctask_ 't';'test2';'a=: i.23',LF,'echo a' NB. LF delimited list of sentences
+killid_jctask_ id
+
+id=. run_jctask_ 't';'test3';<'i.5';'exit''''' NB. boxed list of sentences
+id get_jctask_ 'pid'
+''-:id get_jctask_ 'exit' NB. '' indicates task exit file exists
+killid_jctask_ id
+
+NB. jconsole redirect task (no terminal)
+id=. run_jctask_ 'r';'test4';'echo i.5'
+id get_jctask_ 'start'
+id get_jctask_ 'description'
+id get_jctask_ 'pid'
+id get_jctask_ 'out'  NB. redirected task output
+id get_jctask_ 'exit' NB. last sentence ran exit
+
+NB. info about tasks is collected in folder ~temp/jctask
+report_jctask_'' NB. report on jctask folders
+NB. starttime               ppid id         cpid description
+NB. **** for ppid indicates row is for the pid of this task
+
+id=. run_jctask_ 't';'another test';'echo i.5' NB. type;description;sentences
+report_jctask_''
+
+NB. jctask folders are not automatically removed
+NB.clean_jctask_'all' NB. remove all jctask folders
+NB. report_jctask_''

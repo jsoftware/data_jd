@@ -3,23 +3,21 @@ NB. utils for starting jconsole tasks
 
 coclass'jctask'
 
-0 : 0
-usage:
-
+help=: 0 : 0
 jconsole terminal task:
-   id=. jctask__JC 't';'test1'echo 444'
-   id get__JC 'pid'
-   id get__JC 'start'
-   id get__JC 'description'
-   kill__JC id
+   taskid=. run_jctask_ 't';'test1';'echo 444'
+   taskid get_jctask_ 'pid'
+   taskid get_jctask_ 'start.ijs'
+   taskid get_jctask_ 'description'
+   kill_jctask_ taskid
    
 jconsole redirect task (no terminal):
-   id=. jctask__JC 'r';'echo 444'
-   id get__JC 'pid'
-   id get__JC 'start'
-   id get__JC 'description'
-   id get__JC 'out'
-   kill__JC id NB. fails because task will have already terminated
+   taskid=. run_jctask_ 'r';'test2';'echo 444'
+   taskid get_jctask_ 'pid'
+   taskid get_jctask_ 'start.ijs'
+   taskid get_jctask_ 'description'
+   taskid get_jctask_ 'out'
+   kill_jctask_ taskid NB. fails because task will have already terminated
 )   
 
 0 : 0
@@ -31,11 +29,8 @@ kill 't' task:
  win   - terminates task - closes window
 
 'r' task:
- linux - eof terminates task
- macos - eof terminates task
- win   - eof does not terminate task - adding exit'' to the end works
-
- fix - add TAIL (exit'') at end of file for all platforms
+ linux/macos eof would terminate task but windows does not
+ addding TAIL sentence that run exit (as modified by HEAD) write exit.txt file and does 2!:55''
  
 ps:
  linux - ps -C jconsole
@@ -43,44 +38,59 @@ ps:
  win   - tasklist /FI "IMAGENAME" eq jconsole.exe
 )
 
-JC__=: <'jctask'
+3 : 0''
+if. _1=nc<'unique' do. unique=: 0 end.
+)
+
 PID=: 2!:6''
-PIDC=: ":PID
 PATH=: jpath'~temp/jctask/'
 JC=: jpath'~bin/',('/usr/share/j/'-:13{.jpath'~install'){::'jconsole';'ijconsole'
-HEAD=: '(":2!:6'''')fwrite ''DIR/pid.txt''',LF
-TAIL=: LF,'exit'''''
+TAIL=: LF,LF,'exit'''''
+
+HEAD=: 0 : 0
+MYTASKID_jctask_=: 'PU'
+(":2!:6'') fwrite 'PUpid'
+exit_z_ =: 3 : '2!:55[0[''''fwrite ''PUexit'''
+
+)
+
+NB. timestamp is pretty unique + pid + unique
+mktaskid=: 3 : 0
+unique=: >:unique
+((isotimestamp 6!:0''),' ',(":PID),' ',":unique) rplc ' ';'_'
+)
+
 
 NB.! brute force rmdir of jctask folder
 NB. could/should be made smarter (jum validatepids)
-clean=: 3 : 'i.0 0[rmdir_j_ }:PATH'
-
-mktmpdir=: 3 : 0
-if. _1=nc<'unique' do. unique=: _1 end.
-unique=: >:unique
-PATH,(":2 !:6''),'-',":unique
+clean=: 3 : 0
+'arg must be ''all'''assert y-:'all'
+i.0 0[rmdir_j_ jpath'~temp/jctask'
 )
 
-NB. jctask type;description;sentences
+NB. run type;description;sentences
 NB. type is t for terminal or r for redirect
-jctask=: 3 : 0
+run=: 3 : 0
 'type description d'=. y
 'type must be t (terminal) or r (redirect)'assert type e. 'tr'
+if. 1=L. d do. d=. ;d,each LF end.
 term=. 't'=type
-dir=. mktmpdir''
-mkdir_j_ dir
-(type,' ',description)fwrite dir,'/description.txt'
-start=. dir,'/start.ijs'
-((TAIL#~-.term),~d,~HEAD rplc 'DIR';dir)fwrite start
+taskid=. mktaskid''
+pu=. PATH,taskid,'/'
+mkdir_j_ pu
+pstart=. pu,'start.ijs'
+((TAIL#~-.term),~d,~HEAD rplc 'PU';pu)fwrite pstart
+pout=. pu,'out'
 
 select. UNAME
 case. 'Linux' do.
  if. term do.
-  c=. 'x-terminal-emulator -e "\"/home/eric/j901/bin/jconsole\" \"START\""'
+  c=. 'x-terminal-emulator -e "\"JC\" \"START\""'
  else.
-  c=. '"/home/eric/j901/bin/jconsole" "START" > "DIR/out.txt"'
+  c=. '"JC" "START" > "OUT"'
  end.
- c=.  c rplc 'START';start;'DIR';dir
+ c=.  c rplc 'JC';JC;'START';pstart;'PATH';PATH;'OUT';pu,'out'
+ echo c
  fork_jtask_ c 
 
 case. 'Darwin' do.
@@ -89,40 +99,80 @@ case. 'Darwin' do.
   shell'chmod +x ',dir,'/launch.command'
   c=. 'open -a /Applications/Utilities/Terminal.app "DIR/launch.command"'
  else.
-  c=. '"JC" "START" > "DIR/out.txt"'
+  c=. '"JC" "START" > "OUT"'
  end.
- c=.  c rplc 'JC';JC;'START';start;'DIR';dir
+ c=.  c rplc 'JC';JC;'START';start;'PATH';PATH;'OUT';pu,'out'
  fork_jtask_ c
  
 case. 'Win' do.
  if. term do.
   c=. '"JC" "START"'
  else.
-  c=. '"JC" "START" >"DIR/out.txt"'
+  c=. '"JC" "START" >"DIR/out"'
  end.
  c=.  c rplc 'JC';(hostpathsep JC);'START';start;'DIR';dir
  term winserver c
 end.
-_1".(>: dir i:'-')}.dir
+NB. get new task pid
+for. i.10 do. NB. 10*0.1 is 1 second total delay
+ t=. fread pu,'pid'
+ if. -.t-:_1 do. break. end.
+ 6!:3[0.1 NB. give task a chance to run
+end.
+'task did not start'assert -._1-:t
+t fwrite pu,'pid'
+(type,' ',description)fwrite pu,'/description'
+taskid
 )
 
-
+NB. taskid get name
 get=: 4 : 0
-fread PATH,PIDC,'-',(":x),'/',y,;(y-:'start'){'.txt';'.ijs'
+'invalid taskid' assert fexist PATH,x,'/start.ijs'
+fread PATH,x,'/',y
 )
 
-NB. return 1 for success
-kill=: 3 : 0
-pid=. ":getpid y
-if. IFWIN do.
- 'SUCCESS:'-:8{.shell 'taskkill /f /pid ',pid
-else.
- shell 'kill ',pid
+report=: 3 : 0
+p=. {."1[1!:0 <PATH_jctask_,'*'
+a=. p,~each<PATH
+d=. >":each fread each a,each<'/description'
+pid=. >":each fread each a,each<'/pid'
+exit=. >(;fexist each a,each<'/exit'){'    ';'exit'
+(/:p){exit,.' ',.pid,.' ',.(>p),.' ',.d
+)
+
+NB. killtaskid taskid - kill pid and remove jctask folder
+NB. result 1 if pid was killed or was already dead
+killtaskid=: 3 : 0
+r=. 1 NB. 1 if pid has already been killed
+if.  checkpid y do.
+ pid=. y get 'pid'
+ echo 'kill valid pid'
+ try.
+  if. IFWIN do.
+   r=. 'SUCCESS:'-:8{. shell 'taskkill /f /pid ',pid
+  else.
+   r=. ''-:shell 'kill ',pid
+  end.
+ catch.
+ end.
 end. 
+rmdir_j_ PATH,y
+r
+)
+
+NB. return 1 if taskid still running
+checkpid=: 3 : 0
+select. UNAME
+case. 'Linux' do.
+ a=. <;._2 shell 'ps -e -o pid -o command'
+ #a#~;+/each (<PATH,taskid,'/start.ijs') E. each a
+case. 'Darwin' do. assert 0
+case. 'Win'    do. assert 0
+case.          do. assert 0
+end.
 )
 
 NB. stuff from jcs/jum modified
-
 3 : 0''
 if. 'Win'-:UNAME do.
  CloseHandle=: 'kernel32 CloseHandle i x'&cd"0
