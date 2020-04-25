@@ -57,7 +57,8 @@ exit_z_ =: 3 : '2!:55[0[''''fwrite ''PUexit'''
 NB. timestamp is pretty unique + pid + unique
 mktaskid=: 3 : 0
 unique=: >:unique
-((isotimestamp 6!:0''),' ',(":PID),' ',":unique) rplc ' ';'_'
+t=. (isotimestamp 6!:0''),' ',(":PID),' ',":unique
+'_' ((t e. ' -:.')#i.#t)}t
 )
 
 
@@ -77,6 +78,9 @@ if. 1=L. d do. d=. ;d,each LF end.
 term=. 't'=type
 taskid=. mktaskid''
 pu=. PATH,taskid,'/'
+
+echo pu
+
 mkdir_j_ pu
 pstart=. pu,'start.ijs'
 ((TAIL#~-.term),~d,~HEAD rplc 'PU';pu)fwrite pstart
@@ -108,11 +112,13 @@ case. 'Win' do.
  if. term do.
   c=. '"JC" "START"'
  else.
-  c=. '"JC" "START" >"DIR/out"'
+  c=. '"JC" "START" > "OUT"'
  end.
- c=.  c rplc 'JC';(hostpathsep JC);'START';start;'DIR';dir
+ c=.  c rplc 'JC';(hostpathsep JC);'START';(hostpathsep pstart);'OUT';pu,'out'
+ echo c
  term winserver c
 end.
+
 NB. get new task pid
 for. i.10 do. NB. 10*0.1 is 1 second total delay
  t=. fread pu,'pid'
@@ -165,9 +171,11 @@ checkpid=: 3 : 0
 select. UNAME
 case. 'Linux' do.
  a=. <;._2 shell 'ps -e -o pid -o command'
- #a#~;+/each (<PATH,taskid,'/start.ijs') E. each a
+ #a#~;+/each (<PATH,y,'/start.ijs') E. each a
 case. 'Darwin' do. assert 0
-case. 'Win'    do. assert 0
+case. 'Win'    do.
+ a=. <;._2 shell'wmic process where "name like ''jconsole.exe''" get processid,commandline'
+ #a#~;+/each (<hostpathsep PATH,y,'/start.ijs') E. each a
 case.          do. assert 0
 end.
 )
