@@ -48,7 +48,8 @@ select=: 3 : 0
 if. (0=#dat)*.0~:#y do.
  <@:({&val)@:(+i.)/"1 y{(1,2)$0
 else.
- <@:({&val)@:(+i.)/"1 y{dat
+NB.  <@:({&val)@:(+i.)/"1 y{dat
+ val (<;.0~ ,."1) y{dat
 end.
 )
 
