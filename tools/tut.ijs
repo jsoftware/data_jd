@@ -53,6 +53,7 @@ server
  jdserver
  mtm
  json
+ jctask
 xtra
  blob
  custom          

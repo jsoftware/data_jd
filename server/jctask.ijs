@@ -5,19 +5,19 @@ coclass'jctask'
 
 help=: 0 : 0
 jconsole terminal task:
-   taskid=. run_jctask_ 't';'test1';'echo 444'
-   taskid get_jctask_ 'pid'
-   taskid get_jctask_ 'start.ijs'
-   taskid get_jctask_ 'description'
-   kill_jctask_ taskid
+   tid=. run_jctask_ 't';'test1';'echo 444'
+   tid get_jctask_ 'pid'
+   tid get_jctask_ 'start.ijs'
+   tid get_jctask_ 'description'
+   killtid_jctask_ tid
    
 jconsole redirect task (no terminal):
-   taskid=. run_jctask_ 'r';'test2';'echo 444'
-   taskid get_jctask_ 'pid'
-   taskid get_jctask_ 'start.ijs'
-   taskid get_jctask_ 'description'
-   taskid get_jctask_ 'out'
-   kill_jctask_ taskid NB. fails because task will have already terminated
+   tid=. run_jctask_ 'r';'test2';'echo 444'
+   tid get_jctask_ 'pid'
+   tid get_jctask_ 'start.ijs'
+   tid get_jctask_ 'description'
+   tid get_jctask_ 'out'
+   killtid_jctask_ tid 
 )   
 
 0 : 0
@@ -48,7 +48,7 @@ JC=: jpath'~bin/',('/usr/share/j/'-:13{.jpath'~install'){::'jconsole';'ijconsole
 TAIL=: LF,LF,'exit'''''
 
 HEAD=: 0 : 0
-MYTASKID_jctask_=: 'PU'
+tid_jctask_=: 'TID'
 (":2!:6'') fwrite 'PUpid'
 exit_z_ =: 3 : '2!:55[0[''''fwrite ''PUexit'''
 
@@ -65,8 +65,13 @@ t=. (isotimestamp 6!:0''),' ',(":PID),' ',":unique
 NB.! brute force rmdir of jctask folder
 NB. could/should be made smarter (jum validatepids)
 clean=: 3 : 0
-'arg must be ''all'''assert y-:'all'
-i.0 0[rmdir_j_ jpath'~temp/jctask'
+select. y
+case.'all' do.
+ killtid each {."1[1!:0 <PATH_jctask_,'*'
+case.      do.
+ 'bad arg'assert 0
+end.
+i.0 0
 )
 
 NB. run type;description;sentences
@@ -78,12 +83,9 @@ if. 1=L. d do. d=. ;d,each LF end.
 term=. 't'=type
 taskid=. mktaskid''
 pu=. PATH,taskid,'/'
-
-echo pu
-
 mkdir_j_ pu
 pstart=. pu,'start.ijs'
-((TAIL#~-.term),~d,~HEAD rplc 'PU';pu)fwrite pstart
+((TAIL#~-.term),~d,~HEAD rplc 'PU';pu;'TID';taskid)fwrite pstart
 pout=. pu,'out'
 
 select. UNAME
@@ -94,7 +96,6 @@ case. 'Linux' do.
   c=. '"JC" "START" > "OUT"'
  end.
  c=.  c rplc 'JC';JC;'START';pstart;'PATH';PATH;'OUT';pu,'out'
- echo c
  fork_jtask_ c 
 
 case. 'Darwin' do.
@@ -115,7 +116,6 @@ case. 'Win' do.
   c=. '"JC" "START" > "OUT"'
  end.
  c=.  c rplc 'JC';(hostpathsep JC);'START';(hostpathsep pstart);'OUT';pu,'out'
- echo c
  term winserver c
 end.
 
@@ -127,7 +127,8 @@ for. i.10 do. NB. 10*0.1 is 1 second total delay
 end.
 'task did not start'assert -._1-:t
 t fwrite pu,'pid'
-(type,' ',description)fwrite pu,'/description'
+type fwrite pu,'/type'
+description fwrite pu,'/description'
 taskid
 )
 
@@ -139,20 +140,25 @@ fread PATH,x,'/',y
 
 report=: 3 : 0
 p=. {."1[1!:0 <PATH_jctask_,'*'
+time=. (<'-- ::.') 4 7 10 13 16 19}each 23{.each p
 a=. p,~each<PATH
-d=. >":each fread each a,each<'/description'
-pid=. >":each fread each a,each<'/pid'
-exit=. >(;fexist each a,each<'/exit'){'    ';'exit'
-(/:p){exit,.' ',.pid,.' ',.(>p),.' ',.d
+type=. ":each fread each a,each<'/type'
+d=.    ":each fread each a,each<'/description'
+pid=.  ":each fread each a,each<'/pid'
+dead=. -.;checktaskid each p
+exit=. ;fexist each a,each<'/exit'
+status=. (2*dead)-exit
+status=. status{'run ';'exit';'dead'
+h=. ;:'red pid tid timestamp t desc'
+h,(/:time){status,.pid,.p,.time,.type,.d
 )
 
 NB. killtaskid taskid - kill pid and remove jctask folder
 NB. result 1 if pid was killed or was already dead
-killtaskid=: 3 : 0
+killtid=: 3 : 0
 r=. 1 NB. 1 if pid has already been killed
-if.  checkpid y do.
+if.  checktaskid y do.
  pid=. y get 'pid'
- echo 'kill valid pid'
  try.
   if. IFWIN do.
    r=. 'SUCCESS:'-:8{. shell 'taskkill /f /pid ',pid
@@ -167,7 +173,7 @@ r
 )
 
 NB. return 1 if taskid still running
-checkpid=: 3 : 0
+checktaskid=: 3 : 0
 select. UNAME
 case. 'Linux' do.
  a=. <;._2 shell 'ps -e -o pid -o command'
