@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '4.4.79'
+VERSION=: '4.4.80'
 
 FILES=: 0 : 0
 manifest.ijs
@@ -75,6 +75,7 @@ demo/northwind/csv/Categories.csv
 demo/northwind/csv/Customers.csv
 demo/northwind/csv/Orders.csv
 demo/jhs/jdapp1.ijs
+tutorial/jctask_tut.ijs
 tutorial/ptable_tut.ijs
 tutorial/table_table_tut.ijs
 tutorial/setget_tut.ijs
@@ -226,14 +227,16 @@ base/zutil.ijs
 base/tests.ijs
 base/testtuts.ijs
 mtm/mtm.ijs
-mtm/mtm_client.ijs
 mtm/mtm_man.ijs
 mtm/mtm_server.ijs
 mtm/demo/createmtmdb.ijs
-mtm/demo/test.ijs
 mtm/json.txt
-mtm/mtmx.ijs
 server/jcs_server.ijs
+server/http_client.ijs
+server/http_client_test.ijs
+server/http_server.ijs
+server/jctask.ijs
+server/server_client_tools.ijs
 test/jdserver_test.ijs
 test/byten_test.ijs
 test/createdcol_test.ijs

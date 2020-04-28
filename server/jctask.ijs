@@ -117,7 +117,6 @@ case. 'Darwin' do.
   c=. '"JC" "START" > "OUT"'
  end.
  c=.  c rplc 'JC';JC;'START';pstart;'PU';pu;'OUT';pu,'out'
- echo c
  fork_jtask_ c
  
 case. 'Win' do.
