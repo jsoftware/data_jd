@@ -95,18 +95,19 @@ case. 'Linux' do.
  else.
   c=. '"JC" "START" > "OUT"'
  end.
- c=.  c rplc 'JC';JC;'START';pstart;'PATH';PATH;'OUT';pu,'out'
+ c=.  c rplc 'JC';JC;'START';pstart;'OUT';pu,'out'
  fork_jtask_ c 
 
 case. 'Darwin' do.
  if. term do.
-  ('#!/bin/sh',LF,'"',JC,'" "',start,'"')fwrite dir,'/launch.command'
-  shell'chmod +x ',dir,'/launch.command'
-  c=. 'open -a /Applications/Utilities/Terminal.app "DIR/launch.command"'
+  ('#!/bin/sh',LF,'"',JC,'" "',pstart,'"')fwrite pu,'/launch.command'
+  shell'chmod +x ',pu,'/launch.command'
+  c=. 'open -a /Applications/Utilities/Terminal.app "PU/launch.command"'
  else.
   c=. '"JC" "START" > "OUT"'
  end.
- c=.  c rplc 'JC';JC;'START';start;'PATH';PATH;'OUT';pu,'out'
+ c=.  c rplc 'JC';JC;'START';pstart;'PU';pu;'OUT';pu,'out'
+ echo c
  fork_jtask_ c
  
 case. 'Win' do.
@@ -120,10 +121,11 @@ case. 'Win' do.
 end.
 
 NB. get new task pid
-for. i.10 do. NB. 10*0.1 is 1 second total delay
+for_i. >:i.10 do. NB. +/0.2*>:i.10 is total delay of 11 seconds
  t=. fread pu,'pid'
+ echo t
  if. -.t-:_1 do. break. end.
- 6!:3[0.1 NB. give task a chance to run
+ 6!:3[i*0.2 NB. give task a chance to run
 end.
 'task did not start'assert -._1-:t
 t fwrite pu,'pid'
@@ -139,7 +141,8 @@ fread PATH,x,'/',y
 )
 
 report=: 3 : 0
-p=. {."1[1!:0 <PATH_jctask_,'*'
+p=. {."1[1!:0 <PATH,'*'
+p=. p#~'.'~:;{.each p
 time=. (<'-- ::.') 4 7 10 13 16 19}each 23{.each p
 a=. p,~each<PATH
 type=. ":each fread each a,each<'/type'
@@ -178,7 +181,11 @@ select. UNAME
 case. 'Linux' do.
  a=. <;._2 shell 'ps -e -o pid -o command'
  #a#~;+/each (<PATH,y,'/start.ijs') E. each a
-case. 'Darwin' do. assert 0
+case. 'Darwin' do.
+ a=. <;._2 shell 'ps -e -o pid -o command'
+ t=. }.PATH NB. PATH Users vs users
+ t=. (t i.'/')}.t
+ #a#~;+/each (<t,y,'/launch.command') E. each a
 case. 'Win'    do.
  a=. <;._2 shell'wmic process where "name like ''jconsole.exe''" get processid,commandline'
  #a#~;+/each (<hostpathsep PATH,y,'/start.ijs') E. each a
