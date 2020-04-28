@@ -121,11 +121,10 @@ case. 'Win' do.
 end.
 
 NB. get new task pid
-for_i. >:i.10 do. NB. +/0.2*>:i.10 is total delay of 11 seconds
+for_i. >:i.10 do.   NB. +/0.2*>:i.10 is total delay of 11 seconds
+ 6!:3[i*0.2         NB. give task a chance to run
  t=. fread pu,'pid'
- echo t
  if. -.t-:_1 do. break. end.
- 6!:3[i*0.2 NB. give task a chance to run
 end.
 'task did not start'assert -._1-:t
 t fwrite pu,'pid'
