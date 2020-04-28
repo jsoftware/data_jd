@@ -54,6 +54,16 @@ exit_z_ =: 3 : '2!:55[0[''''fwrite ''PUexit'''
 
 )
 
+HEADWIN=: 0 : 0 NB. win does not need to write pid
+tid_jctask_=: 'TID'
+exit_z_ =: 3 : '2!:55[0[''''fwrite ''PUexit'''
+
+)
+
+3 : 0''
+if. 'Win'-:UNAME do. HEAD=: HEADWIN end.
+)
+
 NB. timestamp is pretty unique + pid + unique
 mktaskid=: 3 : 0
 unique=: >:unique
@@ -117,17 +127,22 @@ case. 'Win' do.
   c=. '"JC" "START" > "OUT"'
  end.
  c=.  c rplc 'JC';(hostpathsep JC);'START';(hostpathsep pstart);'OUT';pu,'out'
- term winserver c
+ pid=. term winserver c
+ (":pid) fwrite pu,'pid'
+ 'task did not start' assert _1~:pid
 end.
 
-NB. get new task pid
-for_i. >:i.10 do.   NB. +/0.2*>:i.10 is total delay of 11 seconds
- 6!:3[i*0.2         NB. give task a chance to run
- t=. fread pu,'pid'
- if. -.t-:_1 do. break. end.
+if. -.'Win'-:UNAME do.
+ NB. unix starts need to give the task a chance to run
+ for_i. >:i.10 do.   NB. +/0.2*>:i.10 is total delay of 11 seconds
+  6!:3[i*0.2         NB. give task a chance to run
+  t=. fread pu,'pid'
+  if. -.t-:_1 do. break. end.
+ end.
+ 'task did not start'assert -._1-:t
+ t fwrite pu,'pid'
 end.
-'task did not start'assert -._1-:t
-t fwrite pu,'pid'
+
 type fwrite pu,'/type'
 description fwrite pu,'/description'
 taskid
@@ -202,19 +217,25 @@ if. 'Win'-:UNAME do.
 end. 
 )
 
+NB. result is pid or _1
 NB. x 1 for terminal 
 NB. windows createprocess
 NB. fork_jtask_ leaves stdin/stdout hooked up
 NB. following should be refactored into jtasks
 NB. /S strips leading " and last " and leaves others alone
 NB. win32 requires 104->68 ; 16->24 ; _2 ic 8{.pi -> _3 ic 16{.pi
+NB. ProcessInfo dwProcessid is pid of cmd.exe parent
+NB. wmic gets child probess for the parent
 winserver=: 4 : 0
 'only valid on win64'assert IF64
 f=. x{CREATE_NO_WINDOW,CREATE_NEW_CONSOLE
 c=. uucp 'cmd /S /C "',y,'"'
 si=. (104{a.),104${.a.
 pi=. 24${.a.
-'r i1 c i2 i3 i4 f i5 i6 si pi'=. CreateProcess 0;c;0;0;0;f;0;0;si;pi
+'r i1 c i2 i3 i4 f i5 i6 si pi'=. CreateProcess Q__=: 0;c;0;0;0;f;0;0;si;pi
 'createprocess failed'assert 0~:r
 CloseHandle _3 ic 16{.pi
+ppid=. _2 ic 4{.16}.pi
+pid=. shell'wmic process where (ParentProcessId=',(":ppid),') get ProcessId'
+_1".;1{<;._2 pid-.CR
 )
