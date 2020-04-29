@@ -48,8 +48,8 @@ JC=: jpath'~bin/',('/usr/share/j/'-:13{.jpath'~install'){::'jconsole';'ijconsole
 TAIL=: LF,LF,'exit'''''
 
 HEAD=: 0 : 0
-tid_jctask_=: 'TID'
 (":2!:6'') fwrite 'PUpid'
+tid_jctask_=: 'TID'
 exit_z_ =: 3 : '2!:55[0[''''fwrite ''PUexit'''
 
 )
@@ -106,7 +106,7 @@ case. 'Linux' do.
   c=. '"JC" "START" > "OUT"'
  end.
  c=.  c rplc 'JC';JC;'START';pstart;'OUT';pu,'out'
- fork_jtask_ c 
+ fork_jtask_ c
 
 case. 'Darwin' do.
  if. term do.
