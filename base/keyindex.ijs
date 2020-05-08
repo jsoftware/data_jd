@@ -54,7 +54,7 @@ vs=. {:"1 nsvs
 t=. jdgl tab,PTM
 pcol=. getpcol__t''
 'key must have ptable pcol' assert (<pcol)e.ns
-c=. {:CHILDREN__t
+c=. CHILDREN__t {~ NAMES__t i. <pcol
 i=. ({."1 nsvs)i.<pcol
 parts=. ;{:i{nsvs NB. pcol vals are ints (int, edate, edatetime)
 parts=. typ__c pcol_ffromv parts NB.edate to int
