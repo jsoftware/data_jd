@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '4.4.80'
+VERSION=: '4.4.81'
 
 FILES=: 0 : 0
 manifest.ijs
@@ -236,6 +236,7 @@ server/http_client.ijs
 server/http_client_test.ijs
 server/http_server.ijs
 server/jctask.ijs
+server/fork.ijs
 server/server_client_tools.ijs
 test/jdserver_test.ijs
 test/byten_test.ijs

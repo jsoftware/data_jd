@@ -14,7 +14,7 @@ all use is through JDP_z_ (set when the library is loaded)
 )
 
 coclass'jd'
-jdversion=: '4.30'
+jdversion=: '4.31'
 
 doin=: 4 : '(<x)(4 : ''do__y x'')each<"0 y' NB. run sentence in each locale
 
