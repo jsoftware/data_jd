@@ -39,7 +39,8 @@ y
 
 Revert=: 3 : 0
 if. y>:#dat do. return. end.
-val =: ({.@, y{dat) {. val
+NB. val =: ({.@, y{dat) {. val
+val =: val{.~ +/dat{~ (i. >./) y{. {."1 dat  NB. max starting position after update
 dat =: y{.dat
 )
 
