@@ -256,7 +256,6 @@ if. 'varbyte'-:typ__y do. NB. adjust val
  i=. (1{"1 mappings_jmf_)i.<p
  n=. i{mappings_jmf_
  had=. >MAPHEADER_jmf_{n
- decho had
  fs=. fsize 1{n
  fs memw had,HADS_jmf_,1,JINT NB. jam header to fsize - exact calc no necessary
  fs memw had,HADN_jmf_,1,JINT
