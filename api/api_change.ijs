@@ -9,10 +9,9 @@ jd_insert=: 3 : 0
 FETAB=: tab=. ;{.y
 t=. jdgl tab
 'ns vs rows'=. _1 fixpairs__t 1}.y
-bdn=. 3 : 'derived__y' "0 CHILDREN__t NB. derived names
-dn=. bdn#NAMES__t
-EDERIVED assert 0=#FECOL_jd_=: ;{.ns#~ns e. dn
-EMISSING assert 0=#FECOL_jd_=: (NAMES__t#~-.bjdn NAMES__t)-.ns,dn
+NB. dn=. cn_state__t'derived'
+NB. EDERIVED assert 0=#FECOL_jd_=: ;{.ns#~ns e. dn
+NB. EMISSING assert 0=#FECOL_jd_=: (NAMES__t#~-.bjdn NAMES__t)-.ns,dn
 if. rows<1 do. JDOK return. end.
 nv=. ns,.vs
 
@@ -152,6 +151,7 @@ NB.  col(s) to use with keyindex
 jd_update=: 3 : 0
 ECOUNT assert 2<:#y
 'tab w'=. 2{.y
+y=. 2}.y
 FETAB_jd_=. ;tab
 t=. jdgl FETAB
 if. 2=3!:0 w do.
@@ -166,14 +166,9 @@ if. 2=3!:0 w do.
   if. (#key)=#ns do. JDOK return. end. NB. no data to update
   i=. ns i. key
   w=. keyindex tab;,,(i{ns),.i{vs
-  'ns vs rows'=. (#w) fixpairs__t 2}.y
-  NB. remove keys from pairs
-  b=. -.ns e. key
-  ns=. b#ns
-  vs=. b#vs
+  y=. (2# -.ns e. key)#y NB. remove keys from pairs
  else.
   w=. ;{:,old=. jdi_read 'jdindex from ',tab,' where ',w NB. ; always a list so 1 n$'abc' works
-  'ns vs rows'=. (#w) fixpairs__t 2}.y
  end. 
 else.
  if. w-:_ do. w=. i.Tlen__t end.
@@ -181,11 +176,11 @@ else.
   if. 1=3!:0 w do. w=. 0+w else. EINDEX assert 0 end.
  end.
  w=. ,w NB. , to allow 1 n$'abc' to work
- 'ns vs rows'=. (#w) fixpairs__t 2}.y
 end.
 NB. w is always a list - if it has 1 element, this allows data 1 4$'a'
 NB. force w to scalar if single element list to disallow 1 4$'a'
 
+'ns vs rows'=. (#w) fixpairs__t y
 if. 0=#w do. NB. allow 0 or 1 rows if nothing to do
  ETALLY assert rows e. 0 1
  JDOK return.
@@ -193,8 +188,7 @@ end.
 
 ETALLY assert rows=#w
 
-bdn=. 3 : 'derived__y' "0 CHILDREN__t NB. mask of derived names
-EDERIVED assert -.+./ns e.~ bdn#NAMES__t
+EDERIVED assert -.+./ns e.~ cn_state__t'derived'
 
 if. -.isptable tab do.
  EINDEX assert (w<Tlen__t),0<:w
@@ -203,6 +197,9 @@ if. -.isptable tab do.
   c=. getloc__t {.i{ns
   w modify__c >i{vs
  end.
+ 
+ derived_mapped_update__t w NB. update derived_mapped cols data
+ 
 else.
  'parts tlens'=. getparts tab
  EINDEX assert (w<+/tlens),0<:w

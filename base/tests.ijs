@@ -4,8 +4,8 @@ test/alloc_test.ijs
 test/basic_test.ijs
 test/byten_test.ijs
 test/cd_query_test.ijs
+test/createcol_derived_test.ijs
 test/createcol_test.ijs
-test/createdcol_test.ijs
 test/createtable_test.ijs
 test/csv_test.ijs
 test/csvcdefs_test.ijs

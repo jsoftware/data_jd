@@ -232,7 +232,7 @@ NB. intx csv tests
 CSVFOLDER=: '~temp/jd/csv/intx' 
 jddeletefolder_jd_ CSVFOLDER
 
-NB ECSVBYTE0 tests - avoid crashes
+NB. ECSVBYTE0 tests - avoid crashes
 CSVFOLDER=: '~temp/jd/csv'
 
 bld=: 3 : 0

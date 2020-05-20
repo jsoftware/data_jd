@@ -108,7 +108,6 @@ tutorial/intro_csv_tut.ijs
 tutorial/csv_advanced_tut.ijs
 tutorial/quandl_ibm_tut.ijs
 tutorial/bus_lic_tut.ijs
-tutorial/createdcol_tut.ijs
 tutorial/key_tut.ijs
 tutorial/info_tut.ijs
 tutorial/tableinsert_tut.ijs
@@ -177,7 +176,6 @@ api/api_csv.ijs
 api/api_table.ijs
 api/api_info.ijs
 api/api_create.ijs
-api/api_createdcol.ijs
 api/api_change.ijs
 api/api_csvcdefs.ijs
 api/api_drop.ijs
@@ -240,7 +238,6 @@ server/fork.ijs
 server/server_client_tools.ijs
 test/jdserver_test.ijs
 test/byten_test.ijs
-test/createdcol_test.ijs
 test/csvcdefs_test.ijs
 test/csvrd_types_test.ijs
 test/valid_data_test.ijs

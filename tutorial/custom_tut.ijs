@@ -25,8 +25,7 @@ RPAREN
 
 jdadminx'test'                               NB. new admin, new db, no custom.ijs
 custom fwrite '~temp/jd/test/custom.ijs'  NB. create custom.ijs
-jdadmin 0
-jdadmin'test' NB. custom.ijs loaded when db opened
+jdloadcustom_jd_'' NB. load changes
 jd'createtable';'f';'cola int,colb int'
 jd'insert';'f';'cola';23 24 25;'colb';33 34 35
 jd'read from f'

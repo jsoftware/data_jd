@@ -448,3 +448,10 @@ unmapall_jmf_''
 coerase conl 1
 jdadmin 0
 )
+
+NB. add y defns to custom.ijs and reload it
+jdloadcustom=: 3 : 0
+p=. jdpath_jd_'custom.ijs' 
+if. #y do. y fappend p end.   
+load__dbl p
+)

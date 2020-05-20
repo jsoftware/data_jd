@@ -9,8 +9,9 @@ basic
  epochdt         
  admin
 op
- createcol       
- createdcol      
+ createcol
+ createcol_derived
+ createcol_derived_mapped
  createtable     
  delete          
  gen             

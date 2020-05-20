@@ -102,6 +102,34 @@ Create nam;typ;shape
 if. ifhash do. MakeHashed nam end.
 )
 
+NB. x is rows to add to each col
+NB. y is (column names),.(new data)
+Insert=: 4 : 0
+
+N=.,&.> {."1 y
+dat=. {:"1 y
+
+step0=. getloc@> N
+rows=. Tlen
+setTlen Tlen+x  NB. 
+update_subscr'' NB. mark ref cols dirty
+
+try.
+ step0  4 :'Insert__x >y'"0  dat NB. step 0: insert static columns
+ 1+FORCEREVERT#'a'
+catchd.
+ FORCEREVERT_jd_=: 0
+ NB. this could/should be fixed to repair the table
+ NB. needs to jam all columns to have original Tle
+ NB. needs to mark dynamic cols dirty
+ NB. has to do everything that repair would do
+ NB. for now, just mark the db damaged and let repair do the hard work
+ setTlen rows NB. original rows
+ jddamage'insert failed'
+end.
+EMPTY
+)
+
 NB. y is index of rows to compress out
 NB. jdref col marked dirty
 Delete=: 3 : 0
@@ -128,66 +156,6 @@ i.0 0
 markderiveddirty=: 3 : 0
 bdn=. 3 : 'derived__y' "0 CHILDREN NB. derived names
 (3 : 'setderiveddirty__y 1') "0 bdn#CHILDREN NB. mark derived names dirty
-)
-
-
-NB. x is <0 no rules (insert/keyindex), # update rules (scalar extension)
-NB. y is  name,value pairs
-NB. return (possibly adjusted) names;values;rows
-NB. values are converted to appropriate type
-NB. loose scalar extension
-NB.  scalars treated as 1 element lists
-NB.  byteN - scalars and lists extend to be tables
-NB.  byten - overtake OK, but undertake is an error
-NB. x is _1 for insert and required rows for update
-NB. all conform work is done here - may be duplicated later on
-NB. derived names validated and setdirty as required
-fixpairs=: 4 : 0
-'name data pairs - odd number' assert (2<:#y)*.0=2|#y
-ns=. ,each(2*i.-:#y){y NB. list of names
-duplicate_assert ns
-notjd_assert ns
-unknown_assert ns-.NAMES
-ns=. vs=. ts=. ''
-for_i. i.-:#y do.
- j=. 2*i
- n=. <,;j{y
- FECOL_jd_=: >n
- EUNKNOWN assert n e. NAMES
- ns=. ns,n
- c=. 0{CHILDREN{~NAMES i. n
- ts=. ts,<shape__c
- d=. >(>:j){y
- if. -.''-:shape__c do. d=. >d end. NB. json needs this
- d=. fixtypex__c d
- if. -.''-:shape__c do.
-  'fixpairs: bad shape'assert 'byte'-:typ__c
-  if. 0=$$d do. d=. ,d end.
-  if. 1=$$d do. d=. ,:d end.
-  'bad shape (data trailing shape greater than col trailing shape)' assert ({:$d)<:shape__c 
-  d=. shape__c{."1 d
- end.
- NB. if. 'edate'-:5{.typ__c do. EEPOCH assert -.IMIN e. d  end.
- d=. <d
- vs=. vs,d
- i=. >:i
-end.
-t=. ;#each vs
-ETALLY assert 0=#t-.1,>./t
-m=. x>.>./t
-if. (1 e.t)*.1<m do. NB. scalar extension
- for_i. i.#vs do.
-  d=. >i{vs 
-  if. 1=#d do.
-   vs=. (<m#d) i}vs
-  end.
- end.
-end.
-t=. ;#each vs
-rows=. {.t
-'fixpairs: bad count'assert rows=t
-ESHAPE assert (}.each$each vs)=ts
-ns;vs;rows
 )
 
 NB. x is rows to add to each col

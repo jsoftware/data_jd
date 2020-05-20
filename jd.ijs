@@ -100,6 +100,7 @@ base/common.ijs
 base/folder.ijs
 base/database.ijs
 base/table.ijs
+base/fixpairs.ijs
 base/column.ijs
 base/constants.ijs
 base/keyindex.ijs
@@ -115,7 +116,6 @@ api/api_adm.ijs
 api/api_blob.ijs
 api/api_change.ijs
 api/api_create.ijs
-api/api_createdcol.ijs
 api/api_csv.ijs
 api/api_csvcdefs.ijs
 api/api_drop.ijs

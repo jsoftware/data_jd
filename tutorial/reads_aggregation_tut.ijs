@@ -1,4 +1,3 @@
-
 jdadmin'sandp'
 
 jd'reads from j'
@@ -38,8 +37,7 @@ aggavgx addagg 'avgnonneg'
 )
 
 custom fwrite '~temp/jd/test/custom.ijs'
+jdloadcustom_jd_'' NB. load changes
 
-jdadmin 0
-jdadmin'test' NB. open db with new custom stuff
 jd'info agg'
 jd'reads avg-non-neg:avgnonneg a,avg:avg a from f'

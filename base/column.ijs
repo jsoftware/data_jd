@@ -8,13 +8,15 @@ NB. There are 3 col types: static, dynamic, and summary (which may be killed off
 CLASS=: <'jdcolumn'
 CHILD=: a:
 
-derived=: 0 NB. normal col vs derived col
+derived=: 0        NB. mark special
+derived_mapped=: 0 NB. mark special
 dverb=: ''
 
 STATE=: <;._2 ]0 : 0
 typ
 shape
 derived
+derived_mapped
 dverb
 )
 
@@ -77,7 +79,7 @@ if. -.derived do.
 else.
  FETAB_jd_=: NAME__PARENT
  FECOL_jd_=: NAME
- d=. dverb~''
+ d=. fixtypex dverb~''
  'derived bad count'assert Tlen=#d
  'derived bad trailing shape'assert shape-:}.$d
  'derived bad type'assert (3!:0 d)-:3!:0 DATAFILL

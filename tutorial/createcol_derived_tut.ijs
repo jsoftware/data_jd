@@ -1,4 +1,3 @@
-
 0 : 0
 derived col:
  calculated - usually from another col
@@ -15,8 +14,8 @@ jd'createcol f e  edate'
 jd'insert f';'b';(3 4$'abcdef');'e';'2014-10-12','2015-10-13',:'2016-10-14'
 jd'reads from f'
 
-jd'createdcol f catg byte 2 vcatg ' NB. vcatg verb used to derive col
-jd'createdcol f year int vyear'      NB. vyear verb used to derive col
+jd'createcol /derived f catg byte 2 vcatg ' NB. vcatg verb used to derive col
+jd'createcol /derived f year int vyear'      NB. vyear verb used to derive col
 'value error'jdae'reads from f'      NB. derive verbs not defined
 jdlast NB. last error indicates table and col
 
@@ -30,8 +29,8 @@ derive_vyear=: 3 : 0
 RPAREN
 )
 custom fappend jdpath_jd_'custom.ijs'   NB. add derive verbs to custom.ijs
+jdloadcustom_jd_'' NB. load changes
 
-jd'close' NB. open after close will load custom.ijs to get new defns
 jd'reads from f'
 
 CSVFOLDER=: '~temp/jd/csv'

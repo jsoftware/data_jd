@@ -118,8 +118,9 @@ csv1=: 0 : 0
 7,8,9
 )
 
+NB. MANGLEDNAMES
 cdef1=: 0 : 0
-1 d0 int
+1 d0_() int
 2 d1 int
 3 d2 int
 options  , LF NO NO 0
@@ -127,7 +128,7 @@ options  , LF NO NO 0
 
 valid1=: 3 : 0
 assert 0=csverrorcount
-assert (c_d0__csv,.c_d1__csv,.c_d2__csv)-:>:i.3 3
+assert (c_a0__csv,.c_a1__csv,.c_a2__csv)-:>:i.3 3
 )
 
 csv2=: 0 : 0
@@ -185,19 +186,20 @@ csv4=: 0 : 0
 9,jklmnopq,ccccc
 )
 
+NB. MANGLEDNAMES varbyte
 cdef4=: 0 : 0
 1 a int
-2 b varbyte 2
+2 b_() varbyte 2
 3 c varbyte 3
 options  , LF NO NO 0
 )
 
 valid4=: 3 : 0
-assert c_a__csv-:1 5 9
-assert vic c_b__csv
-assert v_b__csv-:'abcdefghijklmnopq'
-assert v_c__csv-:'aaabbbbccccc'
-assert vic c_c__csv
+assert c_a0__csv-:1 5 9
+assert vic c_a1__csv
+assert v_a1__csv-:'abcdefghijklmnopq'
+assert v_a2__csv-:'aaabbbbccccc'
+assert vic c_a2__csv
 )
 
 csv5=: csv0 rplc LF;CRLF

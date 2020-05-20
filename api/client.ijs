@@ -192,6 +192,7 @@ DBX jdx y
 'DB UP SERVER'=: bdnames x
 USER=: (UP i.'/'){.UP
 'FEOP OP FETAB FECOL FEER FEXTRA'=: <''
+FIXPAIRSFLAG=: 0
 try.
 if. 'intask'-:SERVER do.
  'jde: jd not loaded'assert 0=nc<'DBPATHS'

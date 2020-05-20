@@ -20,15 +20,15 @@ RPAREN
 jdadminnew'test'
 
 custom fappend jdpath_jd_'custom.ijs'
-jd'close' NB. force load of custom.ijs
+jdloadcustom_jd_'' NB. load changes
 jd'createtable f'
 jd'createcol f a int';2 3 4
 jd'createcol f b4 byte 4';3 4$'abcdabcdabcd'
 jd'createcol f edt edatetime';'2014-01-02T03:04:05','2015-02-03T03:04:05',:'2016-03-04T03:04:05'
 
-jd'createdcol f b  int    va' 
-jd'createdcol f b3 byte 3 vb4'
-jd'createdcol f y  edate  vedt'
+jd'createcol /derived f b  int    va' 
+jd'createcol /derived f b3 byte 3 vb4'
+jd'createcol /derived f y  edate  vedt'
 jd'reads from f'
 
 NB. verify that info schema and derived to not derive derived cols
@@ -116,7 +116,7 @@ setderiveddirty__c''
 
 derive_va__d=: 3 : '1.5+jd_get''f a'''
 setderiveddirty__c''
-'type'jdae'read from f'
+'bad int'jdae'read from f'
 
 derive_va__d=: 3 : 'i.a.'
 setderiveddirty__c''
@@ -134,8 +134,8 @@ jdadminnew'test'
 jd'createtable f'
 jd'createcol f a int'
 jd'createptable f a'
-'ptable'jdae'createdcol f b int dverb'
-'found' jdae'createdcol w b int dverb'
+'ptable'jdae'createcol /derived f b int dverb'
+'found' jdae'createcol /derived w b int dverb'
 
 NB. assert tab ref is dirty
 ardirty=: 3 : 0
@@ -156,11 +156,10 @@ derive_g_d=: 3 : 0
 RPAREN
 )
 custom fappend jdpath_jd_'custom.ijs'
-
-jd'close'
+jdloadcustom_jd_''
 jd'createtable f'
 jd'createcol f a int'
-jd'createdcol f d int dverb'
+jd'createcol /derived f d int dverb'
 jd'insert f';'a';i.6
 jd'reads from f'
 assert 0 1 2 0 1 2=>{:{:jd'read d from f'
@@ -187,7 +186,7 @@ jd'droptable g'
 
 jd'createtable g'
 jd'createcol g a int'
-jd'createdcol g d int g_d'
+jd'createcol /derived g d int g_d'
 jd'insert g';'a';|.100+i.3
 jd'reads from f'
 jd'reads from g'

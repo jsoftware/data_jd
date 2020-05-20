@@ -39,7 +39,7 @@ NB. test derived col
 msrx'createtable g'
 msrx'createcol g a byte 4'
 msrx'insert g';'a';3 4$'abcdefghijklmonop'
-msrx'createdcol g b byte 2 bfroma'
+msrx'createcol /dervived g b byte 2 bfroma'
 msrx'reads from g'
 msrx'insert g';'a';'zzzz'
 msrx'read from g'

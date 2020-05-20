@@ -545,7 +545,7 @@ end.
 b=. 3={."1 coldefs
 d=. (1{"1 b#coldefs),.b#maxwidths
 names=. b#colnames
-if. MANGLEDNAMES do. names=. (0".each names rplc each <'_';' '){each<a. end.
+if. MANGLEDNAMES do. names=. b#originalnames end.
 r=. fread PATHLOGFILE
 r fappend PATHLOGLOGFILE
 a=. (ctypes''){CTYPES_jdcsv_
@@ -643,9 +643,7 @@ for_i. i.#ccnames do.
  if. +/b do.
   n=. ,.each <"1 |:b#e
   nm=. _7}.each 2}.each i{ccnames
-  
-  if. MANGLEDNAMES do. nm=. (0".each nm rplc each <'_';' '){each<a. end.
-  
+  if. MANGLEDNAMES do.nm=. i{originalnames end.
   NB. nm=. (<TABLE,' '),each nm
   t=. t,1 6$nm,(<>b#ecodes),n,<seecsv"0[b#inaoffset+2{"1 e
  end.
@@ -796,12 +794,13 @@ elidedx=: i.0
 cdef each <;._2 y
 
 NB. pass through if valid simple names
-d=. colnames#~-.a:=colnames
+originalnames=: colnames
+d=. colnames-.a:
 MANGLEDNAMES=: (-.*./0=;#each d-.each<AlphaNum_j_)+. -.*./(;{.each d) e. Alpha_j_
 if. MANGLEDNAMES do.
- colnames=: (":each(<a.)i.each colnames)rplc each <' ','_'
+ colnames=: 'a',each ":each i.#colnames
+ colnames=: a: ((a:=originalnames)#i.#colnames)}colnames
 end.
-
 
 i.0 0
 )
