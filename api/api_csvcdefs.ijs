@@ -98,14 +98,22 @@ NB. byte if no fields
 NB. boolean if all fields (lowercase) are 0, f, false, 1, t, or true
 NB. int/float if __".y conversion has no __
 NB. efs if efs conversion has no errors
+NB. field starting with 'null' (any case) and followed by blanks
+NB.  is not used to determine type
 gettype=: 4 : 0
 varb=. x
 
 w=. {:$y
 if. varb<w do. 'varbyte' return. end.
 if. 29<w   do. 'byte ',":w return. end. NB. efs max len is 29
-a=. dlb each <"1 y NB. trailing blanks have already been dropped
-a=. (0~:;#each a)#a
+a=. <"1 y
+
+NB. remove rows that are 'null',blanks (not case sensitive)
+n=. tolower each  dtb each a
+a=. (n~:<'null')#a
+if. 0=#a do. 'int' return. end. NB. all null treated as int
+a=. dlb each a NB. trailing blanks have already been dropped
+a=. a-.a:
 if. 0=#a do. 'byte' return. end.
 NB. a is dltb boxed items with empties removed
 

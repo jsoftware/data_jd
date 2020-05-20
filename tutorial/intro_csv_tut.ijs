@@ -227,6 +227,29 @@ csvteste fwrite F,'e.csv'
 jd'csvcdefs /replace /h 0 /u e.csv'
 fread F,'e.cdefs'
 
+NB. null NULL
+NB. fields with 'null' (any case) followed by blanks are not used by csvcdefs to determine type
+
+'new'jdadmin'test'
+
+csv=: 0 : 0
+name,num,price
+"cog",301234,12.34
+"nut",null,18.75
+"gear",,20.23
+"pin",12,Null
+)
+
+csv fwrite CSVFOLDER,'f.csv'
+
+jd'csvcdefs /replace /h 1 f.csv'
+
+fread CSVFOLDER,'f.cdefs' NB. num col is int (null treated as ECBADNUM)
+
+jd'csvrd f.csv f'
+jd'read from f' NB. note IMIN for int, but (unfortunately) 0 for float
+jd'info schema'
+
 0 : 0
 csvprobe and csvscan are additional tools for working with csv files
 the following steps build a somewhat larger csv file and show
