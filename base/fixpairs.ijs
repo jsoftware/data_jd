@@ -94,7 +94,7 @@ if. x=_1 do. NB. derived and dm support for insert/upsert
  for_n. dmn do.
   c=. (NAMES i. n){CHILDREN
   ns=. ns,n
-  vs=. vs,< fixtypex__c dverb__c~ d
+  vs=. vs,< fixtypex__c (dverb__c,'__c')~ d
  end.
 end.
 
@@ -108,6 +108,6 @@ derived_mapped_update=: 3 : 0
 dmn=. cn_state'derived_mapped'
 for_n. dmn do.
  c=. (NAMES i. n){CHILDREN
- y modify__c fixtypex__c dverb__c~ y
+ y modify__c fixtypex__c (dverb__c,'__c')~ y
 end. 
 )

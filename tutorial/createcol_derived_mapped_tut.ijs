@@ -27,7 +27,6 @@ derived_mapped_foo=: 3 : 0
 RPAREN
 
 derived_mapped_goo=: 3 : 0
-d=. 'e' jddmfrom y
 0".4{."1 sfe 'e' jddmfrom y
 RPAREN
 )

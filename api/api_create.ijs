@@ -222,9 +222,10 @@ NB. /derived_mapped
 
 NB. col_name jddmfrom base_data_pairs - data_pairs have the col_name data
 NB. col_name jddmfrom rows            - rows selected from col_name dat 
+NB. run in col locale
 jddmfrom=: 4 : 0
 if. 0=L. y do.
- c=. getloc x
+ c=. getloc__PARENT x
  y{dat__c
 else.
  if. 1=$$y do.  y=. _2 ]\y end.
@@ -245,8 +246,7 @@ writestate__c''
 
 if. #dat__c do. NB. update dm col
  rows=. i.#dat__c
- t=. PARENT__c
- rows modify__c fixtypex__c (dverb__c,'__t')~ rows
+ rows modify__c fixtypex__c (dverb__c,'__c')~ rows
 end. 
 
 JDOK
