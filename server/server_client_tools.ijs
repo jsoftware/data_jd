@@ -104,7 +104,7 @@ fread'foo.txt'
 NB. create initial mtm db utils
 NB. custom derive verb for testing mtm derived col
 custom=: 0 : 0 rplc'RPAREN';')' NB. defns for derive verb
-derive_bfroma=: 3 : 0
+derived_bfroma=: 3 : 0
 2{."1 jd_get'g a'
 RPAREN
 )
@@ -116,6 +116,6 @@ require JDP,'jd.ijs'
 custom fappend jdpath_jd_'custom.ijs'
 jdadmin 0
 echo 'mtm db created with no tables'
-echo 'custom.ijs set with derive_bfroma_ verb for derived col test'
+echo 'custom.ijs set with derived_bfroma_ verb for derived col test'
 echo 'ready to be used by mtm server'
 )

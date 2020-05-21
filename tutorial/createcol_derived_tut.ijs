@@ -20,11 +20,11 @@ jd'createcol /derived f year int vyear'      NB. vyear verb used to derive col
 jdlast NB. last error indicates table and col
 
 custom=: 0 : 0 rplc'RPAREN';')' NB. defns for derive verbs
-derive_vcatg=: 3 : 0
+derived_vcatg=: 3 : 0
 2{."1 jd_get'f b'
 RPAREN
 
-derive_vyear=: 3 : 0
+derived_vyear=: 3 : 0
 0".4{."1 sfe jd_get'f e'
 RPAREN
 )

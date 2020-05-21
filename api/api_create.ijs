@@ -210,7 +210,7 @@ assertnotptable {.q
 jd_createcol ;q,each' '
 c=. jdgl 2{.q
 derived__c=: 1
-dverb__c=: 'derive_',v
+dverb__c=: 'derived_',v
 writestate__c'' 
 jdunmap 'dat',Cloc__c
 ferase PATH__c,'dat'

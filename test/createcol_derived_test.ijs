@@ -3,15 +3,15 @@ NB. Copyright 2019, Jsoftware Inc.  All rights reserved.
 der=: EDERIVED_jd_
 
 custom=: 0 : 0 rplc'RPAREN';')'
-derive_va=: 3 : 0
+derived_va=: 3 : 0
 1000+jd_get'f a'
 RPAREN
 
-derive_vb4=: 3 : 0
+derived_vb4=: 3 : 0
 3{."1 jd_get'f b4'
 RPAREN
 
-derive_vedt=: 3 : 0 NB. just the year
+derived_vedt=: 3 : 0 NB. just the year
 efs 10{."1 sfe jd_get'f edt'
 RPAREN
 
@@ -104,25 +104,25 @@ chkv''
 
 NB. check how derive verb errors are handled
 d=. dbl_jd_
-derive_va__d
-derive_va__d=: 3 : '}.1000+jd_get''f a'''
+derived_va__d
+derived_va__d=: 3 : '}.1000+jd_get''f a'''
 c=. jdgl_jd_'f b'
 setderiveddirty__c''
 'count'jdae'read from f'
 
-derive_va__d=: 3 : 'i.(#jd_get''f a''),2'
+derived_va__d=: 3 : 'i.(#jd_get''f a''),2'
 setderiveddirty__c''
 'shape'jdae'read from f'
 
-derive_va__d=: 3 : '1.5+jd_get''f a'''
+derived_va__d=: 3 : '1.5+jd_get''f a'''
 setderiveddirty__c''
 'bad int'jdae'read from f'
 
-derive_va__d=: 3 : 'i.a.'
+derived_va__d=: 3 : 'i.a.'
 setderiveddirty__c''
 'domain error'jdae'read from f'
 
-erase'derive_va__d'
+erase'derived_va__d'
 setderiveddirty__c''
 'value error'jdae'read from f'
 
@@ -147,11 +147,11 @@ NB. ref derived col to normal col
 jdadminnew'test'
 
 custom=: 0 : 0 rplc'RPAREN';')'
-derive_dverb=: 3 : 0
+derived_dverb=: 3 : 0
 3|jd_get'f a'
 RPAREN
 
-derive_g_d=: 3 : 0
+derived_g_d=: 3 : 0
 3|jd_get'g a'
 RPAREN
 )

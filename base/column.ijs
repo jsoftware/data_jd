@@ -79,7 +79,12 @@ if. -.derived do.
 else.
  FETAB_jd_=: NAME__PARENT
  FECOL_jd_=: NAME
- d=. fixtypex dverb~''
+ if. 3=nc<dverb do.
+  d=. fixtypex dverb~''
+ else.
+  NB. derive_verb vs derived_verb mess when derived_mapped introduced
+  d=. fixtypex ('derive',(dverb i.'_')}.dverb)~''
+ end.
  'derived bad count'assert Tlen=#d
  'derived bad trailing shape'assert shape-:}.$d
  'derived bad type'assert (3!:0 d)-:3!:0 DATAFILL
