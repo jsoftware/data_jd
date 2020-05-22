@@ -119,7 +119,7 @@ qlikeci=:   3&liker
 qunlike=:   0&liker
 qunlikeci=: 2&liker 
 
-liker=: 4 : 0,
+liker=: 4 : 0
 b=. (#dat)#0
 y=. y,{.a.
 r=. cd_qlike cd JDT,x,(gethad'b'),(gethad'dat'),gethad'y'
