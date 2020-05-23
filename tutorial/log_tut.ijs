@@ -1,4 +1,3 @@
-
 0 : 0
 events are recorded in log.txt and log.ijf in the db folder
 

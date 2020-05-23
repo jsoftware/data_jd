@@ -25,9 +25,9 @@ p=. <jdpath''
 )
 
 getdb=: 3 : 0
-NB. assertnodamage''
+assertnodamage''
 db=. dbpath DB
-NB. 'not database class'assert 'database'-:jdfread db,'/jdclass'
+'not database class'assert 'database'-:jdfread db,'/jdclass'
 i=. db i:'/'
 f=. Open_jd_ jpath i{.db
 dbl=: Open__f (>:i)}.db
