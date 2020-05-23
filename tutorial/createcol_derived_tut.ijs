@@ -1,10 +1,28 @@
+NB. derived col
+
 0 : 0
-derived col:
- calculated - usually from another col
- not mapped (not backed by a file)
- can't be updated by insert etc.
- can be used in ref
- not currently allowed in a ptable
+derived col
+ values calculated = usually from another col
+ not mapped
+ allowed in ref
+ not allowed in a ptable
+ calculated when first referenced
+ not allowed in insert/upsert/update/... pairs
+
+ calculated with verb derived_mapped_xxxx defined in custom.ijs
+  xxxx is from jd'createcol /derived col type [trailing shape] xxxx'
+
+ csv dumps data (not derived_xxxx verb)
+ jdloadcustom loads changes to custom.ijs to db locale
+ 
+ mark dirty whenever a dependency might have changed
+ mark dirty is agressive - e.g. in perhaps most case sort would be ok
+ but instead sort does not sort derived and marks them dirty
+ sort/dropcol/delete all mark derived dirty
+)
+
+jd_createdcol=: 3 : 0
+jd_createcol '/derived ',y
 )
 
 jdadminnew'test'

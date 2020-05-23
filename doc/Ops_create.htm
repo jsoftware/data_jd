@@ -14,21 +14,33 @@
 <body>
 <p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Replicate.htm">Replicate</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
 <h2 id="createcol">createcol</h2>
-<p>createcol table col <a href="Ops_common.htm#type-" title="wikilink"> type</a><br />
-createcol table col byte [trailing-shape]<br />
-createcol table col <a href="Ops_common.htm#type-" title="wikilink"> type</a> data<br />
-createcol table col byte [trailing-shape] data</p>
-<p>creates new col with default values or data</p>
+<p>create col</p>
+<ul>
+<li>string arg</li>
+</ul>
+<p>createcol table col <a href="Ops_common.htm#types-" title="wikilink"> type</a><br />
+createcol /derived table col <a href="Ops_common.htm#types-" title="wikilink"> type</a> verb<br />
+createcol /derived_mapped table col <a href="Ops_common.htm#types-" title="wikilink"> type</a> verb<br />
+</p>
+<p><code>/derived creates a derived col</code><br />
+<code>derived col is not mapped</code><br />
+<code>derived col data is the result of verb derived_verb in custom.ijs</code></p>
+<p><code>/derived_mapped creates a derived_mapped col</code><br />
+<code>derived_mapped col is mapped</code><br />
+<code>derived_mapped col data is the result of verb derived_mapped_verb in custom.ijs</code></p>
+<ul>
+<li>boxed arg provides data to initialize the col</li>
+</ul>
+<p>createcol table ; col ; <a href="Ops_common.htm#types-" title="wikilink"> type</a> ; data<br />
+tutorials createcol , createcol_derived , createcol_derived_mapped</p>
 <h2 id="createdb">createdb</h2>
 <p>createdb</p>
 <p>valid only after a dropdb<br />
 creates filefolder, initial files, and gets lock</p>
 <h2 id="createdcol">createdcol</h2>
-<p>createdcol table col <a href="Ops_common.htm#type-" title="wikilink"> type</a> verb<br />
-createdcol table col byte [trailing-shape] verb<br />
-creates a derived col</br> derived col data is not from a mapped file</br> derived col data is the result of verb derived_verb defined in custom.ijs</p>
-<p>a derived byte 3 col could be derived from the category part of a byte 20 col</br> a derived int col could be derived from the year in an edatetime col</p>
-<p>tutorial createdcol</p>
+<ul>
+<li>deprecated - use createcol /derived</li>
+</ul>
 <h2 id="createtable">createtable</h2>
 <p>createtable [/a ...] table [coldefs]<br />
 createtable /pairs [/types] [/a ...] table ; <a href="Ops_common.htm#pairs" title="wikilink">pairs</a></p>

@@ -1,15 +1,17 @@
 0 : 0
-derived mapped col:
+derived_mapped col:
  calculated - a row value is usually derived from the same row values in other cols
  mapped (backed by a file)
- not included in insert etc. pairs
- can be used in ref
+ not allowed in insert/upsert/update/... pairs
+ allowed in ref
  not allowed in a ptable
- 
- calculation based on dervived/derived_mapped cols will fail in various ways
  
  calculated with verb derived_mapped_xxxx defined in custom.ijs
   xxxx is from jd'createcol /dervied_mapped col type [trailing shape] xxxx'
+  
+ csv dumps data (not derived_xxxx verb)
+ jdloadcustom loads changes to custom.ijs to db locale
+
 )
 
 jdadminnew'test'
