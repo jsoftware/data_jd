@@ -7,7 +7,7 @@ jdadmin 0
 
 NB. clean state
 f=. '~/jd_rmdir_test'
-ferase f
+1!:5 :: [<jpath f
 jddeletefolderok_jd_ f
 jddeletefolder_jd_ f
 

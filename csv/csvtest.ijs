@@ -41,7 +41,6 @@ jd'csvrd ddt.csv nddt'
 assert (jd'read from ddt')-:jd'read from nddt'
 )
 
-
 NB. x 1 to avoid jd create from csv files
 NB. y test number - selects csvy cdefy validy 
 test=: 3 : 0
