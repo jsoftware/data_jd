@@ -128,7 +128,7 @@ case. 'Win' do.
  c=.  c rplc 'JC';(hostpathsep JC);'START';(hostpathsep pstart);'OUT';pu,'out'
  pid=. term winserver c
  (":pid) fwrite pu,'pid'
- 'task did not start' assert _1~:pid
+ 'task did not start' assert _1-.@-:pid
 end.
 
 if. -.'Win'-:UNAME do.

@@ -399,7 +399,7 @@ perhaps bad data
 
 csvscan=: 3 : 0
 d=. fread csvfpcdefs_jd_
-'cdefs file not found'assert _1~:cdefs
+'cdefs file not found'assert _1-.@-:cdefs
 NB. get options and max col from cdefs
 d=. <;._2 d
 i=. (8{.each d) i: <'options '
@@ -816,7 +816,7 @@ if. c-:'options' do.
 elseif. '#'={.c do.
 elseif. 1 do.
  'col name type xtra'=. 4{.<;._2 ' elided ',~deb y
- ('csv cdef invalid col number: ',y) assert _1~:_1".col
+ ('csv cdef invalid col number: ',y) assert _1-.@-:_1".col
  try. vcname_jd_ name catch. ('csv cdef invalid name: ',y)assert 0 end.
  if. -.type-:'CSTITCH' do. ('csv cdef duplicate name: ',y) assert -.(<name)e.colnames end. 
  if. -.(<type)e.CTYPES do.

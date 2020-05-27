@@ -338,7 +338,7 @@ while. (0=#h)+.cl>#d do. NB. read until we have header and all data
     t=. (15+i)}.h
     t=. (t i.CR){.t
     cl=. _1".t
-    assert _1~:cl
+    assert _1-.@-:cl
    else.
     cl=._1
    end. 

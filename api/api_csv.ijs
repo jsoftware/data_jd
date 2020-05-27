@@ -245,7 +245,7 @@ if. flagcdefs do.
 else.
  cdefs=. fread (_3}.csv),'cdefs'
 end. 
-'cdefs file not found'assert _1~:cdefs
+'cdefs file not found'assert _1-.@-:cdefs
 csvdefs_jdcsv_ cdefs
 csvreportclear_jdcsv_''              NB. clear log file of old reports
 path=. PATH__dbl

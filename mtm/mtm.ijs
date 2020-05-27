@@ -255,7 +255,7 @@ try.
  t=. (15+j)}.data
  t=. (t i.CR){.t
  clen=. _1".t
- assert _1~:clen
+ assert _1-.@-:clen
  if. (hlen+clen)>#data do. return. end.
 catch.
  logit 'bad request';'';sr

@@ -23,7 +23,7 @@ p=. (dbpath DB),'/',;d,each'/'
 'not a jd folder' assert fexist p,'jdstate'
 p=. p,'jdblob'
 jdcreatefolder p
-'blob write failed' assert _1~:data fwrite p,'/',name,'.blob'
+'blob write failed' assert _1-.@-:data fwrite p,'/',name,'.blob'
 JDOK
 )
 
@@ -35,7 +35,7 @@ d=. }:d
 p=. (dbpath DB),'/',;d,each'/'
 p=. 'jdblob',~(dbpath DB),'/',;d,each'/'
 r=. fread p,'/',name,'.blob'
-'blob read failed'assert _1~:r
+'blob read failed'assert _1-.@-:r
 NB. ((;d,each'/'),name);r
 'blob';r
 )
@@ -47,6 +47,6 @@ name=. ;{:d
 d=. }:d
 p=. 'jdblob',~(dbpath DB),'/',;d,each'/'
 r=. ferase p,'/',name,'.blob'
-'blob erase failed'assert _1~:r
+'blob erase failed'assert _1-.@-:r
 JDOK
 )

@@ -174,7 +174,7 @@ if. 1~:REPLICATE do. return. end.
 if. -.(<x) e. rops do. return. end.
 a=. 3!:1 x;<y
 d=. 'RLOGRLOG',(3 ic #a),a
-'rlog write failed' assert _1~:d fappend RLOGFH
+'rlog write failed' assert _1-.@-:d fappend RLOGFH
 setrlogend''
 writestate''
 )
