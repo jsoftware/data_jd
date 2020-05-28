@@ -193,32 +193,6 @@ end.
 i.0 0
 )
 
-
-NB. Windows Search Service (content indexing, ...) and and other windows background tasks
-NB. (antivirus?) can cause rmdir to fail. This problem is mitigated by doing rmdir several
-NB. times as required with a sleep.
-
-NB. similar to rmdir_j_
-NB. host facilities delete folder
-xxxrmsub=: 3 : 0
-y=. jpath y
-d=. 1!:0 y
-if. 1~:#d do. 0;'' return. end. NB. folder already empty
-if. 'd'~:4{4 pick{.d do. ('not a folder: ',y) assert 0 end.
-t=. ,&'/'^:('/'~:{:) jpathsep y
-if. (<filecase_j_ t) e. filecase_j_@:((#t)&{.)&.> 1{"1 }.showmap_jmf_ '' do. ('contains mapped files: ',t) assert 0 end.
-if. IFWIN do.
-  r=. shell_jtask_ 'rmdir /S /Q ','"','"',~hostpathsep y
-  if. #r do. echo r end.
-else.
-  hostcmd_j_ 'rm -rf ','"','"',~y NB. --preserve-root
-end.
-if. 0=#1!:0 y do. 0;'' return. end.
-6!:3[0.1 NB. sometimes required in windows so next test works
-if. 0=#1!:0 y do. 0;'' return. end. 
-1;'delete did not complete'
-)
-
 jdcreatefolder=: 3 : 0
 t=. jpath dltb y
 for_n. ('/'=t)#i.#t=. t,'/'  do.
@@ -228,9 +202,14 @@ end.
 y
 )
 
+NB. Windows Search Service (content indexing, ...) and and other windows background tasks can cause rmdir to fail
+NB. the problem is mitigated by doing rmdir several times as required with a sleep
+NB. if the open blocking the delete stays, then rmsub will fail and the user will get an error
+
 NB. rmsub (old version) was very slow on windows with non ssd
 NB. shell_jtask_ has lots of file ops (createpipe) and performed badly
-NB. try new version with just J foreign
+
+NB. version with just J foreign
 rmsub=: 3 : 0
 p=. jpath y
 d=. 1!:0 p
