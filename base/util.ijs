@@ -252,10 +252,10 @@ if. 0~:#dr do.
   rmsub p,'/',;a
  end.
 end. 
-1!:55 <p
-if. 0=#1!:0 y do. 0;'' return. end.
+1!:55 :: [ <p
+if. 0=#1!:0 p do. 0;'' return. end.
 6!:3[0.1 NB. sometimes required in windows so next test works
-if. 0=#1!:0 y do. 0;'' return. end. 
+if. 0=#1!:0 p do. 0;'' return. end. 
 1;'delete did not complete'
 )
 
