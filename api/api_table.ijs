@@ -82,10 +82,18 @@ snkpath=. '"',snkpath,'"'
 srcpath=. '"',srcpath,'"'
 jd_close''
 if. IFWIN do.
+ if. IFWINE do.
+ r=. shell 'xcopy ',(hostpathsep srcpath),' ',(hostpathsep snkpath),' /I/E/Q/Y/R/H/K '
+ if. +/'ERROR' E. toupper r do.
+  smoutput r
+  assert 0['xcopy failed'
+ end.
+ else.
  r=. shell 'robocopy ',(hostpathsep srcpath),' ',(hostpathsep snkpath),' *.* /E'
  if. +/'ERROR' E. r do.
   smoutput r 
   assert 0['robocopy failed'
+ end.
  end.
 else.
  shell 'cp -r ',srcpath,' ',snkpath

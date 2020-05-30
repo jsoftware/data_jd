@@ -31,6 +31,12 @@ t=. ALLTESTS=:  (tests_jd_,(testtuts_jd_))-.EXCLUDETESTS
 t=. t,~each<JDP
 if. -.IFJHS do. t=. t-.<JDP,'tutorial/jhs_tut.ijs' end.
 if. -.fexist'~addons/net/jcs/jcs.ijs' do. t=. t-.<JDP,'tutorial/jcs_tut.ijs' end. 
+if. IFWINE do.   NB. blacklist tests failed on wine
+ t=. t-.<JDP,'tutorial/jcs_tut.ijs'
+ t=. t-.<JDP,'tutorial/link_tut.ijs'
+ t=. t-.<JDP,'test/replicate_test.ijs'
+ t=. t-.<JDP,'tutorial/replicate_tut.ijs'
+end.
 failed=: ''
 jdt=: i.0 2
 'test start'logtest_jd_''

@@ -114,10 +114,18 @@ snk=. dquote snk
 
 select. UNAME
 case. 'Win' do.
+ if. IFWINE do.
+ r=. shell 'xcopy ',(hostpathsep src),' ',(hostpathsep snk),' /I/E/Q/Y/R/H/K /EXCLUDE:jdlock' NB. can't copy jdlock
+ if. +/'ERROR' E. toupper r do.
+  smoutput r
+  assert 0['xcopy failed'
+ end.
+ else.
  r=. shell 'robocopy ',(hostpathsep src),' ',(hostpathsep snk),' *.* /E /xf jdlock' NB. can't copy jdlock
  if. +/'ERROR' E. r do.
   smoutput r 
   assert 0['robocopy failed'
+ end.
  end.
 case. 'Linux' do.
  shell 'cp -R -T ',src,' ',snk

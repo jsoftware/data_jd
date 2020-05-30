@@ -16,6 +16,7 @@ h
 
 lockclose=: 3 : 0
 if. 0=y do. return. end.
+if. IFWINE do. 1!:22 ::0: y return. end.
 if. IFWIN do.
  1!:22 y
 else.
@@ -85,7 +86,7 @@ f=. RLOGFOLDER,'end'
 s=. 3 ic fsize RLOGFH
 h=. lockopen f
 while. 1 do. if. locklock h do. break. end. 6!:3[0.001[RLOGBLOCK=: >:RLOGBLOCK end.
-if. IFWIN do. s fwrite h else. s fwrite f end.
+if. IFWIN>IFWINE do. s fwrite h else. s fwrite f end.
 lockfree  h
 lockclose h
 )
@@ -98,7 +99,7 @@ h=. lockopen f
 while. 1 do. if. locklock h do. break. end.
  6!:3[0.001[RLOGBLOCK__dbl=: >:RLOGBLOCK__dbl
 end.
-if. IFWIN do. r=. fread h else. r=. fread f end.
+if. IFWIN>IFWINE do. r=. fread h else. r=. fread f end.
 lockfree  h
 lockclose h
 _3 ic r
