@@ -6,6 +6,7 @@ tutorial/createcol_derived_mapped_tut.ijs
 tutorial/createcol_derived_tut.ijs
 tutorial/createcol_tut.ijs
 tutorial/createtable_tut.ijs
+tutorial/csv_load_tut.ijs
 tutorial/csv_advanced_tut.ijs
 tutorial/custom_tut.ijs
 tutorial/delete_tut.ijs

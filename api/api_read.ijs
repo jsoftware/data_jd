@@ -22,7 +22,8 @@ jd_reads '/lr ',y
 )
 
 jd_reads=: 3 : 0
-y=. readstart y
+if. 0~:L.y do. y=. ;y[ECOUNT assert 1=#y end.
+y=. '/lr 0 /e 0 /types 0 /table s /file s'getopts y
 if. 0~:option_table do.
  ETABLEFILE assert 0=option_file
  option_lr=: 1

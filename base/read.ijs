@@ -69,9 +69,6 @@ if. option_types do.
  end.
  cnms=: t
 end.
-
-
-
 cnms,.read
 )
 
@@ -92,7 +89,7 @@ NB. y is from.
 NB. Build table data:
 NB.   tnms, the name of each table
 NB.   tloc, the corresponding table locale
-From =: 3 : 0
+From=: 3 : 0
 n =. #ex =. 'exact '
 if. exact =: 0:`(','~:n&{)@.(ex-:n&{.) y do. y=.n}.y end.
 from =. sortfrom ':'&(_2 {. strsplit)@> ',' strsplit y
@@ -162,13 +159,12 @@ NB.   cloc, the corresponding list of locales
 NB.   inds, the table index of each column
 NB. inds indexes into indices.
 NB. If sel is empty, add all visible columns
-SelBy =: 3 : 0
+SelBy=: 3 : 0
 'sel by'=.y
 sel=. sel rplc ' ,';',';', ';',' NB. remove blanks around ,
 nt =. #tloc
 if. 0=#sel do. sel =. (1<nt){::'*';'*.*' end.
 'a agg1 path' =. ({. , ' 'sel_split (deb each@>@{:)) ':' sel_split ',' strsplit sel
-
 NB. readtset avg must have count - add if necessary
 if. (OP_jd_-:'readptable') *. (-.(<'count')e.agg1) *. (<'avg')e.agg1 do.
  a=.    a,<'readtsetautocount'
@@ -208,7 +204,6 @@ NB. Build indices, a shape (#tloc),len matrix of indices for each table.
 NB.! very slow for cases with lots of indices - might be better to use booleans to do or and avoid /:~
 Where=: 3 : 0
 indices=: /:~@:~.&.|: > ,.&.>/ andqueries&.> toSoP fixwhere_jdtable_ y
-indices
 )
 
 NB. Take a list of queries, each on an individual table.

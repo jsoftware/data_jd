@@ -32,6 +32,30 @@ RESERVEDCHARS=: '/\ *.,:?<>|"''`~-=' NB. illegal in dan/table/col names - -= con
 RESERVEDWORDS=: ;:'by from where order'
 MAXNAMECHARS=: 201 NB. includes terminating blank
 
+t=. 0 : 0 NB. map colname RESERVEDCHARS
+/ _fs_
+\ _bs_
+  _
+* _star_
+. _dot_
+, _comma_
+: _colon_
+? _query_
+< _lt_
+> _gt_
+| _bar_
+" _dquote_
+' _quote_
+` _tie_
+~ _tilda_
+- _minus_
+= _equal_
+)
+
+'bad COLNRPLC'assert RESERVEDCHARS-:;{.each <;._2 t
+COLNRPLC=: (<"0 RESERVEDCHARS_jd_) ,. 2}.each<;._2 t
+
+
 ECOUNT=:     'incorrect arg count'
 EDNONE=:     'bad SUBSCR'
 EEPOCH=:     'bad epoch data'

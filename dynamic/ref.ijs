@@ -100,6 +100,7 @@ setdirty 0
 NB. dat may be out of date - ensure it is current
 select =: 3 : 0
 setdat''
+if. (0=#dat)*.0~:#y do. ,DATAFILL return. end. NB. empty join select
 if. left do.
  NB. derive left1 from left dat
  i=. ({.dat)i.i.Tlen  NB. i:

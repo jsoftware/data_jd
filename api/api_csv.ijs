@@ -14,6 +14,7 @@ y
 
 NB. '' or filename
 csvset=: 3 : 0
+csvy=: y NB. original arg foo.csv or foo.link
 if. IFJHS do.
  NB. assert -.(<'jjd')e. conl 0['job must run in task that is not a server'
  'job must run in task that is not a server' assert ''-:OKURL_jhs
@@ -23,10 +24,14 @@ CSVFOLDER__=: CSVFOLDER__,>('/'={:CSVFOLDER__){'/';''
 jdcreatefolder CSVFOLDER__
 'csv'fwrite CSVFOLDER__,'jdclass'
 if. ''-:y do. return. end.
-('csv file must be .csv: ',y)assert '.csv'-:_4{.y
-root=: (y i:'.'){.y
-csvf=: y
-csvfp=: CSVFOLDER__,y
+if. '.csvlink'-:_8{.y do.
+ csvfp=: fread CSVFOLDER__,y
+else.
+ csvfp=: CSVFOLDER__,y
+end.
+csvf=: (>:csvfp i: '/')}.csvfp
+('csv file must be .csv: ',y)assert '.csv'-:_4{.csvfp
+root=: (csvy i:'.'){.csvy
 csvfpcdefs=:   CSVFOLDER__,root,'.cdefs'
 csvfpcnames=:  CSVFOLDER__,root,'.cnames'
 csvfpcwidths=: CSVFOLDER__,root,'.cwidths'
@@ -207,7 +212,8 @@ if. option_cdefs_jd_ do.
   'CDEFSFILE does not exist' assert fexist CDEFSFILE__
 end.
 'csv table'=. 2 getnext a
-csv=. CSVFOLDER__,csv
+csvset csv
+csv=. csvfp
 ('csv file does not exist: ',csv)assert fexist csv
 vtname table
 
@@ -223,6 +229,8 @@ if. #fs do.
  ts=. ts,~each<table
 
  for_i. i.#fs do.
+  t=. ;i{fs
+  csvset (>:t i:'/')}.t
   csvrd (i{fs),(i{ts),rows;0
  end.
 else.
@@ -243,7 +251,7 @@ assert -.(<table)e.{."1 jdtables''['table already exists'
 if. flagcdefs do.
  cdefs=. fread CDEFSFILE__
 else.
- cdefs=. fread (_3}.csv),'cdefs'
+ cdefs=. fread  csvfpcdefs
 end. 
 'cdefs file not found'assert _1-.@-:cdefs
 csvdefs_jdcsv_ cdefs
@@ -269,11 +277,12 @@ JDOK
 jd_csvprobe=: 3 : 0
 a=. ca'/replace 0'getopts y
 csvset ;1 getnext a
-jd_csvcdefs (option_replace#'/replace '),'/h 0 /u ',csvf
+jd_csvcdefs (option_replace#'/replace '),'/h 0 /u ',csvy
 jd_droptable'csvprobe'
-jd_csvrd'/rows 12 ',csvf,' csvprobe'
+jd_csvrd'/rows 12 ',csvy,' csvprobe'
 r=. jdi_reads'from csvprobe'
 jd_droptable'csvprobe'
+ferase csvfpcdefs
 r
 )
 
@@ -292,6 +301,7 @@ i=. >:(;{.csv)i:'/'
 tabs=. >_4}.each i}.each csv
 for_t. tabs do.
  t=. dltb,;t
+ csvset t,'.csv' NB. get all csvset stuff - csvfpcdefs
  csvrd (CSVFOLDER__,t,'.csv');t;0;0
 end.
 

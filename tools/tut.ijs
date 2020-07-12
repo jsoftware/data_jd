@@ -39,7 +39,8 @@ op
   upsert_basic
   upsert_advanced
 csv
- intro_csv       
+ csv_load
+ csv_intro       
  bus_lic         
  quandl_ibm      
  csv_advanced            

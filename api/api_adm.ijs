@@ -455,3 +455,10 @@ p=. jdpath_jd_'custom.ijs'
 if. #y do. y fappend p end.   
 load__dbl p
 )
+
+jdcsvfolder=: 3 : 0
+CSVFOLDER__=: PATH__dbl,'jdcsv/'
+jdcreatefolder CSVFOLDER__
+'csv'fwrite CSVFOLDER__,'jdclass'
+i.0 0
+)

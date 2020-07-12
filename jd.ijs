@@ -1,4 +1,4 @@
-NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
+NB. Copyright 2020, Jsoftware Inc.  All rights reserved.
 
 0 : 0
 package manager Jd library is ~addons/data/jd
@@ -101,6 +101,7 @@ base/folder.ijs
 base/database.ijs
 base/table.ijs
 base/fixpairs.ijs
+base/parse.ijs
 base/column.ijs
 base/constants.ijs
 base/keyindex.ijs
@@ -179,14 +180,14 @@ ifintel=: 'a'={.2 ic a.i.'a' NB. endian
 )
 
 jdwelcome=: 0 : 0 rplc 'BOOKMARK';(jpath JDP,'doc/Index.htm');'ULIMIT';ULIMIT
-Jd is Copyright 2019 by Jsoftware Inc. All Rights Reserved.
+Jd is Copyright 2020 by Jsoftware Inc. All Rights Reserved.
 Jd is provided "AS IS" without warranty or liability of any kind.
 
 All use must be under a Jd License:
 https://code.jsoftware.com/wiki/Jd/License
 
 All files in Jd application folder, unless otherwise noted, are:
-Copyright 2019, Jsoftware Inc.  All rights reserved.
+Copyright 2020, Jsoftware Inc.  All rights reserved.
 
 Wiki documentation of the latest version is at:
 https://code.jsoftware.com/wiki/Jd/Index
@@ -197,6 +198,10 @@ https://www.jsoftware.com/jd_tuts.html
 Snapshot of the Jd wiki for this release is at: 
 file://BOOKMARK
 ULIMIT
+
+If you want to load a csv file for use in J (rather than Jd):
+   jdrt'csv_load'
+
 Get started:
    jdrt '' NB. tutorials
 )

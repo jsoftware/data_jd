@@ -4,7 +4,7 @@ coclass'jd'
 
 NB. [options] csvfile
 jd_csvcdefs=: 3 : 0
-a=. ca'/replace 0 /c 0 /h 1 /u 0 /v 1'getopts y
+a=. ca'/replace 0 /c 0 /h 1 /u 0 /v 1 /fixn 0'getopts y
 csvset ;1 getnext a
 headers=. option_h
 '/h invalid'assert headers<11
@@ -36,6 +36,7 @@ end.
 quoted=. '"'
 escaped=. 'NO'
 
+cnames=. fread csvfpcnames
 if. option_u do. NB. calc cols based on data
  t=. >:>./;+/each cs=each<;.2 d,rs
  (;LF,~each'c',each ":each<"0 >:i.t)fwrite csvfpcnames
@@ -54,16 +55,16 @@ else.
  cnb=. <;._2 toJ t,>(LF={:t){LF;''
 end.
 cols=. #cnb
-cnb=. cnb rplc each <' ';'_'
+if. option_fixn do. cnb=. (cnb) rplc each <COLNRPLC else. cnb=. cnb rplc each <' ';'_' end. 
 cn=. >cnb
-duplicate_assert cnb
 nums=.  >(( #":cols)":each<"0 >:i.cols)rplc each <' ';'0'
 
 c=. ,LF,.~nums,.' ',.cn,"1 ' byte ',":>:varb
 c=. c,'options ',colsep,' ',rowsep,' ',quoted,' ',escaped,' ',(":headers),' iso8601-char ',LF
 jd'droptable csvprobe'
 c fwrite csvfpcdefs
-jd_csvrd '/rows 5000 CSVF csvprobe'rplc 'CSVF';csvf
+jd_csvrd '/rows 5000 CSVF csvprobe'rplc 'CSVF';csvy
+if. _1-:cnames do. ferase csvfpcnames else. cnames fwrite csvfpcnames end. NB. restore original cnames
 ferase csvfpcdefs
 d=. jd'reads from csvprobe'
 jd'droptable csvprobe'

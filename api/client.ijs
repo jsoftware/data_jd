@@ -34,45 +34,6 @@ fmtoper=: 3 : 0
 ('op'fmtx OP),('tab'fmtx FETAB),('col'fmtx FECOL),('xtra'fmtx FEXTRA),('db'fmtx DB),('user'fmtx USER)
 )
 
-NB. clean args
-NB. box blank delimited args
-NB. args can be quoted in double quotes (to include blanks in arg)
-NB. * escapes to include remainder in final arg
-NB. dltb and , applied to each
-ca=: 3 : 0
-if. 1<:L.y do. ,each dltb each y return. end.
-a=. y
-r=. ''
-while. #a=.dlb a do.
- if. '"'={.a do.
-  a=. }.a
-  i=. a i.'"'
-  'jde: unmatched double quote' assert i<#a
-  r=. r,<i{.a
-  a=. }.i}.a
-  'jde: closing double quote not followed by blank' assert ' '={.a
- elseif. '*'={.a do.
-  r=. r,<}.a
-  a=. '' 
- elseif. 1 do.
-  i=. a i.' '
-  r=. r,<i{.a
-  a=. }.i}.a
- end.
-end.
-,each dltb each r
-)
-
-NB. box blank delimited names
-bdnames=: 3 : 0
-if. 0=#y do. y return. end.
-if. 0=L.y do.
- ,each <;._1' ',deb y
-else.
- ,each dltb each y
-end. 
-)
-
 jdaccess=: 3 : 0
 if. ''-:y do. DBX return. end.
 if. 0-:y do. i.0 0['DB UP SERVER'=: DBX_jd_=: '';'';'intask' return. end.
@@ -196,6 +157,7 @@ FIXPAIRSFLAG=: 0
 try.
 if. 'intask'-:SERVER do.
  'jde: jd not loaded'assert 0=nc<'DBPATHS'
+ 
  if. 0=L.y do.
   t=. dlb y
   i=. t i.' '
@@ -206,6 +168,7 @@ if. 'intask'-:SERVER do.
   FEOP=: OP=: dltb ;{.t
   a=. }.t
  end.
+ 
  pm OP
  'op'logtxt FEOP
  opx=. ;('x'-:{.OP){OP;'x'

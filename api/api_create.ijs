@@ -112,7 +112,7 @@ if. 1<:L.y do.
  y=. }:y
 else.
  dat=. ''
- y=. bdnames '/derived 0 /derived_mapped 0'getopts y
+ y=. '/derived 0 /derived_mapped 0' getopts bdnames y
  if. option_derived        do. createdcol  y return. end.
  if. option_derived_mapped do. createdmcol y return. end.
 end.
@@ -152,8 +152,6 @@ end.
 JDOK
 )
 
-NB. /derived
-
 jd_createdcol=: 3 : 0    NB. deprecated
 jd_createcol '/derived ',y
 )
@@ -172,8 +170,6 @@ ferase PATH__c,'dat'
 erase 'dat'
 JDOK
 )
-
-NB. /derived_mapped
 
 NB. col_name jddmfrom base_data_pairs - data_pairs have the col_name data
 NB. col_name jddmfrom rows            - rows selected from col_name dat 

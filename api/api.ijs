@@ -23,87 +23,6 @@ x rplc  ,(,.<"0 t),.,.boxopen y
 
 jd_z_=: jd_jd_
 
-optget=: 3 : 0
-if. 0~:L.y do. (<}.y),<{.y  return. end.
-y=. dlb y
-b=. '"'={.y
-if. b do.
- y=. }.a
- i=. y i.'"'
-else.
- i=. y i.' '
-end. 
-v=. i{.y
-a=. b}.i}.y
-i=. y i. ' '
-v=. i{.y
-y=. }.i}.y
-y;v
-)
-
-NB. y is jd_... ... 
-NB. x is list of options and their type
-NB. result is y with options stripped
-NB. option_name_jd_ set as option value
-NB. options not provided are set to 0
-NB. option type 0 set to 1
-NB. option type 1 must be positive integer
-NB. option type a (alloc) must be 3 positive integer/float
-NB. option type s is a string - if string arg it can be in "s
-NB. a=. '/e 0 /nx 1 /a a /s s'getopt '/e /nx 23 /a 1 2 3.5 /s "abc def"'
-getopts=: 4 : 0
-t=. ca x
-t=. (2,~-:#t)$t
-n=. {."1 t
-c=. {:"1 t
-p=. ;(<'_jd_ '),~each (<'option_'),each}.each n
-(p)=: 0 NB. default value for options not provided
-a=. y
-while. '/'={.v[v=. ;v['b v'=. optget a do.
- a=. b
- t=. }.v
- p=. 'option_',(}.v),'_jd_'
- i=. n i. <v
- EOPTION assert i < #n
- v=. ''$;i{c
- select. v
- case. '0' do.
-  v=. 1
- case. '1' do.
-  'a v'=. optget a
-  v=. 0+_".;v
-  EOPTIONV assert 4=3!:0 v
-  EOPTIONV assert 0<:v
- case. 'a' do. NB. createtable /a - 3 values and float allowed
-  'a v0'=. optget a
-  'a v1'=. optget a
-  'a v2'=. optget a
-  v=. 0+_".(;v0),' ',(;v1),' ',;v2
-  EOPTIONV assert 3=#v
-  EOPTIONV assert 0<:v
- case. 's' do. NB. string - asdf or "abc def"
-  if. 0~:L.a do.
-   v=. ;{.a
-   a=. }.a
-  else.
-   a=. dltb a
-   if. b=. '"'={.a do.
-    a=. }.a
-    i=. a i.'"'
-   else.
-    i=. a i.' '
-   end. 
-   v=. i{.a
-   a=. b}.i}.a
-  end. 
- case. do.
-  'bad option type' assert 0
- end.
- (p)=: v
-end.
-a
-)
-
 initserver_z_=: 3 : 0
 if. ''-:y do.
  d=. {."1[1!:0 jpath JDP,'config/server_*.ijs'
@@ -128,28 +47,6 @@ dbpath=: 3 : 0
 i=. ({."1 DBPATHS)i.<,y
 'not a db access name'assert i<#DBPATHS
 ;i{{:"1 DBPATHS
-)
-
-NB. box blank delimited name and the rest
-bd2=: 3 : 0
-if. 0=L.y do.
- t=. dltb y
- i=. t i. ' '
- dltb each (i{.t);}.i}.t
-else.
- dltb each y 
-end.
-)
-
-NB. box 2 blank delimited names and the rest
-bd3=: 3 : 0
-if. 0=L.y do.
- t=. dltb y
- i=. t i. ' '
- dltb each (<i{.t),bd2 i}.t
-else.
- dltb each y 
-end.
 )
 
 jdcdef=: 3 : 0
