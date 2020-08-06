@@ -55,7 +55,7 @@ Region
 )
 
 csvprepare 'jkl';JDP,'/demo/northwind/csv/Customers.csv'
-csvload 'jkl';2    NB. names from .cnames file
+csvload 'jkl';0    NB. names from .cnames file
 jd'reads from jkl where jdindex<5' NB. read first 5 rows
 jd'reads Address,Country,ContactTitle from jkl where ContactTitle="Owner"'
 jd'reads count Address from jkl' NB. number of rows

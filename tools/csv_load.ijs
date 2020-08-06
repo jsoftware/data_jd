@@ -38,13 +38,17 @@ r=. r,LF,'first row could be column headers or just data'
 r=. r,LF,'run appropriate line from the following:'
 r=. r,LF,'   csvload ''',tab,''';0 NB. if first row looks like data'
 r=. r,LF,'   csvload ''',tab,''';1 NB. if first row looks like col headers'
-r=. r,LF,'   csvload ''',tab,''';2 NB. if you have created a .cnames file',LF,LF
 )
 
 NB. table;header
 csvload=: 3 : 0
 'tab header'=. y
-header=. ;header{' /u ';' /h 1 ';' /c '
+tab=. dltb tab
+if. fexist CSVFOLDER,tab,'.cnames' do.
+ header=. ' /c '
+else.
+ header=. ;header{' /u ';' /h 1 '
+end. 
 jd'droptable ',tab             NB. delete table if it exists
 jd'csvcdefs /replace ',header,tab,'.csvlink' NB. create metadata - /u - c1,c2,... col names
 jd'csvscan ',tab,'.csvlink'    NB. scan entire file to adjust cdefs max byte col widths
@@ -56,5 +60,3 @@ jd'reads from abc'        NB. labeled cols
 jd'read from abc'       NB. labeled rows
 'c1'jdfrom_jd_ jd'read from abc'
 )
-
-
