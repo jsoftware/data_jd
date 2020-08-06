@@ -143,7 +143,7 @@ coln =. getloc__t@> cols
 typ =. 3 :'<typ__y'"0 coln
 shape =. 3 :'<shape__y'"0 coln
 ECSVBYTE0 assert ;shape~:<,0
-b=. cols,.typ,.shape
+b=. (addq_jd_ each cols),.typ,.shape
 r=. b
 b=. 0 3$''
 for_m. r do.

@@ -2,7 +2,10 @@ NB. Copyright 2015, Jsoftware Inc.  All rights reserved.
 
 coclass 'jd'
 
-isptable=: 3 : '-.0-:jdgl :: 0: y,PTM' NB. ispatable table_name
+isptable=: 3 : 0
+if. '.'e.y do. 0 return. end. NB.!!! ptable must be first in from and by itself - f and not f.g
+-.0-:jdgl :: 0: y,PTM NB. ispatable table_name
+)
 
 NB. return sorted ptable suffixes ; Tlens
 getparts=: 3 : 0

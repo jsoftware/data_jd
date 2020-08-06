@@ -4,7 +4,7 @@ coclass'jd'
 
 NB. [options] csvfile
 jd_csvcdefs=: 3 : 0
-a=. ca'/replace 0 /c 0 /h 1 /u 0 /v 1 /fixn 0'getopts y
+a=. ca'/replace 0 /c 0 /h 1 /u 0 /v 1'getopts y
 csvset ;1 getnext a
 headers=. option_h
 '/h invalid'assert headers<11
@@ -49,14 +49,13 @@ else.
 end.
 
 if. optc-:'header' do.
- cnb=. <;._2 n,cs
+ cnb=. remq_jd_ each cs strsplit_jd_ debq_jd_ n
 else.
  t=. fread csvfpcnames
  cnb=. <;._2 toJ t,>(LF={:t){LF;''
 end.
 cols=. #cnb
-if. option_fixn do. cnb=. (cnb) rplc each <COLNRPLC else. cnb=. cnb rplc each <' ';'_' end. 
-cn=. >cnb
+cn=. >addq each cnb
 nums=.  >(( #":cols)":each<"0 >:i.cols)rplc each <' ';'0'
 
 c=. ,LF,.~nums,.' ',.cn,"1 ' byte ',":>:varb

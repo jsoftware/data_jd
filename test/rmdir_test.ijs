@@ -6,7 +6,7 @@ ae=: 'assertion failure'
 jdadmin 0
 
 NB. clean state
-f=. '~/jd_rmdir_test'
+f=:  jpath'~/_jd_rmdir_test'
 1!:5 :: [<jpath f
 jddeletefolderok_jd_ f
 jddeletefolder_jd_ f
@@ -71,7 +71,7 @@ jdadmin 'test'
 jdadmin 0
 jddeletefolder_jd_ f
 
-jdadminnew '~temp/jd/jdtest'
+jdadminnew '~temp/jd/_jdtest'
 jd'createtable f'
 jd'createtable g'
 jd'droptable f'

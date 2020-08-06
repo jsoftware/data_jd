@@ -10,9 +10,12 @@ keyindex=: 3 : 0
 :
 ECOUNT assert 3<:#y
 tab=. ,;{.y
-FETAB_jd_=: tab
+FETAB=: tab
 t=. jdgl tab
 'ns vs rows'=. _2 fixpairs__t }.y
+
+FIXPAIRSFLAG=: 0 NB.!!! kludge - update needs to run on remaining pairs
+
 if. isptable tab do.
  x kiptable (<tab),<ns,.vs
 else. 
@@ -27,8 +30,9 @@ ns=. {."1 nsvs
 vs=. {:"1 nsvs
 try. t=. jdgl tab catch. _1$~#>{.vs return. end. NB. part doesn't exist
 if. 1=#ns do.
- ksrc=. >(0{ns i. ns){vs
- ksnk=. jd'get ',tab,' ',;ns
+ ksrc=. ;(0{ns i. ns){vs
+ c=. jdgl tab;ns
+ ksnk=. dat__c
 else.
  ksrc=. stitchx__t (ns i.ns){vs
  ksnk=. stitch__t tab;<ns

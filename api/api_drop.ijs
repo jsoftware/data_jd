@@ -79,9 +79,10 @@ for_i. i.#ns do.
  a=. (i{ns),{:y
  if. i=1 do. continue. end. NB. ignore f~
  t=. jdgl {.a
- f=. PATH__t,'column_create_order.txt'
- if. fexist f do. (;' ',~each (;:fread f)-.{:y)fwrite f end.
- DeleteCols__dbl a
+ 
+ cco_remove__t ;{:a
+ 
+ Drop__t ;{:a
  EDELETE assert (0=ftypex) PATH__t,;{:a
  
  if. 'jdref_'-:6{.col do.

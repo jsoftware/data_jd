@@ -63,25 +63,22 @@ ETALLY assert c={.c=. ;#each vs
 deb _3}.' ',;ns,each' ',each typ,each' ',each ts,each<' , '
 )
 
-jdfixcolnames=: 3 : 0
-v=. vsub ,y
-ns=. {."1 v
-vs=. {:"1 v
-ns=. ns rplc each <'.';'-';' ';'_'
-,ns,.vs
-)
-
-vdname=: 3 : 0 NB. validate dan name
-('invalid name: ',y)assert (0~:#y) *. ('~'~:{.y) *.(2=3!:0 y) *. (2>$$y) *. (*./-.RESERVEDCHARS e. y) *. -.RESERVEDWORDS e.~<y
+vname=: 3 : 0
+('invalid name: ',y)assert (0~:#y) *. (2=3!:0 y) *. 2>$$y
+('invalid name - unprintable chars: ',y) assert -.y e.~32{.a.
+('invalid name - jd prefix: ',y)assert -.'jd'-:2{.y
 if. UNAME-:'Darwin' do. ('invalid name (OSX filename - unicode composed vs decomposed): ',y)assert 127>a.i.y end.
 )
 
-vtname=: 3 : 0 NB. validate table name
-('invalid name: ',y)assert -.'jd'-:2{.y
-vdname y
+vdname=: 3 : 0 NB. validate dan name
+vname y
+('invalid name - RESERVEDCHARS_jd_: ',y)assert -.RESERVEDCHARS e. y
 )
 
-vcname=: vtname NB. validate column name
+vtname=:  vdname
+
+NB. validate col name - same as vtname except no RESERVEDCHARS and 
+vcname=: vname
 
 opened=: 3 : 0
 ECOUNT assert 0=#y

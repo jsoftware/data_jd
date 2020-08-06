@@ -46,7 +46,7 @@ csvload=: 3 : 0
 'tab header'=. y
 header=. ;header{' /u ';' /h 1 ';' /c '
 jd'droptable ',tab             NB. delete table if it exists
-jd'csvcdefs /replace /fixn ',header,tab,'.csvlink' NB. create metadata - /u - c1,c2,... col names
+jd'csvcdefs /replace ',header,tab,'.csvlink' NB. create metadata - /u - c1,c2,... col names
 jd'csvscan ',tab,'.csvlink'    NB. scan entire file to adjust cdefs max byte col widths
 jd'csvrd ',tab,'.csvlink ',tab NB. using metadata, load csv file into Jd table
 )

@@ -5,7 +5,7 @@ csvjd=: 3 : 0
 unmapall_jmf_''
 'pathjd pathcsvfolder'=. y
 
-t=. (a:~:CSVCOLS)#CSVCOLS
+t=. dfromn_jd_ each (a:~:CSVCOLS)#CSVCOLS
 
 jdfiles=: jpath each (<pathjd),each '/',each t,each '/'
 jddat=: jdfiles,each<'dat'
@@ -45,7 +45,7 @@ v=. (jdt=<'byte')*b#2{"1 COLDEFS
 s=. ":each v
 s=. ' ',each a: ((v=0)#i.#v)}s
 NB. t=. csvc,.jdt,.s
-t=. csvc,.jdt,.":each csvs
+t=. ((addq_jd_)each csvc),.jdt,.":each csvs
 ;(t,each' '),.<LF
 )
 
@@ -76,7 +76,16 @@ NB. CSVTSHAPE=: (<'byte') ((CSVTYPS=<'CI2')#i.#CSVTYPS)}JDTYPS NB. kludge map CI
 NB. CSVTSHAPE=: (<'byte') ((CSVTYPS=<'CI4')#i.#CSVTYPS)}JDTYPS NB. kludge map CI4 to byte
 
 d=. getdb_jd_''
-Create__d table;<csvjdcoldefs csv
+Create__d table;''
+
+a=. csvjdcoldefs csv
+cds=. 3{.each ' 'strsplit_jd_ each ((LF e. a){',',LF) strsplit_jd_ debq_jd_ }:a
+t=. getloc__d table
+for_d. cds do.
+ d=. >d
+ ICol__t  (remq_jd_ ;{.d);;' ',~each  1}.d
+end.
+
 jd_close_jd_''
 csvjd  jd;csv
 (3!:1 [1 2$'Tlen';ROWS) fwrite jd,'/jdstate' NB. writestate TLen essential

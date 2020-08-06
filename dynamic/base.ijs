@@ -15,7 +15,7 @@ countdat=: 3 : '(dirty+.left){Tlen,~#dat' NB. left jams Tlen as it can't be calc
 NB. y is (table);(list of column names)
 subscribe =: 3 : 0
 cols=.,&.>,boxxopen cols  [  'tab cols' =. ,&.> y
-t =. getloc '^.^.',tab
+t=. getloctab tab
 np=.NAME__PARENT
 relpath =. ((tab-.@-:np) # '^.',np,'.'),NAME  NB. path from t
 writestate__t SUBSCR__t=: SUBSCR__t , relpath;(#subscriptions),&<cols

@@ -807,7 +807,7 @@ i.0 0
 
 NB. f ' num name type [xtra] '
 cdef=: 3 : 0
-y=. deb y
+y=. dlb y
 i=. y i.' '
 c=. i{.y
 d=. i}.y
@@ -815,7 +815,7 @@ if. c-:'options' do.
  options d
 elseif. '#'={.c do.
 elseif. 1 do.
- 'col name type xtra'=. 4{.<;._2 ' elided ',~deb y
+ 'col name type xtra'=. 4{.bdnames_jd_ y,' elided'
  ('csv cdef invalid col number: ',y) assert _1-.@-:_1".col
  try. vcname_jd_ name catch. ('csv cdef invalid name: ',y)assert 0 end.
  if. -.type-:'CSTITCH' do. ('csv cdef duplicate name: ',y) assert -.(<name)e.colnames end. 

@@ -50,9 +50,7 @@ JDOK
 )
 
 jd_key=: 3 : 0
-y=. ca'/in 0'getopts y
-FETAB=: tab=. ;{.y
-(-.option_in) keyindex y
+(-.option_in) keyindex '/in 0'getopts y
 )
 
 jd_flush=: 3 : 0
@@ -81,7 +79,7 @@ if. newt-:oldt do. JDOK return. end.
 EDERIVED assert 0=derived__c 
 ETYPE assert (<newt)e.;:'int int1 int2 int4 intx'
 ETYPE assert 'int'-:3{.oldt
-data=. >{:{:jdi_read col,' from ',tab NB. does conversion from intx to int
+data=. >{:{:jdi_read '"',col,'"',' from ',tab NB. does conversion from intx to int
 
 NB. validate range and pick smallest intx if newt is intx
 min=. <./data
@@ -105,13 +103,14 @@ JDOK
 NB. redefine col with new type and/or data - preserve col create order
 newcol=: 3 : 0
 'tab col type data'=. y
-c=. jdgl 2{.y
-co=. fread pco=. PATH__PARENT__c,'column_create_order.txt'
+t=. jdgl tab
+co=. cco_read__t''
 colx=. col,'_temp_col_during_type_change' NB. kludge to avoid conflict
 jd_renamecol tab;col;colx NB. rename old col out of the way
 jd_createcol tab;col;type;data
 jd_dropcol tab;colx
-co fwrite pco NB. to keep create order file 
+t=. jdgl tab
+cco_write__t co NB. restore cco
 )
 
 NB. change col byte trailing shape
@@ -159,6 +158,7 @@ ta=. getloc__dbl {.{.t
 tb=. getloc__dbl {.{:t
 a=. }.{.t
 b=. }.{:t
+'_ char not allowed in col'assert -.'_'e.;a,b
 for_i. i.#a do.
  ca=. getloc__ta i{a
  cb=. getloc__tb i{b

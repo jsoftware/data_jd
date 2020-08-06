@@ -179,7 +179,6 @@ else.
 end.
 NB. w is always a list - if it has 1 element, this allows data 1 4$'a'
 NB. force w to scalar if single element list to disallow 1 4$'a'
-
 'ns vs rows'=. (#w) fixpairs__t y
 if. 0=#w do. NB. allow 0 or 1 rows if nothing to do
  ETALLY assert rows e. 0 1
@@ -232,14 +231,17 @@ t=. jdgl tab
 if. 0=#>{.vs do. JDOK return. end.
 if. 1=#x do.
  ksrc=. >(0{ns i. x){vs
- NB. ksnk=. jd'get ',tab,' ',;x
- ksnk=. jd_get tab,' ',;x
+ c=. jdgl tab;x
+ ksnk=. dat__c NB. new ref to dat__c - release asap
 else.
  ksrc=. stitchx__t (ns i.x){vs
  ksnk=. stitch__t tab;<x
 end. 
 r=. ksnk i: ksrc
 b=. r<#ksnk
+
+erase'ksnk' NB. could be dat__c ref
+
 if. +/b do.
  update=. tab;(b#r);,ns,.(<b#i.#ksrc){each vs
  jd_update update

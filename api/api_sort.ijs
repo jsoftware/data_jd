@@ -14,14 +14,15 @@ else.
  ord=. i}.y
 end.
 FETAB=: tab
-if. 0 = #ord=. cutcommas ord do. JDOK return. end.
+ord=. cutcommas ord
+if. 0 = #ord do. JDOK return. end.
 ifdesc=. (<'desc') = _4 {.&.> ord
-ord=. ifdesc (_4 stripsp@}. ])^:[&.> ord
+ord=. remq each ifdesc (_4 stripsp@}. ])^:[&.> ord
 'duplicate col'assert (#ord)=#~.ord
 1 validtc__dbl (<FETAB),ord
 q=. ''
 for_n. ord do.
- c=. jdgl tab,' ',;n
+ c=. jdgl tab;n
  q=. q,<dat__c
 end. 
 q=. q,<i.#>{.q

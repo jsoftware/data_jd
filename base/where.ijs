@@ -122,16 +122,16 @@ if. ',' e. col do.
   if. -.(<fn) e. ;:'qequal qin' do.
     throw 'Multicolumn syntax not allowed for operations other than = and in'
   end.
-  cols =. getloc&.> col =. cutcommas col
+  cols =. getlocq&.> col =. cutcommas col
   cols 4 :'assertfunc__x y'&> <fn
   val =. (fn;<cols) fixtype_fn_jdcolumn_ val
   lookup =. [: qand&.>/ cols 4 :'qequal__x y'&.> ]
   > qor&.>/ , lookup"1 val
   return.
 end.
-col=.getloc col
+col=.getlocq col
 if. (<val) e. NAMES do.
-  getwhere2__col fn ,&< getloc val
+  getwhere2__col fn ,&< getlocq val
 else.
   getwhere1__col fn; val
 end.

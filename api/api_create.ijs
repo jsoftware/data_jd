@@ -16,21 +16,32 @@ NB. careful: /replace option used in multiple ops
 jd_createtable=: 3 : 0
 a=. '/replace 0 /types 0 /pairs 0 /a a'getopts y
 if. 0=L.a do. NB. string has col defs with commas and blanks
- a=. bdnames a
- t=. {.a NB. table name
+ a=. dlb a
+ i=. a i.' '
+ FETAB=. i{.a
+ cds=. cutcoldefs i}.a
+else.
+ FETAB=: ;{.a
  a=. }.a
- a=. t, a:-.~<;._2 LF,LF,~(;a,each' ')rplc',';LF
+ NB. a could be col defs or could be pairs
+ if. option_pairs do.
+  cds=. ''
+ else. 
+  if. 1=#a do.
+   cds=. cutcoldefs ;a
+  else. 
+   cds=. 3{.each bdnames each a NB. assume boxed coldefs without , or LF
+  end. 
+ end.
 end.
-df=. option_pairs
+vtname FETAB
 if. 3=#option_a do.
  EALLOC assert 0 0 _1<option_a
  alloc=. 4 1 0>.option_a
 else. 
  alloc=. ROWSMIN_jdtable_,ROWSMULT_jdtable_,ROWSXTRA_jdtable_
 end.
-vtname FETAB=: t=. >0{a NB. table
-a=. }.a
-if. df do.
+if. option_pairs do.
  a=. ,a
  'name data pairs - odd number' assert (2<:#a)*.0=2|#a
  names=. ,each(2*i.-:#a){a
@@ -48,34 +59,32 @@ if. df do.
   typ=. jdtypefromdata each data
   tshape=. ":each}.each$each data
  end. 
- a=. names,each' ',each typ,each ' ',each tshape
+ cds=. <"1 names,.typ,.tshape
 end.
 
-a=. ;cutcoldefs each a
-if. #a do.
- b=. ><;._2 each a,each' '
- ns=. 0{"1 b
- ts=. 1{"1 b
+if. #cds do.
+ ns=. >0{each cds
+ ts=. >1{each cds
+ ss=. >2{each cds
  vcname each ns
  duplicate_assert ns
  ETYPE assert ts e.TYPES
- if. 3<:{:$b do. NB. have shapes
-  EBTS assert 3={:$b
-  ss=. 2{"1 b
-  for_i. i.#ns do.
-   FECOL_jd_=: ;i{ns
-   s=. ;i{ss
-   if. 0~:#s do. NB. this quy has a shape
-    s=. _1".s
-    EBTS assert ('byte'-:;i{ts),(_1~:s),1=#s
-   end. 
-  end.
- end. 
+ b=. -.a:=ss
+ EBTS assert (<'byte')=b#ts
+ EBTS assert _1~:;_1".each b#ss
 end.
+
 if. option_replace do. jd_droptable FETAB end.
-a=. }:;a,each','
-Create__dbl t;a;'';alloc   NB. cols;data;alloc
-if. df do.
+
+Create__dbl FETAB;'';'';alloc   NB. cols;data;alloc
+
+t=. getloc__dbl FETAB
+for_d. cds do.
+ d=. >d
+ ICol__t  ({.d),<;' ',~each  1}.d
+end.
+
+if. option_pairs do.
  try.
   jd_insert FETAB;,names,.data
  catchd.
@@ -136,7 +145,8 @@ end.
 ns=. getparttables ;{.y
 for_i. i.#ns do.
  if. i=1 do. continue. end. NB. ignore f~
- InsertCols__dbl (i{ns),< ;' ',~each}.":each y
+ t=. getloc__dbl i{ns
+ ICol__t  FECOL;;' ',~each  2}.y
 end.
 
 if. #dat do.
@@ -152,6 +162,26 @@ end.
 JDOK
 )
 
+
+NB.!!! duplicate code from jd_createcol should be factored out
+createcol=: 3 : 0
+FETAB=: ;0{y
+FECOL=: ;1{y
+vcname FECOL
+if. 4=#y do.
+ if. (,'_')-:;3{y do. y=. }:y end.
+else.
+ ECOUNT assert 3=#y
+end.
+if. 4=#y do. EBTS assert (2{y)-:<'byte' end.
+ns=. getparttables ;{.y
+for_i. i.#ns do.
+ if. i=1 do. continue. end. NB. ignore f~
+ t=. getloc__dbl i{ns
+ ICol__t  FECOL;;' ',~each  2}.y
+end.
+)
+
 jd_createdcol=: 3 : 0    NB. deprecated
 jd_createcol '/derived ',y
 )
@@ -160,7 +190,7 @@ createdcol=: 3 : 0
 v=. ;{:y NB. verb
 q=. }:y
 assertnotptable {.q
-jd_createcol ;q,each' '
+createcol q
 c=. jdgl 2{.q
 derived__c=: 1
 dverb__c=: 'derived_',v
@@ -189,7 +219,7 @@ createdmcol=: 3 : 0
 v=. ;{:y NB. verb
 q=. }:y
 assertnotptable {.q
-jd_createcol ;q,each' '
+createcol q
 c=. jdgl 2{.q
 derived_mapped__c=: 1
 dverb__c=: 'derived_mapped_',v

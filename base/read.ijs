@@ -94,6 +94,7 @@ n =. #ex =. 'exact '
 if. exact =: 0:`(','~:n&{)@.(ex-:n&{.) y do. y=.n}.y end.
 from =. sortfrom ':'&(_2 {. strsplit)@> ',' strsplit y
 tnms =: $0 for_f. from do. addtablepathnoind f end.
+tnms
 )
 
 NB. Marshall email to change
@@ -149,7 +150,6 @@ tnms =: tnms, <NAME__t"_^:(0=#) a
 tpath =: tpath , <refs,.joins
 )
 
-NB. ***** SELBY *****
 sel_split=: <"_1 @: |: @: ((_2 {. strsplit)&:>"_ 0)
 
 NB. y is sel;by
@@ -165,6 +165,9 @@ sel=. sel rplc ' ,';',';', ';',' NB. remove blanks around ,
 nt =. #tloc
 if. 0=#sel do. sel =. (1<nt){::'*';'*.*' end.
 'a agg1 path' =. ({. , ' 'sel_split (deb each@>@{:)) ':' sel_split ',' strsplit sel
+
+a=. remq each a NB. remove quotes around alias
+
 NB. readtset avg must have count - add if necessary
 if. (OP_jd_-:'readptable') *. (-.(<'count')e.agg1) *. (<'avg')e.agg1 do.
  a=.    a,<'readtsetautocount'
@@ -177,8 +180,8 @@ nby=:0 if. #by do.
   nby =: #>{. b=. ':' sel_split ',' strsplit by
   'a path' =. (a,&<path) ,~&.> b
 end.
-
-'t c' =. -.&' 'L:0 <"_1|: '.'&(_2 {. strsplit)@> path
+'t c' =. <"_1|: '.'&(_2 {. strsplit)@> path
+c=. remq each c
 
 NB. expand * tables
 mask =. t = <,'*'
@@ -195,8 +198,8 @@ tl =. tloc {~ inds=:nt|inds
 NB. expand * columns
 'c nc' =. (; ,&< #@>) tl ([:< 4 :'getdefaultselection__x y'^:((<,'*')=]))"0 c
 tl =. nc#tl  [  t =. nc#t  [  inds=:nc#inds
-cnms =: {.@:(-.&a:)"1  stripsp&.> (nc#a),. t([,('.'#~*@#@[),])&.>c
-cloc =: tl  4 :'getloc__x y'"0  c
+cnms=: {.@:(-.&a:)"1  stripsp&.> (nc#a),. t([,('.'#~*@#@[),])&.>c
+cloc=: tl  4 :'getloc__x y'"0  c
 EMPTY
 )
 
@@ -332,18 +335,20 @@ x {"1~ sel
 )
 
 lookupcol=: 3 : 0
-col =. <y
-if. col e. cnms do.
-  ({&cloc ; {&inds) cnms i. col
+col =. y
+if. (<col) e. cnms do.
+  i=. cnms i. <col
+  (i{cloc);i{inds
 else.
-  'tab col'=.<"_1 ]_2{.'.'strsplit >col
+  'tab col'=.<"_1 ]_2{.'.'strsplit >y
   if. a:=tab do. tab=.{.tnms end.
   if. -.tab e. tnms do. throw 'Not found: table ',>tab end.
   tab =. tloc {~  ind=.tnms i. tab
-  ind ;~ getloc__tab@> {.^:(1=#) cutcommas >col
+  ind ;~ getlocq__tab@> {.^:(1=#) cutcommas >col
 end.
 )
-lookupcolind =: 3 : 0
+
+lookupcolind=: 3 : 0
 'order by col not in selection' assert (<y) e. cnms
 cnms i. <y
 )

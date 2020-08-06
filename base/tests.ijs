@@ -32,6 +32,7 @@ test/modify_test.ijs
 test/multicol_test.ijs
 test/northwind_test.ijs
 test/orderby_test.ijs
+test/osfna_test.ijs
 test/pm_aggby_test.ijs
 test/ptable_csv_test.ijs
 test/ptable_delete_test.ijs

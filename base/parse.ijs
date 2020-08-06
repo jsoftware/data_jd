@@ -12,14 +12,45 @@ problems:
 
 coclass 'jd'
 
-NB. box blank delimited names
+
+NB. remove "s from string and \" -> "
+remq=: 3 : 0
+if. '"'~:{.y do. y else. (}.}:y) rplc '\"';'"' end.
+)
+
+addq=: 3 : 0
+if. +./'" 'e.y do. '"',~'"',y rplc '"';'\"' else. y end.
+)
+
+NB. y is string of coldefs , or LF delimited
+NB. return boxed list of name;type;shape
+cutcoldefs=: 3 : 0
+if. *./y=' ' do. '' return. end.
+r=. 3{.each ' 'strsplit each ((LF e. y){',',LF) strsplit debq y
+remq each L:1 r-.<3{.a:
+)
+
+NB. box blank delimited names - blanks in "s ignored - "s removed from names in result
 bdnames=: 3 : 0
 if. 0=#y do. y return. end.
 if. 0=L.y do.
- ,each <;._1' ',deb y
+ remq_jd_ each ' 'strsplit_jd_ debq_jd_ y
 else.
  ,each dltb each y
-end. 
+end.
+)
+
+strsplit=: 4 : 0
+y=. x,y
+q=. wherequoted y
+b=. I.(x=y)*.q
+d=. 'a' b}y
+,each dltb each(x=d) <;._1 y
+)
+
+cutcommas=: 3 : 0
+if. (#y)=+/y=',' do. '' return. end.
+','strsplit y
 )
 
 NB. clean args

@@ -40,25 +40,52 @@ PATH=:NAME=: ''
 CHILDREN=: ".'CHILDREN'
 NAMES=: ".'NAMES'
 
-NB. =========================================================
-NB. utilities
+osfna=: '`/\:*?"<>|' NB. chars not allowed in os folder names (includes `)
+osfsub=: (#osfna){.26}.Alpha_j_
+osfmark=: '`'
+
+NB. folder from name
+dfromn=: 3 : 0
+i=. I.y e. osfna
+if. 0=#i do. y return. end.
+r=. osfmark,(osfmark i}y),osfmark,(osfna i. i{y){osfsub
+)
+
+NB. name from folder
+nfromd=: 3 : 0
+if. -.osfmark e. y do. y return. end.
+i=. y i: osfmark
+s=. y}.~>:i
+r=. }.i{.y
+((osfsub i. s){osfna)(I.r e. osfmark)}r
+)
+
 NB. y is the name of this locale
 NB. assumes later steps will do writestate
 Init=: 3 : 0
-PATH=: termSEP PATH__PARENT, NAME =: >y
+NAME=: ;y
+d=. NAME
+
+NB. col locale name with osfna chars is encoded to be valid folder name
+if. 0=nc<'CLASS' do.
+ if. CLASS-:<'jdcolumn' do. d=. dfromn NAME end.
+end. 
+
+PATH=: termSEP PATH__PARENT,d 
 LOCALE=: coname''
 CHILDREN=: NAMES=: ''
 )
 
-NewChild =: 3 : 0
+NewChild=: 3 : 0
 loc =. cocreate ''
 coinsert__loc CHILD
 coinsert__loc PARENT__loc =: LOCALE
-CHILDREN =: CHILDREN,loc
-NAMES=: NAMES,<NAME__loc=:y
+CHILDREN=: CHILDREN,loc
+NAMES=: NAMES,<NAME__loc=: y
 loc
 )
-RemoveChild =: 3 : 0
+
+RemoveChild=: 3 : 0
 CHILDREN =: CHILDREN-.y
 NAMES=: NAMES-.<NAME__y
 )
@@ -71,12 +98,49 @@ end.
 
 getlocx=: 3 : 'c=. (NAMES i. <y){CHILDREN' NB. get col locale - do not map
 
+NB. getloc for join subscr - either col in this table or ^.othertable.col
+getlocref=: 3 : 0
+if. '^'={.y do.
+ t=. <;._1'.',y
+ a=. getloc__PARENT ;1{t
+ getloc__a ;2{t
+else.
+ getloc y
+end. 
+)
+
+NB. getloc of another table in same db
+getloctab=: 3 : 0
+t=. PARENT__PARENT
+getloc__t y
+)
+
+NB. getloc col in query - alias - need global cnms and cloc
+NB. match with alias overrides the table we are in!
+getlocq=: 3 : 0
+y=. ,remq y 
+a=. {:conl 1 NB.!!! jdquery locale
+if. 0=nc<'cnms__a' do.
+ if. (<y) e. cnms__a do.
+  i=. cnms__a i. <y
+  c=. i{cloc__a
+  if. PARENT__c~:coname'' do.
+   0 assert~ 'alias ',(addq y),' must be be used with table.alias'
+  end. 
+  c
+  return.
+ end. 
+end.  
+ getloc y
+)
+
+
+NB. get locale for a single table_name or col_name or dbpath
+NB. y may be boxed
+NB. col name may of form "abc \" def"
 NB. get locale and open table children and map column files
 getloc=: 3 : 0
-if. -.'/'e.,>y do.
- if. '.' e. y=.,>y do. 4 :'getloc__y x'/ LOCALE ,~ |.<;._1'.',y return. end.
- if. (,'^') -: y do. PARENT return. end.
-end.
+y=. ,>y
 ind=. NAMES i. <y
 if. (ind=#NAMES) do.
  if. 0=nc<'Tlen' do.
@@ -106,13 +170,13 @@ c
 
 NB. y is name
 ischildfolder=: 3 : 0
-f=. PATH,(;y),'/jdclass'
+f=. PATH,(dfromn ;y),'/jdclass'
 if. fexist f do. t=. 'jd',LF-.~jdfread f else. t=. 'jdfolder' end.
 t-:;CHILD
 )
 
 openallchildren =: 3 : 0
-for_name. dirsubdirs PATH do.
+for_name. nfromd each dirsubdirs PATH do.
   Open^:ischildfolder name
 end.
 )
@@ -126,7 +190,7 @@ jdunmap &> msk # {."1 mappings_jmf_
 NB. =========================================================
 NB. y is a name, which extends PATH.
 Open=: 3 : 0
-y=.,>y
+y=. ,>y
 if. NAMES e.~ <y do. getloc y return. end.
 if. -.ischildfolder y do.
   msg =. 'n1 cannot be opened by c2 n2'
@@ -147,15 +211,18 @@ if. ischildfolder name do.
   throw 'Create: ',name,' already exists as a child of ',NAME
 end.
 LOCALE testcreate__CHILD dat
-dcreate PATH,name=.,name
+
+name=. ,name
+pname=. PATH,dfromn name
+dcreate pname
 
 NB. folder links locate cols on particular paths
 if. 'column'-:2}.>CHILD do.
  links=. jdfread 'links.txt',~jdpath''
  if. -.links-:_1 do.
   links=. >bd2 each <;._2 links
-  link=. jpath PATH,name
-  a=. _3{.<;.2 PATH,name,'/'
+  link=. jpath pname
+  a=. _3{.<;.2 pname,'/'
   s=. <}:;1}.a
   i=. s i.~ {."1 links
   if. i<#links do.
@@ -179,8 +246,7 @@ if. 'column'-:2}.>CHILD do.
   end.
  end.
 end.
-
-(2}.>CHILD) jdfwrite PATH,name,'/jdclass'
+(2}.>CHILD) jdfwrite pname,'/jdclass'
 loc =. NewChild name
 Init__loc name
 create__loc dat
@@ -217,7 +283,7 @@ NB. same arguments as Close
 Drop=: 3 : 0
 if. 0=L.y do.
   if. (<y=.,y)-.@e.NAMES do.
-    if. ischildfolder y do. jddeletefolder PATH,y end.
+    if. ischildfolder y do. jddeletefolder PATH,dfromn y end.
     return.
   end.
    y=. getlocx y NB. avoid unnecessary map and derived error
@@ -243,7 +309,6 @@ if. (JDMT=MTRW_jmf_)*.#STATE do.
 end.
 )
 
-cutcoldefs=: a: -.~ [: (<@deb;._2~ e.&(',',LF)) ,&LF
 cutsp=: i.&' ' ({.;dlb@}.) ]
 
 duplicate_assert=: 3 : 0

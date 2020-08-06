@@ -6,8 +6,9 @@ tutorial/createcol_derived_mapped_tut.ijs
 tutorial/createcol_derived_tut.ijs
 tutorial/createcol_tut.ijs
 tutorial/createtable_tut.ijs
-tutorial/csv_load_tut.ijs
 tutorial/csv_advanced_tut.ijs
+tutorial/csv_intro_tut.ijs
+tutorial/csv_load_tut.ijs
 tutorial/custom_tut.ijs
 tutorial/delete_tut.ijs
 tutorial/dropstop_tut.ijs
@@ -18,7 +19,6 @@ tutorial/insert_tut.ijs
 tutorial/intro_a_tut.ijs
 tutorial/intro_b_tut.ijs
 tutorial/intro_c_tut.ijs
-tutorial/intro_csv_tut.ijs
 tutorial/intx_tut.ijs
 tutorial/jcs_tut.ijs
 tutorial/jctask_tut.ijs

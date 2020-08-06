@@ -23,6 +23,7 @@ JDOK
 )
 
 NB. should be reworked to not use jd_close
+NB. cco is not adjusted - confusing - new is at end unless already there
 jd_renamecol=: 3 : 0
 a=. bdnames y
 ECOUNT assert 3=#a
@@ -36,11 +37,27 @@ ns=. getparttables ;{.a
 for_i. i.#ns do.
  if. i=1 do. continue. end. NB. ignore f~
  t=. jdgl (i{ns),1{a
- new=. ((->:#NAME__t)}.PATH__t),;{:a 
+ 
+ oldname=. <NAME__t
+ newname=. {:a
+ 
+ new=. (('/'i:~}:PATH__t){.PATH__t),'/',dfromn;{:a
  old=. }:PATH__t
  jd_close''
  'file rename failed' assert 1=new frename old
  getdb'' NB. required because of close
+ 
+ NB. preserve cco - note each ptable has its own cco
+ t=. jdgl i{ns
+ cco=. <;._2 cco_read__t''
+ i=. cco i. oldname
+ if. i<#cco do.
+  cco=. newname i}cco
+ else.
+  cco=. cco,newname
+ end.
+ cco_write__t ;cco,each LF
+ 
 end.
 JDOK
 )

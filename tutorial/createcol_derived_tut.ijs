@@ -21,10 +21,6 @@ derived col
  sort/dropcol/delete all mark derived dirty
 )
 
-jd_createdcol=: 3 : 0
-jd_createcol '/derived ',y
-)
-
 jdadminnew'test'
 jd'createtable f'
 jd'createcol f b byte 4'

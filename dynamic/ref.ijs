@@ -111,7 +111,7 @@ end.
 )
 
 getreferenced=: 3 : 0
-getloc '^.^.',>{.{:subscriptions
+getloctab ,>{.{:subscriptions
 )
 
 NB. fix join based on where result
@@ -130,7 +130,7 @@ r
 default_join =: 3 : 0
 setdat''
 'l r' =. y
-'Tl Tr' =. ([:getloc '^.^.'&,)&.> {."1 subscriptions
+'Tl Tr'=. getloctab each  {."1 subscriptions
 NB. 'join - should not happen' assert 0=#l
 if. left do.
  NB. derive left1 from left
@@ -149,7 +149,8 @@ left_join=: 3 : 0
 'left join requires ref built with /left'assert left
 setdat''
 'l r' =. y
-'Tl Tr' =. ([:getloc '^.^.'&,)&.> {."1 subscriptions
+NB. 'Tl Tr' =. ([:getloc '^.^.'&,)&.> {."1 subscriptions
+'Tl Tr'=. getloctab each  {."1 subscriptions
 NB. 'join - should not happen' assert 0=#l
 r fixr dat
 )
@@ -158,7 +159,8 @@ inner_join=: 3 : 0
 'inner join requires ref built with /left'assert left
 setdat''
 'l r' =. y
-'Tl Tr' =. ([:getloc '^.^.'&,)&.> {."1 subscriptions
+NB. 'Tl Tr' =. ([:getloc '^.^.'&,)&.> {."1 subscriptions
+'Tl Tr'=. getloctab each  {."1 subscriptions
 NB. 'join - should not happen' assert 0=#l
 r fixr (1,_1~:}.{:dat)#"1 dat
 )

@@ -31,18 +31,36 @@ NB. =========================================================
 HIDCOL=: <'jdindex'
 getvisiblestatic=: #~ 3 :'visible__y *. static__y'@getloc@>^:(*@#)
 
-getdefaultselection=: 3 : 0
+NB. column_create_order routines
+cco_read=: 3 : 0
 f=. PATH,'column_create_order.txt'
-n=. NAMES
-n=. n#~-.bjdn n
-if. optionsort +. -.fexist f do.
- /:~n
-else. 
- con=. ~.n,~<;._1 ' ',deb jdfread f
- (con e. n)#con
-end.
+d=. fread f
+d=. ;(_1={.d){d;''
+if. LF~:{:d do. d rplc ' ';LF else. d end.
 )
 
+cco_write=: 3 : 0
+if. 'jd'-:2{.y do. return. end.
+y fwrite PATH,'column_create_order.txt'
+)
+
+cco_remove=: 3 : 0
+d=. <;.2 cco_read''
+cco_write ;d-.<y,LF
+)
+
+getdefaultselection=: 3 : 0
+n=. NAMES
+n=. n#~-.bjdn n
+d=. cco_read''
+if. optionsort +. ''-:d do.
+ /:~n
+else. 
+ con=. ~.n,~<;._2 d
+ (con e. n)#con
+end.
+
+)
 setTlen=: 3 : 0
 Tlen=: y
 writestate''
@@ -54,52 +72,30 @@ open=: 3 : 0
 openflag=: 1
 )
 
-testcreate=: 4 : 0
-'cols data alloc'=. 3{.y,3#a:
-cols =. ({.~ i.&' ')&.> cutcoldefs toJ cols
-vcname_jd_ each cols
-if. *@# data do.
-  assert. ((2=#@$)*.2={:@$) cols&,.`,:@.((1=#cols)*.2=#)^:(2>#@$) data
-end.
-)
+testcreate=: [ NB. validation is done in api
 
 NB. only old style testall calls have data
 create=: 3 : 0
-NB. if. 2=#y do. 1+'a' end.
 'cols data alloc'=. 3{.y,3#a:
+'bad table create args'assert (cols-:'')*.data-:''
 if. 3~:#alloc do. alloc=. ROWSMIN_jdtable_,ROWSMULT_jdtable_,ROWSXTRA_jdtable_ end.
 'ROWSMIN ROWSMULT ROWSXTRA'=: 4 1 0>.alloc
 writestate''
 index=: Create 'jdindex' ;'autoindex' ;$0
-InsertCols^:(*@#) cols
-cols=. getdefaultselection''
-Insert@:(cols&,.`,:@.((1=#cols)*.2=#)^:(2>#@$))^:(*@#) data
 )
 
 close =: ]
 
-NB. SECTION col
-
-NB. =========================================================
 DeleteCols=: 3 : 0
 Drop@> ~. cutnames y
 )
 
-NB. =========================================================
-InsertCols=: [: InsertCol@> [: cutcoldefs toJ
-cutcoldefs=: a: -.~ [: (<@deb;._2~ e.&(',',LF)) ,&LF
-
-InsertCol=: 3 : 0
-cutsp =. i.&' ' ({.;}.) ]
-'nam typ'=. cutsp y
+ICol=: 3 : 0
+'nam typ'=. y
 'typ shape'=. cutsp deb typ
-if. ifhash =. typ-:'hash' do.
-  'typ shape'=. cutsp }.shape
-end.
 shape =. ,".shape
 if. (<typ) -.@e. DATATYPES do. throw '101 Invalid datatype: ',typ end.
 Create nam;typ;shape
-if. ifhash do. MakeHashed nam end.
 )
 
 NB. x is rows to add to each col
@@ -260,7 +256,7 @@ filterbytype =: ] #~ ,@boxopen@[ e.~ 3 :'<typ__y'"0@]
 
 NB. y is a referenced table name. Find the reference columns to it.
 FindRef =: 3 : 0
-s =. (<'ref') filterbytype getloc@> {."1 SUBSCR
+s =. (<'ref') filterbytype getlocref@> {."1 SUBSCR
 (#~ ({.boxopen y) = 3 : '{.{:subscriptions__y'"0) s
 )
 
