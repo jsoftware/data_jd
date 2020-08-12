@@ -166,6 +166,7 @@ if. 2=3!:0 w do.
   if. (#key)=#ns do. JDOK return. end. NB. no data to update
   i=. ns i. key
   w=. keyindex tab;,,(i{ns),.i{vs
+  FIXPAIRSFLAG=: 0 NB. must be run on remaining pairs
   y=. (2# -.ns e. key)#y NB. remove keys from pairs
  else.
   w=. ;{:,old=. jdi_read 'jdindex from ',tab,' where ',w NB. ; always a list so 1 n$'abc' works

@@ -14,7 +14,7 @@ NB.  _1 insert
 NB.  _2 keyindex - update/delete/keyindex
 NB.  #  update
 NB.
-NB. fixpairs can be called extra times on the same data - e.g. upsert->insert+update
+NB. fixpairs can be called extra times on the same data - e.g. upsert->insert+update or update+keys+data
 NB.  FIXPAIRSFLAG avoids extra calls
 NB.
 NB. x is <0 no rules (insert/keyindex), # update rules (scalar extension)
@@ -28,7 +28,7 @@ NB.  byten - overtake OK, but undertake is an error
 NB. x is _1 for insert and required rows for update
 NB. all conform work is done here - may be duplicated later on
 fixpairs=: 4 : 0
-if. FIXPAIRSFLAG_jd_ *. -.x-:_2 do.
+if. FIXPAIRSFLAG_jd_ do.
  ns=. (2*i.-:#y){y   NB. list of names
  vs=. (1+2*i.-:#y){y NB. list of values
  ns;vs;#>{.vs

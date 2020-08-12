@@ -1,11 +1,11 @@
 load JDP,'tools/ptable.ijs'
 
 tst=: 3 : 0
-kf=:  keyindex_jd_ 'f';y
-kF=:  keyindex_jd_ 'ptab';y
+kf=:  jd'key f';y
+kF=:  jd'key ptab';y
 assert kf-:kF
 )
-
+ 
 ptablebld'int'
 
 NB. check that i. is used and not i:
@@ -28,7 +28,7 @@ tst 'p';2020;'val';23 NB. part not found
 
 NB. update with indexes from keyindex
 key=. 'p';2013 2015 2016 2015 2013;'val';16 6 8 19 14
-k=. keyindex_jd_ 'f';key
+k=. jd'key f';key
 data=. 'p1';66 77 123 88 99
 jd'update ptab';k;data
 jd'update f';k;data

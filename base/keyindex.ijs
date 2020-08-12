@@ -2,6 +2,7 @@ NB. Copyright 2017, Jsoftware Inc.  All rights reserved.
 
 coclass'jd'
 
+NB. should be called through jd'key ...' so FIXPAIRSFLAG is set
 NB. type keyindex 'f';'p';2015 2016;'val';6 16
 NB. type is 1 for last and 0 for in
 NB. type keyindex table;pairs...
@@ -13,9 +14,6 @@ tab=. ,;{.y
 FETAB=: tab
 t=. jdgl tab
 'ns vs rows'=. _2 fixpairs__t }.y
-
-FIXPAIRSFLAG=: 0 NB.!!! kludge - update needs to run on remaining pairs
-
 if. isptable tab do.
  x kiptable (<tab),<ns,.vs
 else. 

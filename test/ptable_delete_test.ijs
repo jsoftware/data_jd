@@ -14,7 +14,7 @@ guw=: 3 : 0
 if. 0=L.y do.
  >{:{:jd'read u from f where ',y
 else.
-  r=. 0 keyindex_jd_ 'f';y
+  r=. jd'key /in f';y
   >{:{:jd'read u from f where jdindex in (',((":r)rplc' ';','),')'
 end.
 )
