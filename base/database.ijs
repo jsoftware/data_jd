@@ -58,12 +58,12 @@ if. RLOGFH~:0 do. RLOGFH=: 0[1!:22 RLOGFH end.
 )
 
 addagg=: 2 : 0
- assert. _2~:4!:0&< y NB. right argument (aggregate function name) is not invalid as a j name
+ assert. _2~:4!:0&< v NB. right argument (aggregate function name) is not invalid as a j name
  assert. 3=4!:0&< 'u' NB. left argument (aggregate function verb) is a verb
- if. (<y) e. {."1 AGGFCNS NB. if this aggregate function name already exists
-  do. assert. (5!:1 <'u') -: ({:"1 AGGFCNS) {~ (<y) i.~ {."1 AGGFCNS NB. assert the verbs are identical
+ if. (<v) e. {."1 AGGFCNS NB. if this aggregate function name already exists
+  do. assert. (5!:1 <'u') -: ({:"1 AGGFCNS) {~ (<v) i.~ {."1 AGGFCNS NB. assert the verbs are identical
  else.
-  AGGFCNS=: AGGFCNS , y ; 5!:1 <'u' NB. else add it
+  AGGFCNS=: AGGFCNS , v ; 5!:1 <'u' NB. else add it
  end.
  NB. writestate''
  EMPTY

@@ -13,7 +13,7 @@ d=. ":y
 )
 
 NB. from test suite tsu.ijs - return expected error
-etx_z_=: 1 : 'x :: (<:@(13!:11)@i.@0: >@{ 9!:8@i.@0:)'
+etx_z_=: 1 : 'u :: (<:@(13!:11)@i.@0: >@{ 9!:8@i.@0:)'
 
 decho_z_=: echo_z_
 

@@ -119,7 +119,7 @@ if. IFWIN do.
  FlushFileBuffersR=: 'kernel32 FlushFileBuffers > i x'&(15!:0)
 else.
  lib=. ' ',~ unxlib 'c'
- api=. 1 : ('(''',lib,''',x) & cd')
+ api=. 1 : ('(''',lib,''',u) & cd')
  c_fsync=: 'fsync i x'api NB. file descriptor - file handle
 end.
 i.0 0

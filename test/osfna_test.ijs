@@ -17,25 +17,25 @@ jd'createtable /replace f'
 jd'createcol f a/b int'
 jd'createcol f "a/ \b" int'
 jd'createcol f "\" q" byte 3'
-jd'insert f';'a/b';2 3 4;'a/ \b';2 3 4;'" q';3 3$'adbc'
+jd'insert f';'a/b';2 3 4;'a/ \b';2 3 4;'"\" q"';3 3$'adbc'
 )
 
 NB. createcol string as createtable arg
 bld2=: 3 : 0
 jd'createtable g a/b int,"a/ \b" int,"\" q" byte 3'
-jd'insert g';'a/b';2 3 4;'a/ \b';2 3 4;'" q';3 3$'adbc'
+jd'insert g';'a/b';2 3 4;'a/ \b';2 3 4;'"\" q"';3 3$'adbc'
 )
 
 NB. createcol box as createtable arg
 bld3=: 3 : 0
 jd'createtable';'h';'a/b int,"a/ \b" int,"\" q" byte 3'
-jd'insert h';'a/b';2 3 4;'a/ \b';2 3 4;'" q';3 3$'adbc'
+jd'insert h';'a/b';2 3 4;'a/ \b';2 3 4;'"\" q"';3 3$'adbc'
 )
 
 NB. createcol boxes as createtable arg
 bld4=: 3 : 0
 jd'createtable';'i';'a/b int';'"a/ \b" int';'"\" q" byte 3'
-jd'insert i';'a/b';2 3 4;'a/ \b';2 3 4;'" q';3 3$'adbc'
+jd'insert i';'a/b';2 3 4;'a/ \b';2 3 4;'"\" q"';3 3$'adbc'
 )
 
 bld1''

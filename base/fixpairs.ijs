@@ -37,14 +37,14 @@ end.
 FIXPAIRSFLAG_jd_=: 1
 
 'name data pairs - odd number' assert (2<:#y)*.0=2|#y
-ns=. ,each(2*i.-:#y){y NB. list of names
+ns=. remq each ,each(2*i.-:#y){y NB. list of names NB.!!! remq
 duplicate_assert ns
 notjd_assert ns
 unknown_assert ns-.NAMES
 ns=. vs=. ts=. ''
 for_i. i.-:#y do.
  j=. 2*i
- n=. <,;j{y
+ n=. <,remq ;j{y NB.!!!
  FECOL_jd_=: >n
  EUNKNOWN assert n e. NAMES
  ns=. ns,n
@@ -97,8 +97,6 @@ if. x=_1 do. NB. derived and dm support for insert/upsert
   vs=. vs,< fixtypex__c (dverb__c,'__c')~ d
  end.
 end.
-
-
 ns;vs;rows
 )
 

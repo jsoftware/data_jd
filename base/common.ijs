@@ -140,7 +140,7 @@ NB. y may be boxed
 NB. col name may of form "abc \" def"
 NB. get locale and open table children and map column files
 getloc=: 3 : 0
-y=. ,>y
+y=. remq,>y
 ind=. NAMES i. <y
 if. (ind=#NAMES) do.
  if. 0=nc<'Tlen' do.
