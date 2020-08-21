@@ -101,10 +101,8 @@ Create nam;typ;shape
 NB. x is rows to add to each col
 NB. y is (column names),.(new data)
 Insert=: 4 : 0
-
 N=.,&.> {."1 y
 dat=. {:"1 y
-
 step0=. getloc@> N
 rows=. Tlen
 setTlen Tlen+x  NB. 
@@ -152,34 +150,6 @@ i.0 0
 markderiveddirty=: 3 : 0
 bdn=. 3 : 'derived__y' "0 CHILDREN NB. derived names
 (3 : 'setderiveddirty__y 1') "0 bdn#CHILDREN NB. mark derived names dirty
-)
-
-NB. x is rows to add to each col
-NB. y is (column names),.(new data)
-Insert=: 4 : 0
-
-N=.,&.> {."1 y
-dat=. {:"1 y
-
-step0=. getloc@> N
-rows=. Tlen
-setTlen Tlen+x  NB. 
-update_subscr'' NB. mark ref cols dirty
-
-try.
- step0  4 :'Insert__x >y'"0  dat NB. step 0: insert static columns
- 1+FORCEREVERT#'a'
-catchd.
- FORCEREVERT_jd_=: 0
- NB. this could/should be fixed to repair the table
- NB. needs to jam all columns to have original Tle
- NB. needs to mark dynamic cols dirty
- NB. has to do everything that repair would do
- NB. for now, just mark the db damaged and let repair do the hard work
- setTlen rows NB. original rows
- jddamage'insert failed'
-end.
-EMPTY
 )
 
 NB. =========================================================

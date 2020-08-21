@@ -115,32 +115,26 @@ t=. PARENT__PARENT
 getloc__t y
 )
 
-NB. getloc col in query - alias - need global cnms and cloc
 NB. match with alias overrides the table we are in!
 getlocq=: 3 : 0
-y=. ,remq y 
 a=. {:conl 1 NB.!!! jdquery locale
-if. 0=nc<'cnms__a' do.
- if. (<y) e. cnms__a do.
-  i=. cnms__a i. <y
-  c=. i{cloc__a
-  if. PARENT__c~:coname'' do.
-   0 assert~ 'alias ',(addq y),' must be be used with table.alias'
-  end. 
-  c
-  return.
- end. 
-end.  
- getloc y
+b=. <remq;y
+if. 0~:nc<'cnms__a' do. getloc b return. end.
+if. -. b e. cnms__a do. getloc b return. end.
+i=. cnms__a i. b
+c=. i{cloc__a
+if. PARENT__c~:coname'' do.
+ 0 assert~ 'alias ',(;b),' must be be used with table.alias'
+end. 
+c
 )
-
 
 NB. get locale for a single table_name or col_name or dbpath
 NB. y may be boxed
-NB. col name may of form "abc \" def"
+NB. col name is clean name - not in "s
 NB. get locale and open table children and map column files
 getloc=: 3 : 0
-y=. remq,>y
+y=. ;y
 ind=. NAMES i. <y
 if. (ind=#NAMES) do.
  if. 0=nc<'Tlen' do.

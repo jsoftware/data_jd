@@ -14,7 +14,6 @@ NB. EDERIVED assert 0=#FECOL_jd_=: ;{.ns#~ns e. dn
 NB. EMISSING assert 0=#FECOL_jd_=: (NAMES__t#~-.bjdn NAMES__t)-.ns,dn
 if. rows<1 do. JDOK return. end.
 nv=. ns,.vs
-
 if. isptable tab do.
  x insertptable nv
 else.

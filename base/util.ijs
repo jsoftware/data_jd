@@ -80,7 +80,6 @@ pack=: [: (,. ".&.>) ;: ::]
 pdef=: 3 : '0 0$({."1 y)=: {:"1 y'
 termSEP=: , (0 < #) # '/' -. {:
 tocolumn=: ,. @: > each
-strsplit=: #@[ }.each [ (E. <;.1 ]) ,
 
 throw=: 13!:8&101
 
@@ -90,21 +89,6 @@ throwmsg=: }. @ ({.~i.&LF) @ (13!:12)
 NB. =========================================================
 MAX_INT =: 2^64x
 to_unsigned =: MAX_INT | x:
-
-NB. =========================================================
-NB. cutcommas - cut string on commas.
-cutcommas=: stripsp each @ (a: -.~ <;._1) @ (','&,)
-NB. cutnames - cut string on blanks or commas.
-cutnames=: (a: -.~ e.&', ' <;._1 ]) @ (' '&,)
-stripsp=: #~ (+. +./\ *. +./\.)@(' '&~:)
-wherequoted=: ~:/\@:(=&'"' *. 1,'\'~:}:)
-NB. deb, but only where y is not quoted
-debq=: #~ wherequoted +. (+. (1: |. (> </\)))@(' '&~:)
-
-blankquoted_jd_=: 3 : 0
-if. ''-:y do. y return. end. NB. avoid bug in wherequoted
-' ' (I.wherequoted y)}y
-)
 
 NB. =========================================================
 coinserttofront =: 3 : 0

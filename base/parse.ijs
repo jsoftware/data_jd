@@ -12,14 +12,14 @@ problems:
 
 coclass 'jd'
 
-
-NB. remove "s from string and \" -> "
+NB. if in "s - remove "s and \" -> "
 remq=: 3 : 0
-if. '"'~:{.y do. y else. (}.}:y) rplc '\"';'"' end.
+if. *./'"'={.{:y do. (}.}:y) rplc '\"';'"' else. ,y end.
 )
 
+NB. if starts with " or has blank - put in "s and " -> \"
 addq=: 3 : 0
-if. +./'" 'e.y do. '"',~'"',y rplc '"';'\"' else. y end.
+if. ('"'={.y)+.' 'e. y do. '"',~'"',y rplc '"';'\"' else. ,y end.
 )
 
 NB. y is string of coldefs , or LF delimited
@@ -34,7 +34,7 @@ NB. box blank delimited names - blanks in "s ignored - "s removed from names in 
 bdnames=: 3 : 0
 if. 0=#y do. y return. end.
 if. 0=L.y do.
- remq_jd_ each ' 'strsplit_jd_ debq_jd_ y
+ remq each ' 'strsplit_jd_ debq y
 else.
  ,each dltb each y
 end.
@@ -51,6 +51,18 @@ d=. 'a' b}y
 cutcommas=: 3 : 0
 if. (#y)=+/y=',' do. '' return. end.
 ','strsplit y
+)
+
+NB. cutnames - cut string on blanks or commas.
+cutnames=: (a: -.~ e.&', ' <;._1 ]) @ (' '&,)
+stripsp=: #~ (+. +./\ *. +./\.)@(' '&~:)
+wherequoted=: ~:/\@:(=&'"' *. 1,'\'~:}:)
+NB. deb, but only where y is not quoted
+debq=: #~ wherequoted +. (+. (1: |. (> </\)))@(' '&~:)
+
+blankquoted_jd_=: 3 : 0
+if. ''-:y do. y return. end. NB. avoid bug in wherequoted
+' ' (I.wherequoted y)}y
 )
 
 NB. clean args
