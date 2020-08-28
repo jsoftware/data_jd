@@ -19,7 +19,8 @@ if. *./'"'={.{:y do. (}.}:y) rplc '\"';'"' else. ,y end.
 
 NB. if starts with " or has blank - put in "s and " -> \"
 addq=: 3 : 0
-if. ('"'={.y)+.' 'e. y do. '"',~'"',y rplc '"';'\"' else. ,y end.
+NB. if. ('"'={.y)+.' 'e. y do. '"',~'"',y rplc '"';'\"' else. ,y end.
+if. +./' "'e. y do. '"',~'"',y rplc '"';'\"' else. ,y end.
 )
 
 NB. y is string of coldefs , or LF delimited

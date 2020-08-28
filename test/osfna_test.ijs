@@ -23,26 +23,45 @@ a/b
 "\"\""
 )
 
+idata=.  ((<:#cols)$<i.3),<6
+tidata=. ((<:#cols)$<i.3),<6 6 6
+vdata=.  ((<:# cols)#<'abc';'def';'ghijkl'),<<'qewr'
+tvdata=. ((<:# cols)#<'abc';'def';'ghijkl'),<3#<'qewr'
+
 jd'createtable /replace f ',;cols,each<' int',LF
 jd'info schema'
 s=. dtb each <"1 'column' jdfroms_jd_ jd'info schema'
 assert s-:remq_jd_ each cols
-jd'insert f';,cols,.<i.3
-rin=: jd'read from f'
+jd'insert f';,cols,.idata
+assert tidata-:{:"1 jd'read from f'
+
+jd'createtable /replace f ',;cols,each<' varbyte',LF
+jd'info schema'
+s=. dtb each <"1 'column' jdfroms_jd_ jd'info schema'
+assert s-:remq_jd_ each cols
+jd'insert f';,cols,.vdata
+assert tvdata-:{:"1 jd'read from f'
+
+jdcsvfolder_jd_'' NB. create CSVFOLDER in DB folder for metadata
+jd'csvwr f.csv f'
+jd'droptable q'
+jd'csvrd f.csv q'
+assert (jd'read from f')-:jd'read from q'
+jd'droptable q'
 
 jd'createtable /replace f ',;cols,each<' int',','
 jd'info schema'
 s=. dtb each <"1 'column' jdfroms_jd_ jd'info schema'
 assert s-:remq_jd_ each cols
-jd'insert f';,cols,.<i.3
-assert rin-:jd'read from f'
+jd'insert f';,cols,.idata
+assert tidata-:{:"1 jd'read from f'
 
 jd'createtable /replace f'
 jd each   (<'createcol f '),each cols,each <' int'
 s=. dtb each <"1 'column' jdfroms_jd_ jd'info schema'
 assert s-:remq_jd_ each cols
-jd'insert f';,cols,.<i.3
-assert rin-:jd'read from f'
+jd'insert f';,cols,.idata
+assert tidata-:{:"1 jd'read from f'
 
 NB. explicit createcol
 bld1=: 3 : 0

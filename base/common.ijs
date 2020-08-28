@@ -40,15 +40,15 @@ PATH=:NAME=: ''
 CHILDREN=: ".'CHILDREN'
 NAMES=: ".'NAMES'
 
-osfna=: '`/\:*?"<>|' NB. chars not allowed in os folder names (includes `)
-osfsub=: (#osfna){.26}.Alpha_j_
+OSFNA=: '`/\:*?"<>|' NB. chars not allowed in os folder names (includes `)
+osfsub=: (#OSFNA){.26}.Alpha_j_
 osfmark=: '`'
 
 NB. folder from name
 dfromn=: 3 : 0
-i=. I.y e. osfna
+i=. I.y e. OSFNA
 if. 0=#i do. y return. end.
-r=. osfmark,(osfmark i}y),osfmark,(osfna i. i{y){osfsub
+r=. osfmark,(osfmark i}y),osfmark,(OSFNA i. i{y){osfsub
 )
 
 NB. name from folder
@@ -57,7 +57,7 @@ if. -.osfmark e. y do. y return. end.
 i=. y i: osfmark
 s=. y}.~>:i
 r=. }.i{.y
-((osfsub i. s){osfna)(I.r e. osfmark)}r
+((osfsub i. s){OSFNA)(I.r e. osfmark)}r
 )
 
 NB. y is the name of this locale
@@ -66,7 +66,7 @@ Init=: 3 : 0
 NAME=: ;y
 d=. NAME
 
-NB. col locale name with osfna chars is encoded to be valid folder name
+NB. col locale name with OSFNA chars is encoded to be valid folder name
 if. 0=nc<'CLASS' do.
  if. CLASS-:<'jdcolumn' do. d=. dfromn NAME end.
 end. 

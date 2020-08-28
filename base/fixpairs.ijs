@@ -44,7 +44,7 @@ unknown_assert ns-.NAMES
 ns=. vs=. ts=. ''
 for_i. i.-:#y do.
  j=. 2*i
- n=. <remq ;j{y NB.!!!
+ n=. <remq ;j{y
  FECOL_jd_=: >n
  EUNKNOWN assert n e. NAMES
  ns=. ns,n

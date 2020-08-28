@@ -63,7 +63,7 @@ ETALLY assert c={.c=. ;#each vs
 deb _3}.' ',;ns,each' ',each typ,each' ',each ts,each<' , '
 )
 
-vname=: 3 : 0
+vname=: 3 : 0 NB. validate name
 ('invalid name: ',y)assert (0~:#y) *. (2=3!:0 y) *. 2>$$y
 ('invalid name - unprintable chars: ',y) assert -.y e.~32{.a.
 ('invalid name - jd prefix: ',y)assert -.'jd'-:2{.y
@@ -75,10 +75,12 @@ vname y
 ('invalid name - RESERVEDCHARS_jd_: ',y)assert -.RESERVEDCHARS e. y
 )
 
-vtname=:  vdname
+vtname=:  3 : 0 NB. validate table name
+vdname y
+('invalid name - RESERVEDWORDS_jd_: ',y)assert -.RESERVEDWORDS e. <y
+)
 
-NB. validate col name - same as vtname except no RESERVEDCHARS and 
-vcname=: vname
+vcname=: vname NB. validate col name
 
 opened=: 3 : 0
 ECOUNT assert 0=#y

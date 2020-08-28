@@ -1,31 +1,10 @@
 NB. Copyright 2020, Jsoftware Inc.  All rights reserved.
+NB. utils for getting csv files into Jd and J
 
-man=: 0 : 0
-these utils can help you load csv files
-you load a csv into Jd and, for free, it is in J
-maximize ability to work with csv files with minimal Jd knowledge
-)
-
-NB. create csvload DB - y is 'new' to clear out all previous stuff
-csvinit=: 3 : 0
-select. y
-case. 'new' do. 
- 'new'jdadmin'csvload'
- jdcsvfolder_jd_'' NB. create CSVFOLDER in DB folder for metadata
-case. 'keep' do.
- jdadmin'csvload'
-case. do. 'arg must be new or keep'assert 0
-end.
-)
-
-NB. y - table_name ; csv_file
-csvprepare=: 3 : 0
-e=. 'csvinit must be run first'
-e assert 0=nc<'dbl_jd_'
-d=. dbl_jd_
-e assert #d
-e assert CSVFOLDER=:PATH__d,'jdcsv/'
-'tab f'=. y
+csvprepare=: 3 : 0 NB. tab ; csv_file
+'tab f'=: y
+jdadmin :: ('new'&jdadmin) 'csvload' NB. csvload DB
+jdcsvfolder_jd_''
 f=. jpath f
 vtname_jd_ tab
 'file must exist'assert fexist f
@@ -40,8 +19,7 @@ r=. r,LF,'   csvload ''',tab,''';0 NB. if first row looks like data'
 r=. r,LF,'   csvload ''',tab,''';1 NB. if first row looks like col headers'
 )
 
-NB. table;header
-csvload=: 3 : 0
+csvload=: 3 : 0 NB. tab;header
 'tab header'=. y
 tab=. dltb tab
 if. fexist CSVFOLDER,tab,'.cnames' do.
@@ -55,8 +33,10 @@ jd'csvscan ',tab,'.csvlink'    NB. scan entire file to adjust cdefs max byte col
 jd'csvrd ',tab,'.csvlink ',tab NB. using metadata, load csv file into Jd table
 )
 
-csvread=: 3 : 0
-jd'reads from abc'        NB. labeled cols
-jd'read from abc'       NB. labeled rows
-'c1'jdfrom_jd_ jd'read from abc'
+csvrename=: 3 : 0 NB. tab ; oldn ; <newn
+'tab old new'=. y
+for_i. i.(#old)<.#new do.
+ jd'renamecol ',tab,' ',(addq_jd_ i{::old),' ',addq_jd_ i{::new
+end.
+i.0 0
 )
