@@ -30,6 +30,7 @@ test/keyindex_test.ijs
 test/log_test.ijs
 test/modify_test.ijs
 test/multicol_test.ijs
+test/names_test.ijs
 test/northwind_test.ijs
 test/orderby_test.ijs
 test/osfna_test.ijs

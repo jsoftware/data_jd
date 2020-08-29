@@ -66,7 +66,6 @@ deb _3}.' ',;ns,each' ',each typ,each' ',each ts,each<' , '
 vname=: 3 : 0 NB. validate name
 ('invalid name: ',y)assert (0~:#y) *. (2=3!:0 y) *. 2>$$y
 ('invalid name - unprintable chars: ',y) assert -.y e.~32{.a.
-('invalid name - jd prefix: ',y)assert -.'jd'-:2{.y
 if. UNAME-:'Darwin' do. ('invalid name (OSX filename - unicode composed vs decomposed): ',y)assert 127>a.i.y end.
 )
 
@@ -77,10 +76,14 @@ vname y
 
 vtname=:  3 : 0 NB. validate table name
 vdname y
+('invalid name - jd prefix: ',y)assert -.'jd'-:2{.y
 ('invalid name - RESERVEDWORDS_jd_: ',y)assert -.RESERVEDWORDS e. <y
 )
 
-vcname=: vname NB. validate col name
+vcname=: 3 : 0 NB. validate col name
+vname y
+('invalid name - jd prefix: ',y)assert -.'jd'-:2{.y
+)
 
 opened=: 3 : 0
 ECOUNT assert 0=#y

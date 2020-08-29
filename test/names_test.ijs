@@ -1,7 +1,7 @@
 NB. Copyright 2020, Jsoftware Inc.  All rights reserved.
 NB.test db, dan, table, col name validation
 
-'new'jdadmin'test'
+'new'jdadmin'jdtest' NB. jd prefix allowed in DB
 e=. 'invalid name'
 
 e jdae'createtable a/b'
