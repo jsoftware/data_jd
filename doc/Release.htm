@@ -16,7 +16,32 @@
 <p>The Jd wiki is dynamic. It has the latest corrections and changes. It reflects not just the latest release, but development work that hasn't been finalized or released. It reflects the bleeding edge and may not be relevant for the version you are running.</p>
 <p>A snapshot of Jd wiki is converted to html and included in a release.</p>
 <p>For the latest on Jd, use the wiki. For details relevant to your release, use the release html.</p>
-<h2 id="beta---version-4.33">beta - version 4.33</h2>
+<h2 id="beta---version-4.34">beta - version 4.34</h2>
+<h2 id="september-2020---version-4.33">8 September 2020 - version 4.33</h2>
+<p>Lots of changes in sensitive areas. Deploy in production systems with caution.</p>
+<ul>
+<li>csv_load tutorial
+<ul>
+<li>easy to use utils for getting your csv file into J with minimal Jd knowledge</li>
+</ul></li>
+</ul>
+<p><code>jdrt'csv_load'</code></p>
+<ul>
+<li>renamecol updates column_create_order for default read selection</li>
+<li>col names can have any printable char
+<ul>
+<li>easier to work with other systems (especially with csv)</li>
+<li>Jd can now accept/create col names compatible with everyone</li>
+<li>see <a href="Ops_common.htm#names" title="wikilink">names</a> for details on rules for names</li>
+</ul></li>
+</ul>
+<p><code>'new'jdadmin'test'</code><br />
+<code>jd'createtable f'</code><br />
+<code>jd'createcol f </code>“<code>a/</code><code> </code><code>=\</code>”<code> \b&quot; int'</code><br />
+<code>jd'insert f';'a/ =&quot; \b';i.5</code><br />
+<code>jd'read from f where </code>“<code>a/</code><code> </code><code>=\</code>”<code> \b&quot;=3'</code><br />
+<code>jdaddq_jd_'a&quot; /'    NB. &quot; if required by &quot; or blank</code><br />
+<code>jdremq_jd_'</code>“<code>a\</code>”<code> /&quot;' NB. remove &quot;s</code></p>
 <h2 id="may-2020---version-4.32">23 May 2020 - version 4.32</h2>
 <ul>
 <li>jd'createcol /derived ...' - see tutorial createcol_derived</li>

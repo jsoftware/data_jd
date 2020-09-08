@@ -36,7 +36,7 @@ jd'csvrd ',tab,'.csvlink ',tab NB. using metadata, load csv file into Jd table
 csvrename=: 3 : 0 NB. tab ; oldn ; <newn
 'tab old new'=. y
 for_i. i.(#old)<.#new do.
- jd'renamecol ',tab,' ',(addq_jd_ i{::old),' ',addq_jd_ i{::new
+ jd'renamecol ',tab,' ',(jdaddq_jd_ i{::old),' ',jdaddq_jd_ i{::new
 end.
 i.0 0
 )

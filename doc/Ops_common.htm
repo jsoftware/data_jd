@@ -26,28 +26,53 @@
 <p>Options follow the command, start with /, and have a fixed number (0 or more) parameters.</p>
 <pre><code>   jd&#39;reads /lr /e from f&#39;</code></pre>
 <h2 id="names">names</h2>
-<p>Column, table, and database names have similar validation:</p>
+<p>table and column names have similar rules:</p>
 <ul>
-<li>names are used directly as file and folder names
+<li><code>jd...</code> prefix not allowed</li>
+<li>unprintable chars (32{.a.) not allowed</li>
+<li>used as folder names
 <ul>
-<li>windows file names ignore case - linux file names are case sensitive</li>
-<li>avoid names with upper-case if possible</li>
-<li>names that differ only in case will probably lead to grief</li>
+<li>unix file names are case sensitive - windows are not</li>
+<li>names differing only in case could lead to grief</li>
 </ul></li>
 <li>utf-8 supported
 <ul>
-<li>macOS problems with uft-8 file names - composed vs decomposed
+<li>macOS problems - composed vs decomposed
 <ul>
 <li>could be resolved - for now avoid utf-8 names on macOS</li>
 </ul></li>
 </ul></li>
-<li><code>RESERVEDCHARS_jd_</code>are not allowed in names</li>
-<li><code>RESERVEDWORDS_jd_</code>are not allowed</li>
-<li>the <code>jd...</code> prefix is not allowed in table or column names</li>
-<li>the <code>~</code>... prefix is not allowed</li>
-<li>the <code>+-</code> characters are allowed in names, but should be avoided in table names because of conflicts when parsing the read from clause</li>
-<li>the <code>^</code> character is used by the system in table names for ptable and should be avoided</li>
+<li>table names
+<ul>
+<li>not allowed in &quot;s</li>
+<li><code>RESERVEDCHARS_jd_</code>not allowed</li>
+<li><code>RESERVEDWORDS_jd_</code>not allowed</li>
+<li>the <code>^</code> char is used in ptable names and should be avoided</li>
+<li>the <code>()</code> chars could conflict with where clause and should be avoided</li>
+</ul></li>
+<li>col names
+<ul>
+<li>col names can be in &quot;s</li>
+<li>&quot; is escaped in a col name - “a\”b&quot;</li>
+<li>read op parsing may require col names in &quot;s
+<ul>
+<li>jd'read “c d”,a=b from f where “a=b”=23'</li>
+</ul></li>
+<li>ref col can not have _ char</li>
+<li>names with OSFNA_jd_ chars are not used directly as folder names
+<ul>
+<li>name a/b maps to folder name `a`b`b
+<ul>
+<li>dfromn_jd_'a/b' NB. folder name from col name</li>
+<li>nfromd_jd_'`a`b`b' NB. folder name from col name</li>
+</ul></li>
+</ul></li>
+</ul></li>
 </ul>
+<p><code>   jdaddq_jd_'a&quot; /' NB. &quot; if required by &quot; or blank</code><br />
+“<code>a\</code>”<code> /&quot;</code><br />
+<code>   jdremq_jd_'</code>“<code>a\</code>”<code> /&quot;' NB. remove &quot;s</code><br />
+<code>a&quot; /</code></p>
 <h2 id="types">types</h2>
 <p>boolean int float</p>
 <dl>

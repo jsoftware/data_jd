@@ -45,7 +45,7 @@ v=. (jdt=<'byte')*b#2{"1 COLDEFS
 s=. ":each v
 s=. ' ',each a: ((v=0)#i.#v)}s
 NB. t=. csvc,.jdt,.s
-t=. ((addq_jd_)each csvc),.jdt,.":each csvs
+t=. ((jdaddq_jd_)each csvc),.jdt,.":each csvs
 ;(t,each' '),.<LF
 )
 
@@ -83,7 +83,7 @@ cds=. 3{.each ' 'strsplit_jd_ each ((LF e. a){',',LF) strsplit_jd_ debq_jd_ }:a
 t=. getloc__d table
 for_d. cds do.
  d=. >d
- ICol__t  (remq_jd_ ;{.d);;' ',~each  1}.d
+ ICol__t  (jdremq_jd_ ;{.d);;' ',~each  1}.d
 end.
 
 jd_close_jd_''

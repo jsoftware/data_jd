@@ -31,14 +31,14 @@ tvdata=. ((<:# cols)#<'abc';'def';'ghijkl'),<3#<'qewr'
 jd'createtable /replace f ',;cols,each<' int',LF
 jd'info schema'
 s=. dtb each <"1 'column' jdfroms_jd_ jd'info schema'
-assert s-:remq_jd_ each cols
+assert s-:jdremq_jd_ each cols
 jd'insert f';,cols,.idata
 assert tidata-:{:"1 jd'read from f'
 
 jd'createtable /replace f ',;cols,each<' varbyte',LF
 jd'info schema'
 s=. dtb each <"1 'column' jdfroms_jd_ jd'info schema'
-assert s-:remq_jd_ each cols
+assert s-:jdremq_jd_ each cols
 jd'insert f';,cols,.vdata
 assert tvdata-:{:"1 jd'read from f'
 
@@ -52,14 +52,14 @@ jd'droptable q'
 jd'createtable /replace f ',;cols,each<' int',','
 jd'info schema'
 s=. dtb each <"1 'column' jdfroms_jd_ jd'info schema'
-assert s-:remq_jd_ each cols
+assert s-:jdremq_jd_ each cols
 jd'insert f';,cols,.idata
 assert tidata-:{:"1 jd'read from f'
 
 jd'createtable /replace f'
 jd each   (<'createcol f '),each cols,each <' int'
 s=. dtb each <"1 'column' jdfroms_jd_ jd'info schema'
-assert s-:remq_jd_ each cols
+assert s-:jdremq_jd_ each cols
 jd'insert f';,cols,.idata
 assert tidata-:{:"1 jd'read from f'
 

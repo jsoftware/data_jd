@@ -207,6 +207,6 @@ Strings must be quoted to avoid confusion with keywords and col names.</p>
 <p>For in and notin, data is given in a comma-separated list, optionally enclosed by parens.</p>
 <p>In Q expression of the form “col = dat” or “col in dat”, col can be a comma-separated list of cols. In this case each item in dat is a comma-separated list with the same length as the number of cols. If the relational is “in”, each item in dat must be parenthesized. The col values are compared with the items in dat. If there is a hash columns it will be used for the query.</p>
 <h2 id="order-by">ORDER BY</h2>
-<p>One or more cols separated by commas used to sort the final result. Ascending by default. Add desc at end for descending.</p>
+<p>One or more cols in the selection, separated by commas, used to sort the final result. Ascending by default. Add desc at end for descending. If the selection col has an alias, then the alias is used.</p>
 </body>
 </html>

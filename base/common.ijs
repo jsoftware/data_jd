@@ -118,7 +118,7 @@ getloc__t y
 NB. match with alias overrides the table we are in!
 getlocq=: 3 : 0
 a=. {:conl 1 NB.!!! jdquery locale
-b=. <remq;y
+b=. <jdremq;y
 if. 0~:nc<'cnms__a' do. getloc b return. end.
 if. -. b e. cnms__a do. getloc b return. end.
 i=. cnms__a i. b

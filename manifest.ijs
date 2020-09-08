@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '4.4.83'
+VERSION=: '4.4.84'
 
 FILES=: 0 : 0
 manifest.ijs
@@ -106,7 +106,6 @@ tutorial/vr_tut.ijs
 tutorial/sed_tut.ijs
 tutorial/northwind_tut.ijs
 tutorial/sandp_tut.ijs
-tutorial/intro_csv_tut.ijs
 tutorial/csv_advanced_tut.ijs
 tutorial/quandl_ibm_tut.ijs
 tutorial/bus_lic_tut.ijs
@@ -132,6 +131,8 @@ tutorial/blob_tut.ijs
 tutorial/jdserver_tut.ijs
 tutorial/json_tut.ijs
 tutorial/mtm_tut.ijs
+tutorial/csv_intro_tut.ijs
+tutorial/csv_load_tut.ijs
 csv/csv.ijs
 csv/csvinstall.ijs
 csv/csvtest.ijs
@@ -143,6 +144,7 @@ tools/tests.ijs
 tools/ptable.ijs
 tools/ts.ijs
 tools/tut.ijs
+tools/csv_load.ijs
 dynamic/ref.ijs
 dynamic/base.ijs
 doc/License.htm
@@ -208,6 +210,7 @@ types/datetimes.ijs
 types/varbyte.ijs
 base/fixpairs.ijs
 base/jmfx.ijs
+base/parse.ijs
 base/folder.ijs
 base/lock.ijs
 base/util_ptable.ijs
@@ -239,6 +242,8 @@ server/http_server.ijs
 server/jctask.ijs
 server/fork.ijs
 server/server_client_tools.ijs
+test/names_test.ijs
+test/osfna_test.ijs
 test/createcol_derived_test.ijs
 test/jdserver_test.ijs
 test/byten_test.ijs

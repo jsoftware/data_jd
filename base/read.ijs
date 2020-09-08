@@ -166,7 +166,7 @@ nt =. #tloc
 if. 0=#sel do. sel =. (1<nt){::'*';'*.*' end.
 'a agg1 path' =. ({. , ' 'sel_split (deb each@>@{:)) ':' sel_split ',' strsplit sel
 
-a=. remq each a NB. remove quotes around alias
+a=. jdremq each a NB. remove quotes around alias
 
 NB. readtset avg must have count - add if necessary
 if. (OP_jd_-:'readptable') *. (-.(<'count')e.agg1) *. (<'avg')e.agg1 do.
@@ -181,7 +181,7 @@ nby=:0 if. #by do.
   'a path' =. (a,&<path) ,~&.> b
 end.
 't c' =. <"_1|: '.'&(_2 {. strsplit)@> path
-c=. remq each c
+c=. jdremq each c
 
 NB. expand * tables
 mask =. t = <,'*'

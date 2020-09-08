@@ -13,13 +13,12 @@ problems:
 coclass 'jd'
 
 NB. if in "s - remove "s and \" -> "
-remq=: 3 : 0
+jdremq=: 3 : 0
 if. *./'"'={.{:y do. (}.}:y) rplc '\"';'"' else. ,y end.
 )
 
-NB. if starts with " or has blank - put in "s and " -> \"
-addq=: 3 : 0
-NB. if. ('"'={.y)+.' 'e. y do. '"',~'"',y rplc '"';'\"' else. ,y end.
+NB. if contains " or blank - put in "s and " -> \"
+jdaddq=: 3 : 0
 if. +./' "'e. y do. '"',~'"',y rplc '"';'\"' else. ,y end.
 )
 
@@ -28,14 +27,14 @@ NB. return boxed list of name;type;shape
 cutcoldefs=: 3 : 0
 if. *./y=' ' do. '' return. end.
 r=. 3{.each ' 'strsplit each ((LF e. y){',',LF) strsplit debq y
-remq each L:1 r-.<3{.a:
+jdremq each L:1 r-.<3{.a:
 )
 
 NB. box blank delimited names - blanks in "s ignored - "s removed from names in result
 bdnames=: 3 : 0
 if. 0=#y do. y return. end.
 if. 0=L.y do.
- remq each ' 'strsplit_jd_ debq y
+ jdremq each ' 'strsplit_jd_ debq y
 else.
  ,each dltb each y
 end.

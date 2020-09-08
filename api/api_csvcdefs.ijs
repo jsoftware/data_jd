@@ -49,13 +49,13 @@ else.
 end.
 
 if. optc-:'header' do.
- cnb=. remq_jd_ each cs strsplit_jd_ debq_jd_ n
+ cnb=. jdremq_jd_ each cs strsplit_jd_ debq_jd_ n
 else.
  t=. fread csvfpcnames
  cnb=. <;._2 toJ t,>(LF={:t){LF;''
 end.
 cols=. #cnb
-cn=. >addq each cnb
+cn=. >jdaddq each cnb
 nums=.  >(( #":cols)":each<"0 >:i.cols)rplc each <' ';'0'
 
 c=. ,LF,.~nums,.' ',.cn,"1 ' byte ',":>:varb
