@@ -127,15 +127,9 @@ for_i. i.#h do.
  assert msize>:dsize
  rn=. rn,i{d
  ra=. ra,fsize i{d
- rz=. rz,HS_jmf_+dsize
- if. msize>dsize do.
-  setmsize_jmf_ n;dsize 
-  jdunmap n
-  newsize_jmf_ (;i{d);HS_jmf_+dsize
- else.
-  jdunmap n
- end. 
+ rz=. rz,HS_jmf_+psroundup dsize
+ jdunmap n;dsize
+ jdmap n;i{d
 end.
-jd_close''
 ('file';'old';'new'),:(<>rn),(<,.ra),<,.rz
 )

@@ -14,15 +14,9 @@ jd'insert g';'b';>:i.3
 )
 
 show=: 3 : 0
-NB. decho jd'read from f'
-NB. decho jd'read from g'
-NB. decho jd'read from f,f.g'
 c=. jdgl_jd_ 'f jdref_a_g_b'
 if. 2=#dat__c do.
-NB. decho jd'read from f,f>g'
-NB. decho jd'read from f,f-g'
 end.
-NB. decho dat__c
 i.0 0
 )
 

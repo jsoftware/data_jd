@@ -109,25 +109,29 @@ jdunmap (name,Cloc);size
 mapcolfile name
 )
 
-NB. resize file if required - flag 1 for replace
-resize_if=: 3 : 0
-'name data flag'=. y
-if. flag do. old=. 0 else. old=. getbytes name~ end.
-new=. getbytes data
-if. (old+new)>getmsize_jmf_ name,Cloc do.
- if. (<name)e.;:'datr val nub' do.
-  b=. >.1.5*old+new  NB.! how big should these guys be?
- elseif. 1 do.
-  b=. (getbytes{.data)*ROWSMIN>.>.ROWSMULT*ROWSXTRA+(#name~)+#data
- end.
- resizemap name;b
-end.
+resize=: 3 : 0
+'name data'=. y
+resizemap name;(getbytes{.data)*ROWSMIN>.>.ROWSMULT*ROWSXTRA+(#name~)+#data
 )
 
-appendmap=: 4 : 0
-resize_if x;y;0
-". 'name=:name,y' rplc 'name';x
-EMPTY NB. result
+appenddat=: 3 : 0
+try. 
+ dat=: dat,y
+catch. 
+ resize 'dat';y
+ dat=: dat,y
+end.
+i.0 0
+)
+
+appendval=: 3 : 0
+try. 
+ val=: val,y
+catch. 
+ resize 'val';y
+ val=: val,y
+end.
+i.0 0
 )
 
 getbytes=: 3 : 0

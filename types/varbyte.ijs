@@ -69,7 +69,7 @@ for_n. i.#x do.
   val=: d (j+i.#d)}val
  else.
   dat=: ((#val),#d) i}dat
-  'val' appendmap d
+  appendval d
  end.
 end. 
 )

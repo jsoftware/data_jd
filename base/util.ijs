@@ -3,6 +3,23 @@ jdrt_z_=:      jdrt_jd_
 
 coclass 'jd'
 
+NB. assert that fsize=HS+msize and fsize is within pad of page boundary
+chksize=: 3 : 0
+d=. }.showmap_jmf_''
+fs=. ;MAPFSIZE_jmf_{"1 d
+ms=. ;MAPMSIZE_jmf_{"1 d
+r=. -.HS_jmf_=fs-ms
+if. +./r do.
+ echo r# d
+ 'bad fsize vs msize'assert 0
+end.
+r=. -.0=PAGESIZE_jd_|fs+JMFPAD_jd_
+if. +./r do.
+ echo r# d
+ 'bad fsize page boundary'assert 0
+end.
+)
+
 NB. boolean mask - names starting with jd
 bjdn=: 3 : 0
 (<'jd')=2{.each y

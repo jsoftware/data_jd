@@ -132,7 +132,8 @@ c
 NB. get locale for a single table_name or col_name or dbpath
 NB. y may be boxed
 NB. col name is clean name - not in "s
-NB. get locale and open table children and map column files
+NB. getloc dbpath - create table locales
+NB. getloc table - create col locales and maps
 getloc=: 3 : 0
 y=. ;y
 ind=. NAMES i. <y
@@ -306,6 +307,7 @@ end.
 cutsp=: i.&' ' ({.;dlb@}.) ]
 
 duplicate_assert=: 3 : 0
+if. (#y)=#~.y do. return. end.
 EDUPLICATE assert 0=#FECOL_jd_=: ;{.(1<+/y =/ y)#y
 )
 

@@ -101,13 +101,11 @@ Create nam;typ;shape
 NB. x is rows to add to each col
 NB. y is (column names),.(new data)
 Insert=: 4 : 0
-N=.,&.> {."1 y
 dat=. {:"1 y
-step0=. getloc@> N
+step0=. getloc@> {."1 y
 rows=. Tlen
 setTlen Tlen+x  NB. 
 update_subscr'' NB. mark ref cols dirty
-
 try.
  step0  4 :'Insert__x >y'"0  dat NB. step 0: insert static columns
  1+FORCEREVERT#'a'

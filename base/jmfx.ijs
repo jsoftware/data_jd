@@ -1,17 +1,54 @@
-NB. Copyright 2014, Jsoftware Inc.  All rights reserved.
+NB. Copyright 2020, Jsoftware Inc.  All rights reserved.
+
+0 : 0
+JE does overfetch by 7 bytes - crash if unallocated
+JE also uses 71 bytes after for performance reasons
+JE fills jmf file msize to the last byte
+
+createjmf could provide PAD after msize that was in the file
+but this has BIG deployment problems because of back level Jd installs
+see bup code for jmf addon that does this, but was stashed
+
+solution is to have Jd ensure jmf filesize always ends PAD bytes before page bounary
+this means overfetch and performance access will access bytes after filesize
+ that are still valid as they are in the allocated page
+
+this Jd fix does not fix problem for other jmf users or for non-jmf use
+so the crash exposure is still there for jmf and non-jmf files that have less than
+7 bytes before a page boundary
+
+the JMFPAD use here should probably eventually be incorporated into jmf addons
+)
 
 coclass'jd'
 
-NB. jd jmf operations
-NB. error checks beyond those provided by jmf
-NB. the error checks should eventually be included in jmf
-jdcreatejmf=: 3 : 0
-createjmf_jmf_ y
-if. -.fexist {.y              do. logijfdamage 'createjmf a';y end. 
-if. (fsize {.y)~:HS_jmf_+;1{y do. logijfdamage 'createjmf b';y end.
+JMFPAD=: 96     NB. round up from 71 because 96 is a nicer than 71
+PAGESIZE=: 4096 NB. crash exposure if this assumption is wrong
+
+NB. roundup msize to that filesize will be at pageboundary-pad
+psroundup=: 3 : 0
+c=. (PAGESIZE*>.(HS_jmf_+y+JMFPAD)%PAGESIZE)-HS_jmf_+JMFPAD
+assert c>:y
+assert 0=PAGESIZE|HS_jmf_+JMFPAD+c
+c
 )
 
-NB. map ro if ro
+psroundupfs=: 3 : 0
+HS_jmf_+psroundup y-HS_jmf_
+)
+
+NB. enforce JMFPAD safe filesize and extra error checks
+NB. msize increased so all available bytes are used
+jdcreatejmf=: 3 : 0
+'a b'=. y
+c=. psroundup b
+createjmf_jmf_ a;c
+if. -.fexist {.y              do. logijfdamage 'createjmf a';y end. 
+NB. if. (fsize {.y)~:HS_jmf_+;1{y do. logijfdamage 'createjmf b';y end.
+)
+
+NB. psroundup if necessary
+NB. jmf files are remapped with new size if necessary to ensure JMFPAD
 jdmap=: 3 : 0
 0 jdmap y
 :
@@ -33,8 +70,18 @@ catchd.
   logijfdamage 'map';y
  end. 
 end.
+if. 0=x do.
+ NB. jmf resize if HS+msize not at pageboundary-pad
+ fs=. fsize fn
+ a=. HS_jmf_+psroundup fs-HS_jmf_ NB. preferred file size
+ if. a~:fs do.
+  jdunmap jn;a
+  jdmap jn;fn;'';JDMT
+ end. 
+end. 
 )
 
+NB. resize does psroundup if necessary
 jdunmap=: 3 : 0
 if. 0=L.y do.
  r=. unmap_jmf_ y
@@ -42,6 +89,9 @@ if. 0=L.y do.
  return.
 end.
 fn=. 1{(({."1 mappings_jmf_)i.{.y){mappings_jmf_
+'a b'=. y
+c=. psroundup b
+y=. a;c
 r=. unmap_jmf_ y
 ('unmap resize failed: ',(":r),' ',;{.y)assert 2~:r
 NB. resize failure not detected
@@ -80,34 +130,10 @@ had=. 1{memr sad,0 4,JINT
 ''$memr had,HADS,1,JINT
 )
 
-NB. set allocation size of mapped noun
-setmsize=: 3 : 0
-'name msize'=. y
-sad=. symget <fullname name
-had=. 1{memr sad,0 4,JINT
-msize memw had,HADM,1,JINT
-i.0 0
-)
-
 getmsize=: 3 : 0
 sad=. symget <fullname y
 had=. 1{memr sad,0 4,JINT
 ''$memr had,HADM,1,JINT
-)
-
-NB. newsize fn;size
-newsize=: 3 : 0
-'fn size'=. y
-if. IFUNIX do.
- c_truncate fn;size
-else.
- t=. fn;(GENERIC_READ+GENERIC_WRITE);0;NULLPTR;OPEN_EXISTING;0;0
- fh=. CreateFileR t
- SetFilePointerR fh;size;NULLPTR;FILE_BEGIN
- SetEndOfFile fh
- CloseHandleR fh
-end.
-i.0 0
 )
 
 3 : 0''

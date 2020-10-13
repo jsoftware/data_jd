@@ -107,7 +107,7 @@ else.
   tab=. ;{.y
   t=. jdgl tab
   'ns vs rows'=. _2 fixpairs__t }.y
-  w=. 0 keyindex tab;,,ns,.vs
+  w=. 0 keyindex tab;,ns,.vs
  end.
 end.
 FETAB=: tab
@@ -153,20 +153,20 @@ ECOUNT assert 2<:#y
 y=. 2}.y
 FETAB_jd_=. ;tab
 t=. jdgl FETAB
+'ns vs rows'=. _2 fixpairs__t y NB. update rules
 if. 2=3!:0 w do.
  NB. read where clause or col(s)
  if. *./(;: ::0:w)e.NAMES__t do. NB. where clause could contain unmatched quote
   NB. key update 
  'name data pairs - odd number' assert (2<:#y)*.0=2|#y
-  ns=. ,each(2*i.-:#y){y NB. list of names
-  vs=. (>:2*i.-:#y){y    NB. list of values
   key=. ;:w NB. search for the
   'key(s) not in pairs'assert 0=#key-.ns
   if. (#key)=#ns do. JDOK return. end. NB. no data to update
   i=. ns i. key
-  w=. keyindex tab;,,(i{ns),.i{vs
-  FIXPAIRSFLAG=: 0 NB. must be run on remaining pairs
-  y=. (2# -.ns e. key)#y NB. remove keys from pairs
+  w=. keyindex tab;,(i{ns),.i{vs
+  b=. -.ns e. key  NB. remove keys from pairs
+  ns=. b#ns
+  vs=. b#vs
  else.
   w=. ;{:,old=. jdi_read 'jdindex from ',tab,' where ',w NB. ; always a list so 1 n$'abc' works
  end. 
@@ -178,12 +178,21 @@ else.
  w=. ,w NB. , to allow 1 n$'abc' to work
 end.
 NB. w is always a list - if it has 1 element, this allows data 1 4$'a'
-NB. force w to scalar if single element list to disallow 1 4$'a'
-'ns vs rows'=. (#w) fixpairs__t y
+
 if. 0=#w do. NB. allow 0 or 1 rows if nothing to do
  ETALLY assert rows e. 0 1
  JDOK return.
 end. 
+
+if. (rows=1) *. rows~:#w do. NB. scalar extend to match #w
+ rows=. #w
+ for_i. i.#vs do.
+  d=. >i{vs 
+  if. 1=#d do.
+   vs=. (<rows#d) i}vs
+  end.
+ end.
+end.
 
 ETALLY assert rows=#w
 

@@ -50,10 +50,10 @@ for_i. i.#snkns do.
  b=. i{srccs
  if. 'varbyte'-:typ__a do.
    v=. 0,~#val__a 
-  'val' appendmap__a val__b
-  'dat' appendmap__a v+"1 dat__b
+  appendval__a val__b
+  appenddat__a v+"1 dat__b
  else.
-  'dat' appendmap__a dat__b
+  appenddat__a dat__b
  end. 
 end.
 JDOK

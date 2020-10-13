@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '4.4.84'
+VERSION=: '4.4.85'
 
 FILES=: 0 : 0
 manifest.ijs
@@ -145,6 +145,7 @@ tools/ptable.ijs
 tools/ts.ijs
 tools/tut.ijs
 tools/csv_load.ijs
+tools/locreport.ijs
 dynamic/ref.ijs
 dynamic/base.ijs
 doc/License.htm
@@ -201,6 +202,7 @@ pm/pm.ijs
 pm/pmx.ijs
 pm/replicate.ijs
 pm/csvtest.ijs
+pm/pm_insert_1.ijs
 types/numeric.ijs
 types/epoch.ijs
 types/byte.ijs

@@ -20,7 +20,17 @@ modifygen''
 jd'update f';'jdindex=0';'boolean';1;'int';2;'float';2.2;'byte';'b';'byte4';(1 4$'bbbb');'edatetime';efs_jd_'2000'
 assert (jd'reads from f where jdindex=0')-:jd'reads from f where jdindex=3'
 
+NB. all pairs with correct #
 jd'update f';'jdindex in (1,2)';'boolean';1 1;'int';2 2;'float';2.2 2.2;'byte';'bb';'byte4';(2 4$'bbbb');'edatetime';2$efs_jd_'2000'
+assert (jd'reads from f where jdindex in (1,2)')-:jd'reads from f where jdindex in (4,5)'
+
+
+NB. some pairs with correct # and scalar extension in fixpairs
+jd'update f';'jdindex in (1,2)';'boolean';1 ;'int'; 2;'float';2.2 2.2;'byte';'bb';'byte4';(2 4$'bbbb');'edatetime';2$efs_jd_'2000'
+assert (jd'reads from f where jdindex in (1,2)')-:jd'reads from f where jdindex in (4,5)'
+
+NB. all pairs scalar with extension done in update (after we know how many are required)
+jd'update f';'jdindex in (1,2)';'boolean';1 ;'int'; 2;'float';  2.2;'byte';'b';'byte4';(1 4$'bbbb');'edatetime';1$efs_jd_'2000'
 assert (jd'reads from f where jdindex in (1,2)')-:jd'reads from f where jdindex in (4,5)'
 
 NB. shape and scalar extension

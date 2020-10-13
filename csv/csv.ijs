@@ -15,6 +15,8 @@ grow 0 if only load up to rows
 grow 1 is callbacks should increase file allocation to load all rows
 )
 
+NB. use createjmf (not jdcreatejmf) as csv depends on exact msize
+
 coclass'jdcsv'
 
 csvreportclear=: 3 : '''''fwrite PATHLOGLOGFILE'
@@ -149,17 +151,32 @@ jd_close_jd_''
 )
  
 free=: 3 : 0
-NB. cdf''
-NB. unmapall_jmf_''
 i.0 0
 )
 
+NB. do not use jdmap as it will do resize - and csv files must not be resized here
 csvmap=: 3 : 0
-jdmap_jd_ y
+0 csvmap y
+:
+try.
+ x map_jmf_ y
+catchd.
+ echo 'csv jdmap failed - will retry : ',fn,' : ',LF-.~,13!:12''
+ try.
+  6!:3[5
+  x map_jmf_ y
+ catchd. 
+  echo 'csv jdmap failed - failed again : ',fn,' : ',LF-.~,13!:12''
+  FEER_jd_=: 13!:12''
+  logijfdamage 'csvmap';y
+ end. 
+end.
 )
 
+NB. do not use jdunmap as it will do resize with JMFPAD - and csv files must not have pad
 csvunmap=: 3 : 0
-jdunmap_jd_ y
+r=. unmap_jmf_ y
+('csvunmap failed: ',(":r),' ',;{.y)assert 2~:r
 )
 
 NB. rows makecol col - create and map c file
@@ -167,22 +184,9 @@ makecol=: 4 : 0
 n=. >y{ccnames
 f=. >y{ccfiles
 c=. getcount y
-jdcreatejmf_jd_ f;x*c
+createjmf_jmf_ f;x*c
 csvmap n;f
 settypeshape_jmf_ n;x colsub y
-)
-
-NB. rows sizecol col - resize c file to have x rows
-resizec=: 4 : 0
-n=. >y{ccnames
-f=. >y{ccfiles
-c=. x*getcount y
-setmsize_jmf_ n;c
-settypeshape_jmf_ n;x colsub y
-csvunmap n
-newsize_jmf_ f;HS_jmf_+c
-csvmap n;f
-i.0 0
 )
 
 NB. rows colsub y - return Jtype;shape
@@ -225,22 +229,31 @@ makevar=: 4 : 0
 n=. >y{cvnames
 f=. >y{cvfiles
 c=. x*y{cxtra''
-jdcreatejmf_jd_ f;c
+createjmf_jmf_ f;c
 csvmap n;f
 settypeshape_jmf_ n;JCHAR;c
 i.0 0
+)
+
+NB. exact filesize resize as required by csv
+NB. rows sizecol col - resize c file to have x rows
+NB. csv files kept to exact msize - no roundup for pad
+resizec=: 4 : 0
+n=. >y{ccnames
+f=. >y{ccfiles
+c=. x*getcount y
+csvunmap n;c
+csvmap n;f     NB. not jdmap as we don't want roundup
+settypeshape_jmf_ n;x colsub y
 )
 
 NB. size f col
 resizev=: 4 : 0
 vn=. >y{cvnames
 f=. >y{cvfiles
-setmsize_jmf_ vn;x
-settypeshape_jmf_ vn;JCHAR;x
-csvunmap vn
-newsize_jmf_ f;HS_jmf_+x
+csvunmap vn;x
 csvmap vn;f
-i.0 0
+settypeshape_jmf_ vn;JCHAR;x
 )
 
 NB. createcols rows - create and map new c and v files
@@ -351,14 +364,14 @@ i.0 0
 
 clearerrors=: 3 : 0
 csvunmap'csverrors_jdcsv_'
-jdcreatejmf_jd_ csverrorfile;SZI_jmf_*y*ECMAX*ECCOLS
+createjmf_jmf_ csverrorfile;SZI_jmf_*y*ECMAX*ECCOLS
 csvmap 'csverrors_jdcsv_';csverrorfile
 csverrors=: (y,ECMAX,ECCOLS)$23-23
 )
 
 clearprogress=: 3 : 0
 csvunmap'csvprogress_jdcsv_'
-jdcreatejmf_jd_ csvprogressfile;SZI_jmf_*PROGRESSMAX
+createjmf_jmf_ csvprogressfile;SZI_jmf_*PROGRESSMAX
 csvmap 'csvprogress_jdcsv_';csvprogressfile
 csvprogress=: 0,ROWS,0,#csvin
 )
@@ -380,6 +393,8 @@ csvcommon y
 csvld 'load'
 )
 
+
+NB. csvappend depends on files having exact size - no extra filesize and no padding
 csvappend=: 3 : 0
 csvcommon y
 csvld 'append'
@@ -527,6 +542,8 @@ for_i. i.#coldefs do.
   (i{var) resizev i
  end.
 end.
+
+NB. csv mappings must be left at exact size for possible csvappend
 TZ=: 6!:1''
 NB. log 'callbackc count: ',":callbackc
 NB. log 'callbackv count: ',":callbackv
@@ -671,7 +688,7 @@ f=. (f i:'/'){.f
 )
 
 NB. f name - convert byte n col to enum
-createenum=: 3 : 0
+xxxcreateenum=: 3 : 0
 i=. colnames i. <y
 cn=. >i{ccnames
 en=. ename y
@@ -679,12 +696,12 @@ fn=. (getcolpath y),'/c_',y
 fe=. (getcolpath y),'/e_',y
 r=. ".'#',cn
 e=. ".'~.',cn
-jdcreatejmf_jd_ fe;*/$e
+createjmf_jmf_ fe;*/$e
 csvmap en;fe
 ".en,'=:e'
 n=.".en,' i. ',cn
 csvunmap <cn
-jdcreatejmf_jd_ fn;SZI_jmf_*r
+createjmf_jmf_ fn;SZI_jmf_*r
 csvmap cn;fn
 ".cn,'=:n'
 coldefs=: (CI8,0 0 0)i}coldefs
@@ -693,68 +710,6 @@ t=. (<'int') (CSVCOLS i. <y)}CSVJDTYPS
 (3!:1 CSVCOLS;CSVTYPS;(<t),<coldefs) fwrite PATHCSVFOLDER,'/info' NB. map enum to JD int
 )
 
-NB. f name - create hash from data
-NB. assumes d_name is char matrix
-createhash=: 3 : 0
-i=. colnames i. <y
-cn=. >i{ccnames
-hn=. hname y
-fn=. (getcolpath y),'/c_',y
-fh=. (getcolpath y),'/h_',y
-'c w'=. ".'$',cn
-csvunmap <hn
-jdcreatejmf_jd_ fh;SZI_jmf_*c
-csvmap hn;fh
-settypeshape_jmf_ hn;JINT;c,1
-xhash (<15!:14<hn);c;(<15!:14<cn);w
-NB. csvunmap cn
-NB. csvunmap hn
-i.0 0
-)
-
-NB. f colname;newname;value
-NB. colname must be mapped
-NB. new file created in same path as colname with same #
-createi=: 3 : 0
-'colname name value'=. y
-value=. 0+value
-assert 0=$value
-assert 4=3!:0 value
-f=. (getcolpath colname),'/c_',name
-n=. cname name
-rows=. ".'#',>(colnames i. <colname){ccnames
-csvunmap <n
-jdcreatejmf_jd_ f;rows*SZI_jmf_
-csvmap n;f
-settypeshape_jmf_ n;JINT;rows,1
-xseti (<15!:14<n);rows;value
-i.0 0
-)
-
-NB. not tested and needs changes
-NB. f colname;newname;value
-appendi=: 3 : 0
-'colname name value'=. y
-value=. 0+value
-assert 0=$value
-assert 4=3!:0 value
-f=. (gettablepath colname),'/',name,'/DAT'
-n=. cname name
-csvunmap <n
-csvmap n;f
-newrows=. ".'#c_',colname
-oldrows=. ".'#c_',name
-if. oldrows=newrows do. return. end.s
-assert oldrows<newrows
-c=. SZI_jmf_*newrows
-setmsize_jmf_ n;c
-settypeshape_jmf_ n;JINT;newrows,1
-csvunmap n
-newsize_jmf_ f;HS_jmf_+c
-csvmap n;f
-xseti (<(SZI_jmf_*oldrows)+15!:14<n);(newrows-oldrows);value
-i.0 0
-)
 
 options=: 3 : 0
 t=. <;._2 ' ',~deb y

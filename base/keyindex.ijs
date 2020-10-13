@@ -9,15 +9,14 @@ NB. type keyindex table;pairs...
 keyindex=: 3 : 0
 1 keyindex y
 :
-ECOUNT assert 3<:#y
 tab=. ,;{.y
 FETAB=: tab
-t=. jdgl tab
-'ns vs rows'=. _2 fixpairs__t }.y
+a=. }.y
+nsvs=. (2,~-:#a)$a
 if. isptable tab do.
- x kiptable (<tab),<ns,.vs
+ x kiptable (<tab),<nsvs
 else. 
- x keyindexsub (<tab),<ns,.vs
+ x keyindexsub (<tab),<nsvs
 end. 
 )
 

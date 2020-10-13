@@ -59,15 +59,15 @@ if. (<NAME)e.;{:"1 SUBSCR__PARENT do. update_subscr__PARENT <NAME end. NB. mark 
 dat=: y x} dat
 )
 
+NB. fixpairs has done scalar extension
 Insert=: 3 : 0
 if. 0=#MAP do. return. end.
-t=. Tlen-countdat''
-if. t~:#y do. y=. (t,shape)$y end. 
 if. typ-:'varbyte' do.
- y=.   fixinsert fixtype y
- MAP appendmap&> y
+ 'a b'=. fixinsert fixtype y
+ appendval b
+ appenddat a
 else. 
- MAP appendmap&> <fixinsert y NB. fixinsert from type
+ appenddat fixinsert y
 end. 
 )
 

@@ -50,7 +50,13 @@ JDOK
 )
 
 jd_key=: 3 : 0
-(-.option_in) keyindex '/in 0'getopts y
+a=. '/in 0'getopts y
+ECOUNT assert 3<:#a
+tab=. ,;{.a
+FETAB=: tab
+t=. jdgl tab
+'ns vs rows'=. _2 fixpairs__t }.a
+(-.option_in) keyindex tab;,ns,.vs
 )
 
 jd_flush=: 3 : 0
