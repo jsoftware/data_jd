@@ -27,7 +27,7 @@ type init arg
 jd'droptable g'
 jd'csvrd f.csv g'
 if. csverrorcount do.
- e=. ,;1{{:csverror
+ e=. ,;1{ {:csverror
  e=. (e i.' '){.e
  flage=. ' x'{~-.val-:e
  v=. {:;{:{:jd'read /e from g'
@@ -151,7 +151,7 @@ b=. ,>1{.each<;._2 byte6s,LF
 assert a-:b
 assert 10=>{:{:jd'info summary g'
 assert 2=#jd'csvreport /errors g'
-'ECTRUNCATE'-:10{.,;2{{:jd'csvreport /errors'
+'ECTRUNCATE'-:10{.,;2{ {:jd'csvreport /errors'
 )
 
 
@@ -163,7 +163,7 @@ b=.>y{.each<;._2 byte6s,LF
 assert a-:b
 assert 10=>{:{:jd'info summary g'
 assert 2=#jd'csvreport /errors g'
-'ECTRUNCATE'-:10{.,;2{{:jd'csvreport /errors'
+'ECTRUNCATE'-:10{.,;2{ {:jd'csvreport /errors'
 )
 
 testvarbyte=: 3 : 0

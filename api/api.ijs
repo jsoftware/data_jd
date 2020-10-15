@@ -46,7 +46,7 @@ t=. (((#y)%2),2)$y
 dbpath=: 3 : 0
 i=. ({."1 DBPATHS)i.<,y
 'not a db access name'assert i<#DBPATHS
-;i{{:"1 DBPATHS
+;i{ {:"1 DBPATHS
 )
 
 jdcdef=: 3 : 0

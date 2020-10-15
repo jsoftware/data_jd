@@ -52,6 +52,7 @@ tutorial/table_table_tut.ijs
 tutorial/tablecopy_tut.ijs
 tutorial/tableinsert_tut.ijs
 tutorial/tablemove_tut.ijs
+tutorial/taxi_tut.ijs
 tutorial/update_advanced_tut.ijs
 tutorial/update_basic_tut.ijs
 tutorial/upsert_advanced_tut.ijs

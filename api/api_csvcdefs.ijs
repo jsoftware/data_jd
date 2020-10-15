@@ -24,7 +24,8 @@ elseif. CR     e. d  do. rowsep=. 'CR'   [ rs=. CR
 elseif. 1            do. assert 0['unable to determine rowsep'
 end.
 
-n=. (d i. {.rs){.d NB. first row
+n=. d{.~ 1 i.~rs E. d NB. first row - could be headers
+
 if.     TAB e. n do. colsep=. 'TAB'    [ cs=. TAB
 elseif. ',' e. n do. colsep=. ','      [ cs=. ','
 elseif. ';' e. n do. colsep=. ';'      [ cs=. ';'
@@ -49,7 +50,7 @@ else.
 end.
 
 if. optc-:'header' do.
- cnb=. jdremq_jd_ each cs strsplit_jd_ debq_jd_ n
+ cnb=. jdremq_jd_ each cs strsplit_jd_ debq_jd_ n-.CRLF
 else.
  t=. fread csvfpcnames
  cnb=. <;._2 toJ t,>(LF={:t){LF;''

@@ -45,7 +45,7 @@ jd'csvwr f.csv f'
 jd'csvrd f.csv g'
 assert (jd'reads from f')-:jd'reads from g'
 
-'b b3y '-:,;1{{:jd'info derived'
+'b b3y '-:,;1{ {:jd'info derived'
 
 bc=:  jdgl_jd_ 'f b'
 b3c=: jdgl_jd_ 'f b3'

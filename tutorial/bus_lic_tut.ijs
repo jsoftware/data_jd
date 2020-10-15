@@ -1,4 +1,3 @@
-
 0 : 0
 load Chicago business_licenses.csv - >250 MB, 35 cols, and >860e6 rows
 
@@ -43,7 +42,7 @@ jd'csvreport'
 jd'reads count ID from buslic' NB. more than 860 thousand rows
 jd'reads count:count ID by APPLICATION_TYPE from buslic'
 jd'reads first LICENSE_DESCRIPTION,count:count ID by LICENSE_CODE from buslic order by count desc'
-10{.>1{{:jd'reads first LICENSE_DESCRIPTION,count:count ID by LICENSE_CODE from buslic order by count desc'
+10{.>1{ {:jd'reads first LICENSE_DESCRIPTION,count:count ID by LICENSE_CODE from buslic order by count desc'
 jd'reads ID,APPLICATION_TYPE,LEGAL_NAME from buslic where LEGAL_NAME = "CHICAGO GAME CO"'
 d=: 'APPLICATION_TYPE'jdfrom_jd_ jd'read APPLICATION_TYPE from buslic'
 $d

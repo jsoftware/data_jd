@@ -104,7 +104,7 @@ if. (0=#dat)*.0~:#y do. ,DATAFILL return. end. NB. empty join select
 if. left do.
  NB. derive left1 from left dat
  i=. ({.dat)i.i.Tlen  NB. i:
- y{{:i{"1 dat
+ y{ {:i{"1 dat
 else. 
  y{dat
 end. 

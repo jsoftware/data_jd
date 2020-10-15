@@ -41,7 +41,8 @@ op
 csv
  csv_load
  csv_intro       
- bus_lic         
+ bus_lic  
+ taxi
  quandl_ibm      
  csv_advanced            
 demo

@@ -26,7 +26,7 @@ OLDLOGOPS_jd_=: LOGOPS_jd_
 MAXROWCOUNT_jd_=: _
 fast=. 'fast'-:y
 csvonly=. 'csv'-:y
-EXCLUDETESTS=: (<'_tut.ijs'),each~(<'tutorial/'),each 'stock_data';'bus_lic';'quandl_ibm';'jctask'
+EXCLUDETESTS=: (<'_tut.ijs'),each~(<'tutorial/'),each 'stock_data';'bus_lic';'taxi';'quandl_ibm';'jctask'
 t=. ALLTESTS=:  (tests_jd_,(testtuts_jd_))-.EXCLUDETESTS
 t=. t,~each<JDP
 if. -.IFJHS do. t=. t-.<JDP,'tutorial/jhs_tut.ijs' end.

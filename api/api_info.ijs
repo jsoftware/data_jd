@@ -122,7 +122,7 @@ infovalidate=: 3 : 0
 
 infovalidatebad=: 3 : 0
 d=.''validateclocs 1 jdclocs y
-b=. ' '~:,;2{{:d
+b=. ' '~:,;2{ {:d
 ({.d),:(<b)#each {:d
 )
 
