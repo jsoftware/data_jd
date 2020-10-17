@@ -379,7 +379,7 @@ adj =. <@I. (+|:) (=/ i.@#) _1(0})x
 NB. =========================================================
 NB. ***** QUERY *****
 NB. Perform selection and aggregate, placing the results in read
-Query =: 3 : 0
+Query=: 3 : 0
 indices =: (-. _1"0@{.)&.|: indices
 read =: (inds{indices) readselect cloc
 if. nby do. read =: nby (agg aggregate) read
@@ -388,7 +388,7 @@ end.
 )
 
 NB. aggregation
-getagg =: 1 : 0
+getagg=: 1 : 0
 if. (<u) -.@e. {."1 AGGFCNS do.
   throw 'Unrecognized aggregate function: ',u
 end.
