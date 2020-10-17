@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '4.4.85'
+VERSION=: '4.4.86'
 
 FILES=: 0 : 0
 manifest.ijs
@@ -133,6 +133,7 @@ tutorial/json_tut.ijs
 tutorial/mtm_tut.ijs
 tutorial/csv_intro_tut.ijs
 tutorial/csv_load_tut.ijs
+tutorial/taxi_tut.ijs
 csv/csv.ijs
 csv/csvinstall.ijs
 csv/csvtest.ijs
@@ -203,6 +204,7 @@ pm/pmx.ijs
 pm/replicate.ijs
 pm/csvtest.ijs
 pm/pm_insert_1.ijs
+pm/pm_read_avg_by.ijs
 types/numeric.ijs
 types/epoch.ijs
 types/byte.ijs
