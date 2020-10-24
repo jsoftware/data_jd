@@ -49,6 +49,11 @@ end.
 y
 )
 
+ifromi1=: 3 : 'n-(n<128){256 0[n=. a.i.y'
+ifromi2=: 3 : '_1 ic y'
+ifromi4=: 3 : '_2 ic y'
+
+
 coclass deftype_jdtnumeric_ 'boolean'
 DATAFILL=: 0
 DATASIZE=: 1
@@ -68,7 +73,6 @@ NB. int1 =========================================================
 coclass deftype_jdtnumeric_ 'int1'
 DATASIZE=: 1
 
-ifromi1=: 3 : 'n-(n<128){256 0[n=. a.i.y'
 i1fromi=: 3 : '((2*#y)$;ifintel{0 1;1 0)#1 ic y'
 
 ". each <;._2 qnumtxt  rplc 'dat';'(ifromi1 dat)'
@@ -120,7 +124,7 @@ select=: 3 : 0
 if. (0=#dat)*.0~:#y do.
  y{(1,shape)$DATAFILL
 else.
- _1 ic ,(,(2*y),.1+2*y){dat
+ ifromi2 ,(,(2*y),.1+2*y){dat
 end.
 )
 
@@ -153,7 +157,7 @@ select=: 3 : 0
 if. (0=#dat)*.0~:#y do.
 y{(1,shape)$DATAFILL
 else.
- _2 ic ,(,(4*y)+"0 1 i.4){dat
+ ifromi4 ,(,(4*y)+"0 1 i.4){dat
 end.
 ) 
 

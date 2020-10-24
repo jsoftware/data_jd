@@ -25,15 +25,16 @@ Read=: 3 : 0
 'sel by from where order'=. sel_parse y
 From from
 SelBy sel;by
-Where where
-t=. {:$indices
-if. MAXROWCOUNT < t do.
-  msg =. 'Asked for ',(":t),' rows; returning first ',(":MAXROWCOUNT),' (MAXROWCOUNT_jd_) rows.'
-  echo msg
-  indices =: MAXROWCOUNT {."1 indices
-end.
-Query ''
-Order order
+
+if. (1=#tnms)*.(''-:where)*.-.OP-:'readptable' do.
+ simplequery''
+ Order order
+ read=: memu each read
+else.
+ Where where
+ Query ''
+ Order order
+end. 
 
 NB. cnms has by cols before agg cols
 n=. (#cnms)-#AGG_jd_
@@ -382,6 +383,24 @@ NB. Perform selection and aggregate, placing the results in read
 Query=: 3 : 0
 indices =: (-. _1"0@{.)&.|: indices
 read =: (inds{indices) readselect cloc
+if. nby do. read =: nby (agg aggregate) read
+elseif. #;agg do. read =: agg  4 :'x getagg  y'&.>  read
+end.
+)
+
+NB. simple read with single table and empty where and not ptable
+simplequery=: 3 : 0
+read=: ''
+for_c. cloc do.
+ select. typ__c
+ case. 'autoindex' do. read=: read,<i.Tlen__c
+ case. 'varbyte'   do. read=: read,<val__c (<;.0~ ,."1) dat__c
+ case. 'int1'      do. read=: read,<ifromi1_jdtnumeric_ dat__c
+ case. 'int2'      do. read=: read,<ifromi2_jdtnumeric_ dat__c
+ case. 'int4'      do. read=: read,<ifromi4_jdtnumeric_ dat__c
+ case.             do. read=: read,<dat__c
+ end. 
+end.
 if. nby do. read =: nby (agg aggregate) read
 elseif. #;agg do. read =: agg  4 :'x getagg  y'&.>  read
 end.

@@ -34,7 +34,7 @@ benchfile=: 'bench.ijf'
 
 bld=: 3 : 0
 'new'jdadmin'ins1'
-decho 'cols rows: ',":cols,rows
+echo 'cols rows: ',":cols,rows
 d=. i.rows
 jd'createtable f'
 for_n. i.cols do.

@@ -136,19 +136,8 @@ Readr
 Modify
 )
 
-NB. =========================================================
-newqueryloc=: 3 : 0
- loc =. cocreate ''
- coinsert__loc 'jdquery'
- coinsert__loc LOCALE
- getloc__loc =: ('getloc_',(>LOCALE),'_')~
- executescript100__loc=: 0!:100
- executescript100__loc y
- loc
-)
-
-NB. =========================================================
 Reads=: ({."1 ,: [:tocolumn{:"1)@:Read
+
 Read=: 3 : 0
 loc =. cocreate ''
 coinsert__loc 'jdquery'
@@ -158,6 +147,7 @@ r=. Read__loc y
 coerase loc
 r
 )
+
 
 NB. replicate routines
 

@@ -20,8 +20,6 @@ I4MAX=: <:<.2^31
 I4MIN=: _1+-I4MAX
 I4BAD=: I4MIN
 
-MAXROWCOUNT=: _
-
 PTM=: '^'    NB. ptable filename
 
 NB. chars not allowed in Jd names because they are used as file names

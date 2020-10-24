@@ -20,7 +20,7 @@ jpm - j performance monitor - run in jconsole or Jqt
 require'jfiles'
 require'jpm'
 
-sentence=: 'reads avg fare_amount by passenger_count from yellow_tripdata'
+sentence=: 'read avg fare_amount by passenger_count from yellow_tripdata'
 
 old=: 0.316146 NB. time from before project started
 
