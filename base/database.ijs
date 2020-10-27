@@ -132,7 +132,6 @@ Insert
 Delete
 InsertCols
 DeleteCols
-Readr
 Modify
 )
 

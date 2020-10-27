@@ -398,7 +398,7 @@ for_c. cloc do.
  case. 'int1'      do. read=: read,<ifromi1_jdtnumeric_ dat__c
  case. 'int2'      do. read=: read,<ifromi2_jdtnumeric_ dat__c
  case. 'int4'      do. read=: read,<ifromi4_jdtnumeric_ dat__c
- case.             do. read=: read,<dat__c
+ case.             do. read=: read,<forcecopy dat__c NB. careful with map ref count
  end. 
 end.
 if. nby do. read =: nby (agg aggregate) read
@@ -415,11 +415,18 @@ end.
 )
 
 NB. nby (agg aggregate) res
-NB. Marshall improved version for Bogner example
+NB. aggregate by 1 col is fast because it can use ~.
 aggregate=: 1 : 0
 :
-c=. i.~|: i.~@> x{.y       NB. indices used to group columns
-((~.c)&{&.> x{.y) , u (c 1 :(':';'u (x getagg)/. y'))&.> x}.y
+if. 1=x do.
+ d=. >{.y
+ nub=. ~.d
+ c=. nub i. d
+ (<nub) , u (c 1 :(':';'u (x getagg)/. y'))&.> x}.y
+else.
+ c=. i.~|: i.~@> x{.y       NB. indices used to group columns
+ ((~.c)&{&.> x{.y) , u (c 1 :(':';'u (x getagg)/. y'))&.> x}.y
+end.
 )
 
 NB. Sort by order

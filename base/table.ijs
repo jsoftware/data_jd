@@ -150,9 +150,6 @@ bdn=. 3 : 'derived__y' "0 CHILDREN NB. derived names
 (3 : 'setderiveddirty__y 1') "0 bdn#CHILDREN NB. mark derived names dirty
 )
 
-NB. =========================================================
-NB. Read is found in read.ijs
-Readr=: getwhere
 Reads=: ({."1 ,: [:tocolumn{:"1)@:Read
 
 NB. Write table to the given csv file
