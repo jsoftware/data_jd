@@ -1,15 +1,15 @@
 NB. Copyright 2020, Jsoftware Inc.  All rights reserved.
 
 man=: 0 : 0
-   bld ''      NB. cols , rows
-   faster ''   NB. current bench'' is x % faster that original
+   bld rows,cols NB. cols , rows
+   faster ''     NB. current bench'' is x % faster that original
 
-   runpm''     NB. run test under perfmon
-   show''      NB. show perfmon results
+   runpm''       NB. run test under perfmon
+   show''        NB. show perfmon results
    
-   record'     NB. record last perfmon results in benchfile
-   seerecord'' NB. show last record in benchfile
-   seerecord 3 NB. show benchfile record 3 
+   record'       NB. record last perfmon results in benchfile
+   seerecord''   NB. show last record in benchfile
+   seerecord 3   NB. show benchfile record 3 
 
    
 jpm - j performance monitor - run in jconsole or Jqt
@@ -22,9 +22,6 @@ require'jpm'
 
 old=: 0.00152047 NB. time from before project started
 
-cols=: 50
-rows=: 300000
-newdata=: ,('c',each":each<"0 i.cols),.<23
 
 reload=: 3 : 0
 load JDP,'pm/pm_insert_1.ijs'
@@ -33,13 +30,14 @@ load JDP,'pm/pm_insert_1.ijs'
 benchfile=: 'bench.ijf'
 
 bld=: 3 : 0
+'cols rows'=: y
 'new'jdadmin'ins1'
-echo 'cols rows: ',":cols,rows
 d=. i.rows
 jd'createtable f'
 for_n. i.cols do.
  jd('createcol f ',('c',":n),' int');d
 end.
+newdata=: ,('c',each":each<"0 i.cols),.<23
 i.0 0
 )
 
@@ -47,7 +45,7 @@ bench=: 3 : 0
 100 timex 'jd''insert f'';newdata'
 )
 
-old=: 0.00152047
+old=: 0.00152047 NB. bld 50 300000
 
 faster=: 3 : '(old-bench'''')%old' NB. faster bench''
 

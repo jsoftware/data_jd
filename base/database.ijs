@@ -1,5 +1,6 @@
 NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
 coclass 'jddatabase'
+coinsert 'jdquery'
 coinsert 'jd'
 
 CLASS =: <'jddatabase'
@@ -136,16 +137,6 @@ Modify
 )
 
 Reads=: ({."1 ,: [:tocolumn{:"1)@:Read
-
-Read=: 3 : 0
-loc =. cocreate ''
-coinsert__loc 'jdquery'
-coinsert__loc LOCALE
-getloc__loc =: ('getloc_',(>LOCALE),'_')~
-r=. Read__loc y
-coerase loc
-r
-)
 
 
 NB. replicate routines

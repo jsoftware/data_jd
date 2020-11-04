@@ -4,7 +4,7 @@ man=: 0 : 0
    bld ''      NB. cols , rows
    faster ''   NB. current bench'' is x % faster that original
 
-   runpm''     NB. run test under perfmon
+   runpm y     NB. run test under perfmon
    show''      NB. show perfmon results
    
    record'     NB. record last perfmon results in benchfile
@@ -39,13 +39,14 @@ pcnt=. jd 'get yellow_tripdata passenger_count'
 
 benchfile=: 'bench.ijf'
 
-jdadmin'csvload' NB. tripdata table from jdrt
+jdadmin'taxi' NB. tripdata table from jdrt
 
 faster=: 3 : '(old-jdtx sentence)%old' NB. faster bench''
 
+NB. sentence
 runpm=: 3 : 0
 start_jpm_''
-jd sentence
+jd y
 show''
 )
 

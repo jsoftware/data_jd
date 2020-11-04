@@ -687,29 +687,6 @@ f=. getcolpath y
 f=. (f i:'/'){.f
 )
 
-NB. f name - convert byte n col to enum
-xxxcreateenum=: 3 : 0
-i=. colnames i. <y
-cn=. >i{ccnames
-en=. ename y
-fn=. (getcolpath y),'/c_',y
-fe=. (getcolpath y),'/e_',y
-r=. ".'#',cn
-e=. ".'~.',cn
-createjmf_jmf_ fe;*/$e
-csvmap en;fe
-".en,'=:e'
-n=.".en,' i. ',cn
-csvunmap <cn
-createjmf_jmf_ fn;SZI_jmf_*r
-csvmap cn;fn
-".cn,'=:n'
-coldefs=: (CI8,0 0 0)i}coldefs
-'CSVCOLS CSVTYPS CSVJDTYPS COLDEFS ROWS'=. 3!:2 fread PATHCSVFOLDER,'/info'
-t=. (<'int') (CSVCOLS i. <y)}CSVJDTYPS
-(3!:1 CSVCOLS;CSVTYPS;(<t),<coldefs) fwrite PATHCSVFOLDER,'/info' NB. map enum to JD int
-)
-
 
 options=: 3 : 0
 t=. <;._2 ' ',~deb y

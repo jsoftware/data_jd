@@ -11,7 +11,7 @@ group1=.10 8 $ 8 # a. {~ 97+(i.10)
 group1v=. group1 {~ ?. N#10
 group2=.10 4 $ 4 # a. {~ 97+(i.5)
 group2v=. group2 {~ ?. N#5
-jd Q__=: 'insert t';'a';(N#1);'b';group1v;'c';group2v;'d';group1v,.group2v
+jd'insert t';'a';(N#1);'b';group1v;'c';group2v;'d';group1v,.group2v
 
 tbc=: 6!:2 'jdresult=:jd ''reads sum a by b,c from t'''
 td=: 6!:2 'r=: jd ''reads sum a by d from t'''

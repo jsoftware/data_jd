@@ -22,6 +22,9 @@ jd_reads '/lr ',y
 )
 
 jd_reads=: 3 : 0
+NB. erase globals from last read - previously done with coerase of jdquery temporary locale
+NB. some globals left as they are used in readptable loop
+erase__dbl;:'cnms read inds' 
 if. 0~:L.y do. y=. ;y[ECOUNT assert 1=#y end.
 y=. '/lr 0 /e 0 /types 0 /table s /file s'getopts y
 if. 0~:option_table do.

@@ -391,6 +391,9 @@ end.
 NB. simple read with single table and empty where and not ptable
 simplequery=: 3 : 0
 read=: ''
+
+try.
+
 for_c. cloc do.
  select. typ__c
  case. 'autoindex' do. read=: read,<i.Tlen__c
@@ -398,11 +401,17 @@ for_c. cloc do.
  case. 'int1'      do. read=: read,<ifromi1_jdtnumeric_ dat__c
  case. 'int2'      do. read=: read,<ifromi2_jdtnumeric_ dat__c
  case. 'int4'      do. read=: read,<ifromi4_jdtnumeric_ dat__c
- case.             do. read=: read,<forcecopy dat__c NB. careful with map ref count
+ case.             do. read=: read,<dat__c
  end. 
 end.
 if. nby do. read =: nby (agg aggregate) read
 elseif. #;agg do. read =: agg  4 :'x getagg  y'&.>  read
+end.
+read=: forcecopy each read NB. careful with map ref counts
+
+catchd.
+ erase'read' NB. might have map refs 3
+ rethrow''
 end.
 )
 

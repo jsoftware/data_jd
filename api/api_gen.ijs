@@ -111,7 +111,6 @@ c=. (n$0 1) ;(a+70000);(a+15);(a+523);(a+60000);a+0.5
 b=. b,'date';'datetime';'edate';'edatetime';'edatetimem';'edatetimen';'byte';'byte 4';'varbyte'
 c=. c,(n#19551212);(n#19551212105812);(n#0);(n#0);(n#0);(n#0);(n$'abc');((n,4)$'abc');<n$'abc';'ab';'a'
 
-q__=: b
 'type problem'assert (/:~TYPES)-:/:~b-.<'byte 4'
 
 for_t. b do.
