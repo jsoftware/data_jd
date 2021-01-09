@@ -15,8 +15,8 @@ Content-Type: application/x-www-form-urlencoded
 )
 
 reload=: 3 : 0
-load JDP,'server/http_client.ijs'
-load JDP,'server/http_client_test.ijs'
+load JDP,'server/http/http_tools.ijs'
+load JDP,'server/http/http_client.ijs'
 )
 
 3 : 0''
@@ -37,20 +37,18 @@ rc=. sdconnect_jsocket_ S;AF_INET_jsocket_;'127.0.0.1';PORT
 'connect failed' assert 0=rc
 )
 
-fixconfig=: 3 : 0
-'a b'=. 2{.;:CONTEXT
-if. 'json'-:a do. in=:  jsonenc else. in=:  jbinenc  end.
-if. 'json'-:b do. out=: [       else. out=: jbindec end.
-i.0 0
-)
-
 NB. jbin jbin version
 NB. send http request and get response - must be connected and does not close
 msr=: 3 : 0
+CONTEXT msr y
+:
+'a b'=. 2{.;:x
+if. 'json'-:a do. in=:  jsonenc else. in=:  jbinenc  end.
+if. 'json'-:b do. out=: [       else. out=: jbindec end.
 try.
  if. PORT=_1 do. config''  end.
  if. S=_1    do. connect'' end.
- if. L.y do. y=. CONTEXT,(;{.y),';',in }.y else. y=. CONTEXT,y end.
+ if. L.y do. y=. CONTEXT,(;{.y),LF,in }.y else. y=. x,y end.
  snd_request (HTTP rplc'XX';":#y),CRLF,y
  out rcv_response''
 catch.
@@ -117,4 +115,26 @@ bad=. HTTP rplc'POST';'POSx'
 snd_request (bad rplc'XX';":#y),CRLF,y
 out rcv_response''
 )
+
+NB. wget
+
+NB. create post arg file for wget or curl
+wcarg=: 3 : 0
+c=. 'json json http u/p;'
+if. L.y do. a=. c,(;{.y),LF,jsonenc }.y else. a=. c,y end.
+a fwrite 'wget_post'
+)
+
+wget=: 3 : 0
+wcarg y
+spawn_jtask_ 'wget -O- -q http://127.0.0.1:65220/ --post-file wget_post > foo.txt'
+fread'foo.txt'
+)
+
+curl=: 3 : 0
+wcarg y
+spawn_jtask_ 'curl -s http://127.0.0.1:65220/ --data @wget_post > foo.txt'
+fread'foo.txt'
+)
+
 

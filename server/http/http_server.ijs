@@ -1,26 +1,12 @@
 NB. Copyright 2020, Jsoftware Inc.  All rights reserved.
 NB. stripped down from mtm sever
 
-jd_http_server_jman_=: 0 : 0
-start http server:
-   start jconsole
-   load Jd (jd or ~Jddev/jd.ijs)
-   load JDP,'server/http_server.ijs'
-   init''
-   
-start http client:
-   start jconsole
-   load'~Jddev/mtm/mtmx.ijs' or 'jd'
-   ldc''     NB. load client scipts
-   init''
-   connect''
-   msr'info summary'
-)   
+NB. see man in http_tools.ijs
 
 require'~addons/net/jcs/jcs.ijs'
 
 reload=: 3 : 0
-load JDP,'server/http_server.ijs'
+load JDP,'server/http/http_server.ijs'
 )
 
 WTIMEOUT=: 60000
@@ -32,19 +18,20 @@ srdecode_z_=: a.{~256 256 256 256 256#:]
 
 logit_z_=: 3 : 0
 'type data route'=. y
-data=. 36{.(data i. ';'){.data
+data=. 36{.(data i. LF){.data
 m=. (16{.type),' : ',data,' : ',(10{.":route),' : ',_4}._12{.isotimestamp 6!:0''
 echo m
 (m,LF) fappend LOGFILE
 )
 
 init=: 3 : 0
-'not a path to a db'assert 'database'-: fread DB,'/jdclass'
 'zmq must be version 4.1.4 or later'assert 414<:10#.version_jcs_''
-killp_jcs_''
 logit 'start http';(":BASE);0
-jdadmin DB
-logit 'database';DB;0
+for_d. DBS do.
+ d=. >d
+ jdadmin d
+ logit 'database';d;0
+end. 
 CJ=: jcssraw_jcs_ BASE
 coinsert__CJ 'jobs'
 SRS__CJ=:      '' NB. client zmqraw routes
@@ -123,7 +110,7 @@ end.
 NB. http_server runs the job right away - unlike mtm which has WJOBS q
 t=. data}.~>:data i.';'
 logit'op';t;sr
-r=. jdserver data
+r=. jds data
 addout sr;r
 )
 

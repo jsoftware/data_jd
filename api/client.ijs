@@ -15,6 +15,7 @@ jdaccess_z_=: jdaccess_jd_
 jd_z_  =:   jd_jd_
 jdae_z_=:   jdae_jd_
 jdtx_z_=:   jdtx_jd_
+jds_z_=:    jds_jd_
 jdserver_z_=:    jdserver_jd_
 
 coclass'jd'
@@ -51,8 +52,70 @@ end.
 i.0 0
 )
 
+jd_jds_jman_=: 0 : 0
+jds - similar to jd - except:
+ arg is a string (boxed data jbin/json encoded)
+ result is a jbin/json dictionary
+ jdaccess args are in context
+
+jds y
+y is a string
+context ; op [LF arg]
+ context - fin fout [dan user pswd]
+ fin  - arg encoding    - json/jbin
+ fout - result encoding - json/jbin
+ dan user pswd - not currently used and must be elided
+
+jds can be used by http and similar clients that require json/jbin strings
+jds is used by mtm (see jdrt'mtm')
+)
+
+jds=: 3 : 0
+try.
+ i=. y i. ';'
+ 'fin fout dan up'=. 4{.bdnames i{.y
+ 'bad fin' assert (<fin) e.'jbin';'json' 
+ 'bad fout'assert (<fout)e.'jbin';'json'
+ jdaccess a=. dan,' ',up,' intask'
+ NB.!!! sid -> u/p
+ a=. y}.~>:i
+ i=. a i.LF
+ b=. a}.~>:i NB. boxed part
+ opstring=. a=. i{.a
+ if. #b do.
+  select. fin
+  case. 'jbin' do. a=. a;,jbindec b
+  case. 'json' do. a=. a;,jsondec b
+  end.
+ end.
+ jdlasty_z_=: a
+ jdlast_z_=: jdx a
+ a=. jdlast
+ t=. ;{.{.a
+ if. 'Jd error'-:t do. a=. ('Jd error';'Jd extra'),.}.a
+ elseif. JDOK-:a do. a=. ,:'Jd OK';0
+ elseif. 'Jd report '-:10{.t do. a=. ,a
+ elseif. 0=*/$a do. a=. ,:'Jd empty';''
+ elseif. 0=L.a  do. a=. ,:'Jd version';a
+ end.
+ select. fout
+ case. 'jbin' do. jbinenc a
+ case. 'json' do.
+  op=. (opstring i.' '){.opstring
+  if. op-:'info' do. a=. |:a end. 
+  jsonenc a
+ end.
+catch.
+ t=. 13!:12''
+ t=. ('Jd server error';'Jd extra'),.(}.(t i.':'){.t);opstring
+ if. fout-:'jbin' do. jbinenc t else. jsonenc t end.
+end.
+)
+
 jd_jdserver_jman_=: 0 : 0
-jdserver is similar to jd - except:
+deprecated!!! - replaced by jds - LF instead of ; starts encoded data
+
+jdserver - similar to jd - except:
  arg is a string (boxed data jbin/json encoded)
  result is a jbin/json dictionary
  jdaccess args are in context

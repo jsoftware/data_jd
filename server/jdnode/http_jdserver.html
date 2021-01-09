@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html><head></head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<body><div><h2>Jd Interface</h2>
+<input type="text" id="cmd" size="40" onkeydown = "if (event.keyCode == 13) run('cmd')">
+<button type="button" id="run" onclick="run('cmd')">run</button>
+<button type="button" id="repeat" onclick="repeat()">repeat</button>
+<button type="button" id="cancel" onclick="cancel()">cancel</button>
+<textarea id="out" rows=10 cols=80></textarea><br/>
+
+<hr/>
+<button type="button" onclick="run('r0')">run</button>
+ <input type="text" id="r0" size="60" value="droptable f"><br/>
+<button type="button" onclick="run('r1')">run</button>
+ <input type="text" id="r1" size="60" value="createtable f a int,b int,c byte 3"><br/>
+<button type="button" onclick="run('r2')">run</button>
+ <input type="text" id="r2" size="60" value='insert f # [ "a",2,"b",3,"c","xyz"]'"><br/>
+<button type="button" onclick="run('r3')">run</button>
+ <input type="text" id="r3" size="60" value='insert f # [ "a",[2,3],"b",[5,6],"c",["xyz","zzz"]]'"><br/>
+<button type="button" onclick="run('r4')">run</button>
+ <input type="text" id="r4" size="60" value='read from f'"><br/>
+<button type="button" onclick="run('r5')">run</button>
+ <input type="text" id="r5" size="60" value='info summary'"><br/>
+<button type="button" onclick="run('r6')">run</button>
+ <input type="text" id="r6" size="60" value='info schema'"><br/>
+<button type="button" onclick="run('r7')">run</button>
+ <input type="text" id="r7" size="60" value=''"><br/>
+<button type="button" onclick="run('r8')">run</button>
+ <input type="text" id="r8" size="60" value=''"><br/>
+
+<hr/><button type="button" id="logon" onclick="logon()">logon</button>
+user: <input type="text" id="usr" value="u" size="6">
+pswd: <input type="text" id="pwd" value="p" size="6">
+<button type="button" id="logout" onclick="logout()">logout</button>
+ 
+<hr/>service: <input type="text" id="host" value="s1" size="6">
+</div>
+
+<script>
+var rq;    
+var busy= 0; // prevent new request until previous has completed
+var repflag= 0;
+
+function run(p)
+{
+  idvs("out","busy");
+  idvs("cmd",idv(p));
+  ajaxrun("jds="+encode(idv("host")+" "+idv("cmd")));
+}
+
+function ajaxrun(p)
+{
+ if(1==busy) {idvs("out","busy on previous request"); return;}
+ busy= 1;
+ rq= new XMLHttpRequest();
+ rq.onreadystatechange= ajax;
+ rq.open("POST","", true);
+ rq.send(p);
+}
+
+function ajax()
+{
+  if(rq.readyState==4)
+  {
+    busy= 0;
+    idvs("out",rq.responseText);
+    if(repflag) ajaxrun("jds="+encode(idv("host")+" "+idv("cmd")));
+  }
+}
+
+function logout()
+{
+  try{ajaxrun("lgx=")} catch(err) {;};
+  document.cookie = "jds_cookie=0";
+  idvs("out","logout - cookie cleared");
+}
+
+function repeat(){repflag= 1;run('cmd');}
+function logon(){ajaxrun("lgn="+encode(idv("usr")+"/"+idv("pwd")));}
+function cancel(){idvs("out","cancelled");busy= 0;repflag= 0;rq.abort();}
+function byid(id){return document.getElementById(id);}
+function idv(id){return byid(id).value;}
+function idvs(id,v){byid(id).value=v;}
+function encode(d){return(encodeURIComponent(d)).replace("/%20/g","+");}
+</script>
+</body></html>

@@ -3,6 +3,8 @@ preliminary version of jdserver - subject to change!
 )
 
 jd_jdserver_jman_
+NB. should be replaced by jds
+jd_jds_jman_
 
 'new'jdadmin'test'
 jdserver 'json json;createtable f'

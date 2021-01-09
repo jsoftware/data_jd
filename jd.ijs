@@ -13,6 +13,8 @@ git developer Jd library is ~Jddev (~config/folders.cfg)
 all use is through JDP_z_ (set when the library is loaded)
 )
 
+manlist_z_=: 3 : '>(nl_jman_''''),each<''_jman_''' NB. experimental man system
+
 coclass'jd'
 jdversion=: '4.38'
 

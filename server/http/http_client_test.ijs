@@ -1,7 +1,7 @@
 NB. Copyright 2020, Jsoftware Inc.  All rights reserved.
 NB. mtm demo tests
 
-NB. runs with json context
+CONTEXT=: 'jbin jbin http u/p;'
 
 msrx=: 3 : 0
 echo y
@@ -35,21 +35,6 @@ assert'fg'-:;;{:{: msrx'info table'
 msrx'droptable g'
 assert(,'f')-:;;{:{: msrx'info table'
 
-NB. test derived col
-msrx'createtable g'
-msrx'createcol g a byte 4'
-msrx'insert g';'a';3 4$'abcdefghijklmonop'
-msrx'createcol /dervived g b byte 2 bfroma'
-msrx'reads from g'
-msrx'insert g';'a';'zzzz'
-msrx'read from g'
-msrx'update g';'a="ijkl"';'a';'qqqq'
-msrx'read from g'
-assert 'abefqqzz'-:;;{:{: msr'read b from g'
-assert 8 2=$msr'mtm report'
-assert 'mtm stop'-:;{.{:msr'mtm stop'
-assert 'mtm error'-:;{.{:msr'info blob'
-msrx'mtm start'
 
 a=. 10 10 10 2 #i.4
 a=. a{~(#a)?#a

@@ -238,14 +238,11 @@ base/testtuts.ijs
 mtm/mtm.ijs
 mtm/mtm_man.ijs
 mtm/mtm_server.ijs
+mtm/mtm_server_tools.ijs
 mtm/json.txt
 server/jcs_server.ijs
-server/http_client.ijs
-server/http_client_test.ijs
-server/http_server.ijs
 server/jctask.ijs
 server/fork.ijs
-server/server_client_tools.ijs
 test/names_test.ijs
 test/osfna_test.ijs
 test/createcol_derived_test.ijs
