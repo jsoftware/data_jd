@@ -11,7 +11,7 @@ create .sh and .ijs scripts for starting jdnode
    create_all'tmp/jdnode';'nodejs/bin/node' NB. path_for_scripts ; path_for_node_binary
    
 start jdnode server
-   $ tmp/jdnode/jdnode.sh
+   $ tmp/jdnode/runall.sh > jdnode.out 2>&1
    
 start jds server on port 65220
    $ tmp/jdnode/jds.sh 65220
@@ -98,7 +98,8 @@ CONFIG
 NB. create shell script to run node server
 NB. y is path to node executable
 create_jdnode_sh=: 4 : 0
-t=. '#!/bin/bash',LF,'"NODEBIN" "JS" "CONFIG"' rplc 'NODEBIN';y;'JS';(JDP,'server/jdnode/jdserver.js');'CONFIG';JDP,'server/jdnode/config.js'
+x=. jpath'~/',x
+t=. '#!/bin/bash',LF,'"NODEBIN" "JS" "CONFIG"' rplc 'NODEBIN';y;'JS';(x,'jdserver.js');'CONFIG';x,'config.js'
 f=. x,'jdnode.sh'
 r=. t fwrite f
 shell'chmod +x "',f,'"'
@@ -110,6 +111,23 @@ t=. '#!/bin/bash',LF,'"BINPATH/jconsole" "SCRIPT"' rplc 'BINPATH';(jpath'~bin');
 f=. x,'jds.sh'
 t fwrite f
 shell'chmod +x ',f
+)
+
+all=: 0 : 0
+#!/bin/bash
+fuser -s -k -n tcp 3000 65220 65221
+nohup tmp/jdnode/jdnode.sh    &
+nohup tmp/jdnode/jds.sh 65220 &
+nohup tmp/jdnode/jds.sh 65221 &
+)
+
+
+copy_source=: 3 : 0
+n=. 'jdserver.js';'jds.js';'config.js';'http_jdserver.html'
+d=. fread each (<JDP,'server/jdnode/'),each n
+'bad file name'assert -.;_1-:each d
+d fwrite each (<y),each n
+i.0 0
 )
 
 NB. y is folder to hold .sh and .ijs node scripts
@@ -124,4 +142,12 @@ p create_jdnode_sh nodebin
 p create_http_server JDP;65220;0;'~temp/65220.txt';'a,b'
 p create_http_server JDP;65221;0;'~temp/65221.txt';'c,d'
 p create_jds ''
+
+all fwrite p,'runall.sh'
+shell'chmod +x ',p,'runall.sh'
+
+(fread JDP,'server/jdnode/cert.napem') fwrite p,'cert.pem'
+(fread JDP,'server/jdnode/key.napem') fwrite p,'key.pem'
+
+copy_source p
 )

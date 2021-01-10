@@ -1,8 +1,8 @@
 // node jdserver config
 
-exports.port= 3000; // port to server
+exports.port= 3000; // port to serve
 
-exports.keypath= "/home/eric/git/addons/data/jd/server/jdnode/" // path to cert.pem and key.pem
+exports.keypath= "/home/eric/tmp/jdnode/" // path to cert.pem and key.pem
 
 // services provided: name,host,port,dan
 exports.svc= 
