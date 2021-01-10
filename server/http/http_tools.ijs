@@ -98,7 +98,7 @@ CONFIG
 NB. create shell script to run node server
 NB. y is path to node executable
 create_jdnode_sh=: 4 : 0
-t=. '#!/bin/bash',LF,'"NODEBIN" JS "CONFIG"' rplc 'NODEBIN';y;'JS';(JDP,'server/jdnode/jdserver.js');'CONFIG';JDP,'server/jdnode/config.js'
+t=. '#!/bin/bash',LF,'"NODEBIN" "JS" "CONFIG"' rplc 'NODEBIN';y;'JS';(JDP,'server/jdnode/jdserver.js');'CONFIG';JDP,'server/jdnode/config.js'
 f=. x,'jdnode.sh'
 r=. t fwrite f
 shell'chmod +x "',f,'"'
@@ -116,6 +116,7 @@ NB. y is folder to hold .sh and .ijs node scripts
 NB. 'tmp/jdnode';'nodejs/bin/node'
 create_all=: 3 : 0
 'p nodebin'=. y
+'node binary not found'assert fexist nodebin
 p=. jpath p,'/'#~'/'~:{:y
 mkdir_j_ p
 'needs work to run in windows'assert -.'Win'-:UNAME
