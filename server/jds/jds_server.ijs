@@ -1,13 +1,7 @@
 NB. Copyright 2020, Jsoftware Inc.  All rights reserved.
 NB. stripped down from mtm sever
 
-NB. see man in http_tools.ijs
-
 require'~addons/net/jcs/jcs.ijs'
-
-reload=: 3 : 0
-load JDP,'server/http/http_server.ijs'
-)
 
 WTIMEOUT=: 60000
 SHUTDOWN=: 0 NB. mtm shutdown sets to stop serving new or queue requests
@@ -15,21 +9,19 @@ SHUTDOWN=: 0 NB. mtm shutdown sets to stop serving new or queue requests
 srcode_z_=:   256#.a.i.]
 srdecode_z_=: a.{~256 256 256 256 256#:]
 
-
 logit_z_=: 3 : 0
 'type data route'=. y
 data=. 36{.(data i. LF){.data
 m=. (16{.type),' : ',data,' : ',(10{.":route),' : ',_4}._12{.isotimestamp 6!:0''
-echo m
 (m,LF) fappend LOGFILE
 )
 
 init=: 3 : 0
 'zmq must be version 4.1.4 or later'assert 414<:10#.version_jcs_''
-logit 'start http';(":BASE);0
+logit 'start jds';(":BASE);0
 for_d. DBS do.
- d=. >d
- jdadmin d
+ d=. adminp_jd_ >d NB. path to DB folder
+ if. fexist d do. jdadmin d else. 'new' jdadmin d end.
  logit 'database';d;0
 end. 
 CJ=: jcssraw_jcs_ BASE

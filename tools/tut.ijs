@@ -51,7 +51,9 @@ demo
  sed             
  vr              
 server
- jcs             
+ jcs
+ jds
+ jds_client
  jhs
  jdserver
  mtm

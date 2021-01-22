@@ -1,115 +1,60 @@
-NB. tutorial on using node (nodejs) as a https server for jds
-
 0 : 0
-this tutorial helps you set up a poc (proof of concept) nodejs server
-that provides client browser access to Jd
+how to use node (nodejs) as an https server for Jd jds
 
-node (node js) is an https server implemented in javascript
-jdnode is a node application that provides client https access to jconsle tasks running Jd
+helps you set up a poc (proof of concept) node server
+ that provides client browser https access to Jd
+
+if node is not already installed, you need to install if before you proceed
+ https://nodejs.org and download and install as required
+
+node https server requires certificate for https
+ the poc provides a self-signed certificate that you can use to get a guick start
+ this will require exception permission when you first browse the page
+ the included self-signed certificate was built with:
+  https://nodejs.org/en/knowledge/HTTP/servers/how-to-create-a-HTTPS-server/
+
+the poc demonstration has 4 host tasks:
+ 1. nodejs engine binary (downloaded and installed as above)
+ 2. Jd jds task serving port 65220
+ 3. Jd jds task serving port 65221
+ 4. broswer https:localhost:3000
+
+ host shell and ijs scripts are created to make it easier to work with these tasks
 )
 
-0 : 0
-if nodejs is not already installed, you need to install if before you can run jdnode
+require JDP,'server/node/node_tools.ijs'
 
-browse to https://nodejs.org and download and install as required
-)
+NODEBIN=: 'nodejs/bin/node' NB. you will probably need to change this!
+'must exist' assert fexist NODEBIN
+shell_jtask_ NODEBIN,' --version'
 
+PORT=: 3000 NB. port served by node application - hardwired in config.js file
+spath=: '~temp/jdserver'
+[path=: create_node spath;PORT;NODEBIN
+dir path
 
-load JDP,'server/http/http_tools.ijs'
+fread path,'/run.sh'  NB. script to run node app
+fread path,'/run.txt' NB. fork_jtask arg to run node app server
 
-0 : 0
-the poc demonstration requires several host terminal tasks to be run:
-
-1. $ node_binary jd_node_application
-2. $ jconsole jds_port_62320_server
-3. $ jcossole jds_port_62221_server
-4. broswer https:localhost:3000
-)
-
-0 : 0
-several host shell scripts and ijs scripts are created to make it easier to work with the different host task
-
-these scripts are created in the folder of your choice
- it could be in your J ~temp folder, but a shorter name can be more convenient (e.g. ~/tmp/jdnode)
-)
-
-'windows needs work'assert -.'Win'-:UNAME
-
-tmppath=: 'tmp/jdnode'      NB. you may want to change this!
-nodebin=: 'nodejs/bin/node' NB. you will probably need to change this!
-
-create_all tmppath;nodebin
-
-dir tmppath
+fork_jtask_ fread path,'/run.txt' NB. start node jds app server on port 3000
+fread path,'/logstd.log' NB. stdout/stderr from the server
 
 0 : 0
-start the nodejs jdnode application
+server configured to use a self-signed certificate (cert.pem and key.pem)
+when you first browse to the page you will have to accept this certificate
+ 
+most things in the appliation won't work as the Jd servers are probably not running
 
-start a terminal task
-... $ tmp/jdnode.sh
-
-reports that a Server has been started for port 3000
-server actions will be logged to this window
-)
-
-0 : 0
 browse to https://localhost:3000
-
-play with the page, but not much will work as there are no Jd jds servers
 )
 
-0 : 0
-start Jd jds server on port 65220
+NB. next steps start jds servers on ports 65220 and 65221
+NB. errors in the following indicate you need to run tutorial jds to setup the servers
+fork_jtask_ fread spath,'/jds/65220/run.txt'
+fread spath,'/jds/65220/logstd.log'
 
-start a terminal task
-... $ tmp/jdnode/jds.sh 65220
+fork_jtask_ fread spath,'/jds/65221/run.txt'
+fread spath,'/jds/65221/logstd.log'
 
-reports that a Jd server on port 65220 has access to databases a and b
-jds actions are logged to this window
-)
-
-0 : 0
-play with the browser page
-)
-
-0 : 0
-browser page change service to s2 and note that the jd ops now access a different database in the same server
-)
-
-0 : 0
-browser page change service to s3 and note that the jd ops now access a server that is not running
-)
-
-0 : 0
-start Jd jds server on port 65221
-
-start a terminal task
-... $ tmp/jdnode/jds.sh 65221
-
-reports that a Jd server on port 652201 as access to databases c and d
-jds actions are logged to this window
-)
-
-0 : 0
-note that browser page can now access s3 databases
-)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+NB. play with the brower application - you should now see interactions with Jd
 

@@ -35,8 +35,8 @@ for (i = 0; i < svc.length; i++)
 }
 
 const options = {
-  key: fs.readFileSync(conf.keypath+'key.pem'),
-  cert: fs.readFileSync(conf.keypath+'cert.pem')
+  key: fs.readFileSync(__dirname+'/key.pem'),
+  cert: fs.readFileSync(__dirname+'/cert.pem')
 };
 
 var token= []; // cookie token for u/p lookup

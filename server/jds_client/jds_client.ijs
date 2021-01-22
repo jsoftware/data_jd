@@ -1,26 +1,32 @@
 NB. Copyright 2019, Jsoftware Inc.  All rights reserved.
-NB. mtm jbin/jbin client example
-NB. mtm client - normal socket connection to mtm server ZMQ_STREAM socket
+NB. post request is built from: host port fin fout dan u/p ; string LF boxed
 
 require'socket'
 require'convert/pjson'
 
-HTTP=: 0 : 0 rplc LF;CRLF
-POST /fubar HTTP/1.1
-Host: 127.0.0.1:65220
-User-Agent: curl/7.47.0
-Accept: */*
-Content-Length: XX
-Content-Type: application/x-www-form-urlencoded
-)
-
-reload=: 3 : 0
-load JDP,'server/http/http_tools.ijs'
-load JDP,'server/http/http_client.ijs'
-)
-
 3 : 0''
 if. _1=nc<'S' do. PORT=: S=: _1 end.
+)
+
+NB. 'localhost';65220;'jbin';'jbin';'a';'u/p' 
+jds_client_config=: 3 : 0
+'HOST PORT FIN FOUT DAN UP'=: y
+SPORT=: ":PORT
+TIMEOUT=: 20000
+BUFSIZE=: 50000
+close''
+if. 'json'-:FIN  do. in=:  jsonenc else. in=:  jbinenc  end.
+if. 'json'-:FOUT do. out=: [       else. out=: jbindec end.
+i.0 0
+)
+
+HTTP=: 0 : 0 rplc LF;CRLF
+POST / HTTP/1.1
+Host: IPAD:PORT
+User-Agent: j_jd_msr
+Accept: */*
+Content-Length: XXX
+Content-Type: application/x-www-form-urlencoded
 )
 
 jbinenc_z_=: 3 !: 1
@@ -37,23 +43,23 @@ rc=. sdconnect_jsocket_ S;AF_INET_jsocket_;'127.0.0.1';PORT
 'connect failed' assert 0=rc
 )
 
-NB. jbin jbin version
+NB. build http request
+msx=: 3 : 0 
+c=. FIN,' ',FOUT,' ',DAN,' ',UP,';'
+if. 0=L.y do. c=. c,y else. c=. c,(;{.y),LF,in }.y end.
+(HTTP rplc 'IPAD';HOST;'PORT';SPORT;'XXX';":#c),CRLF,c
+)
+
 NB. send http request and get response - must be connected and does not close
 msr=: 3 : 0
-CONTEXT msr y
-:
-'a b'=. 2{.;:x
-if. 'json'-:a do. in=:  jsonenc else. in=:  jbinenc  end.
-if. 'json'-:b do. out=: [       else. out=: jbindec end.
+'run jds_client_config to set PORT'assert _1~:PORT
 try.
- if. PORT=_1 do. config''  end.
- if. S=_1    do. connect'' end.
- if. L.y do. y=. CONTEXT,(;{.y),LF,in }.y else. y=. x,y end.
- snd_request (HTTP rplc'XX';":#y),CRLF,y
+ if. S=_1 do. connect'' end.
+ snd_request msx y
  out rcv_response''
 catch.
  close''
- 'failed'assert 0
+ (13!:12'')assert 0
 end.
 )
 
@@ -116,25 +122,38 @@ snd_request (bad rplc'XX';":#y),CRLF,y
 out rcv_response''
 )
 
-NB. wget
+NB. wget/curl
+
+POSTFILE=:   jpath'~temp/postfile'
+POSTRESULT=: jpath'~temp/postresult'
 
 NB. create post arg file for wget or curl
 wcarg=: 3 : 0
-c=. 'json json http u/p;'
+c=. 'json json ',DAN,' ',UP,';'
 if. L.y do. a=. c,(;{.y),LF,jsonenc }.y else. a=. c,y end.
-a fwrite 'wget_post'
+a fwrite POSTFILE
+)
+
+wgetx=: 3 : 0
+wcarg y
+t=. 'wget -O- -q http://HOST:PORT/ --post-file "POSTFILE" > "POSTRESULT"'
+t rplc 'HOST';HOST;'PORT';SPORT;'POSTFILE';POSTFILE;'POSTRESULT';POSTRESULT
 )
 
 wget=: 3 : 0
+spawn_jtask_ wgetx y
+fread POSTRESULT
+)
+
+curlx=: 3 : 0
 wcarg y
-spawn_jtask_ 'wget -O- -q http://127.0.0.1:65220/ --post-file wget_post > foo.txt'
-fread'foo.txt'
+t=. 'curl -s http://HOST:PORT/ --data @"POSTFILE" > "POSTRESULT"'
+t rplc 'HOST';HOST;'PORT';SPORT;'POSTFILE';POSTFILE;'POSTRESULT';POSTRESULT
 )
 
 curl=: 3 : 0
-wcarg y
-spawn_jtask_ 'curl -s http://127.0.0.1:65220/ --data @wget_post > foo.txt'
-fread'foo.txt'
+spawn_jtask_ curlx y
+fread POSTRESULT
 )
 
 
