@@ -1,20 +1,7 @@
 NB. Copyright 2020, Jsoftware Inc.  All rights reserved.
 NB.    jdrt'jds'
 
-pidfromport=: 3 : 0
-select. UNAME
-case. 'Linux' do.
- _1 ". ": shell_jtask_ :: _1: 'fuser -n tcp ',":y
-case. 'Win' do.
- _1 ". ": shell_jtask_ :: _1: 'for /f "tokens=5" %a in (''netstat -aon ^| find ":',(":y),'" ^| find "LISTENING"'') do echo %a'
-case. 'Darwin' do.
-end.
-)
-
-killport=: 3 : 0
-if. _1=pid=. pidfromport y do. 0 return. end.
-1[shell_jtask_'kill ',":pid
-)
+require JDP,'server/port.ijs'
 
 jdsfork=: 3 : 0
 fork_jtask_ fread y,('/'#~'/'~:{:y),'run.txt'
@@ -57,10 +44,12 @@ case. 'Linux' do.
 
 case. 'Win' do.
  t=. 'for /f "tokens=5" %%a in (''netstat -aon ^| find ":',sport,'" ^| find "LISTENING"'') do taskkill /f /pid %%a' 
- t=. t,LF,('/';'\')rplc~'"BINPATH/jconsole" "SCRIPT"' rplc 'BINPATH';(jpath'~bin');'SCRIPT';f,'run.ijs'
+ t=. t,LF
+ 
+ t=. ('/';'\')rplc~'"BINPATH/jconsole" "SCRIPT"' rplc 'BINPATH';(jpath'~bin');'SCRIPT';f,'run.ijs'
  t fwrite f,'run.bat'
   
- cmd=. ('"PATHrun.sh" > "LOG" 2>&1') rplc 'PATH';f;'LOG';logstd
+ cmd=. ('"PATHrun.bat" > "LOG" 2>&1') rplc 'PATH';f;'LOG';logstd
  (cmd rplc '/';'\') fwrite f,'run.txt'
 
 

@@ -9,13 +9,14 @@ NB. server init does jdadmin for each db - 'new'jdadmin if db does not exist
 
 spath=: '~temp/jdserver' NB. path to server folders
 [path=: create_jds spath;PORT;LOGLEVEL;DBS
+run_sh_bat=: ;('Win'-:UNAME){'run.sh';'run.bat'
 dir path
-fread path,'run.ijs' NB. ijs script to start this server
-fread path,'run.sh'  NB. host shell script to run this server
-fread path,'run.txt' NB. fork_jtask_ arg to start this server
+fread path,'run.ijs'  NB. ijs script to start this server
+fread path,run_sh_bat NB. host shell script to run this server
+fread path,'run.txt'  NB. fork_jtask_ arg to start this server
 
 NB. next step kills previous task on port
-fork_jtask_ fread path,'run.txt' NB. start new server
+jdsfork path
 6!:3[0.5 NB. give task a chance to get started
 
 pidfromport PORT NB. pid of server task - _1 if start failed
