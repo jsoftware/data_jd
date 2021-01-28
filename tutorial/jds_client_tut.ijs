@@ -3,11 +3,25 @@ accessing a jds server from J/wget/curl
    jdrt'jds' NB. prerequisite tutorial
 )
 
-NB. error in next line indicates server not set up and you need to first run tutorial jds
-fork_jtask_ fread '~temp/jdserver/jds/65220/run.txt' NB. start server set up by jds tutorial
-
 load JDP,'server/jds_client/jds_client.ijs'
-jds_client_config 'localhost';65220;'jbin';'jbin';'jds_db_a';'u/p'
+load JDP,'server/port.ijs'
+
+PORT=: 65220 NB. port with jds service
+
+checkserver=: 3 : 0
+if. _1~:pidfromport PORT do. 'server already running' return. end.
+f=. '~temp/jdserver/jds/65220/run.txt'
+'run jdrt''jds'' first to set up server'assert fexist f
+fork_jtask_ fread f NB. start server set up by jds tutorial
+6!:3[0.2 NB. give task a chance to get started
+'server failed to start' assert _1~:PORT=pidfromport PORT
+'server has been started'
+)
+
+checkserver''
+
+NB. config client to use server
+jds_client_config 'localhost';PORT;'jbin';'jbin';'jds_db_a';'u/p'
 
 msx'info summary' NB. http data to send to jds server
 msr'info summary'

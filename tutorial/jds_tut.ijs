@@ -15,16 +15,16 @@ fread path,'run.ijs'  NB. ijs script to start this server
 fread path,run_sh_bat NB. host shell script to run this server
 fread path,'run.txt'  NB. fork_jtask_ arg to start this server
 
-NB. next step kills previous task on port
-jdsfork path
-6!:3[0.5 NB. give task a chance to get started
-
+killport PORT NB. kill task (if any) serving port
+fork_jtask_ fread path,'run.txt' NB. start jds server on port 
+i.0 0[6!:3[0.2 NB. give task a chance to get started
 pidfromport PORT NB. pid of server task - _1 if start failed
 fread path,'logstd.log' NB. stdout/stderr log
 fread path,'log.log'    NB. event log
 killport PORT NB. kill the server
 
-create_jds spath;65221;LOGLEVEL;'jds_db_c,jds_db_d' NB. setup 65221 server for use by node tutorial
+NB. setup 65221 server for use by node tutorial
+create_jds spath;65221;LOGLEVEL;'jds_db_c,jds_db_d'
 
 0 : 0
    jdrt'jds_client' NB. how a client can use a server

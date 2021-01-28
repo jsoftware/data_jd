@@ -12,20 +12,19 @@ case. 'Darwin' do.
 end.
 )
 
-killport=: 3 : 0
-if. _1=pid=. pidfromport y do. 0 return. end.
-spid=: ":pid
+killport=: 3 : 0 
+'must be single port'assert 1=#y
+spid=: ":pidfromport y
 select. UNAME
-case. 'Win' do.
- shell_jtask_'taskkill /f /pid ',spid
-case. do.
- 1[shell_jtask_'kill ',spid
+ case. 'Win' do. shell_jtask_'taskkill /f /pid ',spid
+ case. do. shell_jtask_'kill ',spid
 end.
+''
 )
 
 NB. from jcs.ijs
-servers=: 3 : 0
-p=. ;(y-:''){y;PORTS
+pidfromport=: 3 : 0
+p=. y
 select. UNAME
 case. 'Linux' do.
  t=. jpath'~temp/fuser.txt'
@@ -52,13 +51,12 @@ case. 'Darwin' do.
  d=. (({."1 d) e. p)#d
 case. 'Win' do.
  d=.  CR-.~each deb each <;._2 shell'netstat -ano -p tcp'
- b=. ;(<'TCP')-:each 3{.each d
- d=. b#d
+ b=. d#~;(<'TCP')-:each 3{.each d
  d=. ><;._2 each d,each' '
- d=. ( (<'LISTENING')=3{"1 d )#d
+ d=. d#~(<'LISTENING')=3{"1 d
  a=. 1{"1 d
  a=. ;0".each(>:;a i: each':')}.each a
  d=. ;0".each 4{"1 d
- d=. (a i. p){d,_1
+ (a i. p){d,_1
 end.
 )
