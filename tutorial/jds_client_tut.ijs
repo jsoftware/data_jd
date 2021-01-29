@@ -8,19 +8,16 @@ load JDP,'server/port.ijs'
 
 PORT=: 65220 NB. port with jds service
 
-checkserver=: 3 : 0
-if. _1~:pidfromport PORT do. 'server already running' return. end.
-f=. '~temp/jdserver/jds/65220/run.txt'
-'run jdrt''jds'' first to set up server'assert fexist f
-fork_jtask_ fread f NB. start server set up by jds tutorial
-6!:3[0.2 NB. give task a chance to get started
-'server failed to start' assert _1~:PORT=pidfromport PORT
-'server has been started'
+check_jds PORT
+
+0 : 0
+config client to use server
+ host port fin fout dan u/p
+ fin  is format for input arrays - json or jbin (3!:2)
+ fout is format for outut arrays - json or jbin
+ dan  is data access name (jdaccess)
+ u/p  is user/pswd
 )
-
-checkserver''
-
-NB. config client to use server
 jds_client_config 'localhost';PORT;'jbin';'jbin';'jds_db_a';'u/p'
 
 msx'info summary' NB. http data to send to jds server
@@ -43,6 +40,14 @@ start jconsole
    jds_client_config 'localhost';65220;'jbin';'jbin';'jds_db_a';'u/p'
    msr'read from f'
 )
+
+NB. change fin/fout to json
+jds_client_config 'localhost';PORT;'json';'json';'jds_db_a';'u/p'
+
+msr'read from f'
+[d=. jsonenc 'a';7 8 9
+msr'insert f';d
+msr'read from f'
 
 NB. the jds server can be accessed by tools such as wget and curl
 

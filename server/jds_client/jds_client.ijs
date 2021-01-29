@@ -124,8 +124,8 @@ out rcv_response''
 
 NB. wget/curl
 
-POSTFILE=:   jpath'~temp/postfile'
-POSTRESULT=: jpath'~temp/postresult'
+POSTFILE=:   hostpathsep jpath'~temp/postfile'
+POSTRESULT=: hostpathsep jpath'~temp/postresult'
 
 NB. create post arg file for wget or curl
 wcarg=: 3 : 0
@@ -136,7 +136,9 @@ a fwrite POSTFILE
 
 wgetx=: 3 : 0
 wcarg y
-t=. 'wget -O- -q http://HOST:PORT/ --post-file "POSTFILE" > "POSTRESULT"'
+'macos - use curl instead of wget'assert -.UNAME-:'Darwin'
+t=. ;(UNAME-:'Win'){'wget';hostpathsep jpath'~tools/ftp/wget'
+t=. t,' -O- -q http://HOST:PORT/ --post-file "POSTFILE" > "POSTRESULT"'
 t rplc 'HOST';HOST;'PORT';SPORT;'POSTFILE';POSTFILE;'POSTRESULT';POSTRESULT
 )
 

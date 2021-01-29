@@ -8,6 +8,7 @@ DBS=: 'jds_db_a,jds_db_b' NB. list of dbs to jdadmin - "s around as required
 NB. server init does jdadmin for each db - 'new'jdadmin if db does not exist
 
 spath=: '~temp/jdserver' NB. path to server folders
+NB. next step creates scripts for managing the jds server on PORT
 [path=: create_jds spath;PORT;LOGLEVEL;DBS
 run_sh_bat=: ;('Win'-:UNAME){'run.sh';'run.bat'
 dir path
