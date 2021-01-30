@@ -28,7 +28,7 @@ t=. jds_server_config_template rplc '<JDP>';JDP;'<PORT>';sport;'<LOG>';(":loglev
 t fwrite f,'run.ijs'
 
 select. UNAME
-case. 'Linux';'Darwin' do. NB. macos does not have setsid - use nohup
+case. 'Linux';'Darwin' do.
  t=. '#!/bin/bash',LF
  t=. t,'"BINPATH/jconsole" "SCRIPT"' rplc 'BINPATH';(jpath'~bin');'SCRIPT';f,'run.ijs'
  t fwrite f,'/run.sh'

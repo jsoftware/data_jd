@@ -23,7 +23,7 @@ NB. create cert.pem and key.pem - mangled to avoid github warning
 ((fread JDP,'server/node/key.napem') rplc 'XXXXXX';'RSA PRIVATE KEY') fwrite p,'key.pem'
 
 NB. create run.txt - fork_jtask arg
-('setsid "PATH/run.sh" > "LOG" 2>&1 &' rplc 'PATH';p;'LOG';p,'logstd.log') fwrite p,'run.txt'
+('nohup "PATH/run.sh" > "LOG" 2>&1' rplc 'PATH';p;'LOG';p,'logstd.log') fwrite p,'run.txt'
 
 NB. copy node js source files
 n=. 'jdserver.js';'jds.js';'config.js';'http_jdserver.html'
