@@ -1,55 +1,21 @@
 NB. Copyright 2020, Jsoftware Inc.  All rights reserved.
 NB. port/pid tools
 
-pidfromport=: 3 : 0
-select. UNAME
-case. 'Linux' do.
- _1 ". ": shell_jtask_ :: _1: 'fuser -n tcp ',":y
-case. 'Win' do.
- p=. _1 ". ": shell_jtask_ :: _1: 'for /f "tokens=5" %a in (''netstat -aon ^| find ":',(":y),'" ^| find "LISTENING"'') do echo %a'
- p-._1
-case. 'Darwin' do.
-end.
-)
-
 killport=: 3 : 0 
 'must be single port'assert 1=#y
-spid=: ":pidfromport y
-select. UNAME
- case. 'Win' do. shell_jtask_'taskkill /f /pid ',spid
- case. do. shell_jtask_'kill ',spid
-end.
-''
+pid=: pidfromport y
+if. _1~:pid do. 
+ select. UNAME
+  case. 'Win' do. shell_jtask_'taskkill /f /pid ',":pid
+  case. do. shell_jtask_'kill ',":pid
+ end.
+end. 
+i.0 0
 )
 
-NB. from jcs.ijs
-pidfromport=: 3 : 0
-p=. y
-select. UNAME
-case. 'Linux' do.
- t=. jpath'~temp/fuser.txt'
- try.
-  d=. 2!:1'fuser -n tcp ',(":p),' > "',t,'" 2>&1'
- catch.
-  0 2$0
-  return.
- end.
- d=. fread t
- d=. d-. '/tcp:'
- d=. d rplc LF,' '
- d=. 0".d
- d=. (2,~2%~#d)$d
-case. 'Darwin' do.
- d=. <;._2 [ 2!:0 'netstat -anv'
- b=. ;(<'tcp')-:each 3{.each d
- d=. deb each b#d
- d=. ><;._2 each d,each' '
- d=. ( (<'LISTEN')=5{"1 d )#d
- a=. 3{"1 d
- a=. ;0".each(>:;a i: each'.')}.each a
- d=. a,.;0".each 8{"1 d
- d=. (({."1 d) e. p)#d
-case. 'Win' do.
+NB. pids,.ports
+pidport=: 3 : 0
+if. UNAME-:'Win' do.
  d=.  CR-.~each deb each <;._2 shell'netstat -ano -p tcp'
  b=. d#~;(<'TCP')-:each 3{.each d
  d=. ><;._2 each d,each' '
@@ -57,8 +23,20 @@ case. 'Win' do.
  a=. 1{"1 d
  a=. ;0".each(>:;a i: each':')}.each a
  d=. ;0".each 4{"1 d
- (a i. p){d,_1
+ d,:a
+else.
+ d=. <;._2 shell_jtask_'lsof -F pn -s TCP:LISTEN -i TCP'
+ d=. (3,~<.3%~#d)$d
+ pids=. ;_1".each}.each{."1 d
+ a=. {:"1 d
+ ports=. ;_1".each a}.~each >:;a i: each':'
+ pids,:ports
 end.
+)
+
+pidfromport=: 3 : 0
+'pid port'=. pidport''
+(port i. y){pid,_1
 )
 
 NB. check if jds server y is running and start it if not

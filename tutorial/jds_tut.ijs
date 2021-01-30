@@ -19,6 +19,7 @@ fread path,'run.txt'  NB. fork_jtask_ arg to start this server
 killport PORT NB. kill task (if any) serving port
 fork_jtask_ fread path,'run.txt' NB. start jds server on port 
 i.0 0[6!:3[0.2 NB. give task a chance to get started
+pidport'' NB. table of pids and ports
 pidfromport PORT NB. pid of server task - _1 if start failed
 fread path,'logstd.log' NB. stdout/stderr log
 fread path,'log.log'    NB. event log
