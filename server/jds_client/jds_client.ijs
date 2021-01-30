@@ -3,6 +3,7 @@ NB. post request is built from: host port fin fout dan u/p ; string LF boxed
 
 require'socket'
 require'convert/pjson'
+load JDP,'server/port.ijs'
 
 3 : 0''
 if. _1=nc<'S' do. PORT=: S=: _1 end.
@@ -125,7 +126,6 @@ out rcv_response''
 NB. wget/curl
 
 POSTFILE=:   hostpathsep jpath'~temp/postfile'
-POSTRESULT=: hostpathsep jpath'~temp/postresult'
 
 NB. create post arg file for wget or curl
 wcarg=: 3 : 0
@@ -138,24 +138,16 @@ wgetx=: 3 : 0
 wcarg y
 'macos - use curl instead of wget'assert -.UNAME-:'Darwin'
 t=. ;(UNAME-:'Win'){'wget';hostpathsep jpath'~tools/ftp/wget'
-t=. t,' -O- -q http://HOST:PORT/ --post-file "POSTFILE" > "POSTRESULT"'
-t rplc 'HOST';HOST;'PORT';SPORT;'POSTFILE';POSTFILE;'POSTRESULT';POSTRESULT
+t=. t,' -O- -q http://HOST:PORT/ --post-file "POSTFILE"'
+t rplc 'HOST';HOST;'PORT';SPORT;'POSTFILE';POSTFILE
 )
 
-wget=: 3 : 0
-spawn_jtask_ wgetx y
-fread POSTRESULT
-)
+wget=: 3 : 'shell_jtask_ wgetx y'
 
 curlx=: 3 : 0
 wcarg y
-t=. 'curl -s http://HOST:PORT/ --data @"POSTFILE" > "POSTRESULT"'
-t rplc 'HOST';HOST;'PORT';SPORT;'POSTFILE';POSTFILE;'POSTRESULT';POSTRESULT
+t=. 'curl -s http://HOST:PORT/ --data @"POSTFILE"'
+t rplc 'HOST';HOST;'PORT';SPORT;'POSTFILE';POSTFILE
 )
 
-curl=: 3 : 0
-spawn_jtask_ curlx y
-fread POSTRESULT
-)
-
-
+curl=: 3 : 'shell_jtask_ curlx y'

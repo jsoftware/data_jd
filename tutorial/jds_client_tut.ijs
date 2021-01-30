@@ -4,19 +4,18 @@ accessing a jds server from J/wget/curl
 )
 
 load JDP,'server/jds_client/jds_client.ijs'
-load JDP,'server/port.ijs'
+
 
 PORT=: 65220 NB. port with jds service
 
 check_jds PORT
 
 0 : 0
-config client to use server
- host port fin fout dan u/p
- fin  is format for input arrays - json or jbin (3!:2)
- fout is format for outut arrays - json or jbin
- dan  is data access name (jdaccess)
- u/p  is user/pswd
+config client to use server:  host port fin fout dan u/p
+ fin  - format for input arrays - json or jbin (3!:1)
+ fout - format for outut arrays - json or jbin
+ dan  - data access name (jdaccess)
+ u/p  - user/pswd
 )
 jds_client_config 'localhost';PORT;'jbin';'jbin';'jds_db_a';'u/p'
 
@@ -43,18 +42,16 @@ start jconsole
 
 NB. change fin/fout to json
 jds_client_config 'localhost';PORT;'json';'json';'jds_db_a';'u/p'
+msr'info schema'
+msr'read from f'
+msr'insert f';'a';5 4 3 NB. data is sent to jds server in json format
+msr'read from f'
 
-msr'read from f'
-[d=. jsonenc 'a';7 8 9
-msr'insert f';d
-msr'read from f'
 
 NB. the jds server can be accessed by tools such as wget and curl
-
 wgetx'read from f' NB. host command that will be run
 wget 'read from f'
 wget 'insert f';'a';999 888 777
-fread POSTFILE NB. note json encoding of pairs
 
 wget'read from f'
 
