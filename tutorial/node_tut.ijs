@@ -8,7 +8,7 @@ if node is not already installed, you need to install if before you proceed
  https://nodejs.org and download and install as required
 
 node https server requires certificate for https
- the poc provides a self-signed certificate that you can use to get a guick start
+ the poc provides a self-signed certificate that you can use for a quick start
  this will require exception permission when you first browse the page
  the included self-signed certificate was built with:
   https://nodejs.org/en/knowledge/HTTP/servers/how-to-create-a-HTTPS-server/
@@ -19,12 +19,12 @@ the poc demonstration has 4 host tasks:
  3. Jd jds task serving port 65221
  4. broswer https:localhost:3000
 
- host shell and ijs scripts are created to make it easier to work with these tasks
+ host shell and ijs scripts are created to make it easier to manage these tasks
 )
 
 require JDP,'server/node/node_tools.ijs'
 
-NODEBIN=: 'nodejs/bin/node' NB. you will probably need to change this!
+NODEBIN=: 'you need to set this as the node binary path'
 'must exist' assert fexist NODEBIN
 shell_jtask_ NODEBIN,' --version'
 
@@ -42,19 +42,14 @@ fread path,'/logstd.log' NB. stdout/stderr from the server
 0 : 0
 server configured to use a self-signed certificate (cert.pem and key.pem)
 when you first browse to the page you will have to accept this certificate
- 
-most things in the appliation won't work as the Jd servers are probably not running
+most things in the app won't work as the Jd servers are probably not running
 
 browse to https://localhost:3000
 )
 
 NB. next steps start jds servers on ports 65220 and 65221
 NB. errors in the following indicate you need to run tutorial jds to setup the servers
-fork_jtask_ fread spath,'/jds/65220/run.txt'
-fread spath,'/jds/65220/logstd.log'
-
-fork_jtask_ fread spath,'/jds/65221/run.txt'
-fread spath,'/jds/65221/logstd.log'
+check_jds 65220 NB. start server on port 65220 that was setup in tutorial jds
+check_jds 65221 NB. start server on port 65220 that was setup in tutorial jds
 
 NB. play with the brower application - you should now see interactions with Jd
-

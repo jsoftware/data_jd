@@ -45,7 +45,7 @@ rc=. sdconnect_jsocket_ S;AF_INET_jsocket_;'127.0.0.1';PORT
 )
 
 NB. build http request
-msx=: 3 : 0 
+msrx=: 3 : 0 
 c=. FIN,' ',FOUT,' ',DAN,' ',UP,';'
 if. 0=L.y do. c=. c,y else. c=. c,(;{.y),LF,in }.y end.
 (HTTP rplc 'IPAD';HOST;'PORT';SPORT;'XXX';":#c),CRLF,c
@@ -56,7 +56,7 @@ msr=: 3 : 0
 'run jds_client_config to set PORT'assert _1~:PORT
 try.
  if. S=_1 do. connect'' end.
- snd_request msx y
+ snd_request msrx y
  out rcv_response''
 catch.
  close''
@@ -124,6 +124,8 @@ out rcv_response''
 )
 
 NB. wget/curl
+NB. wget or curl will fail if they are not installed on your machine
+NB. if wget fails, try curl and vice versa
 
 POSTFILE=:   hostpathsep jpath'~temp/postfile'
 
@@ -136,7 +138,6 @@ a fwrite POSTFILE
 
 wgetx=: 3 : 0
 wcarg y
-'macos - use curl instead of wget'assert -.UNAME-:'Darwin'
 t=. ;(UNAME-:'Win'){'wget';hostpathsep jpath'~tools/ftp/wget'
 t=. t,' -O- -q http://HOST:PORT/ --post-file "POSTFILE"'
 t rplc 'HOST';HOST;'PORT';SPORT;'POSTFILE';POSTFILE

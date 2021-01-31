@@ -1,6 +1,8 @@
 NB. Copyright 2020, Jsoftware Inc.  All rights reserved.
 NB. node server tools
 
+require JDP,'server/port.ijs'
+
 NB. PATH;PORT;NODEBIN
 NB. create node files in folder PATH/PORT
 create_node=: 3 : 0

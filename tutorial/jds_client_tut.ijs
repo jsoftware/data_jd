@@ -9,6 +9,8 @@ load JDP,'server/jds_client/jds_client.ijs'
 PORT=: 65220 NB. port with jds service
 
 check_jds PORT
+pidport''
+pidfromport PORT
 
 0 : 0
 config client to use server:  host port fin fout dan u/p
@@ -19,13 +21,13 @@ config client to use server:  host port fin fout dan u/p
 )
 jds_client_config 'localhost';PORT;'jbin';'jbin';'jds_db_a';'u/p'
 
-msx'info summary' NB. http data to send to jds server
+msrx'info summary' NB. http data to send to jds server
 msr'info summary'
 msr'droptable f'
 msr'createtable f'
 msr'createcol f a int'
 msr'read from f'
-msx'insert f';'a';777
+msrx'insert f';'a';777
 msr'insert f';'a';777
 msr'insert f';'a';888 999
 msr'read from f'
@@ -47,8 +49,10 @@ msr'read from f'
 msr'insert f';'a';5 4 3 NB. data is sent to jds server in json format
 msr'read from f'
 
-
 NB. the jds server can be accessed by tools such as wget and curl
+NB. wget or curl will fail if they are not installed on your machine
+NB. if wget fails, try curl and vice versa
+
 wgetx'read from f' NB. host command that will be run
 wget 'read from f'
 wget 'insert f';'a';999 888 777

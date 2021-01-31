@@ -22,6 +22,8 @@ tutorial/intro_c_tut.ijs
 tutorial/intx_tut.ijs
 tutorial/jcs_tut.ijs
 tutorial/jctask_tut.ijs
+tutorial/jds_client_tut.ijs
+tutorial/jds_tut.ijs
 tutorial/jdserver_tut.ijs
 tutorial/jhs_tut.ijs
 tutorial/json_tut.ijs
@@ -29,6 +31,7 @@ tutorial/key_tut.ijs
 tutorial/link_tut.ijs
 tutorial/log_tut.ijs
 tutorial/mtm_tut.ijs
+tutorial/node_tut.ijs
 tutorial/northwind_tut.ijs
 tutorial/pairs_tut.ijs
 tutorial/performance_tut.ijs

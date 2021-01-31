@@ -4,7 +4,7 @@ require JDP,'server/jds/jds_tools.ijs'
 
 PORT=:    65220
 LOGLEVEL=: 0 NB. 0 for all, 1 for only important
-DBS=: 'jds_db_a,jds_db_b' NB. list of dbs to jdadmin - "s around as required
+DBS=: 'jds_db_a,jds_db_b' NB. dbs to jdadmin - "s around as required
 NB. server init does jdadmin for each db - 'new'jdadmin if db does not exist
 
 spath=: '~temp/jdserver' NB. path to server folders
