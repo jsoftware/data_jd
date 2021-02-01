@@ -13,7 +13,6 @@ mkdir_j_ p
 
 NB. create run.sh
 t=. '#!/bin/bash'
-t=. t,LF,'fuser -s -k -n tcp PORT'
 t=. t,LF,'"NODEBIN" "JS" "CONFIG"'
 t=. t rplc 'PORT';sport;'NODEBIN';nodebin;'JS';(p,'/jdserver.js');'CONFIG';p,'/config.js'
 f=. p,'run.sh'

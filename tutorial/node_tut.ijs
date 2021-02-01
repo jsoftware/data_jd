@@ -48,6 +48,7 @@ spath=: '~temp/jdserver'
 [path=: create_node spath;PORT;nodebin
 dir path
 
+killport PORT NB. kill previous server if any
 fread path,'/run.sh'  NB. script to run node app
 fread path,'/run.txt' NB. fork_jtask arg to run node app server
 
