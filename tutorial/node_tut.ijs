@@ -1,10 +1,10 @@
 0 : 0
-how to use node (nodejs) as an https server for Jd jds
+how to use node as an https server for Jd jds
 
 helps you set up a poc (proof of concept) node server
  that provides client browser https access to Jd
 
-if node is not already installed, you need to install if before you proceed
+if node is not already installed, you need to install it before you proceed
  https://nodejs.org and download and install as required
 
 node https server requires certificate for https
@@ -14,7 +14,7 @@ node https server requires certificate for https
   https://nodejs.org/en/knowledge/HTTP/servers/how-to-create-a-HTTPS-server/
 
 the poc demonstration has 4 host tasks:
- 1. nodejs engine binary (downloaded and installed as above)
+ 1. node engine binary (downloaded and installed as above)
  2. Jd jds task serving port 65220
  3. Jd jds task serving port 65221
  4. broswer https:localhost:3000
@@ -24,19 +24,35 @@ the poc demonstration has 4 host tasks:
 
 require JDP,'server/node/node_tools.ijs'
 
-NODEBIN=: 'you need to set this as the node binary path'
-'must exist' assert fexist NODEBIN
-shell_jtask_ NODEBIN,' --version'
+NB. need path to node binary to start node server
+NB. on the first run you put the path in file ~temp/jdserver/node/nodebinpath
+NB. subsequent runs the path from that file is used
+
+fn=. '~temp/jdserver/node/nodebinpath'
+
+3 : 0''
+mkdir_j_ '~temp/jdserver/node' NB. folder for node stuff
+if. -.fexist fn do. 
+ echo 'run following sentence to set the path to node binary'
+ echo '   (jpath''path to node binary - e.g., /usr/local/bin'') fwrite ''',fn,''''
+end. 
+)
+
+t=. fread fn
+[nodebin=: 'node',~t,('/'~:{:t)#'/'
+'must exist' assert fexist nodebin
+shell_jtask_ nodebin,' --version'
 
 PORT=: 3000 NB. port served by node application - hardwired in config.js file
 spath=: '~temp/jdserver'
-[path=: create_node spath;PORT;NODEBIN
+[path=: create_node spath;PORT;nodebin
 dir path
 
 fread path,'/run.sh'  NB. script to run node app
 fread path,'/run.txt' NB. fork_jtask arg to run node app server
 
 fork_jtask_ fread path,'/run.txt' NB. start node jds app server on port 3000
+pidport''
 fread path,'/logstd.log' NB. stdout/stderr from the server
 
 0 : 0

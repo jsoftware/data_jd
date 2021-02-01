@@ -3,6 +3,16 @@ NB. post request is built from: host port fin fout dan u/p ; string LF boxed
 
 require'socket'
 require'convert/pjson'
+
+NB. JDP_z_ set as path to JD if not already set
+3 : 0''
+if. 0=nc<'JDP' do. return. end.
+n=. '/addons/data/jd/'
+d=. jpath each 4!:3''
+d=. ;d{~(1 i.~;+./each(<n)E. each d)
+JDP_z_=: d{.~(1 i.~n E.d)+#n
+)
+
 load JDP,'server/port.ijs'
 
 3 : 0''
@@ -115,16 +125,32 @@ end.
 
 NB. send bad http request and get response - must be connected and does not close
 msrbad=: 3 : 0
-if. PORT=_1 do. config''  end.
-if. S=_1    do. connect'' end.
-if. L.y do. y=. CONTEXT,(;{.y),';',jsonenc}.y else. y=. CONTEXT,y end.
-bad=. HTTP rplc'POST';'POSx'
-snd_request (bad rplc'XX';":#y),CRLF,y
-out rcv_response''
+'run jds_client_config to set PORT'assert _1~:PORT
+try.
+ if. S=_1 do. connect'' end.
+ snd_request (msrx y) rplc'POST';'POSx'
+ out rcv_response''
+catch.
+ close''
+ (13!:12'')assert 0
+end.
+)
+
+NB. send request with bad boxed data
+msrbaddata=: 3 : 0
+'run jds_client_config to set PORT'assert _1~:PORT
+try.
+ if. S=_1 do. connect'' end.
+ snd_request msrx y NB. drop last char to damage data
+ out rcv_response''
+catch.
+ close''
+ (13!:12'')assert 0
+end.
 )
 
 NB. wget/curl
-NB. wget or curl will fail if they are not installed on your machine
+NB. wget or curl will fail (interface error) if they are not installed on your machine
 NB. if wget fails, try curl and vice versa
 
 POSTFILE=:   hostpathsep jpath'~temp/postfile'

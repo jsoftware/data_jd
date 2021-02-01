@@ -3,7 +3,7 @@ NB. how to run a Jd server task with jds
 require JDP,'server/jds/jds_tools.ijs'
 
 PORT=:    65220
-LOGLEVEL=: 0 NB. 0 for all, 1 for only important
+LOGLEVEL=: 0 NB. 0 for all, 1 for most, ..., 9 for only important
 DBS=: 'jds_db_a,jds_db_b' NB. dbs to jdadmin - "s around as required
 NB. server init does jdadmin for each db - 'new'jdadmin if db does not exist
 

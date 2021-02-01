@@ -50,9 +50,8 @@ msr'insert f';'a';5 4 3 NB. data is sent to jds server in json format
 msr'read from f'
 
 NB. the jds server can be accessed by tools such as wget and curl
-NB. wget or curl will fail if they are not installed on your machine
+NB. wget or curl will fail (interface error) if not installed
 NB. if wget fails, try curl and vice versa
-
 wgetx'read from f' NB. host command that will be run
 wget 'read from f'
 wget 'insert f';'a';999 888 777

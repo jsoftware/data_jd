@@ -79,7 +79,7 @@ try.
 catch.
  logit 'bad request';'';sr
  SDATA=: a: (SRS i. sr)}SDATA NB. do not use old data - best if client does new connect
- rs=. 3!:1 ,:'mtm error';'bad request'
+ rs=. 3!:1 ,:'jds error';'bad request'
  addout sr;rs
  return.
 end.
@@ -93,7 +93,7 @@ if. SHUTDOWN__ do.
  if. 'm'~:getopclass data do.
   logit 'stopped';'';sr
   SDATA=: a: (SRS i. sr)}SDATA NB. do not use old data - best if client does new connect
-  rs=. 3!:1 ,:'mtm error';'stopped'
+  rs=. 3!:1 ,:'jds error';'stopped'
   addout sr;rs
   return.
  end.
