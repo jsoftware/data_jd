@@ -60,6 +60,7 @@ fread path,'/run.txt' NB. fork_jtask arg to run node app server
 
 killport PORT NB. kill previous server if any
 fork_jtask_ fread path,'/run.txt' NB. start node jds app server on port 3000
+i.0 0[6!:3[0.2 NB. give task a chance to get started
 pidport''
 fread path,'/logstd.log' NB. stdout/stderr from the server
 

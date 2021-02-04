@@ -42,7 +42,7 @@ pidfromport=: 3 : 0
 NB. check if jds server y is running and start it if not
 check_jds=: 3 : 0
 if. _1~:pidfromport y do. 'server already running' return. end.
-f=. '~temp/jdserver/jds/65220/run.txt'
+f=. '~temp/jdserver/jds/',(":y),'/run.txt'
 'run jdrt''jds'' first to set up server'assert fexist f
 fork_jtask_ fread f NB. start server set up by jds tutorial
 6!:3[0.2 NB. give task a chance to get started
