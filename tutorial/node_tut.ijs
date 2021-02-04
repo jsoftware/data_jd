@@ -17,16 +17,22 @@ the poc demonstration has 4 host tasks:
  1. node engine binary (downloaded and installed as above)
  2. Jd jds task serving port 65220
  3. Jd jds task serving port 65221
- 4. broswer https:localhost:3000
+ 4. broswer https://localhost:3000
 
  host shell and ijs scripts are created to make it easier to manage these tasks
 )
 
 require JDP,'server/node/node_tools.ijs'
 
-NB. need path to node binary to start node server
-NB. on the first run you put the path in file ~temp/jdserver/node/nodebinpath
-NB. subsequent runs the path from that file is used
+0 : 0
+need path to node binary to start node server
+on the first run you put the path in file ~temp/jdserver/node/nodebinpath
+on subsequent runs the path from that file is used
+
+default install paths for node binary are:
+ windows: c:\Program Files\nodejs
+ macos:   /usr/local/bin
+)
 
 fn=. '~temp/jdserver/node/nodebinpath'
 
@@ -34,24 +40,25 @@ fn=. '~temp/jdserver/node/nodebinpath'
 mkdir_j_ '~temp/jdserver/node' NB. folder for node stuff
 if. -.fexist fn do. 
  echo 'run following sentence to set the path to node binary'
- echo '   (jpath''path to node binary - e.g., /usr/local/bin'') fwrite ''',fn,''''
+ echo '   (jpath''path to node binary'') fwrite ''',fn,''''
 end. 
 )
 
 t=. fread fn
-[nodebin=: 'node',~t,('/'~:{:t)#'/'
+[nodebin=: hostpathsep (t,('/'~:{:t)#'/'),'node',IFWIN#'.exe'
 'must exist' assert fexist nodebin
-shell_jtask_ nodebin,' --version'
+shell_jtask_ '"',nodebin,'" --version'
 
 PORT=: 3000 NB. port served by node application - hardwired in config.js file
 spath=: '~temp/jdserver'
+ NB. create folder with all node 3000 server files
 [path=: create_node spath;PORT;nodebin
 dir path
 
-killport PORT NB. kill previous server if any
-fread path,'/run.sh'  NB. script to run node app
+fread path,;IFWIN{'/run.sh';'/run.bat'  NB. script to run node app
 fread path,'/run.txt' NB. fork_jtask arg to run node app server
 
+killport PORT NB. kill previous server if any
 fork_jtask_ fread path,'/run.txt' NB. start node jds app server on port 3000
 pidport''
 fread path,'/logstd.log' NB. stdout/stderr from the server
