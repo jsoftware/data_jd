@@ -1,4 +1,4 @@
-NB. Copyright 2021, Jsoftware Inc.  All rights reserved.
+NB. Copyright 2020, Jsoftware Inc.  All rights reserved.
 
 0 : 0
 package manager Jd library is ~addons/data/jd
