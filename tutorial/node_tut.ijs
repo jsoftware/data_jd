@@ -36,13 +36,12 @@ default install paths for node binary are:
 
 fn=. '~temp/jdserver/node/nodebinpath'
 
-3 : 0''
-mkdir_j_ '~temp/jdserver/node' NB. folder for node stuff
-if. -.fexist fn do. 
- echo 'run following sentence to set the path to node binary'
- echo '   (jpath''path to node binary'') fwrite ''',fn,''''
-end. 
-)
+t=. 0 : 0
+your need to run following sentence to set the path to node binary
+   (jpath'path to node binary') fwrite fn
+) 
+
+t assert fexist fn
 
 t=. fread fn
 [nodebin=: hostpathsep (t,('/'~:{:t)#'/'),'node',IFWIN#'.exe'

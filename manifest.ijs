@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '4.4.89'
+VERSION=: '4.4.90'
 
 FILES=: 0 : 0
 manifest.ijs
@@ -75,6 +75,9 @@ demo/northwind/csv/Categories.csv
 demo/northwind/csv/Customers.csv
 demo/northwind/csv/Orders.csv
 demo/jhs/jdapp1.ijs
+tutorial/jds_client_tut.ijs
+tutorial/jds_tut.ijs
+tutorial/node_tut.ijs
 tutorial/createcol_derived_mapped_tut.ijs
 tutorial/createcol_derived_tut.ijs
 tutorial/jctask_tut.ijs
@@ -128,7 +131,6 @@ tutorial/createcol_tut.ijs
 tutorial/sort_tut.ijs
 tutorial/read_tut.ijs
 tutorial/blob_tut.ijs
-tutorial/jdserver_tut.ijs
 tutorial/json_tut.ijs
 tutorial/mtm_tut.ijs
 tutorial/csv_intro_tut.ijs
@@ -243,10 +245,23 @@ mtm/json.txt
 server/jcs_server.ijs
 server/jctask.ijs
 server/fork.ijs
+server/jds/jds_server.ijs
+server/jds/jds_tools.ijs
+server/jds_client/examples.ijs
+server/jds_client/jds_client.ijs
+server/jds_client/jds_client_test.ijs
+server/node/cert.napem
+server/node/config.js
+server/node/http_jdserver.html
+server/node/jds.js
+server/node/jdserver.js
+server/node/key.napem
+server/node/node_tools.ijs
+server/port.ijs
+test/jds_test.ijs
 test/names_test.ijs
 test/osfna_test.ijs
 test/createcol_derived_test.ijs
-test/jdserver_test.ijs
 test/byten_test.ijs
 test/csvcdefs_test.ijs
 test/csvrd_types_test.ijs

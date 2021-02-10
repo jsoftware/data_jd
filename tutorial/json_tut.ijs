@@ -1,10 +1,8 @@
-NB. see: jd_jdserver_jman_
-
 jdjson=: 3 : 0
 if. L.y do.
- jdserver'json json;',(;{.y),';',jsonenc}.y
+ jds'json json;',(;{.y),LF,jsonenc}.y
 else.
- jdserver'json json;',y
+ jds'json json;',y
 end.
 )
 
@@ -30,7 +28,7 @@ jdjson'info summary'
 
 jdjson'insert f';'i';3 4;'b';'qw';'b4';2 3$'dgg'
 jdjson'read from f'
-jdjson'insert f';'i';2;'b';'z';'b4';2 5$'x'
+jdjson'insert f';'i';2;'b';'z';'b4';2 5$'x' NB. error bad shape
 
 jdjson'delete f';'jdindex>_1'
 jdjson'createcol f v varbyte'
@@ -54,9 +52,9 @@ d=. }.}:<;.2 y,LF
 )
 
 d=. jdjson 'read from f'
-t=. 'insert f;',lfromd d
+[lfromd d
 NB. t already has the json encoded pairs so can't use jdjson helper verb
-jdserver 'json json;',t
+jds 'json json;insert f',LF,lfromd d
 jdjson 'read from f'
 
 jdjson'update f';'i=23';'b';'+'

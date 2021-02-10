@@ -439,13 +439,13 @@ else.
  ina=. 15!:14<'csvin_jdcsv_'
  inz=. ina+#csvin_jdcsv_
 end.
-probe=. 10000
 inaoffset=: 0
 if. (0=HEADERS)*.BOMUTF8_jd_-:3{.csvin_jdcsv_ do. inaoffset=: 3 end.
 if. (0~:HEADERS)*.0~:fsize PATHCSVFILE do.
  if. BOMUTF8_jd_-:csvin_jdcsv_ do.   NB. otherwise index error below
   inaoffset=: 3
  else.
+  probe=. HEADERS*50000
   t=. (#ROWSEP)+(<:HEADERS){(ROWSEP E. probe{.csvin)#i.probe
   assert t<:#csvin
   inaoffset=: t

@@ -24,7 +24,6 @@ tutorial/jcs_tut.ijs
 tutorial/jctask_tut.ijs
 tutorial/jds_client_tut.ijs
 tutorial/jds_tut.ijs
-tutorial/jdserver_tut.ijs
 tutorial/jhs_tut.ijs
 tutorial/json_tut.ijs
 tutorial/key_tut.ijs

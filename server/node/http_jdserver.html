@@ -40,6 +40,7 @@ pswd: <input type="text" id="pwd" value="p" size="6">
 var rq;    
 var busy= 0; // prevent new request until previous has completed
 var repflag= 0;
+var repcnt= 0;
 
 function run(p)
 {
@@ -63,8 +64,10 @@ function ajax()
   if(rq.readyState==4)
   {
     busy= 0;
-    idvs("out",rq.responseText);
-    if(repflag) ajaxrun("jds="+encode(idv("host")+" "+idv("cmd")));
+    t= rq.responseText;
+    if(repflag) t= "repeat count:"+repcnt+"\n"+t;
+    idvs("out",t);
+    if(repflag) {repcnt+= 1;ajaxrun("jds="+encode(idv("host")+" "+idv("cmd")))};
   }
 }
 

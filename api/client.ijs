@@ -61,10 +61,10 @@ jds - similar to jd - except:
 jds y
 y is a string
 context ; op [LF arg]
- context - fin fout [dan user pswd]
- fin  - arg encoding    - json/jbin
- fout - result encoding - json/jbin
- dan user pswd - not currently used and must be elided
+ context - fin fout [dan u/p]
+ fin  - arg encoding    - jbin or json array
+ fout - result encoding - jbin or json table
+ jdaccess dan u/p intask - if provided or use current access
 
 jds can be used by http and similar clients that require json/jbin strings
 jds is used by mtm (see jdrt'mtm')
@@ -72,12 +72,17 @@ jds is used by mtm (see jdrt'mtm')
 
 jds=: 3 : 0
 try.
+ 'arg must be literal string' assert (0=L.y)*.2=3!:0 y 
  i=. y i. ';'
- 'fin fout dan up'=. 4{.bdnames i{.y
+ t=. bdnames i{.y
+ 'context must be ''fin fout ; '' or ''fin fout dan u/p ; '''assert +./2 4 e.#t
+ 'fin fout'=. 2{.t
  'bad fin' assert (<fin) e.'jbin';'json' 
  'bad fout'assert (<fout)e.'jbin';'json'
- jdaccess a=. dan,' ',up,' intask'
- NB.!!! sid -> u/p
+ if. 4=#t do.
+  NB.!!! sid -> u/p
+  jdaccess (;2{t),' ',(;3{t),' intask'
+ end.
  a=. y}.~>:i
  i=. a i.LF
  b=. a}.~>:i NB. boxed part
@@ -107,31 +112,15 @@ try.
  end.
 catch.
  t=. 13!:12''
- t=. ('Jd server error';'Jd extra'),.(}.(t i.':'){.t);opstring
+ if. _1=nc<'opstring' do. opstring=. y end.
+ if.(0~:L.y)+.2=3!:0 y do. opstring=. '' end.
+ if. _1=nc<'fout' do. fout=. 'json' end.
+ t=. ('Jd server error';'Jd extra'),.(}.(t i.':'){.t);;opstring
  if. fout-:'jbin' do. jbinenc t else. jsonenc t end.
 end.
 )
 
-jd_jdserver_jman_=: 0 : 0
-deprecated!!! - replaced by jds - LF instead of ; starts encoded data
-
-jdserver - similar to jd - except:
- arg is a string (boxed data jbin/json encoded)
- result is a jbin/json dictionary
- jdaccess args are in context
-
-jdserver y
-y is a string
-context ; op [; arg]
-fin fout [dan user pswd] ; op [; fin_encoded_arg]
-fin  - arg encoding    - json/jbin
-fout - result encoding - json/jbin
-dan user pswd - not currently used and must be elided
-
-jdserver can be used by http and similar clients that require json/jbin strings
-jdserver is used by mtm (see jdrt'mtm')
-)
-
+NB. deprecated!!! - replaced by jds - LF instead of ; starts encoded data
 jdserver=: 3 : 0
 try.
  i=. y i. ';'

@@ -6,7 +6,7 @@ require JDP,'server/port.ijs'
 jds_server_config_template=: 0 : 0
 load '<JDP>jd.ijs'
 load JDP,'server/jds/jds_server.ijs'
-BASE=: <PORT>
+PORT=: <PORT>
 LOGFILE_z_=: '<LOGFILE>'
 LOGLEVEL_z_=: <LOGLEVEL>
 DBS=: jdremq_jd_ each ',' strsplit_jd_'<DBS>'
@@ -15,7 +15,7 @@ init''
 
 NB. path;65220;0;'test,"foo,bar",~temp/jd/mum' - NB. PJDS global
 create_jds=: 3 : 0
-'path port loglevel dbs'=. y
+'path port logfile loglevel dbs'=. y
 sport=. ":port
 f=. jpath path,('/'#~'/'~:{:path),'jds/',sport,'/'
 mkdir_j_ f
@@ -24,7 +24,7 @@ logstd=. f,'logstd.log' NB. stdout/stderr
 ferase log;logstd
 loglevel=. 0
 
-t=. jds_server_config_template rplc '<JDP>';JDP;'<PORT>';sport;'<LOG>';(":loglevel);'<LOGFILE>';log;'<DBS>';dbs
+t=. jds_server_config_template rplc '<JDP>';JDP;'<PORT>';sport;'<LOGFILE>';logfile;'<LOGLEVEL>';(":loglevel);'<DBS>';dbs
 t fwrite f,'run.ijs'
 
 select. UNAME

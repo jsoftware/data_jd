@@ -16,15 +16,17 @@ m=. (16{.type),' : ',data,' : ',(10{.":route),' : ',_4}._12{.isotimestamp 6!:0''
 (m,LF) fappend LOGFILE
 )
 
+
+NB. global parameters: PORT LOGFILE LOGLEVEL DBS
 init=: 3 : 0
 'zmq must be version 4.1.4 or later'assert 414<:10#.version_jcs_''
-logit 'start jds';(":BASE);0
+logit 'start jds';(":PORT);0
 for_d. DBS do.
  d=. adminp_jd_ >d NB. path to DB folder
  if. fexist d do. jdadmin d else. 'new' jdadmin d end.
  logit 'database';d;0
 end. 
-CJ=: jcssraw_jcs_ BASE
+CJ=: jcssraw_jcs_ PORT
 coinsert__CJ 'jobs'
 SRS__CJ=:      '' NB. client zmqraw routes
 SDATA__CJ=:    '' NB. client zmqraw data

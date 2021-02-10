@@ -55,7 +55,6 @@ server
  jds
  jds_client
  jhs
- jdserver
  mtm
  node
  json
