@@ -171,17 +171,16 @@ if. _1=nc<'OP' do. NB. one time inits
  PMN=: PMT=: '' NB. no records
  PMMR=: 100     NB. max records kept
 end.
-ULIMIT=: ''
 if. -.UNAME-:'Win' do.
- n=. ".}:2!:0'ulimit -n'
- if. n<1024 do.
-  ULIMIT=: LF,~LF,'Warning: ',(":n),' for "ulimit -n" is low. See Technotes|file handles.'
- end. 
+ libc=. unxlib'c'
+ r=. MAX_HANDLE_COUNT=: {:;{:(libc,' getrlimit i i *x') cd 7;0 0
+ (libc,' setrlimit i i *x') cd 7;r,r
+ if. r<4096 do. decho LF,~LF,~LF,'Warning: ',(":r),' for limit on number of file handles is low. See Technotes|file handles.' end. 
 end.
 ifintel=: 'a'={.2 ic a.i.'a' NB. endian
 )
 
-jdwelcome=: 0 : 0 rplc 'BOOKMARK';(jpath JDP,'doc/Index.htm');'ULIMIT';ULIMIT
+jdwelcome=: 0 : 0 rplc 'BOOKMARK';(jpath JDP,'doc/Index.htm')
 Jd is Copyright 2020 by Jsoftware Inc. All Rights Reserved.
 Jd is provided "AS IS" without warranty or liability of any kind.
 
@@ -199,7 +198,6 @@ https://www.jsoftware.com/jd_tuts.html
 
 Snapshot of the Jd wiki for this release is at: 
 file://BOOKMARK
-ULIMIT
 
 If you want to load a csv file for use in J (rather than Jd):
    jdrt'csv_load'
