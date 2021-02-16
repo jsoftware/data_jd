@@ -155,6 +155,20 @@ load JDP,'tools/repair.ijs'
 repair''
 )
 
+
+
+get_handle_limits=: 3 : 0
+LIBC=: unxlib'c'
+RLIMIT_NOFILE=: ('Darwin'-:UNAME){7,8 NB. assume rpi has linux value
+MAX_OPEN=: 10240*>:-.'Darwin'-:UNAME NB. macos hardwired 10420, linux higher
+;{:(LIBC,' getrlimit i i *x') cd RLIMIT_NOFILE;0 0
+)
+
+set_handle_limit=: 3 : 0
+r=. get_handle_limits''
+;{.(LIBC,' setrlimit i i *x') cd RLIMIT_NOFILE;y,{:r
+)
+
 3 : 0''
 IFTESTS=: 0
 if. _1=nc<'OP' do. NB. one time inits
@@ -172,10 +186,10 @@ if. _1=nc<'OP' do. NB. one time inits
  PMMR=: 100     NB. max records kept
 end.
 if. -.UNAME-:'Win' do.
- libc=. unxlib'c'
- r=. MAX_HANDLE_COUNT=: {:;{:(libc,' getrlimit i i *x') cd 7;0 0
- (libc,' setrlimit i i *x') cd 7;r,r
- if. r<4096 do. decho LF,~LF,~LF,'Warning: ',(":r),' for limit on number of file handles is low. See Technotes|file handles.' end. 
+ r=. get_handle_limits''
+ if. MAX_OPEN>{.r do. set_handle_limit MAX_OPEN end.
+ r=. {.get_handle_limits''
+ if. r<10240 do. echo LF,~LF,~LF,'Warning: ',(":r),' for limit on number of file handles is low. See Technotes|file handles.' end. 
 end.
 ifintel=: 'a'={.2 ic a.i.'a' NB. endian
 )
@@ -207,3 +221,5 @@ Get started:
 )
 
 echo'   jdwelcome_jd_ NB. run this sentence for important information'
+
+
