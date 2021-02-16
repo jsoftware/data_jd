@@ -74,7 +74,12 @@ cnms,.read
 )
 
 ACCESSED=: 0 2$a: NB. List of table name, column name pairs accessed
-access =: 3 : 'ACCESSED=: ~.ACCESSED,NAME__PARENT__y;NAME__y'
+
+access=: 3 : 0
+a=. NAME__PARENT__y;NAME__y NB. avoid ~.... in original code
+if. -. a e. ACCESSED do. ACCESSED=: ACCESSED,a end.
+EMPTY
+)
 
 NB. y is a boxed list of column locales, x is the rows
 readselect=: 4 : 0 "1 0
