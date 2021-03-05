@@ -23,7 +23,7 @@ init=: 3 : 0
 logit 'start jds';(":PORT);0
 for_d. DBS do.
  d=. adminp_jd_ >d NB. path to DB folder
- if. fexist d do. jdadmin d else. 'new' jdadmin d end.
+ if. fexist d,'/admin.ijs' do. jdadmin d else. 'new' jdadmin d end.
  logit 'database';d;0
 end. 
 CJ=: jcssraw_jcs_ PORT
