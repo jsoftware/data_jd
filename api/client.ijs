@@ -59,40 +59,53 @@ jds - similar to jd - except:
  jdaccess args are in context
 
 jds y
-y is a string
-context ; op [LF arg]
+y is a string - context;arg
  context - fin fout [dan u/p]
- fin  - arg encoding    - jbin or json array
- fout - result encoding - jbin or json table
  jdaccess dan u/p intask - if provided or use current access
+
+ fin  - format of arg    - jbin or json or byte
+  jbin/json encodes arg after LF (if any) to create boxed list opstring;encoded_data_after_LF
+  byte does not change arg
+
+ fout - format of result - jbin or json table or byte
+ 
 
 jds can be used by http and similar clients that require json/jbin strings
 jds is used by mtm (see jdrt'mtm')
 )
 
+formats=: 'jbin';'json' NB. 'byte' support not finalized
+
 jds=: 3 : 0
 try.
  'arg must be literal string' assert (0=L.y)*.2=3!:0 y 
  i=. y i. ';'
+ a=. y}.~>:i
  t=. bdnames i{.y
  'context must be ''fin fout ; '' or ''fin fout dan u/p ; '''assert +./2 4 e.#t
  'fin fout'=. 2{.t
- 'bad fin' assert (<fin) e.'jbin';'json' 
- 'bad fout'assert (<fout)e.'jbin';'json'
+ 'bad fin' assert (<fin) e.formats
+ 'bad fout'assert (<fout)e.formats
  if. 4=#t do.
   NB.!!! sid -> u/p
   jdaccess (;2{t),' ',(;3{t),' intask'
  end.
- a=. y}.~>:i
- i=. a i.LF
- b=. a}.~>:i NB. boxed part
- opstring=. a=. i{.a
- if. #b do.
-  select. fin
-  case. 'jbin' do. a=. a;,jbindec b
-  case. 'json' do. a=. a;,jsondec b
-  end.
+
+ select. fin
+  case. 'jbin' do.
+   i=. a i.LF
+   b=. a}.~>:i NB. boxed part
+   opstring=. a=. i{.a
+   if. #b do. a=. a;,jbindec b end.
+  case. 'json' do.
+   i=. a i.LF
+   b=. a}.~>:i NB. boxed part
+   opstring=. a=. i{.a
+   if. #b do. a=. a;,jsondec b end.
+  case. 'byte' do.
+   opstring=. a
  end.
+ 
  jdlasty_z_=: a
  jdlast_z_=: jdx a
  a=. jdlast
@@ -109,6 +122,10 @@ try.
   op=. (opstring i.' '){.opstring
   if. op-:'info' do. a=. |:a end. 
   jsonenc a
+ case. 'byte' do.
+  if. 2~:3!:0 a do. a=. ":a end.
+  if. 1~:$$a do. a=. ,a,.LF end.
+  a
  end.
 catch.
  t=. 13!:12''

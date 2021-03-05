@@ -1,20 +1,19 @@
 /*
 clients <- https -> node <- http -> jdserver
 
+client: https://...:3000         - gets application html
+client: https://...:3000/s1/...  - get html by running s1 xget verb
+
 proof of concept - needs work to be functional/robust/secure
-not hardened against DoS or security attacks - friendly users assumed
+ not hardened against DoS or security attacks - friendly users assumed
 
 logon user/pswd stores token in cookie
-up list of valid u/p values set in config
-crypto is done on up list to create token list to convert token to u/p
+ list of valid u/p values set in config
+ crypto on up list - convert token to u/p
 
 start J
    load'jd'
-   load JDP,'server/http/http_tools.ijs
-   jd_jds_http_client_server_tools_jman_ NB. from manlist''
-
-todo:
-  jds errors - jsonx - jsonenc failure not caught
+   jdrt'node
 */
 
 const https  = require('https');
@@ -30,9 +29,12 @@ const svc= JSON.parse(conf.svc);
 var svcreport= "";
 for (i = 0; i < svc.length; i++)
 {
-  svcreport+= "service: "+svc[0][i];
+  svcreport+= svc[0][i];
   svcreport+= " host/port/dan: "+svc[1][i]+" "+svc[2][i]+" "+svc[3][i]+"\n";
 }
+
+var getdata= fs.readFileSync(__dirname+'/server.html', 'utf8');
+getdata= getdata.replace("SVCREPORT",svcreport);
 
 const options = {
   key: fs.readFileSync(__dirname+'/key.pem'),
@@ -65,7 +67,7 @@ const server = https.createServer(options, (req, res) => {
          if(-1==i)
           replyc(200,res,"login - invalid",0);
          else
-          replyc(200,res,("login - valid\n"+svcreport),token[i]);
+          replyc(200,res,("login - valid"),token[i]);
          break; 
  
         case "lgx=":
@@ -91,16 +93,31 @@ const server = https.createServer(options, (req, res) => {
           jdsreq.jdsreq(c,host,port,dan,olds,res);
           break;
 
-     default:
-      reply(200,res,"bad command")
+       default:
+         reply(200,res,"bad command")
     }
    });
    return;
   }
 
-   // get
+  // get
+  var s= decodeURIComponent(req.url);
+  if("/"==s)
+  {
    res.writeHead(200, "OK", {'Content-Type': 'text/html'});
-   res.end(fs.readFileSync(__dirname+'/http_jdserver.html', 'utf8'));
+   res.end(getdata);
+  }
+  else
+  {
+   c= "u/p" // hardwired user pswd
+   var svcnm= s.substring(1);
+   var i= svcnm.indexOf('/'); // strip of service name
+   svcnm= svcnm.substring(0,i);
+   var svci= svc[0].indexOf(svcnm);
+   if(0!=svci){reply(200,res,"invalid get service name");return;}
+   var host= svc[1][svci]; var port= svc[2][svci]; var dan=  svc[3][svci];
+   jdsreq.jdsreq(c,host,port,dan,("xget "+s),res);
+  }
 });
 
  server.listen(port, bind, () => {
@@ -110,7 +127,6 @@ const server = https.createServer(options, (req, res) => {
 var get_cookies = function(request) {
   var cookies = {};
   if (typeof(request.headers.cookie) == "undefined") return cookies;
-
   request.headers && request.headers.cookie.split(';').forEach(function(cookie) {
     var parts = cookie.match(/(.*?)=(.*)$/)
     cookies[ parts[1].trim() ] = (parts[2] || '').trim();

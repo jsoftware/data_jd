@@ -1,11 +1,24 @@
-// node request to Jd server
+// forward client request to jds server and return result (html or json) to client
 
 const http  = require('http');
 
+// p is string (json table) result from jds request
+// {\n"*... indicates key data is Content-Type ... and is returned to client
+// otherwise p is returned to client as text/plain
 function reply(code,res,p)
 {
-  res.writeHead(code, "OK", {'Content-Type': 'text/plain'});
-  res.end(p);
+  if('{\n"*'==p.substring(0,4)) // *text/html indicates content-type and string
+  {
+    var q= JSON.parse(p);
+    var k = Object.keys(q);
+    res.writeHead(code, "OK", {'Content-Type': k[0].substring(1)});
+    res.end(q[k[0]]);
+  }
+  else
+  {
+   res.writeHead(code, "OK", {'Content-Type': 'text/plain'});
+   res.end(p);
+  }
 }
 
 async function jdsreq(up,host,port,dan,s,res)

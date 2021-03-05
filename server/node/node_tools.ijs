@@ -14,7 +14,7 @@ mkdir_j_ p
 if. IFWIN do.
  NB. create run.bat and run.txt
  t=. '"NODEBIN" "JS" "CONFIG"'
- t=. t rplc 'NODEBIN';nodebin;'JS';(p,'jdserver.js');'CONFIG';p,'config.js'
+ t=. t rplc 'NODEBIN';nodebin;'JS';(p,'server.js');'CONFIG';p,'config.js'
  f=. p,'run.bat'
  r=. t fwrite p,'run.bat'
  pw=. hostpathsep p
@@ -23,7 +23,7 @@ else.
  NB. create run.sh and run.txt
  t=. '#!/bin/bash'
  t=. t,LF,'"NODEBIN" "JS" "CONFIG"'
- t=. t rplc 'NODEBIN';nodebin;'JS';(p,'jdserver.js');'CONFIG';p,'config.js'
+ t=. t rplc 'NODEBIN';nodebin;'JS';(p,'server.js');'CONFIG';p,'config.js'
  f=. p,'run.sh'
  r=. t fwrite f
  shell'chmod +x "',f,'"'
@@ -35,7 +35,7 @@ NB. create cert.pem and key.pem - mangled to avoid github warning
 ((fread JDP,'server/node/key.napem') rplc 'XXXXXX';'RSA PRIVATE KEY') fwrite p,'key.pem'
 
 NB. copy node js source files
-n=. 'jdserver.js';'jds.js';'config.js';'http_jdserver.html'
+n=. 'server.js';'jds.js';'config.js';'server.html'
 d=. fread each (<JDP,'server/node/'),each n
 'bad file name'assert -.;_1-:each d
 d fwrite each (<p,'/'),each n

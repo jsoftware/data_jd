@@ -18,13 +18,21 @@ fread path,run_sh_bat NB. host shell script to run this server
 fread path,'run.txt'  NB. fork_jtask_ arg to start this server
 
 killport PORT NB. kill task (if any) serving port
-fork_jtask_ fread path,'run.txt' NB. start jds server on port 
-i.0 0[6!:3[0.2 NB. give task a chance to get started
+check_jds PORT NB. start jds server on PORT
 pidport'' NB. table of pids and ports
 pidfromport PORT NB. pid of server task - _1 if start failed
 fread path,'logstd.log' NB. stdout/stderr log
 fread path,'log.log'    NB. event log
 killport PORT NB. kill the server
+
+0 :0
+you might want to run the jds server in a terminal window
+so you see log messages that will help in debugging
+to run the jds server in a terminal window:
+ 
+   killport PORT NB. kill currrent server
+   path,runit    NB. command to paste into terminal to run server
+)   
 
 NB. setup 65221 server for use by node tutorial
 create_jds spath;65221;(spath,'/jds/65221/log.log');LOGLEVEL;'jds_db_c,jds_db_d'

@@ -252,9 +252,9 @@ server/jds_client/jds_client.ijs
 server/jds_client/jds_client_test.ijs
 server/node/cert.napem
 server/node/config.js
-server/node/http_jdserver.html
+server/node/server.html
 server/node/jds.js
-server/node/jdserver.js
+server/node/server.js
 server/node/key.napem
 server/node/node_tools.ijs
 server/port.ijs
