@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '4.4.90'
+VERSION=: '4.4.91'
 
 FILES=: 0 : 0
 manifest.ijs
@@ -258,6 +258,7 @@ server/node/server.js
 server/node/key.napem
 server/node/node_tools.ijs
 server/port.ijs
+server/node/custom.ijs
 test/jds_test.ijs
 test/names_test.ijs
 test/osfna_test.ijs
