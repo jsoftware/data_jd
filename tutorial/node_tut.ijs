@@ -55,13 +55,14 @@ default install paths for node binary are:
  macos:   /usr/local/bin
 )
 
-fn=. '~temp/jdserver/node/nodebinpath'
+fn=: '~temp/jdserver/node/nodebinpath'
 
-echo 3 : 0 ''
+3 : 0 ''
 if. fexist fn do. '' return. end.
 mkdir_j_ '~temp/jdserver/node'
 r=. 'you need to run following sentence to set the path to node binary',LF
-r,'   (jpath''path to node binary'') fwrite fn'
+r=. r,'   (jpath''path to node binary'') fwrite fn'
+echo r
 )
 
 t=. fread fn
