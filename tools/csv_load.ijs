@@ -8,7 +8,6 @@ jdcsvfolder_jd_''
 f=. jpath f
 vtname_jd_ tab
 'file must exist'assert fexist f
-'file must be .csv'assert'.csv'-:_4{.f
 f fwrite CSVFOLDER,tab,'.csvlink' NB. CSVFOLDER link to csv file
 d=. jd'csvprobe /replace ',tab,'.csvlink' NB. read first few rows as byte data
 r=. 'first few rows:'

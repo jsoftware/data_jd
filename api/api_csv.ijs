@@ -30,7 +30,6 @@ else.
  csvfp=: CSVFOLDER__,y
 end.
 csvf=: (>:csvfp i: '/')}.csvfp
-('csv file must be .csv: ',y)assert '.csv'-:_4{.csvfp
 root=: (csvy i:'.'){.csvy
 csvfpcdefs=:   CSVFOLDER__,root,'.cdefs'
 csvfpcnames=:  CSVFOLDER__,root,'.cnames'
