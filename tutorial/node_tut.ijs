@@ -35,6 +35,8 @@ jd_xdo verb lets browser app run arbitrary J sentences
 jd_xget verb lets https get run J code that returns html
 )
 
+require JDP,'server/node/node_tools.ijs'
+
 fn_custom=:  '~temp/jd/jds_db_a/custom.ijs'
 (fread JDP,'server/node/custom.ijs')fwrite fn_custom
 fread fn_custom
@@ -42,8 +44,6 @@ fread fn_custom
 killport 65220  NB. force restart so custom.ijs is loaded
 check_jds 65220 NB. make sure jds server is running on port 65220
 check_jds 65221
-
-require JDP,'server/node/node_tools.ijs'
 
 0 : 0
 need path to node binary to start node server
