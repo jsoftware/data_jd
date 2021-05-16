@@ -32,18 +32,10 @@ missingkey=: '!!! Jd key: non-commercial key automatically installed'
 noncomkey=:  '!!! Jd key: non-commercial use only!'
 invalidkey=: '!!! Jd key: invalid'
 updatekey=:  '!!! Jd key: expired - restore earlier version or get new key'
-fkey=:   '~config/jdkey.txt'
-noncom=: 'a11544796265500412' NB. validation bug sometimes needs blank at end
+fkey=:    '~config/jdkey.txt'
+noncom=:  'a11544796265500412' NB. old free key
 
 3 : 0''
-k=. fread fkey
-if. (_1=k)+.(<3{.}.(k i.' ')}.k)e.;:'edu eva' do.
- echo missingkey
- 'non_commercial key install failed'assert (>:#noncom)=(noncom,' ') fwrite fkey
-else.
- if. noncom-:k-.' ' do. echo noncomkey else. echo '!!! Jd key:',(k i.' ')}.k end.
-end. 
-
 if. IFWIN do.
  'Jd requires Windows version > XP'assert 5<{:,(8#256)#:;'kernel32.dll GetVersion x' cd ''
  NB. try. 'msvcr120.dll foo x'cd'' catch. end.
@@ -84,7 +76,18 @@ q=. q,~JDP,'cd/'
 
 LIBJD=: '"',t,'"'
 JDT=: (LIBJD,' jdinit >x') cd '' NB. get jdt
-r=. (LIBJD,' jdlicense >x x *c') cd JDT;<jpath'~config'
+
+k=. fread fkey
+NB. no key or old free key map to JDP,'jdkey.txt'
+if. (_1-:k)+.noncom-:(#noncom){.k do.
+ pk=. }:JDP
+ echo noncomkey
+else.
+ pk=. '~config'
+ echo '!!! Jd key:',(k i.' ')}.k
+end. 
+
+r=. (LIBJD,' jdlicense >x x *c') cd JDT;<jpath pk
 if. _1=r do. assert 0[echo invalidkey end.
 NB. if. _2=r do. assert 0[echo evalkey end.
 if. _3=r do. assert 0[echo updatekey end.
