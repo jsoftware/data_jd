@@ -31,6 +31,7 @@ select. UNAME
 case. 'Linux';'Darwin' do.
  t=. '#!/bin/bash',LF
  t=. t,'"BINPATH/jconsole" "SCRIPT"' rplc 'BINPATH';(jpath'~bin');'SCRIPT';f,'run.ijs'
+ if. '/usr/bin'-:jpath'~bin' do. t=. 'jconsole' rplc 'ijconsole' end.
  t fwrite f,'/run.sh'
  shell'chmod +x ',f,'run.sh'
  cmd=. ('nohup "PATHrun.sh" > "LOG" 2>&1') rplc 'PATH';f;'LOG';logstd
