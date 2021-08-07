@@ -67,7 +67,7 @@ elseif. 1 do.
  if. _1=nc<'DLLDEBUG__' do.
   t=. t,'jd.dll'
  else.
-  t=. '/users/eric/git/jd-cdsrc/makevs/x64/debug64/jddll.dll' NB. ms visual studio debug
+  t=. jpath'~/git/jd-cdsrc/makevs/x64/debug64/jddll.dll' NB. visual studio debug
   echo t
  end.
 end.
