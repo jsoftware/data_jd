@@ -206,14 +206,14 @@ fix1string =: 3 : 0
   cescape_jd_}.}: y
 )
 
-fixnum =: 3 : 0
+fixnum=: 3 : 0
 if. ('edate'-:5{.typ) *. '"'={.y do. 
  r=. efs }.}:y
 else.
- r=. __ ".y
- 'invalid number' assert __~:r
+ r=. __".y
+ if. __ e. r do. 'invalid number' assert -.+./(__=r) *. _=_".y end.
  NB. Temporary fix for bug in dyad ".
- if. (4 = 3!:0 r) *. *@# (i =. (2<.@^52) I.@:<: |r) do.
+ if. 0*.(4 = 3!:0 r) *. *@# (i =. (2<.@^52) I.@:<: |r) do.
   r =. (".@> i { a: -.~ <;._1 ' ',y) i} r
  end.
 end.

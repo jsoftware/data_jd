@@ -17,13 +17,13 @@ fread path,'run.ijs'  NB. ijs script to start this server
 fread path,run_sh_bat NB. host shell script to run this server
 fread path,'run.txt'  NB. fork_jtask_ arg to start this server
 
-killport PORT NB. kill task (if any) serving port
+killport_jport_ PORT NB. kill task (if any) serving port
 check_jds PORT NB. start jds server on PORT
-pidport'' NB. table of pids and ports
-pidfromport PORT NB. pid of server task - _1 if start failed
+pidport_jport_'' NB. table of pids and ports
+pidfromport_jport_ PORT NB. pid of server task - _1 if start failed
 fread path,'logstd.log' NB. stdout/stderr log
 fread path,'log.log'    NB. event log
-killport PORT NB. kill the server
+killport_jport_ PORT NB. kill the server
 
 0 :0
 you might want to run the jds server in a terminal window

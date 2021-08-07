@@ -41,7 +41,7 @@ fn_custom=:  '~temp/jd/jds_db_a/custom.ijs'
 (fread JDP,'server/node/custom.ijs')fwrite fn_custom
 fread fn_custom
 
-killport 65220  NB. force restart so custom.ijs is loaded
+killport_jport_ 65220  NB. force restart so custom.ijs is loaded
 check_jds 65220 NB. make sure jds server is running on port 65220
 check_jds 65221
 
@@ -81,10 +81,10 @@ runit=: ;IFWIN{'run.sh';'run.bat'
 fread path,runit  NB. script to run node app
 fread path,'run.txt' NB. fork_jtask arg to run node app server
 
-killport PORT NB. kill previous server if any
+killport_jport_ PORT NB. kill previous server if any
 fork_jtask_ fread path,'/run.txt' NB. start node jds app server on port 3000
 i.0 0[6!:3[0.2 NB. give task a chance to get started
-pidport''
+pidport_jport_''
 fread path,'/logstd.log' NB. stdout/stderr from the node server
 
 0 :0
@@ -92,7 +92,7 @@ you might want to run the node server in a terminal window
 so you see console.log messages that will help in debugging
 to run the server in a terminal window:
  
-   killport 3000 NB. kill currrent server
+   killport_jport_ 3000 NB. kill currrent server
    path,runit    NB. command to paste into terminal to run server
 )   
 

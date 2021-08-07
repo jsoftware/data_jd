@@ -9,8 +9,8 @@ load JDP,'server/jds_client/jds_client.ijs'
 PORT=: 65220 NB. port with jds service
 
 check_jds PORT
-pidport''
-pidfromport PORT
+pidport_jport_''
+pidfromport_jport_ PORT
 
 0 : 0
 config client to use server:  host port fin fout dan u/p

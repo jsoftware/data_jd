@@ -27,11 +27,12 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '4.4.91'
+VERSION=: '4.4.96'
 
 FILES=: 0 : 0
 manifest.ijs
 jd.ijs
+jdkey.txt
 todo.txt
 demo/common.ijs
 demo/sed/csv/jdclass
