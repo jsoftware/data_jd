@@ -60,9 +60,15 @@ fn=: '~temp/jdserver/node/nodebinpath'
 3 : 0 ''
 if. fexist fn do. '' return. end.
 mkdir_j_ '~temp/jdserver/node'
+if. IFWIN do. if. 2~: ftype fp=. 'c:\Program Files\nodejs' do. fp=. _1 end.
+else. if. _1 -.@-: fp=. 2!:0 ::_1: 'which node' do. fp=. ({.~ i:&'/') fp end.
+end.
+if. _1 -.@-: fp do. (jpath fp) fwrite fn
+else.
 r=. 'you need to run following sentence to set the path to node binary',LF
 r=. r,'   (jpath''path to node binary'') fwrite fn'
 echo r
+end.
 )
 
 t=. fread fn
