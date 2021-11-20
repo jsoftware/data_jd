@@ -44,7 +44,7 @@ if. _1=nc<'unique' do. unique=: 0 end.
 
 PID=: 2!:6''
 PATH=: jpath'~temp/jctask/'
-JC=: jpath'~bin/',('/usr/share/j/'-:13{.jpath'~install'){::'jconsole';'ijconsole'
+JC=: jpath'~bin/',(1 e. '/share/j/' E. jpath'~install'){::'jconsole';'ijconsole'
 TAIL=: LF,LF,'exit'''''
 
 HEAD=: 0 : 0
