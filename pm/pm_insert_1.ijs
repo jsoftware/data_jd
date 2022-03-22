@@ -42,7 +42,7 @@ i.0 0
 )
 
 bench=: 3 : 0
-100 timex 'jd''insert f'';newdata'
+y timex 'jd''insert f'';newdata'
 )
 
 old=: 0.00152047 NB. bld 50 300000

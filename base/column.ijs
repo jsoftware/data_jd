@@ -111,7 +111,8 @@ mapcolfile name
 
 resize=: 3 : 0
 'name data'=. y
-resizemap name;(getbytes{.data)*ROWSMIN>.>.ROWSMULT*ROWSXTRA+(#name~)+#data
+c=. #name~ NB. must be in its own sentence so ref count is up and then back down
+resizemap name;(getbytes{.data)*ROWSMIN>.>.ROWSMULT*ROWSXTRA+c+#data
 )
 
 appenddat=: 3 : 0
