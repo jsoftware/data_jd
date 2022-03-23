@@ -63,10 +63,10 @@ ETALLY assert c={.c=. ;#each vs
 deb _3}.' ',;ns,each' ',each typ,each' ',each ts,each<' , '
 )
 
+NB. OSX pre catalina - if. UNAME-:'Darwin' do. ('invalid name (OSX filename - unicode composed vs decomposed): ',y)assert 127>a.i.y end.
 vname=: 3 : 0 NB. validate name
 ('invalid name: ',y)assert (0~:#y) *. (2=3!:0 y) *. 2>$$y
 ('invalid name - unprintable chars: ',y) assert -.y e.~32{.a.
-if. UNAME-:'Darwin' do. ('invalid name (OSX filename - unicode composed vs decomposed): ',y)assert 127>a.i.y end.
 )
 
 vdname=: 3 : 0 NB. validate dan name
