@@ -177,8 +177,8 @@ end.
 ind=. +/\ 0,}:t{1 2 2
 a=. (;:'int1 int2 int4')i.typ
 t=. t>. (a~:3)*3+a
-rws=. pointer_to_name 'rws'
-col=. pointer_to_name@> ; 3 :'ExportMap__y $0'&.> <"0 cols
+rws=. memhad 'rws'
+col=. memhad@> ; 3 :'ExportMap__y $0'&.> <"0 cols
 lib=. LIBJD,' writecsv > n *c x *x *x *c *x x *x'
 empty lib cd f;l;t;et;seputc;ind;rws;col
 )

@@ -116,23 +116,9 @@ end.
 i.0 0
 )
 
-setcount=: 3 : 0
-'name count'=. y
-sad=. 15!:6 <fullname name
-had=. 1{memr sad,0 4,JINT
-count memw had,HADS,1,JINT
-i.0 0
-)
-
-getcount=: 3 : 0
-sad=. symget <fullname y
-had=. 1{memr sad,0 4,JINT
-''$memr had,HADS,1,JINT
-)
-
+NB. get msize from name
 getmsize=: 3 : 0
-sad=. symget <fullname y
-had=. 1{memr sad,0 4,JINT
+had=. memhad fullname y
 ''$memr had,HADM,1,JINT
 )
 

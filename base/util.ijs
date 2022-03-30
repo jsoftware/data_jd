@@ -245,29 +245,6 @@ logprogress=: 3 : 0
 try. y fwrite '~temp/jdprogress' catch. end.
 )
 
-NB. cd utilities
-pointer_to =: 3 :'pointer_to_name ''y'''
-pointer_to_name=: 1 { [: memr (0 4,JINT) ,~ symget@boxopen@,
-
-gethad=: 1 { [: memr 0 4 4 ,~ [: symget <
-
-NB. Date and time utils
-toseconds =: (3 ((86400 * [: 3 :0 {."1) + (60 #. }."1)) (0,5#100)&#:) :. todatetime
-y=.{."1 y [ m=.1{"1 y [ d=.{:"1 y
-y=. 0 100 #: y - m <: 2
-n=. +/"1 ]4 <.@%~ 146097 1461 *"1 y
-n =. n + 10 <.@%~ 4 + (306 * 12 | m-3)  +  10 * d
-n - 657378
-)
-
-todatetime =: (86400 ((1e6 * [: 3 :0 <.@%~) + 100 #. 0 60 60 #: |) ]) :. toseconds
-a4=. 2629511 + 4*y
-d4=. 4 (]-|) a4 - 146097 * c=. a4 <.@% 146097
-d10=. 10 * 4 <.@%~ 7 + d4 - 1461 * y=. 1461 <.@%~ 3+d4
-d=. 10 <.@%~ 4+d10-306* m=. 306 <.@%~ d10-6
-(1e4*(c*100) + y + m>:10) + (100*1+12|m+2) + d
-)
-
 NB. format utils
 
 NB. convert jd'...' table to HTML

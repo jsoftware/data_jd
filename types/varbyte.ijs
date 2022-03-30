@@ -93,7 +93,7 @@ NB. dat val 0 daty valy u v
 NB.! BC global arg ugly
 callit=: 4 : 0
 b=. BC#0
-r=. varbyte cd JDT,x,(gethad'b'),y
+r=. varbyte cd JDT,x,(memhad'b'),y
 if. 0~:r do. throw 'C varbyte failed with code ',":r end.
 I.b
 )
@@ -101,12 +101,12 @@ I.b
 call=: 4 : 0
 BC=: #dat
 if. 0=L.y do. y=. y,{.a. end. NB. regex needs trailing null
-x callit (gethad'dat'),(gethad'val'),(gethad'y'),0,0,0,0
+x callit (memhad'dat'),(memhad'val'),(memhad'y'),0,0,0,0
 )
 
 callc=: 4 : 0
 BC=: #dat
-x callit (gethad'dat'),(gethad'val'),0,(gethad'dat__y'),(gethad'val__y'),0,0
+x callit (memhad'dat'),(memhad'val'),0,(memhad'dat__y'),(memhad'val__y'),0,0
 )
 
 qequal=:     1&call
@@ -127,7 +127,7 @@ y NB. necessary to enable explicit use of y u v
 u
 v
 BC=: #u
-1 callit (gethad'dat'),(gethad'val'),0,(gethad'dat__y'),(gethad'val__y'),(gethad'u'),gethad'v'
+1 callit (memhad'dat'),(memhad'val'),0,(memhad'dat__y'),(memhad'val__y'),(memhad'u'),memhad'v'
 )
 
 NB. column ne foreign column
@@ -136,5 +136,5 @@ y NB. necessary to enable explicit use of y u v
 u
 v
 BC=: #u
-0 callit (gethad'dat'),(gethad'val'),0,(gethad'dat__y'),(gethad'val__y'),(gethad'u'),gethad'v'
+0 callit (memhad'dat'),(memhad'val'),0,(memhad'dat__y'),(memhad'val__y'),(memhad'u'),memhad'v'
 )

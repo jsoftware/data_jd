@@ -4,7 +4,7 @@ coclass'jd'
 
 valsize=: 4 : 0
 mr=. mappings_jmf_{~({."1 mappings_jmf_)i.<x,'_',(;y),'_'
-ms=. msize_jmf_ >6{mr
+ms=. getmsize_jmf_ 0{::mr
 fs=. fsize 1{mr
 assert fs=ms+HS_jmf_
 )

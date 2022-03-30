@@ -139,27 +139,6 @@ getbytes=: 3 : 0
 ((JTYPES i. 3!:0 y){JSIZES)**/$y
 )
 
-NB. y is dat val hash link etc
-NB. return msize rows (how many rows will fit in msize) 
-getmsr=: 3 : 0
-r=. getmsize_jmf_ y,Cloc
-select. y 
-case. 'dat' do.
- if. 'varbyte'-:typ do.
-  a=. 8[s=. 2
- else.
-  a=. DATASIZE [ s=. shape
- end. 
-case. 'val' do.
- a=. 1
- s=. ''
-case. do.
- a=. 8
- s=. ''
-end. 
-<.r%a**/s
-)
-
 NB. Export column to boxes
 ExportMap=: 3 :'MAP ,&.> <Cloc'
 Export=: [: ".&.> [: ". 'MAP'"_

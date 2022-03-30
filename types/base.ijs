@@ -122,7 +122,7 @@ qunlikeci=: 2&liker
 liker=: 4 : 0
 b=. (#dat)#0
 y=. y,{.a.
-r=. cd_qlike cd JDT,x,(gethad'b'),(gethad'dat'),gethad'y'
+r=. cd_qlike cd JDT,x,(memhad'b'),(memhad'dat'),memhad'y'
 if. 0~:r do. throw 'C qlike failed with code ',":r end.
 I.b
 )

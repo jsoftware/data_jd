@@ -326,9 +326,9 @@ combinejoins =: 4 : 0
 if. 0={:$x do. y return. end.
 NB. comb =. 2 $~ x (+&<:&# , {:@[ (i. +/@:{ ((i.~~.) { #/.~)@[) {.@]) y
 lib =. LIBJD,' combinejoins_len > x x x'
-comb =. 2 $~ (x+&<:&#y) , lib cd pointer_to_name&.> ;:'x y'
+comb =. 2 $~ (x+&<:&#y) , lib cd memhad&.> ;:'x y'
 lib =. LIBJD,' combinejoins > n x x x'
-comb [ lib cd pointer_to_name&.> ;:'comb x y'
+comb [ lib cd memhad&.> ;:'comb x y'
 )
 
 NB. Assume the query is on columns from two different tables.

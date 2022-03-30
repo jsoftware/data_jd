@@ -27,15 +27,15 @@ for_i. i.#y do.
 end.
 )
 
-sp =: [: 7!:2@> (' ';'exact ') ('jd ',[:quote'read from ',,)&.> <
+spjoin =: [: 7!:2@> (' ';'exact ') ('jd ',[:quote'read from ',,)&.> <
 
 tcs 3#<2#i.1e4
-NB. assert 4 < %~/ sp 'f,f.g,g.h where h.a<100'
-NB. assert 10< %~/ sp 'f,f.g,g.h where h.a<100'
-NB. assert 6< %~/  sp 'f,f.g,g.h where h.a<100'
-NB. assert 4 < %~/ sp 'f,f-g,g-h where h.a<100'
-NB. assert 10< %~/ sp 'f,f-g,g-h where h.a<100'
-NB. assert 6< %~/  sp 'f,f-g,g-h where h.a<100'
+NB. assert 4 < %~/ spjoin 'f,f.g,g.h where h.a<100'
+NB. assert 10< %~/ spjoin 'f,f.g,g.h where h.a<100'
+NB. assert 6< %~/  spjoin 'f,f.g,g.h where h.a<100'
+NB. assert 4 < %~/ spjoin 'f,f-g,g-h where h.a<100'
+NB. assert 10< %~/ spjoin 'f,f-g,g-h where h.a<100'
+NB. assert 6< %~/  spjoin 'f,f-g,g-h where h.a<100'
 
 tcs 500 10 1 #&.> 3#<i.10
-NB. assert 2 < %~/ sp 'f,f-g,g-h where h.a=0'
+NB. assert 2 < %~/ spjoin 'f,f-g,g-h where h.a=0'

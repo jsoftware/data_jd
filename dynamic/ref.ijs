@@ -41,10 +41,6 @@ jdmap (y,Cloc);PATH,y
 writestate''
 )
 
-getmapsize=: 3 : 0
-msize_jmf_ 6 pick (({."1 mappings_jmf_) i. <y,Cloc){mappings_jmf_
-)
-
 NB. left1 join - set dat column
 setdat=: 3 : 0
 if. -.dirty do. return. end.
@@ -60,7 +56,7 @@ a=. stitch 1{subscriptions
 b=. stitch 0{subscriptions
 ac=. #a 
 bc=. #b
-if. (bc*8)>getmapsize'dat' do. resizemap 'dat' ; bc*8 end.
+if. (bc*8)>getmsize_jmf_ 'dat',Cloc do. resizemap 'dat' ; bc*8 end.
 dat=: a i. b NB. i:
 dat=: _1 ((dat=ac)#i.#dat)}dat
 setdirty 0
@@ -92,7 +88,10 @@ a=. stitch 1{subscriptions
 b=. stitch 0{subscriptions
 r=. b datleft a
 size=. 8**/$r
-if. size>getmapsize'dat' do. resizemap 'dat' ; size end.
+
+
+
+if. size>getmsize_jmf_ 'dat',Cloc do. resizemap 'dat' ; size end.
 dat=: r
 setdirty 0
 )

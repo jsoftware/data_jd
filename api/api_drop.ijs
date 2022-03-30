@@ -122,9 +122,6 @@ for_i. i.#h do.
  size=. (JTYPES i.type){JSIZES
  shape=. $n~
  dsize=. size**/shape
- msize=. getmsize_jmf_ n
- assert (fsize i{d)=HS_jmf_+msize
- assert msize>:dsize
  rn=. rn,i{d
  ra=. ra,fsize i{d
  rz=. rz,HS_jmf_+psroundup dsize
