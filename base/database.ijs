@@ -84,12 +84,12 @@ str=. ''
 src=. ''
 for_n. b do.
  w=. getloc__t n
- src=. src,symdat<'dat__w'
+ src=. src,15!:14<'dat__w'
  s=. ((JTYPES i. 3!:0 dat__w){JSIZES)
  str=. str,((JTYPES i. 3!:0 dat__w){JSIZES)**/}.$dat__w
 end.
 sink=. (rows,+/str)$'u'
-libstitch cd rows,(symdat<'sink'),(#str),(symdat<'str'),symdat<'src'
+libstitch cd rows,(15!:14<'sink'),(#str),(15!:14<'str'),15!:14<'src'
 sink
 )
 
@@ -104,12 +104,12 @@ src=. ''
 for_i. i.#y do.
  z=. 'a',":i
  (z)=. >i{y
- src=. src,symdat<z
+ src=. src,15!:14<z
  s=. ((JTYPES i. 3!:0 z~){JSIZES)
  str=. str,((JTYPES i. 3!:0 z~){JSIZES)**/}.$z~
 end.
 sink=. (rows,+/str)$'u'
-libstitch cd rows,(symdat<'sink'),(#str),(symdat<'str'),symdat<'src'
+libstitch cd rows,(15!:14<'sink'),(#str),(15!:14<'str'),15!:14<'src'
 sink
 )
 
