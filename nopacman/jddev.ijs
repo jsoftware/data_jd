@@ -14,7 +14,11 @@ Initial load sets JDP_jd_ as path to jd folder and this
 is used for all other file references.
 
 *** pacman release build (from ~Addons/ide/jhs):
- bup'git/addons/data/jd'
+   up jdversion in jd.ijs
+   update wiki Jd/Release notes for this release
+    and start beta note
+ 
+   bupx 'ready-for-pacmna' NB. 'git/addons/data/jd'
 
  ...$ cd git/addons/data/jd
  ...$ git pull
