@@ -10,12 +10,16 @@ STATE=: <;._2 ]0 :0
 REPLICATE
 RLOGFOLDER
 RLOGINDEX
+DAMAGE
+REPAIR
 )
 
 NB. initial state values
 REPLICATE =: 0     NB. 1 for source, 2 for sink
 RLOGFOLDER=: ''    NB. folder for log files
 RLOGINDEX =: _1    NB. snk db index in file of next record 
+DAMAGE=: 0         NB. 1 if db marked as damaged
+REPAIR=: 0         NB. 1 if db marked as under repair
 
 NB. values not in state
 RLOGFH    =: 0     NB. src/snk rlog file handle
@@ -54,6 +58,7 @@ aggcreate''
 writestate''
 )
 
+NB. close does not do writestate - DAMAGE/REPAIR and others do writestate as required
 close=: 3 : 0
 if. RLOGFH~:0 do. RLOGFH=: 0[1!:22 RLOGFH end.
 )

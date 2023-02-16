@@ -92,7 +92,7 @@ NAMES=: NAMES-.<NAME__y
 
 colcheck=: 3 : 0
 if. Tlen~:countdat__y'' do.
- if. -.fexist '/jdrepair',~dbpath DB do. jddamage 'Tlen wrong for col ',NAME__y,' in table ',NAME__PARENT__y end.
+ if. -.REPAIR__dbl do. jddamage 'Tlen wrong for col ',NAME__y,' in table ',NAME__PARENT__y end.
 end.
 )
 

@@ -62,15 +62,16 @@ end.
 
 )
 setTlen=: 3 : 0
+tlen=: y
 Tlen=: y
 writestate''
 )
 
 openflag=: 0 NB. old style tests
 
-open=: 3 : 0
-openflag=: 1
-)
+open=: 3 : 'openflag=: 1'
+
+open=: 3 : 'openflag=: 1'
 
 testcreate=: [ NB. validation is done in api
 
@@ -84,7 +85,7 @@ writestate''
 index=: Create 'jdindex' ;'autoindex' ;$0
 )
 
-close =: ]
+close =: [
 
 DeleteCols=: 3 : 0
 Drop@> ~. cutnames y

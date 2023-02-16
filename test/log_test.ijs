@@ -64,5 +64,5 @@ jd'reads from f' NB. logtxt but not damaged
 
 bld''
 'assertion failure'-:jddamage_jd_ etx'really messed up'
-ferase p,'jddamage'
+jddamage_jd_''
 assert +./'really messed up' E. fread plog

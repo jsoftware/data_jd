@@ -75,7 +75,7 @@ NB. CSVTSHAPE=: (<'byte') ((CSVTYPS=<'CI1')#i.#CSVTYPS)}JDTYPS NB. kludge map CI
 NB. CSVTSHAPE=: (<'byte') ((CSVTYPS=<'CI2')#i.#CSVTYPS)}JDTYPS NB. kludge map CI2 to byte
 NB. CSVTSHAPE=: (<'byte') ((CSVTYPS=<'CI4')#i.#CSVTYPS)}JDTYPS NB. kludge map CI4 to byte
 
-d=. getdb_jd_''
+d=. getdbx_jd_''
 Create__d table;''
 
 a=. csvjdcoldefs csv
@@ -89,7 +89,7 @@ end.
 jd_close_jd_''
 csvjd  jd;csv
 (3!:1 [1 2$'Tlen';ROWS) fwrite jd,'/jdstate' NB. writestate TLen essential
-getdb_jd_'' NB. restore dbl after close
+getdbx_jd_'' NB. restore dbl after close
 
 NB. int1, int2, int4 need shape fixed
 NB. csv loader creates intx cols as n,x cols

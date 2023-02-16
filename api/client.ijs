@@ -246,6 +246,7 @@ if. 'intask'-:SERVER do.
  
  if. -. (<OP) e. NODBOPS do. 
   getdb'' NB. dbl global and test for damage
+  'db damaged and not under repair' assert (-.DAMAGE__dbl)+.REPAIR__dbl
   r=. dbrow DBPATHS
   'not a db access name' assert r<#DBPATHS
   r=. dbrow DBUPS

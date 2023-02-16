@@ -154,7 +154,7 @@ t
 
 NB. make db a replicate src
 jdrepsrc=: 3 : 0
-getdb''
+getdbx''
 fn=. reparg y
 
 if. IFWIN do.
@@ -180,7 +180,7 @@ i.0 0
 )
 
 jdrepsnk=: 3 : 0
-getdb''
+getdbx''
 fn=. reparg y
 'folder does not exist'assert 2=ftype fn
 'not a replicate folder'assert 'rlog'-:fread fn,'jdclass'
@@ -194,7 +194,7 @@ i.0 0
 )
 
 jdrepkill=: 3 : 0
-getdb''
+getdbx''
 ECOUNT assert 0=#y
 'not marked as replicate'assert 0~:REPLICATE__dbl
 REPLICATE__dbl=: 0
@@ -230,7 +230,7 @@ end.
 )
 
 jdrepinfo=: 3 : 0
-getdb''
+getdbx''
 REPLICATE__dbl;RLOGFOLDER__dbl
 )
 

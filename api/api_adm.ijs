@@ -20,17 +20,30 @@ jdpath=:  3 : 'jpath jdpathx y'
 jdpathx=: 3 : '(dbpath DB),''/'',y'
 
 assertnodamage=: 3 : 0
-p=. <jdpath''
-'db damaged and not under repair' assert -.1 0-:fexist p,each'jddamage';'jdrepair'
+'db damaged and not under repair' assert REPAIR__dbl+.-.DAMAGE__dbl
 )
 
-getdb=: 3 : 0
-assertnodamage''
+NB. old version - still required by csv funnies
+getdbx=: 3 : 0
 db=. dbpath DB
-'not database class'assert 'database'-:jdfread db,'/jdclass'
 i=. db i:'/'
 f=. Open_jd_ jpath i{.db
 dbl=: Open__f (>:i)}.db
+assertnodamage''
+dbl
+)
+
+getdb=: 3 : 0
+i=. ({."1 DBLOCS)i.<jpath dbpath DB
+dbl=: {:i{DBLOCS
+NB.! kludge - locale may have been closed
+if.-.dbl e. conl 1 do.
+ getdbx''
+ DBLOCS=: dbl (<i;1)}DBLOCS
+end. 
+dbl=: {:i{DBLOCS
+assertnodamage''
+dbl
 )
 
 NB. table names,.locales sorted by name
@@ -139,6 +152,7 @@ elseif. 0-:y do.
  jdadminup 0
  jdadminop 0
  jdaccess 0
+ DBLOCS=: 0 2$''
  i.0 0
 elseif. 1 do.
  adminopen y
@@ -208,7 +222,14 @@ adminopen=: 3 : 0
  end.
  NB. default access is for the 1st of the new dans
  jdaccess (;{.c{DBPATHS_jd_),' ',(;{:c{DBUPS_jd_),' intask'
- getdb'' NB. set dbl
+ 
+ db=. dbpath DB
+ i=. db i:'/'
+ f=. Open_jd_ jpath i{.db
+ dbl=: Open__f (>:i)}.db
+ DBLOCS=: DBLOCS,(jpath db);dbl
+ assertnodamage''
+ 
  JDMT=: mt
  i.0 0
 )
@@ -300,37 +321,37 @@ x lock y
 i.0 0
 )
 
-NB. serious error (e.g., disk full)
 NB. mark db as damaged - prevent any more ops on db
 NB. signal error
 jddamage=: 3 : 0
 if. 0~:JDMT do. 'RO/CW db serious error - but db not marked as damaged'assert 0 end.
-p=. 'jddamage',~jdpath''
 if. #y do.
  'damage'logtxt y
  'damage'logjd y
  y=. 'db marked as damaged - ',y,' - see doc technical|damaged'
- y fwrite p
+ DAMAGE__dbl=: 1
+ writestate__dbl''
  y assert 0
 end.
-ferase p
-ferase 'jdrepair',~jdpath''
+DAMAGE__dbl=: REPAIR__dbl=: 0 NB. all good now
+writestate__dbl''
 i.0 0 
 )
 
 NB. jdrepair 'reason' - mark damaged db as under repair
 NB. jdrepair ''       - unmark
 jdrepair=: 3 : 0
-p=. jdpath''
 if. #y do.
- y fwrite p,'/jdrepair'
+ REPAIR__dbl=: 1
 else.
- ferase p,'/jdrepair'
+ REPAIR__dbl=: 0
 end.
+writestate__dbl''
 i.0 0
 )
 
 3 : 0''
+if. _1=nc<'DBLOCS'  do. DBLOCS=:  0 2$'' end.
 if. _1=nc<'DBPATHS' do. DBPATHS=: 0 2$'' end.
 if. _1=nc<'DBUPS'   do. DBUPS=:   0 2$'' end.
 if. _1=nc<'DBOPS'   do. DBOPS=:   0 2$'' end.
