@@ -20,7 +20,7 @@ jdversion=: '4.41'
 
 doin=: 4 : '(<x)(4 : ''do__y x'')each<"0 y' NB. run sentence in each locale
 
-'Jd requires J807 or later'assert 807<:0".}.4{.9!:14''
+'Jd requires J807 or later'assert (807<:0".}.4{.9!:14'')+.0=4!:0<'JVERSION_NUMBER__'
 'Jd requires J64'assert IF64=1
 ('Jd not supported on UNAME: ',UNAME) assert (<UNAME)e.'Win';'Linux';'Darwin' 
 'Jd requires addon jfiles'assert fexist '~addons/data/jfiles/jfiles.ijs'
