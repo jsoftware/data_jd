@@ -6,13 +6,11 @@ throw=: 13!:8&101 NB. jd not in our path
 CLASS=: <'jdtable'
 CHILD=: <'jdcolumn'
 
-NB. =========================================================
 Padvar=: 1.5     NB. ratio to increase by on resize
 
-NB. =========================================================
-NB. State
+NB. Tlen maintained in mapped Tlen rather than in state
+NB. state value (from table created in earlier version) to set mapped Tlen
 STATE=: <;._2 ]0 :0
-Tlen
 S_ptable
 SUBSCR
 ROWSMIN
@@ -20,7 +18,6 @@ ROWSXTRA
 ROWSMULT
 )
 
-Tlen=: 0
 S_ptable=: 0
 SUBSCR=: 0 3$a: NB. see dynamic/base.ijs
 ROWSMIN=:  2000
@@ -62,16 +59,25 @@ end.
 
 )
 setTlen=: 3 : 0
-tlen=: y
 Tlen=: y
-writestate''
 )
 
 openflag=: 0 NB. old style tests
 
-open=: 3 : 'openflag=: 1'
+open=: 3 : 0
+openflag=: 1
 
-open=: 3 : 'openflag=: 1'
+tx=. Tlen NB. Tlen from state
+erase'Tlen'
+p=. PATH,'jdtlen'
+if. fexist p do.
+ jdmap ('Tlen_',(;coname''),'_');p
+else.
+ jdcreatejmf p;8
+ jdmap ('Tlen_',(;coname''),'_');p
+ Tlen=: tx
+end.
+)
 
 testcreate=: [ NB. validation is done in api
 
@@ -82,10 +88,18 @@ create=: 3 : 0
 if. 3~:#alloc do. alloc=. ROWSMIN_jdtable_,ROWSMULT_jdtable_,ROWSXTRA_jdtable_ end.
 'ROWSMIN ROWSMULT ROWSXTRA'=: 4 1 0>.alloc
 writestate''
+
+p=. PATH,'jdtlen'
+jdcreatejmf p;8
+jdmap ('Tlen_',(;coname''),'_');p
+Tlen=: 0
+
 index=: Create 'jdindex' ;'autoindex' ;$0
 )
 
-close =: [
+close =: 3 : 0
+jdunmap 'Tlen_',(;coname''),'_'
+)
 
 DeleteCols=: 3 : 0
 Drop@> ~. cutnames y
@@ -117,7 +131,10 @@ catchd.
  NB. needs to mark dynamic cols dirty
  NB. has to do everything that repair would do
  NB. for now, just mark the db damaged and let repair do the hard work
- setTlen rows NB. original rows
+
+ NB. Tlen is mapped and following is a ref without forcecopy
+ setTlen forcecopy rows NB. original rows
+ 
  jddamage'insert failed'
 end.
 EMPTY

@@ -111,6 +111,7 @@ jd_dropfilesize=: 3 : 0
 p=. jpath dbpath DB
 maps=. mappings_jmf_
 maps=. maps /:1{"1 maps
+maps=. ((<'Tlen_')~:5{.each {."1 maps)#maps NB. ignore Tlen
 d=. 1{"1 maps
 b=. (;(<p)-:each (#p){.each d)
 d=. b#d

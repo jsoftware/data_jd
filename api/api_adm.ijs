@@ -226,11 +226,13 @@ adminopen=: 3 : 0
  db=. dbpath DB
  i=. db i:'/'
  f=. Open_jd_ jpath i{.db
+ JDMT=: mt NB. must be set before first Tlen map done by open
  dbl=: Open__f (>:i)}.db
+ 
+ DBLOCS=: (-.({."1 DBLOCS)e.<jpath db)#DBLOCS NB. remove previous
  DBLOCS=: DBLOCS,(jpath db);dbl
  assertnodamage''
  
- JDMT=: mt
  i.0 0
 )
 

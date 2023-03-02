@@ -288,7 +288,9 @@ assert 6003=;{:jd'reads count a from new'
 jd'info schema'
 _ _ 0 _ 2 8-:,'shape'jdfroms_jd_ jd'info schema'
 'abc' fappend CSVFOLDER,'new.csv' NB. damage the csv file
+jd'reads count a from new' NB. should be good
 'ECTOOMUCH' jdae'csvscan new.csv'
+jd'reads count a from new' NB. new should not have been damagaed by csvscab
 
 NB. try the previous examples without the header row
 (;bld each 6000 0 5;3 6000 8)fwrite CSVFOLDER,'new.csv'

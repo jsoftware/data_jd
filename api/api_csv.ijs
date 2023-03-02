@@ -37,6 +37,7 @@ csvfpcwidths=: CSVFOLDER__,root,'.cwidths'
 )
 
 jd_csvscan=: 3 : 0
+jd_close'' NB. close and unmap - later unmapall would abandon table Tlen
 csvset y
 r=. csvscan_jdcsv_''
 if. r<0 do. (;ecodes_jdcsv_{~-r)assert 0 end.

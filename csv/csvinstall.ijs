@@ -87,9 +87,16 @@ for_d. cds do.
 end.
 
 jd_close_jd_''
+NB. set mapped jdtlen with correct length
+p=. jd,'/jdtlen'
+if. -.fexist p do. jdcreatejmf_jd_ p;8 end.
+jdmap_jd_ 'tlen__';p
+tlen__=: ROWS
+jdunmap_jd_ 'tlen__'
+
 csvjd  jd;csv
-(3!:1 [1 2$'Tlen';ROWS) fwrite jd,'/jdstate' NB. writestate TLen essential
 getdbx_jd_'' NB. restore dbl after close
+c=. dbl_jd_
 
 NB. int1, int2, int4 need shape fixed
 NB. csv loader creates intx cols as n,x cols

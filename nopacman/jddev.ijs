@@ -1,24 +1,20 @@
 man=: 0 : 0
 Jd development
 
-~addons -> j90x/addons
+~addons -> j9.4/addons
 ~Addons -> git/addons
 
 editing/testing done with git/addons/data/jd
 
    load'~addons/data/jd/jd.ijs' NB. from ~addons
-   
    load'~Addons/data/jd/jd.ijs' NB. from git/addons
    
-Initial load sets JDP_jd_ as path to jd folder and this
-is used for all other file references.
+initial load sets JDP_z_ as path to jd folder and this
+ is used for all other file references
 
 *** pacman release build (from ~Addons/ide/jhs):
-   up jdversion in jd.ijs
-   update wiki Jd/Release notes for this release
-    and start beta note
- 
-   bupx 'ready-for-pacmna' NB. 'git/addons/data/jd'
+ensure jd'list version' matches jd wiki release notes
+   bupx jd'list version'
 
  ...$ cd git/addons/data/jd
  ...$ git pull
