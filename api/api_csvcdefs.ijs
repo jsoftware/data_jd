@@ -2,6 +2,21 @@ NB. Copyright 2020, Jsoftware Inc.  All rights reserved.
 
 coclass'jd'
 
+NB. better rowsep
+0 : 0
+t=. CRLF e. d
+if.     0 1-:t  do. rowsep=. 'LF' [ rs=. LF NB. only LF
+elseif. 1 0-:t  do. rowsep=. 'CR' [ rs=. CR NB. only CR
+elseif. 1 1-:t  do.
+ NB. both CR and LF - the most CRLF or LF or CR wins
+ ccl=.      +/CRLF E. d NB. CRLFs
+ cc=.  ccl-~+/CR   E. d NB. CRs not in CRLF
+ cl=.  ccl-~+/LF   E. d NB. LFs not in CRLF
+ NB. max determines the rowsep
+elseif.         do. assert 0['unable to determine rowsep - no CR or LF'
+end.
+)
+
 NB. [options] csvfile
 jd_csvcdefs=: 3 : 0
 a=. ca'/replace 0 /c 0 /h 1 /u 0 /v 1'getopts y
@@ -18,10 +33,11 @@ if. option_replace do. ferase csvfpcdefs else. assert (0=ftypex) csvfpcdefs['cde
 NB. determine csv options rowsep colsep quoted escaped headers 
 d=. fread csvfp;0,100000<.fsize csvfp
 if. BOMUTF8=3{.d do. d=. 3}.d end.
+
 if.     +./CRLF E. d do. rowsep=. 'CRLF' [ rs=. CRLF
-elseif. LF     e. d  do. rowsep=. 'LF'   [ rs=. LF
-elseif. CR     e. d  do. rowsep=. 'CR'   [ rs=. CR 
-elseif. 1            do. assert 0['unable to determine rowsep'
+ elseif. LF     e. d  do. rowsep=. 'LF'   [ rs=. LF
+ elseif. CR     e. d  do. rowsep=. 'CR'   [ rs=. CR 
+ elseif. 1            do. assert 0['unable to determine rowsep'
 end.
 
 n=. d{.~ 1 i.~rs E. d NB. first row - could be headers
