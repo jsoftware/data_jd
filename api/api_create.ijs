@@ -4,11 +4,11 @@ coclass'jd'
 
 jd_createdb=: 3 : 0
 ECOUNT assert 0=#y
-t=. dbpath DB
-'w'jdadminlk t
-'f db'=. getfolder''
-Create__f db
-getdb'' NB. required for new db
+'dropdb must be done to allow createdb'assert 0=nc<'CREATEDB'
+p=. CREATEDB
+erase'CREATEDB'
+'db already exists'assert 0=ftypex p
+'new'jdadmin p
 JDOK
 )
 

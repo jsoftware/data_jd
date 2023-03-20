@@ -98,13 +98,6 @@ end.
 r
 )
 
-getfolder=: 3 : 0
-db=. dbpath DB
-p=. jpath db
-i=. p i:'/'
-(Open_jd_ i{.p);(>:i)}.p
-)
-
 NB. y is boxed list of table,col(s)
 NB. table and cols must exist and be valid user names
 NB. x 1 if ptable is allowed

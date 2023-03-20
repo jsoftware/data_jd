@@ -2,15 +2,19 @@ NB. Copyright 2015, Jsoftware Inc.  All rights reserved.
 
 coclass'jd'
 
-NB. release lock, jddeletefolder, admin unchanged
+NB. release lock, jddeletefolder, clear all admin, enable createdb
 jd_dropdb=: 3 : 0
 ECOUNT assert 0=#y
-'f db'=. getfolder''
-t=. dbpath db
+t=. jpath dbpath DB
 'dropstop' assert (0=ftypex) t,'/jddropstop'
 'x' jdadminlk t NB. should be done after Drop - see similar in jdadmin
-Drop__f db
+remove_admin t
+DBLOCS=: (-.({."1 DBLOCS)e.<t)#DBLOCS NB. remove previous
+f=. PARENT__dbl
+Drop__f DB
 jddeletefolder t
+CREATEDB=: t NB. used as implicit arg to createdb
+DB=: dbl=: ''
 JDOK
 )
 

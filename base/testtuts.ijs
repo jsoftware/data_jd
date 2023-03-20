@@ -33,6 +33,7 @@ tutorial/mtm_tut.ijs
 tutorial/node_tut.ijs
 tutorial/northwind_tut.ijs
 tutorial/pairs_tut.ijs
+tutorial/parquet_tut.ijs
 tutorial/performance_tut.ijs
 tutorial/ptable_tut.ijs
 tutorial/quandl_ibm_tut.ijs

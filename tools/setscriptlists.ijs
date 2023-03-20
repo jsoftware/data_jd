@@ -41,7 +41,7 @@ load JDP,'tools/tut.ijs'
 a=. ;(' '=each tuts)i.each 0
 t=. (a>:}.a,0)#tuts
 t=. dltb each t
-f=. 1 dir'~Jddev/tutorial'
+f=. 1 dir JDP,'tutorial'
 f=. _8}.each (>:;f i:each'/')}.each f
 if. #t-.f do.
  echo 'tuts without files'

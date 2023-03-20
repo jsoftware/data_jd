@@ -461,3 +461,19 @@ else.
  'CSVFOLDER already contains the csv file'
 end.
 )
+
+NB. get file from jsoftware jdcsv and put it in ~temp/jdfiles
+getjdfile=: 3 : 0
+require'pacman' NB. httpget
+snk=. '~temp/jdfiles/'
+jdcreatefolder_jd_  snk
+if. -.fexist snk,y do.
+ 'rc fn'=. httpget_jpacman_'www.jsoftware.com/download/jdcsv/',y
+ 'httpget failed'assert 0=rc
+ (snk,y) frename fn
+ m=. 'file downloaded: '
+else.
+ m=. 'already exists: '
+end.
+m,snk,y
+)

@@ -2,21 +2,6 @@ NB. Copyright 2020, Jsoftware Inc.  All rights reserved.
 
 coclass'jd'
 
-NB. better rowsep
-0 : 0
-t=. CRLF e. d
-if.     0 1-:t  do. rowsep=. 'LF' [ rs=. LF NB. only LF
-elseif. 1 0-:t  do. rowsep=. 'CR' [ rs=. CR NB. only CR
-elseif. 1 1-:t  do.
- NB. both CR and LF - the most CRLF or LF or CR wins
- ccl=.      +/CRLF E. d NB. CRLFs
- cc=.  ccl-~+/CR   E. d NB. CRs not in CRLF
- cl=.  ccl-~+/LF   E. d NB. LFs not in CRLF
- NB. max determines the rowsep
-elseif.         do. assert 0['unable to determine rowsep - no CR or LF'
-end.
-)
-
 NB. [options] csvfile
 jd_csvcdefs=: 3 : 0
 a=. ca'/replace 0 /c 0 /h 1 /u 0 /v 1'getopts y
@@ -32,26 +17,39 @@ if. option_replace do. ferase csvfpcdefs else. assert (0=ftypex) csvfpcdefs['cde
 
 NB. determine csv options rowsep colsep quoted escaped headers 
 d=. fread csvfp;0,100000<.fsize csvfp
-if. BOMUTF8=3{.d do. d=. 3}.d end.
+d=. (3*BOMUTF8-:3{.d)}.d NB. drop BOM mark
+d=. (-CR={:d)}.d NB. drop trailing CR in sample (could be CR or CRLF)
 
-if.     +./CRLF E. d do. rowsep=. 'CRLF' [ rs=. CRLF
- elseif. LF     e. d  do. rowsep=. 'LF'   [ rs=. LF
- elseif. CR     e. d  do. rowsep=. 'CR'   [ rs=. CR 
- elseif. 1            do. assert 0['unable to determine rowsep'
-end.
+NB. assume rowsep is the same in quotes as outside quotes - barring bad csv file
+rs=. _1
+if.     -.CR e. d do. rs=. LF NB. no CRs
+elseif. -.LF e. d do. rs=. CR NB. no LFS
+elseif.           do.
+ ccl=.      +/CRLF E. d NB. CRLFs
+ cc=.  ccl-~+/CR   E. d NB. CRs not in CRLF
+ cl=.  ccl-~+/LF   E. d NB. LFs not in CRLF
+ if.   cc+.cl do.
+  echo 'bad csv - CR/LF not in CRLF - assume rowsep is LF'
+  rs=. LF
+ else.
+  rs=. CRLF
+ end.
+end. 
+'unable to determine rowsep' assert _1~:rs
+rowsep=. ;((LF;CR;CRLF)i.<rs){'LF';'CR';'CRLF'
 
 n=. d{.~ 1 i.~rs E. d NB. first row - could be headers
-
-if.     TAB e. n do. colsep=. 'TAB'    [ cs=. TAB
-elseif. ',' e. n do. colsep=. ','      [ cs=. ','
-elseif. ';' e. n do. colsep=. ';'      [ cs=. ';'
-elseif. '|' e. n do. colsep=. '|'      [ cs=. '|'
-elseif. ' ' e. n do. colsep=. 'BLANK ' [ cs=. ' '
+nq=. blankquoted n    NB. only look for colsep outside of "s
+if.     TAB e. nq do. colsep=. 'TAB'    [ cs=. TAB
+elseif. ',' e. nq do. colsep=. ','      [ cs=. ','
+elseif. ';' e. nq do. colsep=. ';'      [ cs=. ';'
+elseif. '|' e. nq do. colsep=. '|'      [ cs=. '|'
+elseif. ' ' e. nq do. colsep=. 'BLANK ' [ cs=. ' '
 elseif. 1        do. assert 0['unable to determine colsep'
 end.
 
 quoted=. '"'
-escaped=. 'NO'
+escaped=. '\' NB. changed from NO in 4.44
 
 cnames=. fread csvfpcnames
 if. option_u do. NB. calc cols based on data
@@ -67,6 +65,8 @@ end.
 
 if. optc-:'header' do.
  cnb=. jdremq_jd_ each cs strsplit_jd_ debq_jd_ n-.CRLF
+ cnb=. dltb each cnb
+ cnb=. (<'null') ((cnb=<'')#i.#cnb)}cnb NB. elided header should be ok
 else.
  t=. fread csvfpcnames
  cnb=. <;._2 toJ t,>(LF={:t){LF;''

@@ -11,10 +11,9 @@ download (only done first time tutorial is run) can take a few minutes
 )
 
 require'web/gethttp'
-require JDP,'tools/csv_load.ijs'
 
 PATH=: '~temp/jd/csv/yellow_tripdata/'
-NAME=: 'yellow_tripdata_2018-01.csv'
+NAME=: 'yellow_tripdata_2019-01.csv'
 
 taxi_get=: 3 : 0
 if. fexist PATH,NAME do. (PATH,NAME,' already downloaded') return. end. 
@@ -29,10 +28,10 @@ NB. next step can take a few minutes if file is not already downloaded
 taxi_get'' NB. download csv file if not already downloaded
 
 NB. use csv_load utils to load csv
-csvprepare 'yellow_tripdata';PATH,NAME
+csvprepare_jd_ 'yellow_tripdata';PATH,NAME
 
 NB. next step can take a few minutes
-csvload 'yellow_tripdata';1
+csvload_jd_ 'yellow_tripdata';1
 
 jd'info summary'
 jd'info schema yellow_tripdata'

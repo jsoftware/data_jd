@@ -199,12 +199,7 @@ adminopen=: 3 : 0
  end.
  
  locktype jdadminlk y
-
- NB. remove old admin for this folder
- dan=. (;(<jpath y)=jpath each {:"1 DBPATHS)#{."1 DBPATHS
- DBPATHS=: (-.({."1 DBPATHS)e.dan)#DBPATHS
- DBUPS=: (-.({."1 DBUPS)e.dan)#DBUPS
- DBOPS=: (-.({."1 DBOPS)e.dan)#DBOPS
+ remove_admin y
  
  bak=. (<DBPATHS),(<DBUPS),<DBOPS
  c=. #DBPATHS
@@ -234,6 +229,14 @@ adminopen=: 3 : 0
  assertnodamage''
  
  i.0 0
+)
+
+NB. remove old admin for folder y
+remove_admin=: 3 : 0
+dan=. (;(<jpath y)=jpath each {:"1 DBPATHS)#{."1 DBPATHS
+DBPATHS=: (-.({."1 DBPATHS)e.dan)#DBPATHS
+DBUPS=: (-.({."1 DBUPS)e.dan)#DBUPS
+DBOPS=: (-.({."1 DBOPS)e.dan)#DBOPS
 )
 
 jdadminnew=: 3 : 0
