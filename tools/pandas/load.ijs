@@ -79,12 +79,14 @@ pandas_log '*** pandas_raw  ',}:;' ',each y
 pandas_path=. jdpath_jd_ pandas_table,'/'
 pandas_snk=. pandas_path,'jdpandas_raw/'
 
-f=. pandas_snk,'jnk.jmf'
-createjmf_jmf_ f;0
-pandas_jmf_header_template=: fread 'abc.jmf'
-ferase f
 jddeletefolder_jd_ pandas_snk
 jdcreatefolder_jd_ pandas_snk
+
+f=. pandas_snk,'jnk.jmf'
+createjmf_jmf_ f;0
+pandas_jmf_header_template=: fread f
+ferase f
+
 py=. JDP,'tools/pandas/load.py'
 q=. '"<py>" "<snk>" "<src>"' rplc '<py>';py;'<snk>';pandas_snk;'<src>';pandas_src
 f=. jdpath '/jd_pandas_python.txt' NB. stdout/stderr redirect
