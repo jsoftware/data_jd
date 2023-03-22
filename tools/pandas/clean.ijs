@@ -24,7 +24,7 @@ for_col. cols do.
  c=. jdgl_jd_ tab,' ',;col
  select. typ__c
  case.'int';'edatetimen';'float' do.
-  r=. cleansub c;OMIN;OMAX;change
+  r=. cleansub c;omin;omax;change
  case. 'byte' do.
   r=. (+/(0{a.)={."1 ,.dat__c),(<:#cleanlabs)#0
  case.        do. r=. _1

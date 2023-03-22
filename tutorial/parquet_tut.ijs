@@ -99,7 +99,7 @@ out+ col has count of values ><.300*avg
 study the table to get a feel for how data can be bad
 )
 
-NB. the next step updates1  the table by replacing Na,out-,out+ data with the mid value
+NB. the next step updates the table by replacing Na,out-,out+ data with the mid value
 clean'pandas_table';200;300;'change'
 jd'read max fare:max fare_amount , avg fare:avg fare_amount from pandas_table'
 jd'read max riders:max passenger_count , min riders: min passenger_count from pandas_table'
