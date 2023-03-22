@@ -16,7 +16,7 @@ all use is through JDP_z_ (set when the library is loaded)
 manlist_z_=: 3 : '>(nl_jman_''''),each<''_jman_''' NB. experimental man system
 
 coclass'jd'
-jdversion=: '4.44'
+jdversion=: '4.45'
 
 doin=: 4 : '(<x)(4 : ''do__y x'')each<"0 y' NB. run sentence in each locale
 
