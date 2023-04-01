@@ -42,10 +42,14 @@ csv
  csv_load
  csv_intro       
  bus_lic 
- parquet
  taxi
  quandl_ibm      
- csv_advanced            
+ csv_advanced
+pandas
+ pandas_install
+ pandas_load
+ pandas_clean
+ pandas_write
 demo
  northwind       
  sandp           

@@ -16,7 +16,7 @@ all use is through JDP_z_ (set when the library is loaded)
 manlist_z_=: 3 : '>(nl_jman_''''),each<''_jman_''' NB. experimental man system
 
 coclass'jd'
-jdversion=: '4.45'
+jdversion=: '4.46'
 
 doin=: 4 : '(<x)(4 : ''do__y x'')each<"0 y' NB. run sentence in each locale
 
@@ -198,27 +198,21 @@ end.
 ifintel=: 'a'={.2 ic a.i.'a' NB. endian
 )
 
-jdwelcome=: 0 : 0 rplc 'BOOKMARK';(jpath JDP,'doc/Index.htm')
-Jd is Copyright 2020 by Jsoftware Inc. All Rights Reserved.
+jdwelcome=: 0 : 0
+Jd is Copyright 2023 by Jsoftware Inc. All Rights Reserved.
 Jd is provided "AS IS" without warranty or liability of any kind.
 
 All use must be under a Jd License:
 https://code.jsoftware.com/wiki/Jd/License
 
-All files in Jd application folder, unless otherwise noted, are:
-Copyright 2020, Jsoftware Inc.  All rights reserved.
-
 Wiki documentation of the latest version is at:
 https://code.jsoftware.com/wiki/Jd/Index
 
-A listing of a run of all the latest tutorials is at:
-https://www.jsoftware.com/jd_tuts.html
-
-Snapshot of the Jd wiki for this release is at: 
-file://BOOKMARK
-
-If you want to load a csv file for use in J (rather than Jd):
+Load csv file for use in J (rather than Jd):
    jdrt'csv_load'
+
+Load parquet (or other format file) for use in J (rather than Jd):
+   jdrt'pandas_load'
 
 Get started:
    jdrt '' NB. tutorials

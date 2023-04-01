@@ -33,7 +33,10 @@ tutorial/mtm_tut.ijs
 tutorial/node_tut.ijs
 tutorial/northwind_tut.ijs
 tutorial/pairs_tut.ijs
-tutorial/parquet_tut.ijs
+tutorial/pandas_clean_tut.ijs
+tutorial/pandas_install_tut.ijs
+tutorial/pandas_load_tut.ijs
+tutorial/pandas_write_tut.ijs
 tutorial/performance_tut.ijs
 tutorial/ptable_tut.ijs
 tutorial/quandl_ibm_tut.ijs
