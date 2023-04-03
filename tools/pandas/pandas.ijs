@@ -154,7 +154,7 @@ for_p. ps do.
   c=. (d-HS_jmf_)%0".rows
   t=. t,' ',":;(1=c){c;''
  end.
- jd'createcol ',table,' ',(dquotex name),' ',t NB.! dquotex?
+ jd'createcol ',table,' ',(dquotex name),' ',t
 end.
 
 c=. jdgl_jd_ table
@@ -165,8 +165,10 @@ jd'close' NB. not really necessary???
 
 NB. move pandas cols to table cols
 for_i. i.#ps do.
- (pt,(dfromn i{::names),'/dat') frename (;i{ps),'.dat' NB.! dfromn
- ferase (;i{ps),'.pandasmeta'
+ fraw=. (;i{ps),'.dat'
+ fdat=. pt,(dfromn i{::names),'/dat'
+ ferase fdat NB. windows frename requires that target does not exist
+ fdat frename fraw
 end.
 jddeletefolder pandas_snk NB. should be empty 
 
@@ -179,7 +181,6 @@ pf=. y
 meta=. fread pf,'.pandasmeta'
 'name type rows'=. <;._2 meta
 rows=. 0".rows
-
 i=. ('int64';'float64';'datetime64[ns]';'object')i.<type
 jt=. i{4 8 4 2
 size=. (fsize pf,'.dat')-HS_jmf_
@@ -199,8 +200,7 @@ if. 'object'-:type do.
   n=. (1 ic 2)    (HADRUS_jmf_+i.2)}n NB. assumes newheader and jams rank 2
  end. 
 end. 
-
-f=. 1!:21 <jpath pf,'.dat'
+f=. 1!:21 <hostpathsep jpath pf,'.dat'
 n fwrite f;0
 1!:22 f
 i.0 0
@@ -260,7 +260,7 @@ cols=. dtb each cols
 types=. dtb each types
 
 i=. pandas_jtypes i. types
-types=. i{pandas_ptypes NB.! error here is unsupported type
+types=. i{pandas_ptypes NB. error here is unsupported type
 
 NB. types=. types,each ":each shapes-.each<_
 NB. types=. (<'S1') ((types=<,'S')#i.#types)}types
@@ -283,7 +283,6 @@ NB. count    - rows to write - 'all' for all rows
 NB. op       - pandas op
 NB. file     - file to write
 NB. parms    - parameters to pandas op
-NB.! assert cnt<:rows
 pandas_write=: 3 : 0
 'db table cnt op file parms'=. y
 jdadmin db
