@@ -303,12 +303,13 @@ fread f
 
 NB. python stuff
 
-python_bin=: 'python3'
+python3_bin=: fread '~config/python3.cfg'
 
 NB. y python command
 NB. x stdout/stderr redirect file
 python_run=: 4 : 0
-t=. python_bin,' ',y,' 1> "<out>" 2>&1'rplc'<out>';jpath x
+'python3_bin_jd_ bad - see jdrt''pandas_install''' assert -._1-:python3_bin
+t=. python3_bin,' ',y,' 1> "<out>" 2>&1'rplc'<out>';jpath x
 try. shell t catch. 'python command failed'assert 0[echo fread x end.
 fread x
 )
