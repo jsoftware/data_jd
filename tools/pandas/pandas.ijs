@@ -121,6 +121,13 @@ fop=. fop rplc '"';'\"'
 q=. '"<py>" "<snk>" "<fop>" "<cnt>"' rplc '<py>';py;'<snk>';pandas_snk;'<fop>';fop;'<cnt>';(":cnt)rplc'_';'-'
 f=. jdpath '/jd_pandas_python.txt' NB. stdout/stderr redirect
 f python_run q
+
+if. -.fexist pandas_snk,'0000.pandasmeta' do.
+ echo q
+ echo fread f
+ 'python_run failed'assert 0
+end. 
+
 pandas_log table;LF,'   python load.py stdout/stderr',LF,fread f
 i.0 0
 )
@@ -297,19 +304,37 @@ fop=. op,'(',(dquotex jpath file),parms,')'
 fop=. fop rplc '"';'\"'
 q=. '"<py>" "<src>" "<fop>" "<cnt>"' rplc '<py>';py;'<src>';src;'<fop>';fop;'<cnt>';cnt
 f=. jpath '~temp/jd_pandas_output.txt' NB. stdout/stderr redirect
+
+ferase file NB. rid of file we are creating
 f python_run q
+if. -.fexist file do.
+ echo q
+ echo fread f
+ 'python_run failed'assert 0
+end. 
 fread f
 )
 
 NB. python stuff
 
-python3_bin=: fread '~config/python3.cfg'
+python3_set_bin=: 3 : 0
+y fwrite '~config/python3.cfg'
+python3_bin=: y
+)
 
-NB. y python command
-NB. x stdout/stderr redirect file
+3 : 0''
+t=. fread '~config/python3.cfg'
+if. t-:_1 do. python3_set_bin'bad_python3_binary_name_jdrt_pandas_install' end.
+python3_bin=: fread '~config/python3.cfg'
+)
+
+NB. y python command - x stdout/stderr redirect file
 python_run=: 4 : 0
-'python3_bin_jd_ bad - see jdrt''pandas_install''' assert -._1-:python3_bin
 t=. python3_bin,' ',y,' 1> "<out>" 2>&1'rplc'<out>';jpath x
-try. shell t catch. 'python command failed'assert 0[echo fread x end.
+try. shell t
+catch.
+ NB. windows shell does not signal error!
+ echo 'python_run failed'
+end.
 fread x
 )

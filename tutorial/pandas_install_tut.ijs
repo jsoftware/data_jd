@@ -29,25 +29,30 @@ it will also need pandas and pyarrow
 )
 
 0 : 0
-you need to manually set python3_bin_jd_ as the file to run
+value in '~config/python3.cfg' is the python3 binary to run
 for linux it might be 'python3'
 for windows it is likely 'py'
 there are many variations - it could be a name in path or a fullname
+you need to set that value the first time and if it changes
 )
 
-NB. rerun the following sentence to set the right filename
-python3_bin_jd_=: 'not_the_right_name'
+python3_bin_jd_ NB. current value in ~config/python3.cfg
+
+0 : 0
+change the value of python3_bin_jd_ if it is not correct
+for example:
+   python3_set_bin_jd_ 'python3'
+)   
 
 '~temp/jd/python.out' python_run_jd_ '--version'
 
 0 : 0
-if previous line failed, the name you set for python3_bin_jd_
-did not work and you need to try again until the python_run_jd_
+if previous line failed, the name you set did not work
+and you need to try again until the python_run_jd_
 sentence runs without error
 )
 
-NB. next line sets python3_bin_jd_ value in ~config/python3.cfg
-python3_bin_jd_ fwrite '~config/python3.cfg'
+'~temp/jd/python.out' python_run_jd_ '--version'
 
 0 : 0
 the loader uses python modules pandas and pyarrow

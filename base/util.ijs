@@ -3,6 +3,13 @@ jdrt_z_=:      jdrt_jd_
 
 coclass 'jd'
 
+NB. 9.4 stdlib - we need it in older installs - in jd locale
+dquotex=: 3 : 0
+s=. y#~ >: m=. (=&'"') y
+p=. (i.#y)#~>: m
+('"'&,@(,&'"')) '\' (p i.(I.m))}s
+)
+
 NB. assert that fsize=HS+msize and fsize is within pad of page boundary
 chksize=: 3 : 0
 d=. }.showmap_jmf_''
