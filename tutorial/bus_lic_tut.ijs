@@ -40,11 +40,11 @@ jd'csvrd ',fcsv,' buslic'
 jd'csvreport'
 
 jd'reads count ID from buslic' NB. more than 860 thousand rows
-jd'reads count:count ID by APPLICATION_TYPE from buslic'
-jd'reads first LICENSE_DESCRIPTION,count:count ID by LICENSE_CODE from buslic order by count desc'
-10{.>1{ {:jd'reads first LICENSE_DESCRIPTION,count:count ID by LICENSE_CODE from buslic order by count desc'
-jd'reads ID,APPLICATION_TYPE,LEGAL_NAME from buslic where LEGAL_NAME = "CHICAGO GAME CO"'
-d=: 'APPLICATION_TYPE'jdfrom_jd_ jd'read APPLICATION_TYPE from buslic'
+jd'reads count:count ID by "APPLICATION TYPE" from buslic'
+jd'reads first "LICENSE DESCRIPTION",count:count ID by "LICENSE CODE" from buslic order by count desc'
+10{.>1{ {:jd'reads first "LICENSE DESCRIPTION",count:count ID by "LICENSE CODE" from buslic order by count desc'
+jd'reads ID,"APPLICATION TYPE","LEGAL NAME" from buslic where "LEGAL NAME" = "CHICAGO GAME CO"'
+d=: 'APPLICATION TYPE'jdfrom_jd_ jd'read "APPLICATION TYPE" from buslic'
 $d
 10{.d
 
