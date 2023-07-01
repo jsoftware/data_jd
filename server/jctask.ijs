@@ -99,7 +99,7 @@ pstart=. pu,'start.ijs'
 pout=. pu,'out'
 
 select. UNAME
-case. 'Linux' do.
+case. 'Linux';'FreeBSD';'OpenBSD' do.
  if. term do.
   c=. 'x-terminal-emulator -e "\"JC\" \"START\""'
  else.
@@ -191,7 +191,7 @@ r
 NB. return 1 if taskid still running
 checktaskid=: 3 : 0
 select. UNAME
-case. 'Linux' do.
+case. 'Linux';'FreeBSD';'OpenBSD' do.
  a=. <;._2 shell 'ps -e -o pid -o command'
  #a#~;+/each (<PATH,y,'/start.ijs') E. each a
 case. 'Darwin' do.

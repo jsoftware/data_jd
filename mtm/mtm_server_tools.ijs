@@ -32,7 +32,7 @@ NB. task utils
 NB. jconsole sentences_to_run
 jconsole=: 3 : 0
 echo y
-'needs work to run in other than linux'assert 'Linux'-:UNAME
+'needs work to run in other than linux'assert (<UNAME)e.'Linux';'FreeBSD';'OpenBSD'
 y fwrite '~temp/jconsole.ijs' 
 fork_jtask_ 'x-terminal-emulator -e "\"/home/eric/j901/bin/jconsole\" ~temp/jconsole.ijs"'
 )
