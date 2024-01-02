@@ -84,7 +84,7 @@ EMPTY
 NB. y is a boxed list of column locales, x is the rows
 readselect=: 4 : 0 "1 0
 ind =. _1 I.@:= x
-sel =. select__y x
+sel =. memu select__y x
 if. *@# ind do. sel =. DATAFILL__y ind} sel end.
 access y
 < sel
