@@ -22,7 +22,7 @@ doin=: 4 : '(<x)(4 : ''do__y x'')each<"0 y' NB. run sentence in each locale
 
 'Jd requires J807 or later'assert (807<:0".}.4{.9!:14'')+.3=4!:0<'revinfo_j_'
 'Jd requires J64'assert IF64=1
-('Jd not supported on UNAME: ',UNAME) assert (<UNAME)e.'Win';'Linux';'Darwin'
+('Jd not supported on UNAME: ',UNAME) assert (<UNAME)e.'Win';'Linux';'FreeBSD';'OpenBSD';'Darwin'
 'Jd requires addon jfiles'assert fexist '~addons/data/jfiles/jfiles.ijs'
 require'jfiles'
 require'data/jmf'
@@ -51,7 +51,7 @@ f=. (;(<n)-:each (-#n){.each d)#d
 JDP_z_=: _6}.;f
 
 t=. jpath JDP,'cd/'
-if. UNAME-:'Linux' do.
+if. (<UNAME)e.'Linux';'FreeBSD';'OpenBSD' do.
  t=. t,IFRASPI{::'libjd.so';'rpi/libjd.so'
 elseif. UNAME-:'Darwin' do.
  t=. t,'libjd.dylib'
@@ -67,7 +67,7 @@ end.
 
 NB. Jd must continue to use pcre library - work is required to make use of the new pcre2 library
 select. UNAME
-case. 'Linux'  do. q=. (IFRASPI#'rpi/'),'libjpcre.so'
+case. 'Linux';'FreeBSD';'OpenBSD' do. q=. (IFRASPI#'rpi/'),'libjpcre.so'
 case. 'Darwin' do. q=. 'libjpcre.dylib'
 case.          do. q=. 'jpcre.dll'
 end.

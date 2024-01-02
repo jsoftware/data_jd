@@ -127,7 +127,7 @@ case. 'Win' do.
   assert 0['robocopy failed'
  end.
  end.
-case. 'Linux' do.
+case. 'Linux';'FreeBSD';'OpenBSD' do.
  shell 'cp -R -T ',src,' ',snk
 case. 'Darwin' do.
  shell 'cp -R '   ,src,' ',snk

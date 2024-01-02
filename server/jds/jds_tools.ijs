@@ -28,7 +28,7 @@ t=. jds_server_config_template rplc '<JDP>';JDP;'<PORT>';sport;'<LOGFILE>';logfi
 t fwrite f,'run.ijs'
 
 select. UNAME
-case. 'Linux';'Darwin' do.
+case. 'Linux';'FreeBSD';'OpenBSD';'Darwin' do.
  t=. '#!/bin/bash',LF
  t=. t,'"BINPATH/jconsole" "SCRIPT"' rplc 'BINPATH';(jpath'~bin');'SCRIPT';f,'run.ijs'
  if. FHS do. t=. t rplc 'jconsole';'ijconsole' end.
