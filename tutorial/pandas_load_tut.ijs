@@ -1,3 +1,12 @@
+load JDP,'tools/pandas/pandas.ijs'
+
+pystatus_jd_''
+
+0 : 0
+if previous step ran with an error you need to run tutorial pandas_install
+to fix the python install before continuing this tutorial
+)
+
 0 : 0
 use python/pandas to:
  load parquet/feathers/orc/csv/... files into Jd tables
@@ -57,10 +66,6 @@ missing (or bad) values are treated differently
  writing to pandas
   does not adjust - but could be an option in the future
 )
-
-NB. see tutorial pandas_install first to be sure python/pandas is installed
-
-load JDP,'tools/pandas/pandas.ijs'
 
 NB. next advance does download (if required) and can take minutes
 getjdfile_jd_'yellow_tripdata.parquet'

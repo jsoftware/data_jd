@@ -46,6 +46,7 @@ missing (or bad) values are treated differently
   does not adjust - but could be an option in the future
 )
 
+
 pandas_test=: 3 : 0
 getjdfile        'yellow_tripdata.parquet'
 f=. jpath'~temp/jdfiles/yellow_tripdata.parquet'
@@ -59,12 +60,13 @@ pandas_write_ops=: (<'to_'),each t
 
 pandas_na=: 128!:5 NB. detect _. in float data
 
-pandas_ptypes=: 'int64';'float64';'datetime64[ns]';'object'
-pandas_jtypes=: 'int'  ;'float'  ;'edatetimen'    ;'byte'
+pandas_ptypes=: 'int64';'float64';'datetime64[ns]';'datetime64[us]';'object'
+pandas_jtypes=: 'int'  ;'float'  ;'edatetimen'    ;'edatetimen'    ;'byte'
 
 pandas_jtypes_from=: 3 : 0
 i=. pandas_ptypes i. boxopen y
-'unsupported pandas type' assert i<#pandas_ptypes
+t=. ;' ',each~.(i=#pandas_ptypes)#y
+('unsupported pandas type(s): ',t) assert 0=#t NB. should not happen
 i{pandas_jtypes
 )
 
@@ -110,7 +112,7 @@ pandas_snk=. pandas_path,'jdpandas_raw/'
 
 jddeletefolder_jd_ pandas_snk
 jdcreatefolder_jd_ pandas_snk
-
+pandas_log
 f=. pandas_snk,'jnk.jmf'
 createjmf_jmf_ f;0
 pandas_jmf_header_template=: fread f
@@ -141,8 +143,22 @@ pandas_snk=. pandas_path,'jdpandas_raw/'
 ps=. _4}.each /:~{."1 dirtree pandas_path,'*.dat'
 'no pandas dat files'assert 0~:#ps
 md=. <;._2 each fread each ps,each<'.pandasmeta'
-names=. >0{each md
 types=. >1{each md
+
+NB. remove cols from ps that have unsupported type
+i=. pandas_ptypes i. types
+b=. i~:#pandas_jtypes
+if. +/0=b do.
+ pandas_log table;'col(s) with unsupported types will be left in:',LF,pandas_snk
+ for_d. (-.b)#md do.
+  pandas_log table;'unsupported type',;' ',each >d
+ end.
+end. 
+ps=. b#ps
+md=. <;._2 each fread each ps,each<'.pandasmeta'
+types=. >1{each md
+
+names=. >0{each md
 rows=.  ;0".each >2{each md
 vcname_jd_ each names
 jtypes=. pandas_jtypes_from types
@@ -176,8 +192,10 @@ for_i. i.#ps do.
  fdat=. pt,(dfromn i{::names),'/dat'
  ferase fdat NB. windows frename requires that target does not exist
  fdat frename fraw
+ (fread (;i{ps),'.pandasmeta')fwrite pt,(dfromn i{::names),'/pandasmeta'
+ ferase (;i{ps),'.pandasmeta'
 end.
-jddeletefolder pandas_snk NB. should be empty 
+NB. jddeletefolder pandas_snk NB. should be empty 
 
 i.0 0
 )
@@ -188,8 +206,8 @@ pf=. y
 meta=. fread pf,'.pandasmeta'
 'name type rows'=. <;._2 meta
 rows=. 0".rows
-i=. ('int64';'float64';'datetime64[ns]';'object')i.<type
-jt=. i{4 8 4 2
+i=. pandas_ptypes i.<type
+jt=. i{4 8 4 4 2
 size=. (fsize pf,'.dat')-HS_jmf_
 
 n=. pandas_jmf_header_template
@@ -250,12 +268,22 @@ for_n. cols do.
    end. 
   end.
  case. 'edatetimen' do.
+  NB. adjust for epoch since 1970 vs 2000 and [us] millis vs nanos
   if. _1=nc <'pandas_fix_has_been_run__c' do.
    NB. pandas NaT is IMIN - do NOT adjust it
-   pandas_log table;repn,' adjusted for epoch since 1970 vs 2000'
-   dat__c=: dat__c+(dat__c~:IMIN)*efs_jd_'1970'
-   pandas_fix_has_been_run__c=: 1
-  end. 
+   pt=. ;1{<;._2 fread PATH__c,'pandasmeta'
+   pandas_log table;repn,' ',pt,' adjusted'
+   select. pt
+   case. 'datetime64[ns]' do.
+    dat__c=: dat__c+(dat__c~:IMIN)*efs_jd_'1970'
+   case. 'datetime64[us]' do.
+    b=. dat__c~:IMIN
+    dat__c=: (dat__c*b{1,1000)+b*efs_jd_'1970'
+   case. do.
+    pandas_log table;repn,' ',pt,' NOT adjusted'
+   end.  
+  end.
+  pandas_fix_has_been_run__c=: 1
  end.
 end.
 i.0 0
@@ -317,19 +345,53 @@ fread f
 
 NB. python stuff
 
-python3_set_bin=: 3 : 0
-y fwrite '~config/python3.cfg'
-python3_bin=: y
+pysub=: 3 : 0
+shell_jtask_  :: 'failed' python3_bin,y
 )
 
-3 : 0''
-t=. fread '~config/python3.cfg'
-if. t-:_1 do. python3_set_bin'bad_python3_binary_name_jdrt_pandas_install' end.
-python3_bin=: fread '~config/python3.cfg'
+pystatus=: 3 : 0
+f=. '~config/python3.cfg'
+python3_bin=: fread f 
+if. _1=python3_bin do.
+ python3_bin=: ;IFUNIX{'py';'python3'
+ echo 'setting ~config/python3.cfg to: ',python3_bin
+ python3_bin fwrite f
+end.
+
+python3=. pysub' --version'
+'python3 binary not found'assert -.python3-:'failed' 
+
+pip3=. shell_jtask_  :: 'failed' 'pip3 --version'
+'pip3 binary not found'assert -.pip3-:'failed'
+
+pandas=. pysub' -c "import pandas as p;print(p.__version__)"'
+if. pandas-:'failed' do.
+ echo'installing pandas'
+ echo shell_jtask_'pip3 install pandas'
+ pandas=. pysub,' -c "import pandas as p;print(p.__version__)"'
+ 'pandas install failed'assert -.pandas-:'failed'
+end. 
+
+pyarrow=. pysub' -c "import pyarrow as p;print(p.__version__)"'
+if. pyarrow-:'failed' do.
+ echo'installing pyarrow'
+ echo shell_jtask_'pip3 install pyarrow'
+ pyarrow=. pysub' -c "import pyarrow as p;print(p.__version__)"'
+ 'pyarrow install failed'assert -.pyarrow-:'failed'
+end.
+
+r=. 0 2$''
+r=. r,'~config/python.cfg';python3_bin
+r=. r,'python3';python3
+r=. r,'pip3';pip3
+r=. r,'pandas';pandas
+r=. r,'pyarrow';pyarrow
 )
 
 NB. y python command - x stdout/stderr redirect file
-python_run=: 4 : 0
+python_run=: 3 : 0
+'~temp/jd_pandas_output.txt'python_run y
+:
 t=. python3_bin,' ',y,' 1> "<out>" 2>&1'rplc'<out>';jpath x
 try. shell t
 catch.
@@ -337,4 +399,9 @@ catch.
  echo 'python_run failed'
 end.
 fread x
+)
+
+3 : 0''
+python3_bin=: fread '~config/python3.cfg'
+if. python3_bin-:_1 do. pystatus'' end.
 )

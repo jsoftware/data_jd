@@ -1,65 +1,31 @@
-0 : 0
-Jd can make use of python/pandas
-but first python and modules pandas/pyarrow must be installed
-and ~config/python3.cfg must be set as the file name for running it
-)
-
 load JDP,'tools/pandas/pandas.ijs'
 
+pystatus_jd_'' NB. error is OK
+
 0 : 0
-if python3/pandas/pyarrow are already installed
-you have already done this step and can continue
+if previous step ran without error, your install is OK and
+you can skip this tutorial and run the pandas_load tutorial
+)
 
-https://www.python.org/downloads/
-
-linux distributions will install with something like the following:
+0 : 0
+linux distributions can usually install with apt (or yum)
+with something like the following:
 > sudo apt update
 > sudo apt install python3
 > sudo apt install python3-pip
-> pip3 install pandas
-> pip3 install pyarrow
 
-windows should install the full python3 package from the web site
- as the windows app store version is slim
-> pip3 install pandas
-> pip3 install pyarrow
+windows app store version slim and you need a full install
+windows should install the full python3 package from:
+https://www.python.org/downloads/
 
 mac should install from the web site or with homebrew
-it will also need pandas and pyarrow
 )
 
 0 : 0
 value in '~config/python3.cfg' is the python3 binary to run
-for linux it might be 'python3'
-for windows it is likely 'py'
-there are many variations - it could be a name in path or a fullname
-you need to set that value the first time and if it changes
+default value of python3 is set for unix
+default value of py is set for windows
+if the default value is not right, you will have set it manually
 )
 
-python3_bin_jd_ NB. current value in ~config/python3.cfg
-
-0 : 0
-change the value of python3_bin_jd_ if it is not correct
-for example:
-   python3_set_bin_jd_ 'python3'
-)   
-
-'~temp/jd/python.out' python_run_jd_ '--version'
-
-0 : 0
-if previous line failed, the name you set did not work
-and you need to try again until the python_run_jd_
-sentence runs without error
-)
-
-'~temp/jd/python.out' python_run_jd_ '--version'
-
-0 : 0
-the loader uses python modules pandas and pyarrow
-if the next line fails you need to install them
-as mentioned earlier in the tutorial
-)
-
-'~temp/jd/python.out' python_run_jd_ ' -c "import pandas as pd; print(pd.__version__)"'
-
-NB. see tutorials pandas_load and pandas_write
+pystatus_jd_'' NB. you have work to do if there is an error
