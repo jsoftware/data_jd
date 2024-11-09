@@ -54,6 +54,8 @@ bug/
 FILESWIN64=: 0 : 0
 cd/jd.dll
 cd/jpcre.dll
+cd/jd-arm64.dll
+cd/jpcre-arm64.dll
 )
 
 FILESLINUX64=: 0 : 0

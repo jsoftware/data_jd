@@ -57,7 +57,7 @@ elseif. UNAME-:'Darwin' do.
  t=. t,'libjd.dylib'
 elseif. 1 do.
  if. _1=nc<'DLLDEBUG__' do.
-  t=. t,'jd.dll'
+  t=. t,('arm64'-:9!:56'cpu'){::'jd.dll';'jd-arm64.dll'
  else.
   t=. jpath'~/git/jd-cdsrc/makevs/x64/debug64/jddll.dll' NB. visual studio debug
   echo t
@@ -69,7 +69,7 @@ NB. Jd must continue to use pcre library - work is required to make use of the n
 select. UNAME
 case. 'Linux';'FreeBSD';'OpenBSD' do. q=. (IFRASPI#'rpi/'),'libjpcre.so'
 case. 'Darwin' do. q=. 'libjpcre.dylib'
-case.          do. q=. 'jpcre.dll'
+case.          do. q=. ('arm64'-:9!:56'cpu'){::'jpcre.dll';'jpcre-arm64.dll'
 end.
 q=. q,~JDP,'cd/'
 'Jd pcre library missing'assert fexist q
