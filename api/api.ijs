@@ -108,7 +108,7 @@ validtc=: 3 : 0
 notjd_assert y
 if. -.({.y)e.NAMES do. ('jde: not found: table (TAB)' rplc 'TAB';;{.y) assert 0 end.
 t=. getloc {.y
-if. x do. 'ptable not allowed'assert 0=S_ptable__t end. NB! test not right
+if. x do. 'ptable not allowed'assert 0=S_ptable__t end. NB.! test not right
 a=. (}.y)-.NAMES__t
 if. #a do. ('jde: not found: table (TAB) column (COL)' rplc 'TAB';(;{.y);'COL';;{.a)assert 0 end.
 for_c. }.y do.
