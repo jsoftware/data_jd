@@ -17,7 +17,7 @@ csvset=: 3 : 0
 csvy=: y NB. original arg foo.csv or foo.link
 if. IFJHS do.
  NB. assert -.(<'jjd')e. conl 0['job must run in task that is not a server'
- 'job must run in task that is not a server' assert ''-:OKURL_jhs_
+ NB. 'job must run in task that is not a server' assert ''-:OKURL_jhs_
 end.
 assert 0=nc<'CSVFOLDER__'['CSVFOLDER must be defined as path to csv files'
 CSVFOLDER__=: CSVFOLDER__,>('/'={:CSVFOLDER__){'/';''

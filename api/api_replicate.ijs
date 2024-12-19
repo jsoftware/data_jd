@@ -109,7 +109,7 @@ foldercopy=: 3 : 0
 'snk src'=. jpath each y
 src=. src,(UNAME-:'Darwin')#'/' NB. macos requires trailing / (no -T option)
 src=. dquote src
-jddeletefolder snkpath
+NB.! jddeletefolder snkpath - noun result was required - what was the intention?
 snk=. dquote snk
 
 select. UNAME

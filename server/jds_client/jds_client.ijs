@@ -106,7 +106,7 @@ if. j<#y do. NB. have headers
  'header without content-length'assert j~:#h
  t=. (15+j)}.h
  c=. _1".(t i.CR){.t
- 'bad content-length'assert _1-.@-:cl
+ 'bad content-length'assert _1-.@-:c
  if. (k+c)=#y do. k}.y return. end.
 end.
 0

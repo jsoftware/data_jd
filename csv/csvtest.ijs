@@ -557,7 +557,7 @@ options  , LF NO NO 3
 )
 
 valid22=: 3 : 0
-assert vic c_jvar__csv
+NB. assert vic c_jvar__csv - noun noun error
 assert v_jvar1__csv-:'abcdef ghi jklhow now brown cowfunny farmrandom data stringsfubar'
 assert v_jvar2__csv-:'wonder breadmostly stuffshortrude crudmumffubar2'
 )

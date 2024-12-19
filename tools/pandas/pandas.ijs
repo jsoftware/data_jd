@@ -102,7 +102,7 @@ NB. 'pandas';'csv_examples/yellow_tripdata_2022-01.parquet'
 pandas_raw=: 3 : 0
 'db table cnt op file parms'=. y
 jdadmin :: ('new'&jdadmin) db
-'not in set of allowed read ops'assert (<op)e.pandas_read_ops_jd_
+'not in set of allowed read ops'assert (<op)e.pandas_load_ops_jd_
 'file does not exist'assert fexist file
 jd'droptable ',table
 jd'createtable ',table
@@ -112,7 +112,7 @@ pandas_snk=. pandas_path,'jdpandas_raw/'
 
 jddeletefolder_jd_ pandas_snk
 jdcreatefolder_jd_ pandas_snk
-pandas_log
+NB.! pandas_log - noun noun!
 f=. pandas_snk,'jnk.jmf'
 createjmf_jmf_ f;0
 pandas_jmf_header_template=: fread f

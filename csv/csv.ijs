@@ -414,7 +414,7 @@ perhaps bad data
 
 csvscan=: 3 : 0
 d=. fread csvfpcdefs_jd_
-'cdefs file not found'assert _1-.@-:cdefs
+'cdefs file not found'assert _1-.@-:d
 NB. get options and max col from cdefs
 d=. <;._2 d
 i=. (8{.each d) i: <'options '
