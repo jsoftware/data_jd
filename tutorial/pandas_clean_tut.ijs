@@ -7,6 +7,7 @@ garbage in, garbage out
 NB. study tutorial pandas_load first
 
 load JDP,'tools/pandas/pandas.ijs'
+pystatus_jd_''
 getjdfile_jd_'yellow_tripdata.parquet'
 [file=: jpath'~temp/jdfiles/yellow_tripdata.parquet'
 pandas_load_jd_  'pandas_db';'pandas_table';'all';'read_parquet';file;''

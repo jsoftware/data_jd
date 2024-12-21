@@ -167,7 +167,7 @@ tlen=. ~.rows
 
 for_p. ps do. pandas_jmf ;p end. NB. fix jmf header in each pandas dat file
 
-jdadmin pandas_db
+jdadmin db NB.! noun noun
 for_p. ps do.
  p=. ;p
  'name type rows'=. <;._2 fread p,'.pandasmeta'
@@ -346,44 +346,45 @@ fread f
 NB. python stuff
 
 pysub=: 3 : 0
-shell_jtask_  :: 'failed' python3_bin,y
+shell_jtask_  :: 'failed' python3_bin,' ',y
 )
 
+NB. ~config/python3.cfg used as path to python binary
+NB. verify python, pandas, and pyarrow
 pystatus=: 3 : 0
 f=. '~config/python3.cfg'
-python3_bin=: fread f 
-if. _1=python3_bin do.
- python3_bin=: ;IFUNIX{'py';'python3'
- echo 'setting ~config/python3.cfg to: ',python3_bin
+if. -.fexist f do. '' fwrite f end.
+python3_bin=: CRLF-.~dltb fread f 
+if. 0=#python3_bin do.
+ echo f,' is empty'
+ if. IFWIN do.
+  python3_bin=: 'py'
+ else.
+  python3_bin=: 'python3'
+  t=. 1 1 dir'~/.venvs/'
+  for_n. t do.
+   if. fexist (;n),'bin/python3' do.
+    python3_bin=: (;n),'bin/python3'
+    break.
+   end. 
+  end.
+ end.
+ echo f,' set as ',python3_bin   
  python3_bin fwrite f
-end.
-
-python3=. pysub' --version'
-'python3 binary not found'assert -.python3-:'failed' 
-
-pip3=. shell_jtask_  :: 'failed' 'pip3 --version'
-'pip3 binary not found'assert -.pip3-:'failed'
-
-pandas=. pysub' -c "import pandas as p;print(p.__version__)"'
-if. pandas-:'failed' do.
- echo'installing pandas'
- echo shell_jtask_'pip3 install pandas'
- pandas=. pysub,' -c "import pandas as p;print(p.__version__)"'
- 'pandas install failed'assert -.pandas-:'failed'
 end. 
 
-pyarrow=. pysub' -c "import pyarrow as p;print(p.__version__)"'
-if. pyarrow-:'failed' do.
- echo'installing pyarrow'
- echo shell_jtask_'pip3 install pyarrow'
- pyarrow=. pysub' -c "import pyarrow as p;print(p.__version__)"'
- 'pyarrow install failed'assert -.pyarrow-:'failed'
-end.
+python3=. pysub'--version'
+('python3 binary ',python3_bin,' not found')assert -.python3-:'failed' 
+
+pandas=. pysub'-c "import pandas as p;print(p.__version__)"'
+'python pandas module not found'assert-.pandas-:'failed'
+
+pyarrow=. pysub'-c "import pyarrow as p;print(p.__version__)"'
+'python pyarrow module not found'assert-.pyarrow-:'failed'
 
 r=. 0 2$''
-r=. r,'~config/python.cfg';python3_bin
+r=. r,'~config/python3.cfg';python3_bin
 r=. r,'python3';python3
-r=. r,'pip3';pip3
 r=. r,'pandas';pandas
 r=. r,'pyarrow';pyarrow
 )
@@ -401,7 +402,7 @@ end.
 fread x
 )
 
-3 : 0''
+3 : 0 NB. previously this was run
 python3_bin=: fread '~config/python3.cfg'
 if. python3_bin-:_1 do. pystatus'' end.
 )
