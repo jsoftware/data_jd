@@ -167,8 +167,8 @@ run=: 3 : 0
 dbg=. y
 path=. server
 'jport nport pfj pfn'=. setup''
-'.ssh/jserver/cert.pem does not exist' assert 1=ftype '.ssh/jserver/cert.pem'
-'.ssh/jserver/fullchain.pem does not exist' assert 1=ftype '.ssh/jserver/fullchain.pem'
+NB.! '.ssh/jserver/cert.pem does not exist' assert 1=ftype '.ssh/jserver/cert.pem'
+NB.! '.ssh/jserver/fullchain.pem does not exist' assert 1=ftype '.ssh/jserver/fullchain.pem'
 'upfile does not exist - newupfile'  assert 1=ftype upfile
 'upfile has no users - adduser'     assert 0<fsize upfile
 'zmq must be version 4.1.4 or later'assert 414<:10#.version_jcs_''
