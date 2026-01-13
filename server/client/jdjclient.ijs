@@ -54,9 +54,9 @@ getuuid=: 3 : 0
 if. IFWIN do.
  c=.'powershell -Command "[guid]::NewGuid().ToString()"'
 else.
- d=. 'uuidgen'
+ c=. 'uuidgen'
 end.
-(shell d)-.CRLF
+(shell c)-.CRLF
 )
 
 NB. jdconnect 'all user0/user0 localhost:3000'
