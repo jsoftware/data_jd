@@ -194,7 +194,7 @@ i.0 0
 
 check_nodebinpath=: 3 : 0
 fn=. '~config/nodebinpath'
-if. 1=ftype f) do. if. 1= ftype fread fn do. return. end. end.
+if. 1=ftype f do. if. 1= ftype fread fn do. return. end. end.
 if. IFWIN do. if. 1~: ftype fp=. 'c:\Program Files\nodejs\node.exe' do. fp=. _1 end.
 else. if. _1 -.@-: fp=. 2!:0 ::_1: 'which node' do. fp=. fp-.LF end.
 end.
