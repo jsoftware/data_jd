@@ -99,6 +99,7 @@ NB. * 3000;65220;'simple'
 NB. node-port ; jds-port ; 1 or more databases
 NB. configure server
 config=: 3 : 0
+check_nodebinpath''
 'nport jport dbs'=. y
 path=. server
 'server path already configured - delete required' assert 2~:ftype path,'jds'
@@ -171,7 +172,6 @@ path=. server
 'upfile does not exist - newupfile'  assert 1=ftype upfile
 'upfile has no users - adduser'     assert 0<fsize upfile
 'zmq must be version 4.1.4 or later'assert 414<:10#.version_jcs_''
-check_nodebinpath''
 'server ports in use - kill required' assert _1=;pidfromport_jport_ each jport,nport
 
 ferase pfj,'logfile.log' NB. remove old jds log file
