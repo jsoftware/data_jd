@@ -207,3 +207,16 @@ echo r
 end.
 i.0 0
 )
+
+create_jserver_cert=: 3 : 0
+p=. '.ssh/jserver'
+'.ssh stuff failed' assert 1=mkdir_j_ p
+'.ssh jserver folder not empty'assert 0=1 dir p
+d=. fread'~addons/ide/jhs/node/cert.pem'
+d fwrite p,'/fullchain.pem'
+d=. fread'~addons/ide/jhs/node/key.pem'
+d fwrite p,'/key.pem'
+)
+
+
+
