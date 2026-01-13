@@ -50,6 +50,14 @@ rmdir_j_ }:connect
 codestroy''
 )
 
+getuuid=: 3 : 0
+if. IFWIN do.
+ shell 'powershell -Command "[guid]::NewGuid().ToString()"'
+else.
+shell 'uuidgen'
+end.
+)
+
 NB. jdconnect 'all user0/user0 localhost:3000'
 jdconnect_z_=: 3 : 0
 t=. <;._1 ' ',deb y
@@ -57,7 +65,7 @@ t=. <;._1 ' ',deb y
 'dan up host'=. t
 cl=. conew'jdjclient'
 cocurrent cl
-connect=: ptemp,'/',~}:shell'uuidgen'
+connect=: ptemp,'/',~}:getuuid''
 'mkdir failed' assert 1=mkdir_j_ connect
 (":2!:6'')fwrite connect,'pid'
 POSTFILE=:   hostpathsep connect,'postfile'
