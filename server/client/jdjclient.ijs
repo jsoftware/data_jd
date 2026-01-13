@@ -52,10 +52,11 @@ codestroy''
 
 getuuid=: 3 : 0
 if. IFWIN do.
- shell 'powershell -Command "[guid]::NewGuid().ToString()"'
+ c=.'powershell -Command "[guid]::NewGuid().ToString()"'
 else.
-shell 'uuidgen'
+ d=. 'uuidgen'
 end.
+(shell d)-.CRLF
 )
 
 NB. jdconnect 'all user0/user0 localhost:3000'
