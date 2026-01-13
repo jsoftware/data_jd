@@ -73,20 +73,11 @@ end.
 cnms,.read
 )
 
-ACCESSED=: 0 2$a: NB. List of table name, column name pairs accessed
-
-access=: 3 : 0
-a=. NAME__PARENT__y;NAME__y NB. avoid ~.... in original code
-if. -. a e. ACCESSED do. ACCESSED=: ACCESSED,a end.
-EMPTY
-)
-
 NB. y is a boxed list of column locales, x is the rows
 readselect=: 4 : 0 "1 0
 ind =. _1 I.@:= x
 sel =. memu select__y x
 if. *@# ind do. sel =. DATAFILL__y ind} sel end.
-access y
 < sel
 )
 
@@ -150,7 +141,6 @@ joins =. (jointype;;:'inner left right outer') {~ (;:'.-><=') i. joins
 tparent =: tparent, i =. tnms i. root
 findref =. 4 : '(< ,~ getreferenced__ref) ref=. getreadref__y x'
 't refs' =. ({:@[ ,&< }.@])/ |:|.> (findref {.)&.>/\. nms , a: <@,~ i{tloc
-access@> refs
 tloc =: tloc , t
 tnms =: tnms, <NAME__t"_^:(0=#) a
 tpath =: tpath , <refs,.joins
@@ -221,7 +211,8 @@ andqueries=: 3 : 0
 'e y' =. ((#~ ,&< (#~-.)) ((<'exists')={.@>@{:)@>) y
 e =. tnms ((<'qnot') <:@+:@~: {.@>@])`(i. {:@>@{:@>)`(0"0@[)} e
 
-getind =. (access"0@:(0&{::) ] 1&{::)@lookupcol@>  NB. Index of table
+getind =. ((0&{::) ] 1&{::)@lookupcol@>  NB. Index of table
+
 if. #y do. inds =. (getind@{. , getind :: _1:@{:)@>@{:@> y
 else. inds=.0 2$0 end.
 NB. Filter out multi-table queries

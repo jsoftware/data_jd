@@ -1,4 +1,4 @@
-NB. Copyright 2020, Jsoftware Inc.  All rights reserved.
+NB. Copyright 2026, Jsoftware Inc.  All rights reserved.
 
 0 : 0
 package manager Jd library is ~addons/data/jd
@@ -13,10 +13,42 @@ git developer Jd library is ~Jddev (~config/folders.cfg)
 all use is through JDP_z_ (set when the library is loaded)
 )
 
-manlist_z_=: 3 : '>(nl_jman_''''),each<''_jman_''' NB. experimental man system
-
 coclass'jd'
 jdversion=: '4.47'
+
+jdwelcome=: 0 : 0
+Jd is Copyright 2026 by Jsoftware Inc. All Rights Reserved.
+Jd is provided "AS IS" without warranty or liability of any kind.
+
+All use must be under a Jd License:
+https://code.jsoftware.com/wiki/Jd/License
+
+Load csv file for use in J (rather than Jd):
+   jdrt'csv_load'
+
+Load parquet (or other format file) for use in J (rather than Jd):
+   jdrt'pandas_load'
+
+Wiki documentation is at:
+https://code.jsoftware.com/wiki/Jd/Index
+
+man system provides latest info written alongsidethe code
+   man''
+   man'jdtest'
+
+Get started:
+   jdrt '' NB. tutorials
+)
+
+man_jd=:jdwelcome_jd_
+
+man_jd_users=: 0 : 0
+jd direct access has a user without a password
+jdaccess dan;user sets the user and then each jd op
+validates the user and op against the DB admin.ijs
+
+jds server requires logon with user/pasword
+)
 
 doin=: 4 : '(<x)(4 : ''do__y x'')each<"0 y' NB. run sentence in each locale
 
@@ -134,11 +166,17 @@ api/api_rename.ijs
 api/api_replicate.ijs
 api/api_sort.ijs
 api/api_table.ijs
-api/client.ijs
 csv/csv.ijs
 csv/csvinstall.ijs
 dynamic/base.ijs
 dynamic/ref.ijs
+server/manager.ijs
+server/client/jdjclient.ijs
+server/jds/jds_server.ijs
+server/jds/jds_tools.ijs
+server/jds/jdup.ijs
+server/node/node_tools.ijs
+tools/tests.ijs
 types/base.ijs
 types/numeric.ijs
 types/autoindex.ijs
@@ -148,18 +186,14 @@ types/epoch.ijs
 types/varbyte.ijs
 )
 
-NB. stubs to load scripts not normally loaded
-jdtests=: 3 : 0
-load JDP,'tools/tests.ijs'
-jdtests y
-)
+require'~addons/ide/jhs/extra/man.ijs'
+require'~addons/ide/jhs/port.ijs'
+require'~addons/net/jcs/jcs.ijs'
 
 repair=: 3 : 0
 load JDP,'tools/repair.ijs'
 repair''
 )
-
-
 
 get_handle_limits=: 3 : 0
 LIBC=: unxlib'c'
@@ -176,6 +210,8 @@ r=. get_handle_limits''
 3 : 0''
 IFTESTS=: 0
 if. _1=nc<'OP' do. NB. one time inits
+ oplogdata=: '' NB. performance data
+ jdaccess '';''
  JDMT=: MTRW_jmf_
  JDMTMRO=: 0 NB. not an mtm ro task
  FEOP=: OP=: 'none'
@@ -198,26 +234,4 @@ end.
 ifintel=: 'a'={.2 ic a.i.'a' NB. endian
 )
 
-jdwelcome=: 0 : 0
-Jd is Copyright 2023 by Jsoftware Inc. All Rights Reserved.
-Jd is provided "AS IS" without warranty or liability of any kind.
-
-All use must be under a Jd License:
-https://code.jsoftware.com/wiki/Jd/License
-
-Wiki documentation of the latest version is at:
-https://code.jsoftware.com/wiki/Jd/Index
-
-Load csv file for use in J (rather than Jd):
-   jdrt'csv_load'
-
-Load parquet (or other format file) for use in J (rather than Jd):
-   jdrt'pandas_load'
-
-Get started:
-   jdrt '' NB. tutorials
-)
-
 echo'   jdwelcome_jd_ NB. run this sentence for important information'
-
-

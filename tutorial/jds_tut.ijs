@@ -1,43 +1,85 @@
-NB. how to run a Jd server task with jds
+NB. configure and run a Jd server
 
-require JDP,'server/jds/jds_tools.ijs'
-
-spath=: '~temp/jdserver' NB. path to server folders
-PORT=:    65220
-LOGFILE=: spath,'/jds/',(":PORT),'/log.log'
-LOGLEVEL=: 0 NB. 0 for all, 1 for most, ..., 9 for only important
-DBS=: 'jds_db_a,jds_db_b' NB. dbs to jdadmin - "s around as required
-NB. server init does jdadmin for each db - 'new'jdadmin if db does not exist
-
-NB. next step creates scripts for managing the jds server on PORT
-[path=: create_jds spath;PORT;LOGFILE;LOGLEVEL;DBS
-run_sh_bat=: ;('Win'-:UNAME){'run.sh';'run.bat'
-dir path
-fread path,'run.ijs'  NB. ijs script to start this server
-fread path,run_sh_bat NB. host shell script to run this server
-fread path,'run.txt'  NB. fork_jtask_ arg to start this server
-
-killport_jport_ PORT NB. kill task (if any) serving port
-check_jds PORT NB. start jds server on PORT
-pidport_jport_'' NB. table of pids and ports
-pidfromport_jport_ PORT NB. pid of server task - _1 if start failed
-fread path,'logstd.log' NB. stdout/stderr log
-fread path,'log.log'    NB. event log
-killport_jport_ PORT NB. kill the server
-
-0 :0
-you might want to run the jds server in a terminal window
-so you see log messages that will help in debugging
-to run the jds server in a terminal window:
- 
-   killport PORT NB. kill currrent server
-   path,runit    NB. command to paste into terminal to run server
-)   
-
-NB. setup 65221 server for use by node tutorial
-create_jds spath;65221;(spath,'/jds/65221/log.log');LOGLEVEL;'jds_db_c,jds_db_d'
+NB. you may need to refocus term window after an edit window is opened
+NB. next step loads and opens script that creates/configures/runs a simple server
+(load,edit) '~addons/data/jd/server/simple_server.ijs' 
+NB. study the sections in the script as they are desribed in this lab
+build'' NB. create the simple database
+NB. note that build ends with jdamin 0 so the server can open it
 
 0 : 0
-   jdrt'jds_client' NB. how a client can use a server
-   jdrt'node'       NB. how to set up a node server to access a server
-)   
+Jd server is 2 tasks:
+ node task that serves client requests
+ node handles https and is robust with www vagaries
+ node task is a reverse-proxy-binary interface to Jd
+ https://nodejs.org
+
+ jds (Jd server) task that serves requests from node task
+  jds uses zmg for localhost connections from node task
+)
+
+NB. 'simple-server.ijs has set SERVER as the path for config files'
+SERVER
+
+config'' NB. config server
+
+dir SERVER
+
+0 : 0
+jds folder has jds config files
+node folder has node config files
+config is the config arg
+jdclass is 'server'
+upclass is user/pswd file with encrypted passwords
+)
+
+dir SERVER,'/jds'
+dir SERVER,'/node'
+
+NB. next step takes a few seconds to start node task and jds task in jconsole
+NB. refocus this task after the jconsole task start
+run 1 NB. run the server with jds in spawned jconsole task
+NB. new jconsole task is running Jd server - it is in loop waiting for zmq requests
+
+NB. sl is locale for managing server
+nodelog__sj'' NB. node stdout - important if the node task failed
+jdslog__sj'' NB. jds log
+
+NB. use this task as a j client to the server
+NB. connect to the server at localhost:3000 to use dan simple-all and user0
+cl=: jdconnect 'simple-all user0/user0 localhost:3000'
+jdreq__cl'info summary' NB. request jd op on server
+jdreq__cl'info schema'
+jdreq__cl'read from t'
+jdclose__cl''
+
+cmds NB. commands for server
+
+jtest''    NB. run cmds
+bashtest'' NB. run cmds from bash shell 
+
+NB. bashtest has installed bash scripts in ~/jdclient/bash
+
+0 : 0
+run bash client manually
+
+start terminal task
+$ connect=$(jdclient/bash/jdconnect.sh simple-all user0/user0 localhost:3000)
+$ jdclient/bash/jdreq.sh $connect '"info summary"'
+$ jdclient/bash/jdclose.sh $connect
+)
+
+0 : 0
+get bash scripts when you can not run bashtest
+
+start terminal task
+$ mkdir -p jdclient/bash
+$ cd jdclient/bash
+$ curl -k -o bash.tar https://localhost:3000/bash.tar
+$ tar -xf bash.tar
+$ cd ~
+)
+
+pidport_jport_ '' NB. pid/port table - note 3000 and 65220
+
+man'jd server debug'

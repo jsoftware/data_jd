@@ -19,7 +19,7 @@ run standard benchmark over time and versions - provide base for measuring perfo
    
 jpm - j performance monitor - run in jconsole or Jqt
    showtotal_jpm_''
-   showdetail_jpm_'jdx'
+   showdetail_jpm_'jdx_jd_'
 )
 
 FROWS=: 100000 NB. rows in big table
@@ -82,7 +82,7 @@ s;~6":<.1e6*timex s
 )
 
 runall=: 3 : 0
-LAST=:    ((jd'list version');(isotimestamp 6!:0'')),>run1 each i.#tests
+LAST=:    ((jd'list version');(isotimestamp 6!:0'')),>run each i.#tests
 )
 
 record=: 3 : 0

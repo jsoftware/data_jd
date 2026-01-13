@@ -1,5 +1,14 @@
 /*
+
+reverse proxy binary
+
 clients <- https -> node <- http -> jdserver
+
+pass binary data unchanged between client and jdserver
+
+no program logic in proxy
+
+***
 
 client: https://...:3000         - gets application html
 client: https://...:3000/s1/...  - get html by running s1 xget verb
@@ -52,6 +61,29 @@ function replyc(code,res,p,cookie)
   res.end(p);
 }
 
+/*!!! binary request data
+http.createServer((req, res) => {
+  if (req.method === 'POST') {
+    const chunks = [];
+    req.on('data', (chunk) => {
+      // 'chunk' will be a Buffer object if no encoding is set
+      chunks.push(chunk);
+    });
+
+    req.on('end', () => {
+      const binaryData = Buffer.concat(chunks);
+      // 'binaryData' now contains the complete POST body as a Buffer
+      console.log('Received binary data:', binaryData);
+      res.end('Binary data received.');
+    });
+  } else {
+    res.end('Send a POST request.');
+  }
+}).listen(3000, () => {
+  console.log('Server listening on port 3000');
+});
+*/
+
 const server = https.createServer(options, (req, res) => {
   if(req.method == 'POST')
   {
@@ -92,6 +124,33 @@ const server = https.createServer(options, (req, res) => {
           s= "json json "+dan+" "+c+';'+s;
           jdsreq.jdsreq(c,host,port,dan,olds,res);
           break;
+
+          case "jdq=":
+            var c= get_cookies(req)['jds_cookie'];
+            i= token.indexOf(c);
+            if(-1==i){replyc(200,res,"logon required",0);return;}
+            c= conf.up[i];
+
+            s= s.trimStart();
+            var i= s.indexOf(' ');
+            var fin= s.slice(0,i);
+
+            s= s.slice(i+1).trimStart();
+            var i= s.indexOf(' ');
+            var fout= s.slice(0,i);
+
+            s= s.slice(i+1).trimStart();
+            var i= s.indexOf(' ');
+            var dan= s.slice(0,i);
+
+            s= s.slice(i+1).trimStart();
+
+            var host= "localhost";
+            var port= "65220"; //!
+            //jdsreq.jdsreq(c,host,port,dan,s,res);
+            jdsreq.jdsreq(fin,fout,dan,c,host,port,s,res);
+            break;
+  
 
        default:
          reply(200,res,"bad command")

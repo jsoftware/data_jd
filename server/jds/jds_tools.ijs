@@ -1,30 +1,32 @@
-NB. Copyright 2020, Jsoftware Inc.  All rights reserved.
-NB.    jdrt'jds'
+NB. Copyright 2025, Jsoftware Inc.  All rights reserved.
 
-require JDP,'server/port.ijs'
+coclass'jdserver'
+coinsert'jd'
 
 jds_server_config_template=: 0 : 0
-load '<JDP>jd.ijs'
-load JDP,'server/jds/jds_server.ijs'
+load'jd'
+load RELOAD=: '~addons/data/jd/server/jds/jds_server_node.ijs'
+LOGFILE_z_=:   '<PATH>jds/logfile.log' NB. z
+UPFILE_jdup_=: '<PATH>upfile'
+uctable_jdup_=: 0 2$'' NB. each row has cookie,user
 PORT=: <PORT>
-LOGFILE_z_=: '<LOGFILE>'
-LOGLEVEL_z_=: <LOGLEVEL>
 DBS=: jdremq_jd_ each ',' strsplit_jd_'<DBS>'
+
 init''
 )
 
 NB. path;65220;0;'test,"foo,bar",~temp/jd/mum' - NB. PJDS global
 create_jds=: 3 : 0
-'path port logfile loglevel dbs'=. y
+'path port dbs'=. y
 sport=. ":port
-f=. jpath path,('/'#~'/'~:{:path),'jds/',sport,'/'
+f=. jpath path,'jds/'
 mkdir_j_ f
 log=. f,'log.log'
 logstd=. f,'logstd.log' NB. stdout/stderr
 ferase log;logstd
 loglevel=. 0
 
-t=. jds_server_config_template rplc '<JDP>';JDP;'<PORT>';sport;'<LOGFILE>';logfile;'<LOGLEVEL>';(":loglevel);'<DBS>';dbs
+t=. jds_server_config_template rplc '<PORT>';sport;'<DBS>';dbs;'<PATH>';path
 t fwrite f,'run.ijs'
 
 select. UNAME
@@ -46,4 +48,9 @@ case. 'Win' do.
 case. 'Darwin' do.
 end.
 f
+)
+
+NB. check if jds server y is running
+check_jds=: 3 : 0
+'server is not running on that port' assert _1~:pidfromport_jport_ y
 )

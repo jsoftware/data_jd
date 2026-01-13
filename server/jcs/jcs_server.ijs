@@ -1,6 +1,5 @@
 NB. script template to start server
 jcs_start_template=: 0 : 0
-load'~addons/net/jcs/jcs.ijs'
 load'jd'
 ADMIN
 SERVER=: jcss 'PORT'

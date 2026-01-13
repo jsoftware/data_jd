@@ -4,6 +4,7 @@ jdadmin_z_   =: jdadmin_jd_
 jdadminnew_z_=: jdadminnew_jd_
 jdadminx_z_  =: jdadminx_jd_
 jdadminro_z_ =: jdadminro_jd_
+jdsetadmin_z_=: jdsetadmin_jd_
 
 coclass'jd'
 
@@ -133,7 +134,7 @@ y=. (-'/'={:y)}.y NB. no trailing /
 
 defaultadmin=: 0 : 0
 'D' jdadminfp ''
-'D' jdadminup 'u/p'
+'D' jdadminup 'u'
 'D' jdadminop '*'
 )
 
@@ -172,7 +173,7 @@ end.
 
 adminopen=: 3 : 0
  if. 0=L.y do. mt=. 0 else. 'y mt'=. y end.
- y=. adminp y
+ adminfp=: y=. adminp y
  'not a folder'assert 2=ftype y
  'not a database'assert 'database'-:jdfread y,'/jdclass'
  v=. fread y,'/jdversion'
@@ -184,8 +185,7 @@ adminopen=: 3 : 0
  i=. t i. <jpath y
  if. i<#t do. NB. already open - just do access to first dan for the db
   'reopen must have same map type' assert JDMT=mt
-  i=. (jpath each {:"1 DBPATHS)i.<jpath y
-  jdaccess (;{.i{DBPATHS_jd_),' ',(;{:i{DBUPS_jd_),' intask'
+  defaultaccess''
   i.0 0
   return.
  end. 
@@ -202,8 +202,6 @@ adminopen=: 3 : 0
  remove_admin y
  
  bak=. (<DBPATHS),(<DBUPS),<DBOPS
- c=. #DBPATHS
- adminfp=: y
  fp=. y,'/admin.ijs'
  if. -.fexist fp do.
   (defaultadmin rplc 'D';d)fwrite fp NB. create default admin.ijs
@@ -215,8 +213,7 @@ adminopen=: 3 : 0
    'x'jdadminlk y
    'load admin.ijs failed'assert 0
  end.
- NB. default access is for the 1st of the new dans
- jdaccess (;{.c{DBPATHS_jd_),' ',(;{:c{DBUPS_jd_),' intask'
+ defaultaccess'' NB. default access for 1st of the new dans
  
  db=. dbpath DB
  i=. db i:'/'
@@ -233,7 +230,9 @@ adminopen=: 3 : 0
 
 NB. remove old admin for folder y
 remove_admin=: 3 : 0
-dan=. (;(<jpath y)=jpath each {:"1 DBPATHS)#{."1 DBPATHS
+t=. jpath y
+t=. <(-'/'={:t)}.t
+dan=. (;t=jpath each {:"1 DBPATHS)#{."1 DBPATHS
 DBPATHS=: (-.({."1 DBPATHS)e.dan)#DBPATHS
 DBUPS=: (-.({."1 DBUPS)e.dan)#DBUPS
 DBOPS=: (-.({."1 DBOPS)e.dan)#DBOPS
@@ -291,6 +290,8 @@ NB. DBUPS
 jdadminup=: 3 : 0
 DBUPS=: DBUPS adminm y
 :
+a=. bdnames y
+y=. }.;' ',each(a i.each '/'){.each a NB. remove old style /p from u/p
 t=. x admind y
 b=. ({."1 DBUPS)~:{.t
 DBUPS=: (b#DBUPS),((0~:#>{:t),2)$t
@@ -324,6 +325,32 @@ end.
 :
 x lock y
 i.0 0
+)
+
+NB. default access is db first dan and first user
+defaultaccess=: 3 : 0
+i=. ({:"1 DBPATHS)i.<adminfp
+jdaccess (;{.i{DBPATHS_jd_),' ',;{.bdnames ;{:i{DBUPS_jd_
+)
+
+NB. dan;users;ops - add rows to admin.ijs
+NB. clear - clear admin.ijs
+NB. load  - remove old admin and load admin.ijs
+jdsetadmin=: 3 : 0
+p=. adminfp,'/admin.ijs'
+
+if. 'clear'-:y do. ''fwrite p return. end.
+if. 'load'-:y  do.
+  remove_admin adminfp
+  load p
+  defaultaccess''
+  return.
+end.  
+
+'dan users ops'=. quote each y
+(LF,~dan,' jdadminfp ''''')   fappend p
+(LF,~dan,' jdadminup ',users) fappend p
+(LF,~dan,' jdadminop ',ops)   fappend p
 )
 
 NB. mark db as damaged - prevent any more ops on db
