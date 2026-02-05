@@ -43,7 +43,7 @@ p=. path
 while. 1 do.
  'too many folders'assert 100> c=. >:c
  if. IFWIN do.
-  if. 0~:#shell'mkdir ',path do. break. end.
+  if. 0=#shell'mkdir ',hostpathsep path do. break. end.
  else.
   if. -.0-:shell :: 0: 'mkdir ',path,' 2> /dev/null' do. break. end.
  end. 
