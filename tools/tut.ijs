@@ -55,15 +55,10 @@ demo
  sandp           
  sed             
  vr              
-server
- jcs
- jds
- jds_client
- jhs
- mtm
- node
- json
- jctask
+server-client
+ j_server
+ j_client
+ python_client
 xtra
  blob
  custom          

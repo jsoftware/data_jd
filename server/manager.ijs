@@ -4,37 +4,47 @@ NB. manage node-jd-DB server
 coclass'jdserver'
 coinsert'jd'
 
+jdserver_z_=: jdserver_jdserver_
+
 man_jd_server=: 0 : 0
-   sj=: 'jdserver/abc' conew 'jdserver' NB. locale with server manager tools
-   
-   NB. node-port ; jds-port ; dbs
-   NB. dbs - 0 or more dbs - admin user can open/close dbs on running server 
-   NB. node inspect at localhost:nport+1
-   config__sj 3000;65220;dbs
-   
-   run__sj 1 NB. start server - 0 forks and 1 spawns visible jconsole jds for debugging
+name    - server folder name - last name in folder-path
+port    - node port that services client requests
+dbs     - 0 or more db names separated by ,
+up      - up or testup - which user/pswd file to use
+inspect - inspect-yes or inspect-no - enable node inspect
+   jdserver 'create';name;port;dbs;up;inspect
+   jdserver 'createforce';... NB. kill ports before create - handy in development
+   jdserver'get';name NB. get full server-folder path
 
-   nodelog__sj'' NB. node stdout/stderr log
-   jdslog__sj''  NB. jds log
-
-   report__sj'' NB. report server config and status
+create/createforce/get set jdsfolder_z_ as full path to server-folder
+jdsfolder is a handle to the server
    
-   kill__sj''   NB. kill node/jds tasks
-   delete__sj'' NB. delete server config folder
+   serverdebug_jdserver_=: 1 NB. 1 for j server task visible in jconsole
 
-example use in : ~addons/data/jd/server/simple_server.ijs
+   jdserver'run'    NB. start server
+   jdserver'report'
+   jdserver'kill    NB. kill server tasks
+   jdserver'delete' NB. kill and delete server-folder
+
+example use in : ~addons/data/jd/server/server1.ijs
 )
 
 man_jd_server_debug=: 0 : 0
-*** debug jds
-if run arg was 0, then kill that task and restart with 1
-   kill__sl ''
-   run__sl 1
+*** debug jds - on the server machine
+   fread jdsfolder,'/node/logstd.log'
+   fread jdsfolder,'jds.log'
 
-ctrl+c
+jds running in a visible jconsole task can be useful
+
+if not running in visible jconsole task
+   jdserver'kill'
+   serverdebug_jdserver_=: 1
+   jdserver'run'
+
+ctrl+c - interrupt server zmq loop
    RELOAD NB. jds main file
-edit RELOAD file - e.g. add decho y line at start jds defn   
-   load RELOAD
+edit RELOAD - e.g. add (decho jdsq__=: y) line at start jds defn   
+   load 'jd' 
    run''
 
 *** debug node
@@ -67,54 +77,95 @@ nodeserver could serve multiple jdservers (even on other hosts)
  but for now it is one node server for one jd server
 )
 
-NB. 'jdserver/test' conew 'jdserver'
-create=: 3 : 0
-path=. y,('/'~:{:y)#'/' NB. trainling /
-b=. (>:'/'i:~}:path){.path
-t=. '/'-.~(('/',}:b)i:'/')}.b
-'folder before last folder must be jdserver'assert t-:'jdserver'
-'mkdir failed'assert 1=mkdir_j_ path
-server=: path
-upfile=: path,'upfile'
-if. -.fexist upfile do. ''fwrite upfile end.
-'server' fwrite path,'jdclass'
+3 :0''
+if. _1=nc<'serverdebug' do. serverdebug=: 0 end.
+)
+
+NB. * op;...
+NB. server manage
+jdserver=: 3 : 0
+op=. dltb;{.y=. boxopen y
+if. 'create'-:op do. create }.y return. end.
+if. 'createforce'-:op do.
+ killport_jport_ each 65220,0".":;2{y
+ create }.y
+ return.
+end.
+if. 'get'-:op do.
+ t=. jdscpath,'server/',(;1{y),'/' 
+ 'not a server-folder' assert 'server'-:fread t,'jdclass'
+ jdsfolder_z_=: t 
+ return.
+end.
+'not a server-folder' assert 'server'-:fread jdsfolder,'jdclass'
+select. op
+case. 'run' do.
+ run''
+ return.
+case. 'kill' do.
+ kill''
+case. 'delete' do.
+ delete''
+case. 'report' do.
+ JDSPATH=: jdsfolder NB. used from server and from jdreq
+ report''
+ return.
+case.       do. 'invalid op' assert 0
+end.
 i.0 0
 )
 
-destroy=: codestroy
+NB. * port;dbs;up;inspect
+NB. multiple dbs separated by ,
+NB. up is up or testtup (upfilepath)
+NB. inspect is inspect-yes or inspect no - node inspect
+NB. create jdserver-folder
+create=: 3 : 0
+erase'jdsfolder_z_'
+'need 5 args'assert 5=#y
+'name nport dbs up inspect'=. y
+name=. dltb name
+nport=. 0".":nport
+jport=. 65220
+'invalid port' assert (nport>:1024)*.nport<:65535
+dbs=. }.;',',each~.deb each ','splitstring dbs
+'invalid dbs'assert -.RESERVEDCHARS e. dbs-.','
+
+'invalid up'assert(<up)e.'up';'testup'
+'invalid inspect'assert(<inspect)e.'inspect-yes';'inspect-no' 
+check_nodebinpath''
+'zmq must be version 4.1.4 or later'assert 414<:10#.version_jcs_''
+jdsfolder_z_=: jdscpath,'server/',name,'/'
+'server ports in use - delete?' assert _1=;pidfromport_jport_ each jport,nport
+rmdir_j_ :: [ }:jdsfolder
+mkdir_j_ jdsfolder
+'server' fwrite jdsfolder,'jdclass'
+mkdir_j_ jdsfolder,'jds'
+mkdir_j_ jdsfolder,'node'
+(5!:5<'y')fwrite jdsfolder,'config'
+cjport=: ":jport
+cnport=: ":nport
+cjport fwrite jdsfolder,'jds/jport'
+cnport fwrite jdsfolder,'node/nport'
+create_jds  jdsfolder;cjport;dbs
+create_node jdsfolder;cnport;cjport;inspect
+(jdscpath,'up/',((up-:'testup')#'test_'),'upfile') fwrite jdsfolder,'upfilepath'
+i.0 0
+)
+
+delete=: 3 : 0
+kill''
+rmdir_j_ }:jdsfolder
+erase'jdsfolder_z_'
+)
 
 NB. set jport etc from server
 setup=: 3 : 0
-path=. server
-'path to server files is invalid' assert 2=ftype path
-'path to server files is empty' assert 0~:dirtree path
-pfj=. path,'jds/'
+pfj=. jdsfolder,'jds/'
 jport=. 0".fread pfj,'jport'
-pfn=. path,'node/'
+pfn=. jdsfolder,'node/'
 nport=. 0".fread pfn,'nport'
 jport;nport;pfj;pfn
-)
-
-NB. * 3000;65220;'simple'
-NB. node-port ; jds-port ; 1 or more databases
-NB. configure server
-config=: 3 : 0
-check_nodebinpath''
-'nport jport dbs'=. y
-path=. server
-'server path already configured - delete required' assert 2~:ftype path,'jds'
-mkdir_j_ path
-mkdir_j_ path,'jds'
-mkdir_j_ path,'node'
-(5!:5<'y')fwrite path,'config'
-'server' fwrite path,'jdclass'
-nport=. ":nport
-jport=. ":jport
-jport fwrite path,'jds/jport'
-nport fwrite path,'node/nport'
-create_jds  path;jport;dbs
-create_node path;nport;jport
-i.0 0
 )
 
 adduser=: 3 : 0
@@ -123,35 +174,33 @@ adduser__uj 'admin/funny'
 adduser__uj'user0/user0'
 )
 
-rep=: 3 : 0
-echo '   ',y
-echo ".y
+NB. last y records from jdslog - '' default is 5
+jdslog_records=: 3 : 0
+d=. fread JDSPATH,'jds.log'
+if. d=_1 do. 'jds.log is empty',LF return. end.
+t=. -;(y-:''){y;5
+;t{.<;.2 d
 )
 
-NB. server_path
+jdslog_format=: 3 : 0
+d=. fread JDSPATH,'jds.log'
+if. d=_1 do. 'jds.log is empty',LF return. end.
+t=. -(+/LF=d)<.;(y-:''){y;5
+t=. t{.<;._2 d
+2 seebox ><;._1 each TAB,each t
+)
+
+
+NB. * number of latest log records to report
 report=: 3 : 0
-echo 'config: ',fread server,'config'
-echo ' '
-echo '   nodelog__sj'''''
-echo '   jdslog__sj'''''
-echo ' '
-rep  'pidport_jport_'''''
-)
-
-nodelog=: 3 : 0
-'jport nport pfj pfn'=. setup''
-fread pfn,'logstd.log'
-)
-
-jdslog=: 3 : 0
-'jport nport pfj pfn'=. setup''
-fread pfj,'logfile.log'
-)
-
-NB. delete server folder
-delete=: 3 : 0
-jddeletefolder server
-i.0 0
+r=. '   jdslog_records_jdserver_ ',(":;(y-:''){y;5),' NB. last n records'
+r=. r,LF,jdslog_format y
+r=. r,LF,'server started: ',fread JDSPATH,'start'
+r=. r,LF,fread JDSPATH,'config'
+r=. r,LF,LF,'   pidport_jport_'''''
+r=. r,LF,,LF,.~":pidport_jport_''
+r=. r,LF,'   fread JDSPATH,''/node/logstd.log'''
+r=. r,LF,fread JDSPATH,'/node/logstd.log'
 )
 
 NB. kill server tasks/ports
@@ -162,34 +211,35 @@ killport_jport_ nport
 i.0 0
 )
 
-NB. 0 or 1 for debug with visible spawned jds task
+certerror=: 0 : 0
+node https server requires cert.pem and fullchain.pem files in .ssh/jserver
+for testing/development you can install self-signed certificates
+   install_self_signed_certs_jdserver_''
+)
+
+NB. start jds and node tasks
 run=: 3 : 0
-dbg=. y
-path=. server
+path=. jdsfolder
 'jport nport pfj pfn'=. setup''
-NB.! '.ssh/jserver/cert.pem does not exist' assert 1=ftype '.ssh/jserver/cert.pem'
-NB.! '.ssh/jserver/fullchain.pem does not exist' assert 1=ftype '.ssh/jserver/fullchain.pem'
-'upfile does not exist - newupfile'  assert 1=ftype upfile
-'upfile has no users - adduser'     assert 0<fsize upfile
-'zmq must be version 4.1.4 or later'assert 414<:10#.version_jcs_''
-'server ports in use - kill required' assert _1=;pidfromport_jport_ each jport,nport
+'server ports in use - delete?' assert _1=;pidfromport_jport_ each jport,nport
+'upfile does not exist'  assert 1=ftype fread jdsfolder,'upfilepath'
+certerror assert 1=;ftype each '.ssh/jserver/key.pem';'.ssh/jserver/fullchain.pem'
 
 ferase pfj,'logfile.log' NB. remove old jds log file
 
-if. dbg do.
+if. serverdebug do.
  spawn_jtask_'x-terminal-emulator -e "\"j9.6/bin/jconsole\" \"',(jpath path,'jds/run.ijs'),'\" "'
 else.
  fork_jtask_ fread pfj,'run.txt'
 end.
 fork_jtask_ fread pfn,'run.txt'
 
-6!:3[0.2 NB. time to spin up
-
-NB. dbg jds spawn won't finish until ???
-if. -.dbg do. 'jd server failed to start'   assert _1~:pidfromport_jport_ jport end.
-
+NB. jds spawn won't finish until ???
+if. -.serverdebug do. 'jd server failed to start'   assert _1~:pidfromport_jport_ jport end.
 'node server failed to start' assert _1~:pidfromport_jport_ nport
-i.0 0
+
+(isotimestamp 6!:0'') fwrite jdsfolder,'start'
+(fread jdsfolder,'jds.log'),LF,fread jdsfolder,'node/logstd.log'
 )
 
 check_nodebinpath=: 3 : 0
@@ -208,15 +258,15 @@ end.
 i.0 0
 )
 
-create_jserver_cert=: 3 : 0
+NB. copy jhs self-signed certs to .ssh/jserver
+install_self_signed_certs=: 3 : 0
 p=. '.ssh/jserver'
 '.ssh stuff failed' assert 1=mkdir_j_ p
-'.ssh jserver folder not empty'assert 0=1 dir p
+'key.pem already exists'       assert 0=ftype p,'/key.pem'
+'fullchain.pem already exists' assert 0=ftype p,'/fullchain.pem'
 d=. fread'~addons/ide/jhs/node/cert.pem'
 d fwrite p,'/fullchain.pem'
 d=. fread'~addons/ide/jhs/node/key.pem'
 d fwrite p,'/key.pem'
+i.0 0
 )
-
-
-

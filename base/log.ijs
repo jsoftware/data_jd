@@ -84,8 +84,6 @@ end.
 i.0 0
 )
 
-log_size_limit=: 16e6
-
 NB. log to db log.txt or ~temp/jdlog/log.txt
 NB. there is also a log_jdcsv_
 logtxt=: 4 : 0

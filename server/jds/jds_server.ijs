@@ -6,7 +6,7 @@ jd_z_  =:   jd_jd_
 jdae_z_=:   jdae_jd_
 jdtx_z_=:   jdtx_jd_
 jds_z_=:    jds_jd_
-jdserver_z_=:    jdserver_jd_
+NB.! jdserver_z_=:    jdserver_jd_
 
 coclass'jd'
 optionspace=: 0
@@ -19,11 +19,10 @@ lastparts  =: _1
 
 JDE1001=: 'jde: not an op'
 
+
 jbinenc_z_=: 3 !: 1
 jbindec_z_=: 3 !: 2
 jsonenc_z_=: enc_pjson_
-
-NB. jsondec_z_=: dec_pjson_
 
 NB. json data has byte matrices encoded as ["abc","def","ghi"]
 NB. open everything to get byte matrices
@@ -44,7 +43,7 @@ NB. dan;user [;intask or host]
 NB. last parameter was used but is now ignored
 NB. previously user was user/password and this was checked agains admin.ijs
 NB. jd direct allows user access without password check
-NB. jds/node server requires logon that checks password against uctable
+NB. jds/node server requires logon that checks password against ductable
 jdaccess=: 3 : 0
 if. ''-:y do. DBX return. end.
 if. 0-:y do. y=. '';'' end.
@@ -82,76 +81,96 @@ if. lz4 do. a=. lz4_compressframe_jlz4_ a end.
 a
 )
 
-NB. cookie dan req
+NB. server log is separate and in addition to other logs
+jdslog=: 3 : 0
+'type dan user data'=. y
+m=. (_4}._12{.isotimestamp 6!:0''),' : ',(3{.type),' : ',(12{.dan),' : ',(12{.user),' : ',(50{.data) rplc LF;TAB
+f=. JDSPATH,'jds.log'
+logsize f
+(m,LF) fappend f
+)
+
+NB. server log is separate and in addition to other logs
+jdslog=: 3 : 0
+'type dan user data'=. 4{.y
+m=. (isotimestamp 6!:0''),TAB,type,TAB,dan,TAB,user,TAB,data rplc LF;' LF ';TAB;' TAB '
+f=. JDSPATH,'jds.log'
+logsize f
+(m,LF) fappend f
+)
+
+
+NB. client request
+NB. jds - similar to jd - except for server
+NB. cookie dan cmd
 NB. cookie is added by node
 NB. cookie must not contain blank
-NB. single blank delimits cookie and dan
-NB. req can be compressed or not - lz4
-NB. req is jbin or json
-NB.
-NB. client request
-NB. +user/pswd or req
-NB. req (compressed or not)
+NB. sinlge blank delimits cookie and dan
+NB. dan cmd can be compressed (lz4) or not
 NB. compression determined by examining initial bytes - lz4 first byte 4{a.
-NB. decompress req if required
-NB. decompreq is in jbin or json format
-NB. node adds cookie in front of req (it is not compressed)
-NB. 
-NB. jds - similar to jd - except for server
-NB. cookie dan ; enc info summary
-NB. cookie dan ; enc insert f',LF,json/jbin-encoded-dat
-NB. + +;enc logonu/p
-NB. enc - lz4+jbin or json
+NB. dan cmd is jbin or json or simple string
+NB. simple string does not start with { or " and does not have " or other special chars
+NB.
 NB. cookie selects user from logon data
-NB. result is a lz4+jbin or json dictionary
-NB. jd server can be used by jdjclient/bash/browser and other clients
+NB. result is lz4 if arg was lz4
+NB. result data is jbin or json dictionary
+NB.
+NB. jd server can be used by jdjclient/bash/python/browser and other clients
 NB. most clients except browser will use curl
 jds=: 3 : 0
-decho jdsq__=: y
+ 'lz4 jbin dan user opstring'=. 0;0;3#<'not-set'
 try.
  req=. y
 
- NB. cookie dan cmd - strip off cookie and dan
- i=. req i. ' '
- up=. i{.req
- req=. (>:i)}.req
- i=. req i. ' '
- dan=. i{.req
- req=. (>:i)}.req
+ NB. strip off cookie from end
+ i=. req i: ' '
+ up=. (>:i)}.req
+ cmd=. i{.req
+
+ NB. infer compression from data 
+ lz4=. 4=a.i.{.cmd
+ if. lz4 do. cmd=. lz4_uncompressframe_jzl4_ cmd end.
  
- NB. infer compression/encoding from data 
- lz4=. 4=a.i.{.req
- if. lz4 do. req=. lz4_uncompressframe_jzl4_ req end.
-
- jbin=. 227=a.i. {.req
-
-echo jbin
-echo jsondec req
+ NB. infer encoding from data
+ jbin=. 227=a.i. {.cmd
+ if. jbin do. cmd=. jbindec cmd else. if. +/'["'e. {.cmd do. cmd=. jsondec cmd end. end.
  
- if. jbin do. req=. jbindec req else. req=. jsondec req end.
-
- opstring=. dltb;{.boxopen req
-
- decho opstring
- 
+ opstring=. dltb;{.boxopen cmd
  'invalid cmd' assert 2=3!:0 opstring
  op=. dltb(opstring i.' '){.opstring
 
  if. 'logoff'-:op do. a=. logoff_jdup_ up return. end.
- if. 'logon'-:op do. a=. logon_jdup_ opstring return. end.
-  
- user=. getuser_jdup_ up
- if. user-:'admin' do.
-  'admin can only do admin'assert 'admin '-:6{.a
-  a=. do__ 6}.a
+
+ if. 'logon'-:op do.
+  t=. bdnames 6}.opstring
+  opstring=. 'logon' NB. do not show in log
+  if. 3=#t do.
+   a=. logon_jdup_ t
+   if. a-:{.a. do. jdslog 'log';dan;user;opstring end.
+   a
+   return.
+  end.
+  if. 1=#t do. jdsresult jbin;lz4;<setdan_jdup_ up;t return. end. 
+  ETALLY assert 0 
+ end. 
+ 
+ 'dan user'=. get_dan_user_jdup_ up
+ 'logon required'assert 0~:#user
+ jdslog 'req';dan;user;opstring
+ jdaccess dan;user
+
+ if. op-:'admin' do.
+  'only admin can do admin'assert 'admin'-:user
+  a=. do__ 6}.opstring
   a=. jdsresult jbin;lz4;<a
   return.
  end.
 
- jdaccess dan;user
-
+ NB. troubles with jd treatment of <'read from t'
+ if. 1=#cmd do. cmd=. opstring end.
+ 
  opstart=. 6!:9''
- jdlast_z_=: jdx req
+ jdlast_z_=: jdx cmd
  oplog ((":!.18)opstart-~6!:9''),' ',user,' ',op
  
  a=. jdlast
@@ -165,7 +184,7 @@ echo jsondec req
  if. (op-:'info')*.-.jbin do. a=. |:a end. NB. json requires 
  a=.jdsresult jbin;lz4;<a
 catch.
- if. +./_1=nc ;:'lz4 jbin opstring' do. 'lz4 jbin opstring'=. 0;0;'not available' end.
+ jdslog 'err';dan;user;opstring,LF,}:13!:12''
  a=. jdsresult jbin;lz4;<('Jd server error';'Jd extra'),.(13!:12'');;opstring
 end.
 )

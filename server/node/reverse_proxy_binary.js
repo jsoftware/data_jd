@@ -16,12 +16,11 @@ const https  = require('https');
 const fs     = require('fs');
 const jdsreq = require(__dirname+"/jds.js");
 
-var nport= conf.nport;
-var jport= conf.jport;
+var nport=  conf.nport;
+var jport=  conf.jport;
+var jdpath= conf.jdpath;
 
 const bind= '0.0.0.0';  // anybody can connect to us
-
-var getdata= fs.readFileSync(__dirname+'/server.html', 'utf8');
 
 const options = {
   //key: fs.readFileSync(__dirname+'/key.pem'),
@@ -36,34 +35,28 @@ function reply(code,res,p){res.writeHead(code, "OK", {'Content-Type': 'text/plai
 const server = https.createServer(options, (req, res) => {
   if(req.method == 'POST')
   {
+    // add cookie to end of request and pass to jds
     dopost(req, res, function() {
       var c= get_cookies(req)['jds_cookie'];
-          if(req.post[0]==43){
-            req.post= Buffer.concat([Buffer.from('+ '),req.post]);
-          }
-          else{
-            if(typeof c=='undefined' || c==''){reply(200,res,'{"Jd error":"logon required"}');return;}
-            req.post= Buffer.concat([Buffer.from(c+' '),req.post]);
-          }
-          jdsreq.jdsreq('localhost',jport,req.post,res); // pass (cookie *cmd) to jds
-       
+      req.post= Buffer.concat([req.post,Buffer.from(' '+c),]);
+      jdsreq.jdsreq('localhost',jport,req.post,res); // pass (cmd cookie) to jds
    });
    return;
   }
 
   // get
   var s= decodeURIComponent(req.url);
-  if("/"==s)
-  {
-   res.writeHead(200, "OK", {'Content-Type': 'text/html'});
-   res.end(fs.readFileSync(__dirname+'/server.html', 'utf8'));
+  switch(s){
+   case '/': s= jdpath+'/server/client/server.html'; break;
+   case '/curl.sh': s= jdpath+'/server/client/curl.sh';break;
+   case '/pyclient.py': s= jdpath+'/server/client/pyclient.py';break;
+   case '/pytest.py': s= jdpath+'/server/client/pytest.py';break;
+   default: s= '';
   }
-  if("/bash.tar"==s)
-    {
-     res.writeHead(200, "OK", {'Content-Type': 'text/html'});
-     res.end(fs.readFileSync(__dirname+'/bash.tar', 'utf8'));
-    }
-  
+  res.writeHead(200, "OK", {'Content-Type': 'text/html'}); // ,'Content-Disposition': 'attachment'
+  try{ s= fs.readFileSync(s, 'utf8'); }catch(error){ s= ''; }
+  res.end(s);
+
 });
 
  server.listen(nport, bind, () => {

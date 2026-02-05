@@ -333,24 +333,29 @@ i=. ({:"1 DBPATHS)i.<adminfp
 jdaccess (;{.i{DBPATHS_jd_),' ',;{.bdnames ;{:i{DBUPS_jd_
 )
 
-NB. dan;users;ops - add rows to admin.ijs
-NB. clear - clear admin.ijs
-NB. load  - remove old admin and load admin.ijs
-jdsetadmin=: 3 : 0
-p=. adminfp,'/admin.ijs'
-
-if. 'clear'-:y do. ''fwrite p return. end.
-if. 'load'-:y  do.
-  remove_admin adminfp
-  load p
-  defaultaccess''
-  return.
-end.  
-
-'dan users ops'=. quote each y
-(LF,~dan,' jdadminfp ''''')   fappend p
-(LF,~dan,' jdadminup ',users) fappend p
-(LF,~dan,' jdadminop ',ops)   fappend p
+NB. admintable jdsetadmin db
+NB. admintable is list of LF terminated 'dan;users;ops'
+NB. set admin.ijs for db
+NB. db opened, admin.ijs set, and db closed
+jdsetadmin=: 4 : 0
+p=. adminp y
+'not a folder'assert 2=ftype p
+'not a database'assert 'database'-:jdfread p,'/jdclass'
+try.
+ t=. dltb each <;._2 x
+ t=. <;._1 each ';',each t
+ r=. ''
+ for_n. t do.
+  'dan users ops'=. '''',~each '''',each deb each>n
+  r=. r,(LF,~dan,' jdadminfp ''''')
+  r=. r,(LF,~dan,' jdadminup ',users)
+  r=. r,(LF,~dan,' jdadminop ',ops)
+ end.
+ r fwrite p,'/admin.ijs'
+catch.
+'jdsetadmin failed'assert 0
+end.
+i.0 0
 )
 
 NB. mark db as damaged - prevent any more ops on db

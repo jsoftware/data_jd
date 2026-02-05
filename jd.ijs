@@ -171,7 +171,7 @@ csv/csvinstall.ijs
 dynamic/base.ijs
 dynamic/ref.ijs
 server/manager.ijs
-server/client/jdjclient.ijs
+server/client/jclient.ijs
 server/jds/jds_server.ijs
 server/jds/jds_tools.ijs
 server/jds/jdup.ijs
@@ -208,6 +208,7 @@ r=. get_handle_limits''
 )
 
 3 : 0''
+if. _1=nc<'jdscpath_z_' do. jdscpath_z_=: 'jdscpath/' end. NB. path to all server/client files
 IFTESTS=: 0
 if. _1=nc<'OP' do. NB. one time inits
  oplogdata=: '' NB. performance data
@@ -217,6 +218,7 @@ if. _1=nc<'OP' do. NB. one time inits
  FEOP=: OP=: 'none'
  TEMPCOLS=: i.0 2
  LOGOPS=: 0 NB. do not log ops
+ log_size_limit=: 16e6 NB. applies to all logs (logtxt abd jdslog)
  cntsclear''
  FORCEVALIDATEAFTER=: 0
  FORCEREVERT=: 0
@@ -233,5 +235,13 @@ if. -.UNAME-:'Win' do.
 end.
 ifintel=: 'a'={.2 ic a.i.'a' NB. endian
 )
+
+NB. from JHS
+seebox=: 3 : 0
+1 seebox y
+:
+;((x+>./>#each y){.each "1 y),.<LF
+)
+
 
 echo'   jdwelcome_jd_ NB. run this sentence for important information'

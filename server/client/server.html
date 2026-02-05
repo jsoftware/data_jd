@@ -3,16 +3,15 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <body><div><h2>Jd Server Interface</h2>
 <button type="button" id="logon" onclick="logon()">logon</button>
-user: <input type="text" id="usr" value="user0" size="6">
-pswd: <input type="text" id="pwd" value="user0" size="6">
-<button type="button" id="logout" onclick="logout()">logout</button>
-<hr>
-dan: <input type="text" id="dan" value="all" size="6">
+dan: <input type="text" id="dan" value="simple" size="4">
+user: <input type="text" id="usr" value="user0" size="4">
+pswd: <input type="text" id="pwd" value="user0" size="4">
+<button type="button" id="logout" onclick="logoff()">logoff</button>
 <hr>
 <button type="button" onclick="run()">run</button>
 <button type="button" onclick="runnxt()">run next example</button>
 <br>
-<input type="text" id="cmd" size="60" value='"info summary"' onkeydown = "if (event.keyCode == 13) run('cmd')">
+<input type="text" id="cmd" size="60" value='info summary' onkeydown = "if (event.keyCode == 13) run('cmd')">
 <br/><textarea id="out" rows=10 cols=80></textarea><br/>
 </div>
 
@@ -20,12 +19,12 @@ dan: <input type="text" id="dan" value="all" size="6">
 var ix=-1;
 
 let examples = [
-'"info summary"',
-'"info schema"',
+'info summary',
+'info schema',
 '["delete t","a<999"]',
 '["insert t","a",45,"byte","xxx"]',
 '["insert t","a",[6,7,8],"byte",["qwe","rqw","erq"]]',
-'"read from t"'
+'read from t'
 ];
 
 function runnxt()
@@ -36,19 +35,12 @@ function runnxt()
   run();
 }
 
-function logon(){
-  var cmd= "logon "+idv("usr")+"/"+idv("pwd");
-  getdata('+ "'+cmd+'"');
-}
-
-function logout(){getdata(idv("dan")+';"logoff"');}
-
-function run(){
-  idvs("out","busy");
-  getdata(idv("dan")+' '+idv('cmd'));
-}
+function logon(){getdata("logon "+idv("dan")+" "+idv("usr")+" "+idv("pwd"));}
+function logoff(){getdata("logoff");}
+function run(){getdata(idv('cmd'));}
 
 async function getdata(p) {
+  idvs("out","busy");
   const url= location.href;
   try {
     const response = await fetch(url, {method: "POST",body: p,});
@@ -63,37 +55,5 @@ async function getdata(p) {
 function byid(id){return document.getElementById(id);}
 function idv(id){return byid(id).value;}
 function idvs(id,v){byid(id).value=v;}
-
-/* replaced by getdata
-var rq;    
-var busy= 0; // prevent new request until previous has completed
-
-function ajaxrun(p)
-{
- if(1==busy) {idvs("out","busy on previous request"); return;}
- busy= 1;
- rq= new XMLHttpRequest();
- rq.onreadystatechange= ajax;
- rq.open("POST","", true);
- rq.send(p);
-}
-
-function ajax()
-{
-  if(rq.readyState==4)
-  {
-    busy= 0;
-    t= rq.responseText;
-    idvs("out",t);
-  }
-}
-
-function run()
-{
-  idvs("out","busy");
-  idvs("cmd",idv("cmd"));
-  ajaxrun(idv("dan")+';'+idv("cmd"));
-}
-*/
 </script>
 </body></html>

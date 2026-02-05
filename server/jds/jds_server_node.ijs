@@ -8,22 +8,14 @@ SHUTDOWN=: 0 NB. mtm shutdown sets to stop serving new or queue requests
 srcode_z_=:   256#.a.i.]
 srdecode_z_=: a.{~256 256 256 256 256#:]
 
-logit_z_=: 3 : 0
-'type data route'=. y
-data=. 36{.(data i. LF){.data
-m=. (16{.type),' : ',data,' : ',(10{.":route),' : ',_4}._12{.isotimestamp 6!:0''
-(m,LF) fappend LOGFILE
-)
-
-
-NB. global parameters: PORT LOGFILE LOGLEVEL DBS
+NB. global parameters: PORT DBS
 init=: 3 : 0
 'zmq must be version 4.1.4 or later'assert 414<:10#.version_jcs_''
-logit 'start jds';(":PORT);0
+jdslog_jd_'ini';'';'';'start: ',isotimestamp 6!:0''
 for_d. DBS do.
  d=. adminp_jd_ >d NB. path to DB folder
- if. fexist d,'/admin.ijs' do. jdadmin d else. 'new' jdadmin d end.
- logit 'database';d;0
+ jdslog_jd_ 'ini';'';'';'jdadmin: ',d
+ if. fexist d,'/admin.ijs' do. jdadmin d else. jdslog_jd_ 'ini';'';'';'jdadmin failed: ',d end.
 end. 
 CJ=: jcssraw_jcs_ PORT
 coinsert__CJ 'jobs'
@@ -59,7 +51,7 @@ sr=. rcv_job y
 if. sr=_1 do. return. end.
 i=. SRS i. sr
 if. i=#SRS do.
- logit'no connection';'';sr
+ jdslog 'zmq';sr;'';'no connection'
  return.
 end. NB. no connection for this route - ignore it 
 data=. ;i{SDATA
@@ -78,7 +70,7 @@ try.
  assert _1-.@-:clen
  if. (hlen+clen)>#data do. return. end.
 catch.
- logit 'bad request';'';sr
+ jdslog 'zmq';sr;'';'bad request'
  SDATA=: a: (SRS i. sr)}SDATA NB. do not use old data - best if client does new connect
  rs=. 3!:1 ,:'jds error';'bad request'
  addout sr;rs
@@ -92,7 +84,7 @@ data=. clen{.hlen}.data
 
 if. SHUTDOWN__ do.
  if. 'm'~:getopclass data do.
-  logit 'stopped';'';sr
+  jdslog 'zmq';sr;'';'stopped'
   SDATA=: a: (SRS i. sr)}SDATA NB. do not use old data - best if client does new connect
   rs=. 3!:1 ,:'jds error';'stopped'
   addout sr;rs
@@ -100,10 +92,6 @@ if. SHUTDOWN__ do.
  end.
 end.
 
-NB. http_server runs the job right away - unlike mtm which has WJOBS q
-t=. data}.~>:data i.';'
-logit'op';t;sr
-q__=: data
 r=. jds data
 addout sr;r
 )
@@ -116,11 +104,9 @@ d=. recv S;(20000#' ');20000;0
 if. 0=#d do.
  b=. sr~:SRS
  if. *./b do.
-  logit 'open';'';sr
   SRS=: SRS,sr
   SDATA=: SDATA,a:
  else.
-  logit 'close';'';sr
   SRS=:   b#SRS
   SDATA=: b#SDATA
  end.
@@ -129,7 +115,7 @@ end.
 
 i=. SRS i. sr
 if. i=#SRS do.
- logit'invalid connection';'';sr
+ jdslog 'zmq';sr;'';'invalid connection'
  _1 return.
 end.
 data=. (;i{SDATA),d
@@ -145,7 +131,7 @@ if. 0=#SRSOUT do. return. end.
 srx=. srdecode sr
 r=. send S;srx;(#srx);ZMQ_SNDMORE
 if. r~:#srx do.
- logit 'bad snd sr';'';sr
+ jdslog 'zmq';sr;'';'bad snd sr'
  'send sr failed' assert 0
 end. 
 
@@ -153,7 +139,7 @@ r=. send S;data;(#data);ZMQ_SNDMORE
 if. r=#data do.
  SRSOUT=:   }.SRSOUT
 else.
- logit'short snd short';'';sr
+ jdslog 'zmq';sr;'';'short snd'
  SRSOUT=: (<sr;r}.data) 0}SRSOUT
 end. 
 )

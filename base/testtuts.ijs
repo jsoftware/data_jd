@@ -20,14 +20,11 @@ tutorial/intro_a_tut.ijs
 tutorial/intro_b_tut.ijs
 tutorial/intro_c_tut.ijs
 tutorial/intx_tut.ijs
-tutorial/jctask_tut.ijs
-tutorial/jds_tut.ijs
-tutorial/jhs_tut.ijs
-tutorial/json_tut.ijs
+tutorial/j_client_tut.ijs
+tutorial/j_server_tut.ijs
 tutorial/key_tut.ijs
 tutorial/link_tut.ijs
 tutorial/log_tut.ijs
-tutorial/mtm_tut.ijs
 tutorial/northwind_tut.ijs
 tutorial/pairs_tut.ijs
 tutorial/pandas_clean_tut.ijs
@@ -36,6 +33,7 @@ tutorial/pandas_load_tut.ijs
 tutorial/pandas_write_tut.ijs
 tutorial/performance_tut.ijs
 tutorial/ptable_tut.ijs
+tutorial/python_client_tut.ijs
 tutorial/quandl_ibm_tut.ijs
 tutorial/read_tut.ijs
 tutorial/reads_aggregation_tut.ijs

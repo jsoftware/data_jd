@@ -1,22 +1,21 @@
 NB. Copyright 2020, Jsoftware Inc.  All rights reserved.
 NB. node server tools
 
-load'~addons/data/jd/server/client/jdbashclient.ijs'
-
 coclass'jdserver'
 coinsert'jd'
 
 NB. PATH;nport;jport
 NB. create node files in folder PATH/PORT
 create_node=: 3 : 0
-'path nport jport'=. y NB. unused was nodebinpath
+'path nport jport inspect'=. y NB. unused was nodebinpath
 nodebin=. fread '~config/nodebinpath'
 p=. jpath path,('/'#~'/'~:{:path),'node/'
 mkdir_j_ p
 
 nodefile=. jpath'~addons/data/jd/server/node/reverse_proxy_binary.js'
-config=. '{\"nport\":\"<NPORT>\",\"jport\":\"<JPORT>\"}'rplc '<NPORT>';nport;'<JPORT>';jport
-nodeflags=. ' --inspect=localhost:',(":1+0".nport),' '
+curl=. (fread path,'node/curl')rplc'"';'\\\"';'/';'\/';'$';'\$' NB. has to get past shell rules
+config=. '{\"nport\":\"<NPORT>\",\"jport\":\"<JPORT>\",\"jdpath\":\"<JDPATH>\"}'rplc '<NPORT>';nport;'<JPORT>';jport;'<JDPATH>';jpath'~addons/data/jd'
+nodeflags=. (inspect-:'inspect-yes')#' --inspect=localhost:',(":1+0".nport),' '
 
 if. IFWIN do.
  NB. create run.bat and run.txt
@@ -34,8 +33,7 @@ else.
  f=. p,'run.sh'
  r=. t fwrite f
  shell'chmod +x "',f,'"'
- ('nohup "PATHrun.sh" > "LOG" 2>&1' rplc 'PATH';p;'LOG';p,'logstd.log') fwrite p,'run.txt'
- createsh_jdbash_ p NB. bash client scripts on this system and in node server files
+ ('setsid "PATHrun.sh" > "LOG" 2>&1' rplc 'PATH';p;'LOG';p,'logstd.log') fwrite p,'run.txt'
 end. 
 
 (fread '~addons/data/jd/server/node/server.html') fwrite p,'/server.html' NB.! ???

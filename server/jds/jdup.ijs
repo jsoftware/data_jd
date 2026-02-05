@@ -5,6 +5,7 @@ NB. serious production use that might be attacked
 NB. should consider replacing this with reviewed code
 
 coclass'jdup'
+coinsert'jd'
 
 man_jd_server_user=: 0 : 0
 user/pswd file for jds server
@@ -15,8 +16,8 @@ which is validated against upfile
 upfile is in jdserver folder and is used by all server subfolders
 pswd are encrypted
 
-valid logon updates the uctable_jdup_ with the user;cookie
-requests with cookie get the user from uctable
+valid logon updates the ductable_jdup_ with the dan;user;cookie
+requests with cookie get the user from ductable
 
    uj=: 'jdserver' conew 'jdup' NB. jd/upfile
    getusers__uj''
@@ -24,30 +25,42 @@ requests with cookie get the user from uctable
    deluser__uj''
 )
 
+NB. * path-to-upfile - must be test_upfile or upfile
 create=: 3 :0
-path=. y,('/'~:{:y)#'/' NB. trainling /
-b=. (>:'/'i:~}:path){.path
-t=. '/'-.~(('/',}:b)i:'/')}.b
-'path must end in jdserver'assert t-:'jdserver'
-'mkdir failed'assert 1=mkdir_j_ path
-UPFILE=: path,'upfile'
+i=. y i:'/'
+n=. (>:i)}.y
+p=. i{.y
+'name must be upfile or test_upfile'assert (<n)e.'upfile';'test_upfile'
+'mkdir failed'assert 1=mkdir_j_ p
+UPFILE=: y
 if. -.fexist UPFILE do. '' fwrite UPFILE end.
 i.0 0
 )
 
+destroy=: codestroy
+
 require'guid'
 hash=: 1&(128!:6) 
 
-NB. logon user0/user0 -checked against upfile
-NB. if valid, added to uctable
-NB. returns 0 if invalid and 0,cookie if valid  
+NB. update dan in ductable
+setdan=: 3 : 0
+'up dan'=. y
+i=. ({:"1 ductable)i.<up
+'logon required'assert i<#ductable
+NB.! what if bad user
+d=. i{ductable
+d=. dan;1}.d
+ductable=: d i}ductable
+,:'Jd OK';0
+)
+
+NB. ductable dan,user,cookie
 logon=: 3 : 0
-'u p'=. <;._1 '/',dltb 6}.y
-decho u;p
-if. check u;p do.   NB. valid logon - record user/cookie uctable
- cookie=. (":6!:0'')rplc' ';'_'
- uctable=: uctable,u;cookie
- ({.a.),cookie NB. ok
+'dan user pswd'=: bdnames y
+if. check user;pswd do.
+ cookie=. ,'0123456789abcdef' {~ 16 16 #: a. i. ,guids 1
+ ductable=: ductable,dan;user;cookie
+ ({.a.),cookie
 else.
  {.a. NB. failed
 end.
@@ -56,14 +69,14 @@ end.
 NB. returns 1 to set cookie empty
 logoff=: 3 : 0
 cookie=. y
-uctable=: ((1{"1 uctable)~:<cookie)#uctable NB. remove entries with same cookie
+ductable=: ((2{"1 ductable)~:<cookie)#ductable NB. remove entries with same cookie
 1{a.
 )
 
-NB. cookie - get user with cookie from uctable
-getuser=: 3 : 0
-i=. (1{"1 uctable)i.<y
-if. i=#uctable do. '' else. ;{.i{uctable end.
+NB. cookie - get user with cookie from ductable
+get_dan_user=: 3 : 0
+i=. ({:"1 ductable)i.<y
+if. i=#ductable do. '';'' else. 2{.i{ductable end.
 )
 
 NB. u/p
@@ -71,13 +84,13 @@ NB. return 0 if not valid or 1 if valid
 NB. must
 NB.  not have blanks
 NB.  have 1 /
-NB.  u must have 3 chars
-NB.  p must have 10 chars
+NB.  u must have at least 1 char
+NB.  p must have at least 1 char
 NB.! testing p needs only 3 chars
 validateup=: 3 : 0
 if. (' 'e.y)+.1~:+/'/'=y do. 0 return. end.
 'u p'=. <;._1 '/',y
-if. (3>#u)+.3>#p do. 0 return. end.
+if. (0=#u)+.0=#p do. 0 return. end.
 1
 )
 
@@ -94,7 +107,6 @@ getusers=: 3 : 0
 NB. user/pswd
 NB. deletes user first if already added
 adduser=: 3 : 0
-'user table does not exist'assert fexist UPFILE
 'invalid u/p'assert validateup y 
 'u p'=. <;._1 '/',y
 if. (<u)e.getusers'' do. deluser u end.
@@ -105,7 +117,6 @@ i.0 0
 
 NB. user
 deluser=: 3 : 0
-'user table does not exist'assert fexist UPFILE
 a=.getusers''
 i=. a i.<y
 'not a user'assert i~:#a

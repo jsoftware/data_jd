@@ -5,10 +5,11 @@ coinsert'jd'
 
 jds_server_config_template=: 0 : 0
 load'jd'
-load RELOAD=: '~addons/data/jd/server/jds/jds_server_node.ijs'
-LOGFILE_z_=:   '<PATH>jds/logfile.log' NB. z
-UPFILE_jdup_=: '<PATH>upfile'
-uctable_jdup_=: 0 2$'' NB. each row has cookie,user
+RELOAD=: '~addons/data/jd/server/jds/jds_server.ijs' NB. likely debug file
+load '~addons/data/jd/server/jds/jds_server_node.ijs'
+JDSPATH_z_=:    '<PATH>'
+UPFILE_jdup_=: fread '<PATH>upfilepath'
+ductable_jdup_=: 0 3$'' NB. each row has dan user cookie
 PORT=: <PORT>
 DBS=: jdremq_jd_ each ',' strsplit_jd_'<DBS>'
 
@@ -36,7 +37,7 @@ case. 'Linux';'FreeBSD';'OpenBSD';'Darwin' do.
  if. FHS do. t=. t rplc 'jconsole';'ijconsole' end.
  t fwrite f,'/run.sh'
  shell'chmod +x ',f,'run.sh'
- cmd=. ('nohup "PATHrun.sh" > "LOG" 2>&1') rplc 'PATH';f;'LOG';logstd
+ cmd=. ('setsid "PATHrun.sh" > "LOG" 2>&1 &') rplc 'PATH';f;'LOG';logstd
  cmd fwrite f,'run.txt'
 case. 'Win' do.
  t=. 'for /f "tokens=5" %%a in (''netstat -aon ^| find ":',sport,'" ^| find "LISTENING"'') do taskkill /f /pid %%a' 

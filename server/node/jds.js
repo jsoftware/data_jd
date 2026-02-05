@@ -2,7 +2,7 @@
 
 const http  = require('http');
 
-const jdok   = '{"JD OK":0}';
+const jdok   = '{"Jd OK":0}';
 const jderror= '{"Jd error":"logon failed"}';
 
 // p is binary buffer from jd server
