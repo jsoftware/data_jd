@@ -37,12 +37,16 @@ NB. if last folder already exists - name adjusted until it is ok
 NB. assumes safe to mkdir -p up to last folder
 mkdirunique=: 3 : 0
 path=. abspath jpath y
-shell'mkdir -p ',(path i:'/'){.path
+'mkdirunique failed'assert 1=mkdir_j_ (path i:'/'){.path
 c=. 0
 p=. path
 while. 1 do.
  'too many folders'assert 100> c=. >:c
- if. -.0-:shell :: 0: 'mkdir ',path,' 2> /dev/null' do. break. end.
+ if. IFWIN do.
+  if. 0=#shell'mkdir ',path do. break. end.
+ else.
+  if. -.0-:shell :: 0: 'mkdir ',path,' 2> /dev/null' do. break. end.
+ end. 
  path=. p,'-',":c
 end.
 path
