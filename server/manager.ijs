@@ -19,8 +19,6 @@ inspect - inspect-yes or inspect-no - enable node inspect
 create/createforce/get set jdsfolder_z_ as full path to server-folder
 jdsfolder is a handle to the server
    
-   serverdebug_jdserver_=: 1 NB. 1 for j server task visible in jconsole
-
    jdserver'run'    NB. start server
    jdserver'report'
    jdserver'kill    NB. kill server tasks
@@ -38,8 +36,8 @@ jds running in a visible jconsole task can be useful
 
 if not running in visible jconsole task
    jdserver'kill'
-   serverdebug_jdserver_=: 1
-   jdserver'run'
+start jconsole
+   load  jdscpath,'jds/run.ijs
 
 ctrl+c - interrupt server zmq loop
    RELOAD NB. jds main file
@@ -75,10 +73,6 @@ nodeserver and jdserver could be started/stopped independently
 
 nodeserver could serve multiple jdservers (even on other hosts)
  but for now it is one node server for one jd server
-)
-
-3 :0''
-if. _1=nc<'serverdebug' do. serverdebug=: 0 end.
 )
 
 NB. * op;...
@@ -227,15 +221,12 @@ certerror assert 1=;ftype each '.ssh/jserver/key.pem';'.ssh/jserver/fullchain.pe
 
 ferase pfj,'logfile.log' NB. remove old jds log file
 
-if. serverdebug do.
- spawn_jtask_'x-terminal-emulator -e "\"j9.6/bin/jconsole\" \"',(jpath path,'jds/run.ijs'),'\" "'
-else.
- fork_jtask_ fread pfj,'run.txt'
-end.
+NB. spawn_jtask_'x-terminal-emulator -e "\"j9.6/bin/jconsole\" \"',(jpath path,'jds/run.ijs'),'\" "'
+fork_jtask_ fread pfj,'run.txt'
 fork_jtask_ fread pfn,'run.txt'
 
 NB. jds spawn won't finish until ???
-if. -.serverdebug do. 'jd server failed to start'   assert _1~:pidfromport_jport_ jport end.
+NB. if. -.serverdebug do. 'jd server failed to start'   assert _1~:pidfromport_jport_ jport end.
 'node server failed to start' assert _1~:pidfromport_jport_ nport
 
 (isotimestamp 6!:0'') fwrite jdsfolder,'start'
