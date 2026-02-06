@@ -48,9 +48,9 @@ const server = https.createServer(options, (req, res) => {
   var s= decodeURIComponent(req.url);
   switch(s){
    case '/': s= jdpath+'/server/client/server.html'; break;
-   case '/curl.sh': s= jdpath+'/server/client/curl.sh';break;
+   case '/curl':        s= jdpath+'/server/client/curl';break;
    case '/pyclient.py': s= jdpath+'/server/client/pyclient.py';break;
-   case '/pytest.py': s= jdpath+'/server/client/pytest.py';break;
+   case '/pytest.py':   s= jdpath+'/server/client/pytest.py';break;
    default: s= '';
   }
   res.writeHead(200, "OK", {'Content-Type': 'text/html'}); // ,'Content-Disposition': 'attachment'

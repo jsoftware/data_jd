@@ -59,13 +59,9 @@ jdclient=: 3 : 0
 'host port'=. <;._1 ':',y
 cert=. ('localhost'-:host){'';'-k' NB. localhost curl option -k
 path=. mkdirunique jdscpath,'client/',host,'-',port
-a=. fread'~addons/data/jd/server/client/curl.sh'
+a=. fread'~addons/data/jd/server/client/curl'
 a=. a rplc '$1';path;'$2';(host,':',port);'$3';cert
-NB.! a fwrite path,'/curl.sh'
-NB. shell 'chmod +x ',path,'/curl.sh'
-a=. ;1{<;._2 a
 a fwrite path,'/curl'
-shell 'chmod +x ',path,'/curl'
 'client'fwrite path,'/jdclass'
 path
 )
@@ -82,7 +78,7 @@ cmds=. }.y
 'not a jd client folder'assert 'client'-:fread path,'/jdclass'
 (lz4_compressframe_jlz4_ 3!:1 cmds) fwrite path,'/post'
 NB.! try. shell path,'/curl.sh' catch. ('curl failed: ',fread path,'/stderr')assert 0 end.
-try. shell path,'/curl' catch. ('curl failed: ',fread path,'/stderr')assert 0 end.
+try. shell fread path,'/curl' catch. ('curl failed: ',fread path,'/stderr')assert 0 end.
 r=. fread path,'/result'
 if. 'logoff'-:dltb ;{.cmds do. rmdir_j_ path end.
 if. '{'={.r do. dec_pjson_ r return. end. NB. dec not jsondec

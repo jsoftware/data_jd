@@ -1,7 +1,7 @@
 # python3 client and req for jd server
 
 from pathlib import Path
-import shutil,subprocess,lz4.frame,json
+import shutil,shlex,subprocess,lz4.frame,json
 
 def mkdirunique(path,name):
  path= str(Path(path).resolve())
@@ -29,12 +29,11 @@ def client(codepath,folderpath,id,host,port):
  cert= '-k' if 'localhost'==host else ''
  hostpath= path
 
- d= fread(codepath+'/curl.sh','r')
+ d= fread(codepath+'/curl','r')
  d= d.replace('$1',hostpath)
  d= d.replace('$2',host+':'+port)
  d= d.replace('$3',cert)
- fwrite(hostpath+'/curl.sh','w',d)
- subprocess.call(['chmod','700',hostpath+'/curl.sh'])
+ fwrite(hostpath+'/curl','w',d)
  return hostpath
 
 def fread(p,mode):
@@ -53,7 +52,7 @@ def req(hostpath,a):
  
  try:
   e= 0
-  subprocess.run([hostpath+"/curl.sh"],check=True)
+  subprocess.run([fread(hostpath+"/curl",'r')],shell=True,check=True)
  except:
   e= 1
 
