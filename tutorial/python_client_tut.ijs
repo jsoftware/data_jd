@@ -5,7 +5,7 @@ load'~addons/data/jd/server/server1.ijs'
 s1_start''
 
 NB. create folder jdpycode with python files to create and run jd py clients
-pycmds=: 0 : 0 rplc ' -p ';;IFWIN{' -p ';''
+pycmds=: 0 : 0 rplc ' -p ';;IFWIN{' -p ';' '
 mkdir -p jdpycode
 curl -k -o jdpycode/curl        https://localhost:3000/curl
 curl -k -o jdpycode/pyclient.py https://localhost:3000/pyclient.py
