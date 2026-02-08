@@ -33,7 +33,11 @@ def client(codepath,folderpath,id,host,port):
  d= d.replace('$1',hostpath)
  d= d.replace('$2',host+':'+port)
  d= d.replace('$3',cert)
- fwrite(hostpath+os.sep+'curl','w',d)
+ if('\\'==os.sep):
+  fwrite(hostpath+os.sep+'curl.bat','w',d)
+ else:
+  fwrite(hostpath+os.sep+'curl','w',d)
+ 
  return hostpath
 
 def fread(p,mode):
