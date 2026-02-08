@@ -1,13 +1,13 @@
 # python3 client and req for jd server
 
 from pathlib import Path
-import shutil,shlex,subprocess,lz4.frame,json
+import os,shutil,subprocess,lz4.frame,json
 
 def mkdirunique(path,name):
  path= str(Path(path).resolve())
  Path(path).mkdir(parents=True,exist_ok=True)
  c= 0
- p= path+'/'+name
+ p= path+os.sep+name
  while 1:
   c= c+1
   if 100<c:
@@ -23,17 +23,17 @@ def mkdirunique(path,name):
 # returns path to client files that is arg to req
 def client(codepath,folderpath,id,host,port):
  path=mkdirunique(folderpath,id)
- # path= str(Path(folderpath+'/'+id).resolve())
+ # path= str(Path(folderpath+os.sep+id).resolve())
  Path(path).mkdir(parents=True,exist_ok=True)
- fwrite(path+'/jdclass','w','jdclient')
+ fwrite(path+os.sep+'jdclass','w','jdclient')
  cert= '-k' if 'localhost'==host else ''
  hostpath= path
 
- d= fread(codepath+'/curl','r')
+ d= fread(codepath+os.sep+'curl','r')
  d= d.replace('$1',hostpath)
  d= d.replace('$2',host+':'+port)
  d= d.replace('$3',cert)
- fwrite(hostpath+'/curl','w',d)
+ fwrite(hostpath+os.sep+'curl','w',d)
  return hostpath
 
 def fread(p,mode):
@@ -48,18 +48,18 @@ def fwrite(p,mode,d):
  f.close()
 
 def req(hostpath,a):
- fwrite(hostpath+'/post','wb',lz4.frame.compress(a.encode('utf-8')))
+ fwrite(hostpath+os.sep+'post','wb',lz4.frame.compress(a.encode('utf-8')))
  
  try:
   e= 0
-  subprocess.run([fread(hostpath+"/curl",'r')],shell=True,check=True)
+  subprocess.run([fread(hostpath+os.sep+'curl','r')],shell=True,check=True)
  except:
   e= 1
 
  if e:
-  raise Exception(fread(hostpath+'/stderr','r'))
+  raise Exception(fread(hostpath+os.sep+'stderr','r'))
 
- r= fread(hostpath+'/result','rb')
+ r= fread(hostpath+os.sep+'result','rb')
 
  if('logoff'==a):
   shutil.rmtree(hostpath)
