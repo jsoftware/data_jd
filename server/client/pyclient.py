@@ -52,7 +52,11 @@ def req(hostpath,a):
  
  try:
   e= 0
-  subprocess.run([fread(hostpath+os.sep+'curl','r')],shell=True,check=True)
+  if('\\'==os.sep):
+   subprocess.run([hostpath+os.sep+'curl.bat'],check=True)
+  else: 
+   subprocess.run([fread(hostpath+os.sep+'curl','r')],shell=True,check=True)
+   
  except:
   e= 1
 
