@@ -57,7 +57,7 @@ def req(hostpath,a):
  try:
   e= 0
   if('\\'==os.sep):
-   r= subprocess.run([hostpath+os.sep+'curl.bat'],check=True) # r avoids CompleteProcess msg
+   r= subprocess.run([hostpath+os.sep+'curl.bat'],stdout=subprocess.DEVNULL,check=True) # r avoids CompleteProcess msg
   else: 
    subprocess.run([fread(hostpath+os.sep+'curl','r')],shell=True,check=True)
    
