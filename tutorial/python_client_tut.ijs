@@ -4,9 +4,10 @@ NB. rebuild server1 from scratch
 load'~addons/data/jd/server/server1.ijs'
 s1_start''
 
-NB. create folder jdpycode with python files to create and run jd py clients
-pycmds=: 0 : 0 rplc ' -p ';;IFWIN{' -p ';' '
-mkdir -p jdpycode
+mkdir_j_ jdpycode NB. folder to hold python files
+
+NB. download python files from server
+pycmds=: 0 : 0
 curl -k -o jdpycode/curl        https://localhost:3000/curl
 curl -k -o jdpycode/pyclient.py https://localhost:3000/pyclient.py
 curl -k -o ~/pytest.py          https://localhost:3000/pytest.py

@@ -62,6 +62,8 @@ echo jdreq jdp1;'logoff'
 
 NB. server1 - build/admin/up/create/run
 s1_start=: 3 : 0
+killport_jport_ 3000
+killport_jport_ 65220
 s1_build''  NB. build simple db
 s1_admin''  NB. set simple admin.ijs
 s1_up''     NB. create user/pswd test_upfile

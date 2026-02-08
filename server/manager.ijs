@@ -14,7 +14,7 @@ up      - up or testup - which user/pswd file to use
 inspect - inspect-yes or inspect-no - enable node inspect
    jdserver 'create';name;port;dbs;up;inspect
    jdserver 'createforce';... NB. kill ports before create - handy in development
-   jdserver'get';name NB. get full server-folder path
+   jdserver 'get';name NB. get full server-folder path
 
 create/createforce/get set jdsfolder_z_ as full path to server-folder
 jdsfolder is a handle to the server
