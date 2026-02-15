@@ -225,11 +225,10 @@ NB. spawn_jtask_'x-terminal-emulator -e "\"j9.6/bin/jconsole\" \"',(jpath path,'
 fork_jtask_ fread pfj,'run.txt'
 fork_jtask_ fread pfn,'run.txt'
 
-NB. jds spawn won't finish until ???
-NB. if. -.serverdebug do. 'jd server failed to start'   assert _1~:pidfromport_jport_ jport end.
+'jds server failed to start'  assert _1~:pidfromport_jport_ jport
 'node server failed to start' assert _1~:pidfromport_jport_ nport
-
 (isotimestamp 6!:0'') fwrite jdsfolder,'start'
+
 (fread jdsfolder,'jds.log'),LF,fread jdsfolder,'node/logstd.log'
 )
 
