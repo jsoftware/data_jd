@@ -7,7 +7,7 @@ def mkdirunique(path,name):
  path= str(Path(path).resolve())
  Path(path).mkdir(parents=True,exist_ok=True)
  c= 0
- p= path+os.sep+name
+ p= path+'/'+name
  while 1:
   c= c+1
   if 100<c:
@@ -23,20 +23,24 @@ def mkdirunique(path,name):
 # returns path to client files that is arg to req
 def client(codepath,folderpath,id,host,port):
  path=mkdirunique(folderpath,id)
- # path= str(Path(folderpath+os.sep+id).resolve())
+ # path= str(Path(folderpath+'/'+id).resolve())
  Path(path).mkdir(parents=True,exist_ok=True)
- fwrite(path+os.sep+'jdclass','w','jdclient')
+ fwrite(path+'/'+'jdclass','w','jdclient')
  cert= '-k' if 'localhost'==host else ''
  hostpath= path
 
- d= fread(codepath+os.sep+'curl','r')
+ d= fread(codepath+'/'+'curl','r')
  d= d.replace('$1',hostpath)
  d= d.replace('$2',host+':'+port)
  d= d.replace('$3',cert)
- if('\\'==os.sep):
-  fwrite(hostpath+os.sep+'curl.bat','w',d)
+ if(os.sep=='\\'):
+  # replace / with \ except for https://
+  d= d.replace('/',os.sep)
+  d= d.replace('https:\\\\','https://')
+  d= d.replace('application\\octet-strea','application/octet-stream')
+  fwrite(hostpath+'/'+'curl.bat','w',d)
  else:
-  fwrite(hostpath+os.sep+'curl','w',d)
+  fwrite(hostpath+'/'+'curl','w',d)
  
  return hostpath
 
@@ -52,22 +56,22 @@ def fwrite(p,mode,d):
  f.close()
 
 def req(hostpath,a):
- fwrite(hostpath+os.sep+'post','wb',lz4.frame.compress(a.encode('utf-8')))
+ fwrite(hostpath+'/'+'post','wb',lz4.frame.compress(a.encode('utf-8')))
  
  try:
   e= 0
-  if('\\'==os.sep):
-   r= subprocess.run([hostpath+os.sep+'curl.bat'],stdout=subprocess.DEVNULL,check=True) # r avoids CompleteProcess msg
+  if(os.sep=='\\'):
+   r= subprocess.run([hostpath+'/'+'curl.bat'],stdout=subprocess.DEVNULL,check=True) # r avoids CompleteProcess msg
   else: 
-   subprocess.run([fread(hostpath+os.sep+'curl','r')],shell=True,check=True)
+   subprocess.run([fread(hostpath+'/'+'curl','r')],shell=True,check=True)
    
  except:
   e= 1
 
  if e:
-  raise Exception(fread(hostpath+os.sep+'stderr','r'))
+  raise Exception(fread(hostpath+'/'+'stderr','r'))
 
- r= fread(hostpath+os.sep+'result','rb')
+ r= fread(hostpath+'/'+'result','rb')
 
  if('logoff'==a):
   shutil.rmtree(hostpath)
