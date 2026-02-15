@@ -229,6 +229,7 @@ fork_jtask_ fread pfn,'run.txt'
 'node server failed to start' assert _1~:pidfromport_jport_ nport
 (isotimestamp 6!:0'') fwrite jdsfolder,'start'
 
+6!:3[0.1 NB. time to spin up
 (fread jdsfolder,'jds.log'),LF,fread jdsfolder,'node/logstd.log'
 )
 

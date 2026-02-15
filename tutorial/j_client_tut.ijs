@@ -2,6 +2,7 @@ NB. server1 access from j
 
 NB. rebuild server1 from scratch
 load'~addons/data/jd/server/server1.ijs'
+NB. next start the server and can take several seconds
 s1_start''
 
 NB. create new and unique client-folder for managing connection
