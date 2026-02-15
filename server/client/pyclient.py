@@ -1,4 +1,6 @@
 # python3 client and req for jd server
+# py windows - allows / \ and a mix - we use /
+# curl windows requires \ in paths and / in https:// and application/octet-stream
 
 from pathlib import Path
 import os,shutil,subprocess,lz4.frame,json
@@ -12,11 +14,12 @@ def mkdirunique(path,name):
   c= c+1
   if 100<c:
     raise Exception('too many folders')
+  path= p+'-'+str(c)  
   try:
    Path(path).mkdir(exist_ok=False)
    break
   except:
-   path= p+'-'+str(c)
+   pass
  return path
 
 # codepath,clientpath,id,host,port
@@ -34,7 +37,7 @@ def client(codepath,folderpath,id,host,port):
  d= d.replace('$2',host+':'+port)
  d= d.replace('$3',cert)
  if(os.sep=='\\'):
-  # replace / with \ except for https://
+  # replace / with \ except for https:// and application/octet-stream
   d= d.replace('/',os.sep)
   d= d.replace('https:\\\\','https://')
   d= d.replace('application\\octet-strea','application/octet-stream')

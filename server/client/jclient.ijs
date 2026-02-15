@@ -41,13 +41,14 @@ path=. abspath jpath y
 c=. 0
 p=. path
 while. 1 do.
- 'too many folders'assert 100> c=. >:c
+ c=. c+1
+ 'too many folders'assert 100>c
+ path=. p,'-',":c
  if. IFWIN do.
   if. 0=#shell'mkdir ',hostpathsep path do. break. end.
  else.
   if. -.0-:shell :: 0: 'mkdir ',path,' 2> /dev/null' do. break. end.
  end. 
- path=. p,'-',":c
 end.
 path
 )
