@@ -50,8 +50,3 @@ case. 'Darwin' do.
 end.
 f
 )
-
-NB. check if jds server y is running
-check_jds=: 3 : 0
-'server is not running on that port' assert _1~:pidfromport_jport_ y
-)

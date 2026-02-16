@@ -27,6 +27,14 @@ jdsfolder is a handle to the server
 example use in : ~addons/data/jd/server/server1.ijs
 )
 
+man_jd_server_requirements=: 0 : 0
+Jd server needs zmq and node.
+Mac installs zmq with brew.
+
+Jd python client requires python3 and lz4.
+ $ python3 -m pip install lz4
+)
+
 man_jd_server_debug=: 0 : 0
 *** debug jds - on the server machine
    fread jdsfolder,'/node/logstd.log'
@@ -130,7 +138,7 @@ dbs=. }.;',',each~.deb each ','splitstring dbs
 check_nodebinpath''
 'zmq must be version 4.1.4 or later'assert 414<:10#.version_jcs_''
 jdsfolder_z_=: jdscpath,'server/',name,'/'
-'server ports in use - delete?' assert _1=;pidfromport_jport_ each jport,nport
+'server ports in use - delete?' assert _1=;getpid_jport_ each jport,nport
 rmdir_j_ :: [ }:jdsfolder
 mkdir_j_ jdsfolder
 'server' fwrite jdsfolder,'jdclass'
@@ -191,9 +199,7 @@ r=. '   jdslog_records_jdserver_ ',(":;(y-:''){y;5),' NB. last n records'
 r=. r,LF,jdslog_format y
 r=. r,LF,'server started: ',fread JDSPATH,'start'
 r=. r,LF,fread JDSPATH,'config'
-r=. r,LF,LF,'   pidport_jport_'''''
-r=. r,LF,,LF,.~":pidport_jport_''
-r=. r,LF,'   fread JDSPATH,''/node/logstd.log'''
+r=. r,LF,LF,'   fread JDSPATH,''/node/logstd.log'''
 r=. r,LF,fread JDSPATH,'/node/logstd.log'
 )
 
@@ -215,7 +221,7 @@ NB. start jds and node tasks
 run=: 3 : 0
 path=. jdsfolder
 'jport nport pfj pfn'=. setup''
-'server ports in use - delete?' assert _1=;pidfromport_jport_ each jport,nport
+'server ports in use - delete?' assert _1=;getpid_jport_ each jport,nport
 'upfile does not exist'  assert 1=ftype fread jdsfolder,'upfilepath'
 certerror assert 1=;ftype each '.ssh/jserver/key.pem';'.ssh/jserver/fullchain.pem'
 
@@ -225,8 +231,8 @@ NB. spawn_jtask_'x-terminal-emulator -e "\"j9.6/bin/jconsole\" \"',(jpath path,'
 fork_jtask_ fread pfj,'run.txt'
 fork_jtask_ fread pfn,'run.txt'
 
-'jds server failed to start'  assert _1~:pidfromport_jport_ jport
-'node server failed to start' assert _1~:pidfromport_jport_ nport
+'jds server failed to start'  assert _1~:getpid_jport_ jport
+'node server failed to start' assert _1~:getpid_jport_ nport
 (isotimestamp 6!:0'') fwrite jdsfolder,'start'
 
 6!:3[0.1 NB. time to spin up
