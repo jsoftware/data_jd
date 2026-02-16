@@ -82,6 +82,10 @@ f=. (;(<n)-:each (-#n){.each d)#d
 'can not mix different Jd libraries' assert 1=#f
 JDP_z_=: _6}.;f
 
+NB. sever requires setsid so jds and node task will not end when the start task ends
+NB. setsid is not in mac so we provide our own binary from brew install util-linux
+SETSID=: ;(UNAME-:'Darwin'){'setsid';jpath'~bin/setsid'
+
 t=. jpath JDP,'cd/'
 if. (<UNAME)e.'Linux';'FreeBSD';'OpenBSD' do.
  t=. t,IFRASPI{::'libjd.so';'rpi/libjd.so'

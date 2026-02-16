@@ -37,7 +37,7 @@ case. 'Linux';'FreeBSD';'OpenBSD';'Darwin' do.
  if. FHS do. t=. t rplc 'jconsole';'ijconsole' end.
  t fwrite f,'/run.sh'
  shell'chmod +x ',f,'run.sh'
- cmd=. ('setsid "PATHrun.sh" > "LOG" 2>&1 &') rplc 'PATH';f;'LOG';logstd
+ cmd=. (SETSID,' "PATHrun.sh" > "LOG" 2>&1 &') rplc 'PATH';f;'LOG';logstd
  cmd fwrite f,'run.txt'
 case. 'Win' do.
  t=. 'for /f "tokens=5" %%a in (''netstat -aon ^| find ":',sport,'" ^| find "LISTENING"'') do taskkill /f /pid %%a' 

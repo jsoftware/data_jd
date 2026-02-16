@@ -33,7 +33,7 @@ else.
  f=. p,'run.sh'
  r=. t fwrite f
  shell'chmod +x "',f,'"'
- ('setsid "PATHrun.sh" > "LOG" 2>&1' rplc 'PATH';p;'LOG';p,'logstd.log') fwrite p,'run.txt'
+ (SETSID,' "PATHrun.sh" > "LOG" 2>&1' rplc 'PATH';p;'LOG';p,'logstd.log') fwrite p,'run.txt'
 end. 
 
 (fread '~addons/data/jd/server/node/server.html') fwrite p,'/server.html' NB.! ???

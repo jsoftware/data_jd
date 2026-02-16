@@ -31,6 +31,11 @@ man_jd_server_requirements=: 0 : 0
 Jd server needs zmq and node.
 Mac installs zmq with brew.
 
+Mac needs setsid
+ $ brew install util-linux
+/usr/local/opt/util-linux/bin/setsid
+
+
 Jd python client requires python3 and lz4.
  $ python3 -m pip install lz4
 )
