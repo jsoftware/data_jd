@@ -70,18 +70,3 @@ s1_up''     NB. create user/pswd test_upfile
 s1_create'' NB. config server1 folder
 s1_run''    NB. run server1
 )
-
-NB. create server for another db
-northwind=: 3 : 0
-jdserver 'createforce';'server2';3000;'northwind'
-jdserver 'testup' NB. use test_upfile
-jdserver'run'
-)
-
-northwind_test=: 3 : 0
-echo jdp1=: jdclient 'localhost:3000'
-echo jdreq jdp1;'logon northwind u u'
-echo jdreq jdp1;'info summary'
-echo jdreq jdp1;'logoff'
-)
-

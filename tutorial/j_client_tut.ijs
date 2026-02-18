@@ -56,7 +56,6 @@ jds1'logon northwind u u'
 jds1'info summary'
 jds1'logoff'
 
-
 0 : 0
 this client had jd fully loaded
 you can also have j client with just the client code
@@ -102,4 +101,7 @@ jdreq jdp1;'logon simple-all user0 user0' NB. access dan simple with user and ps
 NB. bash works with jd server with json
 shell './bash_server1.sh ',jdp1,' "read from t"'
 
-man'jd server debug'
+0 : 0
+for debug info see:
+  man'jd server debug'
+)

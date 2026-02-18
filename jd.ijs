@@ -83,8 +83,8 @@ f=. (;(<n)-:each (-#n){.each d)#d
 JDP_z_=: _6}.;f
 
 NB. sever requires setsid so jds and node task will not end when the start task ends
-NB. setsid is not in mac so we provide our own binary from brew install util-linux
-SETSID=: ;(UNAME-:'Darwin'){'setsid';jpath'~bin/setsid'
+NB. setsid is not in mac so we provide our own universal binary from github
+SETSID=: ;(UNAME-:'Darwin'){'setsid';jpath'~addons/data/jd/cd/setsid/setsid'
 
 t=. jpath JDP,'cd/'
 if. (<UNAME)e.'Linux';'FreeBSD';'OpenBSD' do.
