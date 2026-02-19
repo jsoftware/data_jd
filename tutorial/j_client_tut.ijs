@@ -82,17 +82,19 @@ for debug info see:
 )
 
 0 : 0
-any programming environment can access server1
+any programming environment can access a Jd server
 
 first you need to build a client folder similar to the one for j
  python3 has been done - others left as an exercise for the reader
 
-following shows how unix bash can access server1 by using the j client folder
+following shows how windows bat or unix bash
+ can access a server by using the j client folder
 )
 
-'following steps run only on *nix'assert -.IFWIN
+jdp1=: jdclient 'localhost:3000' NB. client folder for use by bash
+jdreq jdp1;'logon simple user0 user0' NB. access dan simple with user and pswd
 
-0 : 0  fwrite 'bash_server1.sh'
+bash_client=: 0 : 0
 #!/bin/bash
 # $1 path to j client folder, $2 command
 printf %s "$2" > $1/post
@@ -100,12 +102,30 @@ $1/curl
 cat $1/result
 )
 
-shell 'chmod +x bash_server1.sh'
+bat_client=: 0 : 0
+rem %1 path to j client folder, %2 command
+@echo %2 > %1\post
+@call %1\curl > null
+@type %1\result
+)
 
-jdp1=: jdclient 'localhost:3000' NB. client folder for use by bash
-jdreq jdp1;'logon simple user0 user0' NB. access dan simple with user and pswd
+3 : 0''
+if. IFWIN do.
+ name=: 'bat_client.bat'
+ bat_client fwrite 'bat_client.bat'
+ (fread jdp1,'/curl') fwrite jdp1,'/curl.bat'
+else.
+ name=: './bash_client.sh'
+ bash_client fwrite 'bash_client.sh'
+ shell 'chmod +x bash_client.sh'
+ shell 'chmod +x ',jdp1,'/curl' NB. required to run from bash
+end.
+)
 
-shell 'chmod +x ',jdp1,'/curl' NB. required to run from bash
-NB. bash works with jd server with json
-shell './bash_server1.sh ',jdp1,' "read from t"'
+shell name,' ',(hostpathsep_j_ jdp1),' "info schema"'
 
+shellcmd=: 3 : 0
+shell name,' ',(hostpathsep_j_ jdp1),' "',y,'"'
+)
+
+shellcmd'read from t'
