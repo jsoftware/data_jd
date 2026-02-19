@@ -34,7 +34,7 @@ https://code.jsoftware.com/wiki/Jd/Index
 
 man system provides latest info written alongsidethe code
    man''
-   man'jdtest'
+   man'jdtests'
 
 Get started:
    jdrt '' NB. tutorials

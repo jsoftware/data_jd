@@ -60,6 +60,17 @@ echo jdreq jdp1;'read a from t'
 echo jdreq jdp1;'logoff'
 )
 
+NB. simple server tests
+s1_test=: 3 : 0
+r=. ''
+r=. r,<jdp1=: jdclient 'localhost:3000'
+r=. r,<jdreq jdp1;'logon simple u u'
+r=. r,<jdreq jdp1;'info schema'
+r=. r,<jdreq jdp1;'insert t';'a';6 7 8;'byte';3 3$'qwer' 
+r=. r,<jdreq jdp1;'read a from t'
+,.r,<jdreq jdp1;'logoff'
+)
+
 NB. server1 - build/admin/up/create/run
 s1_start=: 3 : 0
 killport_jport_ 3000

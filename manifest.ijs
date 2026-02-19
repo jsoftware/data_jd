@@ -68,6 +68,7 @@ cd/rpi/libjpcre.so
 FILESDARWIN64=: 0 : 0
 cd/libjd.dylib
 cd/libjpcre.dylib
+cd/setsid/setsid
 )
 
 RELEASE=: 'j807'

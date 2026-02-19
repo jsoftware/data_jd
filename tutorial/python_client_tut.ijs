@@ -8,9 +8,9 @@ mkdir_j_ 'jdpycode' NB. folder to hold python files
 
 NB. download python files from server
 pycmds=: 0 : 0
-curl -k -o jdpycode/curl        https://localhost:3000/curl
-curl -k -o jdpycode/pyclient.py https://localhost:3000/pyclient.py
-curl -k -o pytest.py            https://localhost:3000/pytest.py
+curl --no-progress-meter -k -o jdpycode/curl        https://localhost:3000/curl
+curl --no-progress-meter -k -o jdpycode/pyclient.py https://localhost:3000/pyclient.py
+curl --no-progress-meter -k -o pytest.py            https://localhost:3000/pytest.py
 )
 
 shell each <;._2 pycmds

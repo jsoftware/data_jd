@@ -77,31 +77,35 @@ https://localhost:3000
 )
 
 0 : 0
+for debug info see:
+  man'jd server debug'
+)
+
+0 : 0
 any programming environment can access server1
 
 first you need to build a client folder similar to the one for j
  python3 has been done - others left as an exercise for the reader
 
-following shows how bash can access server1 by using the j client folder
+following shows how unix bash can access server1 by using the j client folder
 )
+
+'following steps run only on *nix'assert -.IFWIN
 
 0 : 0  fwrite 'bash_server1.sh'
 #!/bin/bash
 # $1 path to j client folder, $2 command
 printf %s "$2" > $1/post
-$1/curl.sh
+$1/curl
 cat $1/result
 )
 
 shell 'chmod +x bash_server1.sh'
 
 jdp1=: jdclient 'localhost:3000' NB. client folder for use by bash
-jdreq jdp1;'logon simple-all user0 user0' NB. access dan simple with user and pswd
+jdreq jdp1;'logon simple user0 user0' NB. access dan simple with user and pswd
 
+shell 'chmod +x ',jdp1,'/curl' NB. required to run from bash
 NB. bash works with jd server with json
 shell './bash_server1.sh ',jdp1,' "read from t"'
 
-0 : 0
-for debug info see:
-  man'jd server debug'
-)

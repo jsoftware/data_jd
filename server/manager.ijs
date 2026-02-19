@@ -21,23 +21,22 @@ jdsfolder is a handle to the server
    
    jdserver'run'    NB. start server
    jdserver'report'
-   jdserver'kill    NB. kill server tasks
+   jdserver'kill'   NB. kill server tasks
    jdserver'delete' NB. kill and delete server-folder
 
 example use in : ~addons/data/jd/server/server1.ijs
 )
 
 man_jd_server_requirements=: 0 : 0
-Jd server needs zmq and node.
-Mac installs zmq with brew.
+Jd server uses zmq and node
+Mac installs zmq with brew
 
 Mac needs setsid
- $ brew install util-linux
-/usr/local/opt/util-linux/bin/setsid
-distribute mac setsid in jd folder
-js.ijs SETSID=: 
+ Mac univeral setsid is in ~addons/data/jd/cd/setsid
+ SETSID_jd_=: ...
 
-Jd python client requires python3 and lz4.
+Jd python client requires python3 and lz4
+you want, but sometimes the name is python or py
  $ python3 -m pip install lz4
 )
 
@@ -233,15 +232,27 @@ certerror assert 1=;ftype each '.ssh/jserver/key.pem';'.ssh/jserver/fullchain.pe
 
 ferase pfj,'logfile.log' NB. remove old jds log file
 
-NB. spawn_jtask_'x-terminal-emulator -e "\"j9.6/bin/jconsole\" \"',(jpath path,'jds/run.ijs'),'\" "'
 fork_jtask_ fread pfj,'run.txt'
 fork_jtask_ fread pfn,'run.txt'
 
-'jds server failed to start'  assert _1~:getpid_jport_ jport
-'node server failed to start' assert _1~:getpid_jport_ nport
-(isotimestamp 6!:0'') fwrite jdsfolder,'start'
+if. +./_1=a=. ;getpidx_jport_ each jport,nport do.
+ NB. jds and/or node task did not start
+ m=. 'jds and/or node task failed to start',LF
+ if. _1={.a do.
+  m=. m,LF,~'jds task did not start on port: ',":jport
+  m=. m,LF,~":fread jdsfolder,'jds/logstd.log'
+ end. 
+ if. _1={:a do.
+  m=. m,LF,~'node task did not start on port: ',":nport
+  m=. m,LF,~":fread jdsfolder,'node/logstd.log'
+ end.
+ m assert 0
+end.
 
-6!:3[0.1 NB. time to spin up
+'jds server failed to start'  assert _1~:getpidx_jport_ jport NB. delay to let spin up
+'node server failed to start' assert _1~:getpidx_jport_ nport
+
+(isotimestamp 6!:0'') fwrite jdsfolder,'start'
 (fread jdsfolder,'jds.log'),LF,fread jdsfolder,'node/logstd.log'
 )
 
