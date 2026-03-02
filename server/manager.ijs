@@ -286,7 +286,7 @@ if. _1-:fread fn do.  NB. not set - try to set it
  end.
 end.
 NB. check that it is set properly
-r=. shell :: _1: (fread fn),' --version'
+r=. shell :: _1: '"',(fread fn),'" --version'
 '~config/nodebinpath is not path to node binary'assert -._1-:r
 '~config/nodebinpath has bad --version'assert ('v'={.r)*.18>:{.0".(}.r)rplc'.';' '
 i.0 0
