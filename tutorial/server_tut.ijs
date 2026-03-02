@@ -1,5 +1,5 @@
 0 : 0
-server1 - build/admin/up/create/run/test
+server1 - build/admin/users-pswds/create/run/test
 
 server1 provides access to database simple
 
@@ -10,6 +10,17 @@ test_upfile is created for a few users to allow logon
 you may need to refocus term window after edit window opens
 next step loads and opens script that creates server1
 )
+
+0 : 0
+a server requires that zmq, node, and lz4 are installed
+the following checks and reports problems
+issues should be resolved before continuing the lab
+)
+
+check_zmq_jdserver_''
+check_node_jdserver_''
+check_lz4_jdserver_''
+
 load '~addons/data/jd/server/server1.ijs'
 0 : 0
 edit the script to follow along for a more detailed experience,
@@ -50,16 +61,16 @@ jdclass is 'server'
 upfilepath is path to user/pswd file (encrypted passwords)
 )
 
-jdserver'report'
+jdserver 'server1';'report'
 
 0 : 0
 you can manage a server from the machine that started the server
 
-  jdserver 'get';name NB. set jdsfolder_z_ for server name
-  jdserver 'report'  NB. report server1 info
-  jdserver 'kill'    NB. kill server1 ports
-  jdserver 'run'     NB. start server1
-  jdserver 'delete'  NB. kill ports and delete server-folder
+  jdserver 'simple';'handle'
+  jdserver 'simple';'report'   NB. report server1 info
+  jdserver 'simple';'stop'     NB. kill server1 ports
+  jdserver 'simple';'start'      NB. start server1
+  jdserver 'simple';'delete'   NB. kill ports and delete server-folder
 )
 
 0 : 0

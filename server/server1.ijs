@@ -24,7 +24,7 @@ NB. and the password is given seecurely to the user
 NB. this simple example has everything in plain view
 NB. pswd is encrypted in upfile
 s1_up=: 3 : 0
-ul=. (jdscpath,'up/test_upfile') conew 'jdup' NB. locale for managing test_upfile
+ul=. 'test_upfile' conew 'jdup' NB. locale for managing test_upfile
 adduser__ul 'admin/funny'
 adduser__ul 'u/u' NB. for most ~temp databases
 adduser__ul 'user0/user0'
@@ -33,21 +33,20 @@ i.0 0
 )
 
 NB. create server-folder
-NB. createforce useful in development as it forces kill of ports
-NB. create gets error if ports are in use
+NB. kills any current server tasks
 NB. server1 is folder name 
-NB. 3000 is port for clients to access node
-NB. 65220 hardwired j port to service zmq requests from node
+NB. 65220 is j port to service zmq requests from node
+NB. 3000 is node port for clients
 NB. simple is database to serve
 NB. testup - use test user/pswd file
 NB. inspect-no - node does not enable inspect
 s1_create=: 3 : 0
-jdserver 'createforce';'server1';3000;'simple';'testup';'inspect-no'
+jdserver 'server1';'createforce';65220;3000;'simple';'testup';'inspect-no'
 )
 
 NB. run server1
 s1_run=: 3 : 0
-jdserver'run'
+jdserver'server1';'start'
 )
 
 NB. simple server tests
@@ -73,8 +72,6 @@ r=. r,<jdreq jdp1;'read a from t'
 
 NB. server1 - build/admin/up/create/run
 s1_start=: 3 : 0
-killport_jport_ 3000
-killport_jport_ 65220
 s1_build''  NB. build simple db
 s1_admin''  NB. set simple admin.ijs
 s1_up''     NB. create user/pswd test_upfile

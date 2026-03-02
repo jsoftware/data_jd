@@ -31,8 +31,8 @@ jdreq jdp1;'logoff' NB. logoff and remove jdp1 folder
 jdp1=: jdclient 'localhost:3000' NB. get new connection
 jdreq jdp1;'logon simple admin funny' NB. admin user can execute j sentences
 jdreq jdp1;'admin i.2 3'
-jdreq jdp1;'admin report_jdserver_ 3'
-jdreq jdp1;'admin jdslog_format_jdserver_ _'
+jdreq jdp1;'admin jdserver''server1'';''report'''
+jdreq jdp1;'admin fread (jdserver''server1'';''handle''),''jds.log'''
 jdreq jdp1;'logoff'
 
 NB. for lots of jdreq calls with the same client-folder
@@ -45,8 +45,8 @@ jds1'logoff'
 
 NB. a server can be configured to run with 0 or more dbs
 
-jdserver 'createforce';'nw+simple';3000;'northwind,simple';'testup';'inspect-no'
-jdserver 'run'
+jdserver 'nw+simple';'create';65220;3000;'northwind,simple';'testup';'inspect-no'
+jdserver 'nw+simple';'start'
 jds1=: (jdclient 'localhost:3000')&jdreq
 jds1'logon simple u u'
 jds1'info summary'
@@ -56,6 +56,8 @@ jds1'logon northwind u u'
 jds1'info summary'
 jds1'logoff'
 
+jdserver 'nw+simple';'delete' NB. delete server so dbs are not locked
+ 
 0 : 0
 this client had jd fully loaded
 you can also have j client with just the client code
@@ -64,7 +66,7 @@ you can also have j client with just the client code
 0 : 0 fwrite 'jd.jnk' NB. write script for jqt or jconsole
 load'~addons/data/jd/server/client/jclient.ijs'
 s1=: (jdclient 'localhost:3000')&jdreq
-s1'logon simple-all user0 user0' NB. access dan simple-all with user and pswd
+s1'logon simple user0 user0' NB. access dan simple with user and pswd
 s1'info schema'
 s1'logoff'
 )
@@ -84,48 +86,13 @@ for debug info see:
 0 : 0
 any programming environment can access a Jd server
 
-first you need to build a client folder similar to the one for j
- python3 has been done - others left as an exercise for the reader
+a client must build a client folder similar to the one for j
+this has been done for python3 - others left as an exercise for the reader
 
-following shows how windows bat or unix bash
- can access a server by using the j client folder
+   jdrt'python_client' NB. access from python3 client
+
+simplified bat/bash examples use the j client folder for access
+
+   jdrt'shell_client' NB. access from window bat or unix bash
 )
 
-jdp1=: jdclient 'localhost:3000' NB. client folder for use by bash
-jdreq jdp1;'logon simple user0 user0' NB. access dan simple with user and pswd
-
-bash_client=: 0 : 0
-#!/bin/bash
-# $1 path to j client folder, $2 command
-printf %s "$2" > $1/post
-$1/curl
-cat $1/result
-)
-
-bat_client=: 0 : 0
-rem %1 path to j client folder, %2 command
-@echo %2 > %1\post
-@call %1\curl > null
-@type %1\result
-)
-
-3 : 0''
-if. IFWIN do.
- name=: 'bat_client.bat'
- bat_client fwrite 'bat_client.bat'
- (fread jdp1,'/curl') fwrite jdp1,'/curl.bat'
-else.
- name=: './bash_client.sh'
- bash_client fwrite 'bash_client.sh'
- shell 'chmod +x bash_client.sh'
- shell 'chmod +x ',jdp1,'/curl' NB. required to run from bash
-end.
-)
-
-shell name,' ',(hostpathsep_j_ jdp1),' "info schema"'
-
-shellcmd=: 3 : 0
-shell name,' ',(hostpathsep_j_ jdp1),' "',y,'"'
-)
-
-shellcmd'read from t'

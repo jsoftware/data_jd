@@ -2,7 +2,7 @@ NB. Copyright 2026, Jsoftware Inc.  All rights reserved.
 NB. j curl access to jd server
 
 3 : 0'' NB. normally done in jd.ijs - but not if only client code
-if. _1=nc<'jdscpath_z_' do. jdscpath_z_=: 'jdscpath/' end. NB. path to all server/client files
+if. _1=nc<'jdscpath' do. jdscpath=: 'jdscpath/' end. NB. path to all server/client files
 )
 
 require'~addons/ide/jhs/extra/man.ijs'
@@ -13,19 +13,18 @@ coclass'jdjclient'
 coinsert'jd'
 
 man_jd_jclient=: 0 : 0
-access jd server:
+access jd server running on localhost port 3000:
 start J task 
-   load'jd' NB. includes client
+   load'jd' NB. includes jdjclient.ijs
 or   
    load'~addons/data/jd/server/client/jds/jdjclient.ijs' NB. just client
 
-curl uses files that are in folder created by jdclient
-
-   jdp1=: jdclient 'localhost:3000'
-   dir jdp1
-   jdreq jdp1;'logon user0/user0'
+   jdp1=: jdclient 'localhost:3000' NB. create jd access folder
+   jdreq jdp1;'logon simple u u' NB. dan simple user pswd
    jdreq jdp1;'info schema'
    jdreq jdp1;'logoff' NB. logoff and delete client folder
+
+   jdrt'j_client'
 )
 
 jdclient_z_=: jdclient_jdjclient_
@@ -69,7 +68,7 @@ path
 
 NB. * path;cmd
 NB. path * cmd
-NB. * path;'logon simple-all user0 user0'
+NB. * path;'logon dan user pswd'
 NB. * path;'info schema'
 NB. * path;'logoff'  NB. logoff and delete folder
 NB. dyadic allows path&jdreq

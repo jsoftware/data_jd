@@ -7,32 +7,29 @@ NB. should consider replacing this with reviewed code
 coclass'jdup'
 coinsert'jd'
 
-man_jd_server_user=: 0 : 0
-user/pswd file for jds server
+man_jd_server_user_pswd=: 0 : 0
+user/pswd file for Jd server
 
-jds server requires logon with user/pswd
-which is validated against upfile
+Jd server requires logon with dan user pswd.
 
-upfile is in jdserver folder and is used by all server subfolders
-pswd are encrypted
+The user and pswd is validated against the server upfile.
 
-valid logon updates the ductable_jdup_ with the dan;user;cookie
-requests with cookie get the user from ductable
+The upfile is in jdscpath up folder. A server-folder upfilepath specfies the server upfile.
 
-   uj=: 'jdserver' conew 'jdup' NB. jd/upfile
-   getusers__uj''
-   adduser__uj 'abc';'abc'
-   deluser__uj''
+The upfile pswds are encrypted.
+
+Valid logon updates the ductable_jdup_ with dan;user;cookie.
+
+Subsequent requests with a cookie get the and and user from the ductable.
+
+See server1.ijs for an exmple of building an upfile.
 )
 
-NB. * path-to-upfile - must be test_upfile or upfile
+NB. * upfile name - must be test_upfile or upfile
 create=: 3 :0
-i=. y i:'/'
-n=. (>:i)}.y
-p=. i{.y
-'name must be upfile or test_upfile'assert (<n)e.'upfile';'test_upfile'
-'mkdir failed'assert 1=mkdir_j_ p
-UPFILE=: y
+'name must be upfile or test_upfile'assert (<y)e.'upfile';'test_upfile'
+'mkdir failed'assert 1=mkdir_j_ jdscpath_jd_,'up'
+UPFILE=: jdscpath_jd_,'up/',y
 if. -.fexist UPFILE do. '' fwrite UPFILE end.
 i.0 0
 )

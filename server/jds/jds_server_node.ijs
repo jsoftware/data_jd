@@ -10,7 +10,6 @@ srdecode_z_=: a.{~256 256 256 256 256#:]
 
 NB. global parameters: PORT DBS
 init=: 3 : 0
-'zmq must be version 4.1.4 or later'assert 414<:10#.version_jcs_''
 jdslog_jd_'ini';'';'';'start: ',isotimestamp 6!:0''
 for_d. DBS do.
  d=. adminp_jd_ >d NB. path to DB folder

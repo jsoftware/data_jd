@@ -16,7 +16,7 @@ DBS=: jdremq_jd_ each ',' strsplit_jd_'<DBS>'
 init''
 )
 
-NB. path;65220;0;'test,"foo,bar",~temp/jd/mum' - NB. PJDS global
+NB. path;jport;'test,"foo,bar",~temp/jd/mum'
 create_jds=: 3 : 0
 'path port dbs'=. y
 sport=. ":port
@@ -24,7 +24,6 @@ f=. jpath path,'jds/'
 mkdir_j_ f
 log=. f,'log.log'
 logstd=. f,'logstd.log' NB. stdout/stderr
-ferase log;logstd
 loglevel=. 0
 
 t=. jds_server_config_template rplc '<PORT>';sport;'<DBS>';dbs;'<PATH>';path

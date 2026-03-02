@@ -1,5 +1,13 @@
 NB. server1 access from python3
 
+0 : 0
+Jd python client requires python3 and lz4
+sometimes the python3 binary is linked to from python or py
+ $ python3 -m pip install lz4
+
+   check_python3''
+)
+
 NB. rebuild server1 from scratch
 load'~addons/data/jd/server/server1.ijs'
 s1_start''

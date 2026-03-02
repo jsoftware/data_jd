@@ -43,11 +43,12 @@ Get started:
 man_jd=:jdwelcome_jd_
 
 man_jd_users=: 0 : 0
-jd direct access has a user without a password
-jdaccess dan;user sets the user and then each jd op
-validates the user and op against the DB admin.ijs
+jd direct access users do not have passwords
+   jdaccess dan;user
+sets the user and then each jd op
+validates the user and op against the dan admin.ijs
 
-jds server requires logon with user/pasword
+Jd serverrequires logon with user and a pswd
 )
 
 doin=: 4 : '(<x)(4 : ''do__y x'')each<"0 y' NB. run sentence in each locale
@@ -212,7 +213,7 @@ r=. get_handle_limits''
 )
 
 3 : 0''
-if. _1=nc<'jdscpath_z_' do. jdscpath_z_=: 'jdscpath/' end. NB. path to all server/client files
+if. _1=nc<'jdscpath' do. jdscpath=: 'jdscpath/' end. NB. path to all server/client files
 IFTESTS=: 0
 if. _1=nc<'OP' do. NB. one time inits
  oplogdata=: '' NB. performance data

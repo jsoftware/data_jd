@@ -56,9 +56,10 @@ demo
  sed             
  vr              
 server-client
- j_server
+ server
  j_client
  python_client
+ shell_client
 xtra
  blob
  custom          
