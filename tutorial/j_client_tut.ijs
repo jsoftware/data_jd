@@ -45,7 +45,7 @@ jds1'logoff'
 
 NB. a server can be configured to run with 0 or more dbs
 
-jdserver 'nw+simple';'create';65220;3000;'northwind,simple';'testup';'inspect-no'
+jdserver 'nw+simple';'createforce';65220;3000;'northwind,simple';'testup';'inspect-no'
 jdserver 'nw+simple';'start'
 jds1=: (jdclient 'localhost:3000')&jdreq
 jds1'logon simple u u'
