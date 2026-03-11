@@ -2,7 +2,7 @@ NB. Copyright 2026, Jsoftware Inc.  All rights reserved.
 NB. server1 servder example
 
 NB. build simple database
-s1_build=: 3 : 0t
+s1_build=: 3 : 0
 NB. linux - build simple ok even if simple already open in server
 NB. win   - build simple fails if simple already open in server
 NB. stop server1 so we can build simple in win
