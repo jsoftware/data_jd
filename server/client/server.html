@@ -10,6 +10,7 @@ pswd: <input type="text" id="pwd" value="user0" size="4">
 <hr>
 <button type="button" onclick="run()">run</button>
 <button type="button" onclick="runnxt()">run next example</button>
+<button type="button" onclick="runtime()">run time</button>
 <br>
 <input type="text" id="cmd" size="60" value='info summary' onkeydown = "if (event.keyCode == 13) run('cmd')">
 <br/><textarea id="out" rows=10 cols=80></textarea><br/>
@@ -33,6 +34,24 @@ function runnxt()
   if(ix==examples.length) ix=0;
   idvs('cmd',examples[ix]);
   run();
+}
+
+// time 500 runs of read from t
+async function runtime(){
+ idvs('cmd','list version');
+ var i= 0;
+ var result;
+ var t= Date.now();
+ await getdata(idv('cmd'));
+
+
+ while(i<1000){
+  i++;
+  await getdata(idv('cmd'));
+ }
+ t= Date.now()-t;
+ t= Math.floor(1000/(t/1000));
+ idvs('out',t.toString()+' list version ops per second');
 }
 
 function logon(){getdata("logon "+idv("dan")+" "+idv("usr")+" "+idv("pwd"));}

@@ -110,7 +110,7 @@ case. 'handle' do. handle return.
 case. 'start'  do. start handle return.
 case. 'debug'  do. debug handle return.
 case. 'stop'   do.
- ('stopped: ',isotimestamp 6!:0'') fwrite y,'status'
+ ('stopped: ',isotimestamp 6!:0'') fwrite handle,'status'
  killport_jport_ jport
  killport_jport_ nport
 case. 'delete' do.

@@ -1,14 +1,20 @@
 NB. bmserver client
-load'~addons/data/jd/server/client/jds_client.ijs'
-CL=: 'localhost:3000' conew 'jdsclient'
 
+NB. return 'read from t' ops per seconds
 beat=: 3 :0
-req__CL 'logon ',user
-while. y do.
- a=. req__CL 'reads from t where a0<10 || a1<10 || a2<10'
- y=. <:y
-end.
-req__CL'logoff'
+load'jd'
+jds1=: (jdclient host,':3000')&jdreq
+jds1'logon simple user0 user0'
+a=. 6!:9''
+i=. 0
+while. i<y do.
+ jds1'read from t'
+ i=. i+1
+end. 
+z=. 6!:9''
+r=. y%(z-a)%6!:8''
+(LF,~":r)fappend'beatit.txt'
+jds1'logoff'
 exit''
 )
 

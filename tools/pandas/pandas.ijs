@@ -225,9 +225,11 @@ if. 'object'-:type do.
   n=. (1 ic 2)    (HADRUS_jmf_+i.2)}n NB. assumes newheader and jams rank 2
  end. 
 end. 
-f=. 1!:21 <hostpathsep jpath pf,'.dat'
-n fwrite f;0
-1!:22 f
+NB.! f=. 1!:21 <hostpathsep jpath pf,'.dat'
+NB.! n fwrite f;0
+NB.! 1!:22 f
+f=. hostpathsep jpath pf,'.dat'
+(n,HS_jmf_}.fread f)fwrite f
 i.0 0
 )
 

@@ -24,6 +24,12 @@ function reply(code,res,p)
 
 async function jdsreq(host,port,s,res)
 {
+  //! performance loop
+  // res.writeHead(200, "OK", {'Set-Cookie':"jds_cookie=;path=/;Secure;Httponly",'Content-Type': 'application/octet-stream'});
+  // res.end(jdok);
+  // return
+
+
 let promise= dorequest(host,port,s);
 promise.then(good,bad);
 function good(data){reply(200,res,data);}
@@ -46,7 +52,8 @@ function dorequest(host,port,body){
       res.on("data", d => {data.push(d)})
       res.on("end", () => {resolve(Buffer.concat(data));})
     })
-    .on("error",  (error) => {reject(JSON.stringify(error));})
+//    .on("error",  (error) => {reject(JSON.stringify(error));})
+      .on("error",  (error) => {reject('{"Jd error":"'+error+'"}');})
     .end(body)
 });
 }

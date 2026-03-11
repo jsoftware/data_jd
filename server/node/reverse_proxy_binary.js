@@ -59,6 +59,8 @@ const server = https.createServer(options, (req, res) => {
 
 });
 
+ server.keepAliveTimeout=10000;
+
  server.listen(nport, bind, () => {
   console.log(`Server running at https://${bind}:${nport}/`);
 });

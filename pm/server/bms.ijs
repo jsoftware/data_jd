@@ -1,6 +1,88 @@
 NB. Copyright 2026, Jsoftware Inc.  All rights reserved.
 NB. nov 2025 - benchmark Jd for new server work
 
+NB. time multiple tasks doing read for server1
+
+0 : 0
+node performance
+
+node server.keepAlive= 10000;
+curl --keepalive-time 10
+
+node-loop (no call to jd) makes little diference on localhost
+beatit 4;500;'localhost' 69 vs 56
+so the time is in curl access to node
+)
+
+NB. task-count;beat-count;host
+NB. 2;100;'localhost'
+NB. task-count is number of tasks to spawn
+NB. each task loads beat.ijs and runs beat[beat-count
+beatit=: 3 : 0
+ferase 'beatit.txt'
+'tasks count host'=: y
+'too many'assert tasks<32
+for_i. i.tasks do.
+ NB.spawn_jtask_ t=: 'x-terminal-emulator -e " \"j9.6/bin/jconsole\" -js load\''~addons/data/jd/pm/server/beat.ijs\'' beat[',(":count),' "'
+ fork_jtask_ t=: ('j9.6/bin/jconsole -js load\''~addons/data/jd/pm/server/beat.ijs\'' host=:\''<HOST>\'' beat[',(":count)) rplc '<HOST>';host
+end. 
+while. 1 do.
+ 6!:3[5
+ d=. fread 'beatit.txt'
+ if. tasks=+/LF=d do. break. end.
+end. 
+<.0.5+;0".each<;._2 d
+)
+
+cnt=: 500
+
+beatserver=: 3 : 0
+echo'server.jsoftware.com'
+jds1=: (jdclient 'server.jsoftware.com:3000')&jdreq
+jds1'logon simple u u'
+echo jds1'list version'
+a=. 6!:9''
+i=. 0
+while. i<cnt do.
+ jds1'list version'
+ i=. i+1
+end. 
+z=. 6!:9''
+cnt%(z-a)%6!:8''
+)
+
+beatlocalserver=: 3 : 0
+echo'localhost'
+jdadmin 0
+jdserver'server1';'start'
+jds1=: (jdclient 'localhost:3000')&jdreq
+jds1'logon simple u u'
+echo jds1'list version'
+a=. 6!:9''
+i=. 0
+while. i<cnt do.
+ jds1'list version'
+ i=. i+1
+end. 
+z=. 6!:9''
+cnt%(z-a)%6!:8''
+)
+
+
+NB. rd ops with local jd
+beatlocal=: 3 : 0
+jdserver'server1';'stop'
+jdadmin'simple'
+a=. 6!:9''
+i=. 0
+while. i<1000 do.
+ jd'list version'
+ i=. i+1
+end. 
+z=. 6!:9''
+1000%(z-a)%6!:8''
+)
+
 geninsert=: 3 : 0
 r=. 'c';'abc'
 for_i. i.20 do.
@@ -20,19 +102,6 @@ req__CL'logon admin/funny'
 req__CL'admin oplogdata_jd_'
 )
 
-NB. task-count,beat-count
-NB. task-count is number of tasks to spawn
-NB. each task loads beat.ijs and runs beat[beat-count
-beatit=: 3 : 0
-req__CL'logon admin/funny'
-req__CL'admin oplogdata_jd_=: '''''
-'tasks count'=: y
-'too many'assert tasks<7
-for_i. i.tasks do.
- user=. 'userx/userx'rplc 'x';":i
- spawn_jtask_ t=: 'x-terminal-emulator -e " \"j9.6/bin/jconsole\" -js load\''~addons/data/jd/pm/server/beat.ijs\'' user=:\''',user,'\'' beat[',(":count),' "'
-end. 
-)
 
 NB. build and start server for bmserver db
 run_bms=: 3 :0
