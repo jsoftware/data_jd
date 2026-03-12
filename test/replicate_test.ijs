@@ -75,6 +75,7 @@ a=. jd'info summary'
 jdadmin 0 NB. so reader can use rlog
 testsnk''
 assert a-:jd'info summary'
+jdadmin 0 NB. close replog 
 )
 
 NB. db with 1 table and no rows
@@ -87,6 +88,7 @@ a=. jd'info summary'
 jdadmin 0 NB. so reader can use rlog
 testsnk''
 assert a-:jd'info summary'
+jdadmin 0 NB. close replog 
 )
 
 NB. db with 1 table and some rows
@@ -100,6 +102,7 @@ a=. jd'reads from t'
 jdadmin 0 NB. so reader can use rlog
 testsnk''
 assert a-:jd'reads from t'
+jdadmin 0 NB. close replog 
 )
 
 NB. db repsrc with data 
@@ -116,6 +119,7 @@ a=. jd'reads from t'
 jdadmin 0 NB. so reader can use rlog
 testsnk''
 assert a-:jd'reads from t'
+jdadmin 0 NB. close replog 
 )
 
 testerrors''
