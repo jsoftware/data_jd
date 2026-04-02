@@ -13,7 +13,7 @@ NB. x 1                       echo test scripts as they are run
 jdtests=: 3 : 0
 0 jdtests y
 :
-NB. assert -.(<'jjd')e. conl 0['jdtests must be run in task that is not acting as a server'
+'must not run in server' assert -.IFJDS
 jdadmin 0
 load JDP,'base/tests.ijs'
 load JDP,'base/testtuts.ijs'

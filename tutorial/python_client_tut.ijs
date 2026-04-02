@@ -9,7 +9,7 @@ sometimes the python3 binary is linked to from python or py
 )
 
 NB. rebuild server1 from scratch
-load'~addons/data/jd/server/server1.ijs'
+load JDP,'server/server1.ijs'
 s1_start''
 
 mkdir_j_ 'jdpycode' NB. folder to hold python files
@@ -35,6 +35,7 @@ pyclient.py - python3 code to create jd py client folder
 )
 
 [r=. shell'python3 pytest.py jdpycode jdclient py-server1 localhost 3000'
+r__=: r
 'python client test failed'assert (6=#t)*.6=+/'{'=;{.each t=. <;._2 r
 
 0 : 0

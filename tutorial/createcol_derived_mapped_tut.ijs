@@ -65,7 +65,7 @@ jd'reads from f'
 jd'update f';'year';'year';2013;'e';'2021' NB. derived_mapped col can be in key
 jd'reads from f'
 
-jd'delete f';jd'delete f';jd'key /in f';'year';2018
+jd'delete f';jd'key /in f';'year';2018
 jd'reads from f'
 
 'expected result from previous steps' assert 2014 2012 2021 2011 2020-:'year'jdfrom_jd_ jd'read from f'

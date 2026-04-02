@@ -57,6 +57,7 @@ demo
  vr              
 server-client
  server
+ server_admin
  j_client
  python_client
  shell_client

@@ -1,6 +1,8 @@
 NB. rebuild server1 from scratch
-load'~addons/data/jd/server/server1.ijs'
+load JDP,'server/client/jcurlclient.ijs'
+load JDP,'server/server1.ijs'
 s1_start''
+s1'free' NB. free libcurl locale connection
 
 NB. server access from shell clients - windows bat and unix bash
 NB. j client folder could be built, but for now we just use a j client folder

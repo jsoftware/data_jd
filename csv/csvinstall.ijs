@@ -112,6 +112,6 @@ if. #cols do.
  jdrepair_jd_''
 end. 
 
-jdi_read_jd_ 'from ',table,' where jdindex=1' NB. file resize to get JMFPAD
+jd_read_jd_ 'from ',table,' where jdindex=1' NB. file resize to get JMFPAD
 chksize_jd_''
 )

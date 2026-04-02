@@ -73,7 +73,7 @@ part=. (>:i)}.y
 t=. jdgl :: 0: y
 if. 0~:t do. i.0 0 return. end. NB. already exists
 jd_createtable y
-s=. {:jdi_info'schema ',tab
+s=. {:jd_info'schema ',tab
 for_i. i.ttally s do.
  d=. i tfrom s
  n=. }.d
@@ -82,7 +82,7 @@ for_i. i.ttally s do.
  d=. ;' ',each(<(;{.d),PTM,part),(1{d),<(;2{d),' ',":shape
  jd_createcol d
 end.
-s=. {:jdi_info'ref ',tab
+s=. {:jd_info'ref ',tab
 for_i. i.ttally s do.
  d=. i tfrom s
  t=. (;{.d),PTM,part
@@ -111,7 +111,7 @@ else.
  end.
 end.
 FETAB=: tab
-if. 2=3!:0 w do. w=. ;{:{:jdi_read 'jdindex from ',tab,' where ',w end. 
+if. 2=3!:0 w do. w=. ;{:{:jd_read 'jdindex from ',tab,' where ',w end. 
 if. 0=#w do. JDOK return. end.
 if. isptable tab do.
  deleteptable tab;w
@@ -168,7 +168,7 @@ if. 2=3!:0 w do.
   ns=. b#ns
   vs=. b#vs
  else.
-  w=. ;{:,old=. jdi_read 'jdindex from ',tab,' where ',w NB. ; always a list so 1 n$'abc' works
+  w=. ;{:,old=. jd_read 'jdindex from ',tab,' where ',w NB. ; always a list so 1 n$'abc' works
  end. 
 else.
  if. w-:_ do. w=. i.Tlen__t end.

@@ -16,6 +16,7 @@ vtname table
 csvadmin 'csvload'
 jdcsvfolder''
 file fwrite CSVFOLDER__,table,'.csvlink' NB. CSVFOLDER link to csv file
+ferase CSVFOLDER__,table,'.cnames' NB. don't use leftovers
 d=. jd'csvprobe /replace ',table,'.csvlink' NB. read first few rows as byte data
 r=. 'first few rows:'
 r=. r,,LF,.":{:d

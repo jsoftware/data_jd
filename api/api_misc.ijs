@@ -2,6 +2,20 @@ NB. Copyright 2019, Jsoftware Inc.  All rights reserved.
 
 coclass'jd'
 
+NB. multiple ops in one request
+NB. 1st result is Jd OK or error
+jd_each=: 3 : 0
+r=. ''
+e=. 0
+for_n. y do.
+ a=. jdx;n
+ r=. r,<a
+ e=. 'Jd error'-:;{.{.a
+ if. e do. break. end.
+end.
+(e{(<'Jd OK';0),<'Jd error';0),r
+)
+
 NB. jdget 'tab col'
 jd_get=: 3 : 0
 a=. bdnames y
@@ -85,7 +99,7 @@ if. newt-:oldt do. JDOK return. end.
 EDERIVED assert 0=derived__c 
 ETYPE assert (<newt)e.;:'int int1 int2 int4 intx'
 ETYPE assert 'int'-:3{.oldt
-data=. >{:{:jdi_read '"',col,'"',' from ',tab NB. does conversion from intx to int
+data=. >{:{:jd_read '"',col,'"',' from ',tab NB. does conversion from intx to int
 
 NB. validate range and pick smallest intx if newt is intx
 min=. <./data

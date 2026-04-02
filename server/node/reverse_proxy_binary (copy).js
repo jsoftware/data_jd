@@ -14,7 +14,7 @@ console.log('server started');
 const conf  = JSON.parse(process.argv[2]);
 
 const https  = require('https');
-const http  = require('http');
+//const http  = require('http');
 const fs     = require('fs');
 const jdsreq = require(__dirname+"/jds.js");
 
@@ -34,20 +34,14 @@ const options = {
 
 function reply(code,res,p){res.writeHead(code, "OK", {'Content-Type': 'text/plain'});res.end(p);}
 
-const server_https = https.createServer(options, (req, res) => {doit(req,res);});
-
-const server_http = http.createServer((req, res) => {doit(req,res);});
-
-var ping= false; // 1 for immediate response with no jd call
-
-function doit(req,res){
+const server = https.createServer(options, (req, res) => {
+//const server = http.createServer((req, res) => {
   if(req.method == 'POST')
   {
-    if(ping){
-      res.writeHead(200, "OK", {'Set-Cookie':"jds_cookie=;path=/;Secure;Httponly",'Content-Type': 'application/octet-stream'});
-      res.end('{"Jd ping":0}');
-      return;
-    }
+    //! node only 
+    //res.writeHead(200, "OK", {'Set-Cookie':"jds_cookie=;path=/;Secure;Httponly",'Content-Type': 'application/octet-stream'});
+    //res.end('{"Jd OK":23}');
+    //return;
 
     // add cookie to end of request and pass to jds
     dopost(req, res, function() {
@@ -64,24 +58,22 @@ function doit(req,res){
    case '/': s= jdpath+'/server/client/server.html'; break;
    case '/curl':        s= jdpath+'/server/client/curl';break;
    case '/pyclient.py': s= jdpath+'/server/client/pyclient.py';break;
-   case '/pytest.py':   s= jdpath+'/server/client/pytest.py';break;  
-   case '/ping':        ping= !ping;     
+   case '/pytest.py':   s= jdpath+'/server/client/pytest.py';break;
    default: s= '';
   }
   res.writeHead(200, "OK", {'Content-Type': 'text/html'}); // ,'Content-Disposition': 'attachment'
   try{ s= fs.readFileSync(s, 'utf8'); }catch(error){ s= ''; }
   res.end(s);
 
-};
+});
 
- server_https.keepAliveTimeout=10000;
- server_http.keepAliveTimeout=10000;
+ server.keepAliveTimeout=10000;
 
- server_https.listen(nport, bind, () => {console.log(`Server running at https://${bind}:${nport}/`);});
+ server.listen(nport, bind, () => {
+  console.log(`Server running at https://${bind}:${nport}/`);
+});
 
- server_http.listen(Number(nport)+2, 'localhost', () => {console.log(`Server running at http://localhost:${Number(nport)+2}/`);});
-
- var get_cookies = function(request) {
+var get_cookies = function(request) {
   var cookies = {};
   if (typeof(request.headers.cookie) == "undefined") return cookies;
   request.headers && request.headers.cookie.split(';').forEach(function(cookie) {

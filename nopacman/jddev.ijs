@@ -6,8 +6,8 @@ Jd development
 
 editing/testing done with git/addons/data/jd
 
-   load'~addons/data/jd/jd.ijs' NB. from ~addons
-   load'~Addons/data/jd/jd.ijs' NB. from git/addons
+   load'~addons/data/jd/jd.ijs'    NB. from ~addons
+   load'git/addons/data/jd/jd.ijs' NB. from git/addons
    
 initial load sets JDP_z_ as path to jd folder and this
  is used for all other file references

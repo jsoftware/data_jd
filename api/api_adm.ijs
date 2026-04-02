@@ -5,6 +5,8 @@ jdadminnew_z_=: jdadminnew_jd_
 jdadminx_z_  =: jdadminx_jd_
 jdadminro_z_ =: jdadminro_jd_
 jdsetadmin_z_=: jdsetadmin_jd_
+jdsetuser_z_=:  jdsetuser_jd_
+
 
 coclass'jd'
 
@@ -134,7 +136,7 @@ y=. (-'/'={:y)}.y NB. no trailing /
 
 defaultadmin=: 0 : 0
 'D' jdadminfp ''
-'D' jdadminup 'u'
+'D' jdadminup 'user0'
 'D' jdadminop '*'
 )
 
@@ -198,17 +200,21 @@ adminopen=: 3 : 0
   ('replicate folder ''',a,''' is in use')assert -.(<hostpathsep t) e. {:1!:20''
  end.
  
- locktype jdadminlk y
  remove_admin y
  
- bak=. (<DBPATHS),(<DBUPS),<DBOPS
  fp=. y,'/admin.ijs'
- if. -.fexist fp do.
-  (defaultadmin rplc 'D';d)fwrite fp NB. create default admin.ijs
- end.
+ if. -.fexist fp do. (defaultadmin rplc 'D';d)fwrite fp end. NB. default admin.ijs
+
+ NB. error if new admin has a dan that is already in use
+ dans=. dltb each <;.2 fread fp
+ dans=. ((dans i.each ' '){.each dans)-.each '''' NB. dans in new admin
+ 'new db admin has dan that is already in use'assert -.({."1 DBPATHS)e.dans
+ 
  try.
+   bak=. (<DBPATHS),(<DBUPS),<DBOPS
+   locktype jdadminlk y
    load y,'/admin.ijs'
- catch.
+ catchd.
    'DBPATHS DBUPS DBOPS'=: bak
    'x'jdadminlk y
    'load admin.ijs failed'assert 0
@@ -333,27 +339,67 @@ i=. ({:"1 DBPATHS)i.<adminfp
 jdaccess (;{.i{DBPATHS_jd_),' ',;{.bdnames ;{:i{DBUPS_jd_
 )
 
-NB. admintable jdsetadmin db
-NB. admintable is list of LF terminated 'dan;users;ops'
+NB. * table ; user [ ; pswd]
+NB. * 'test_upfile';'john';'wonder'
+NB. remove user if pswd elided
+jdsetuser=: 3 : 0
+setuser_jdup_ y
+)
+
+NB. * db [ ; dan [ ; users... ; ops... ] ]
+NB. * db                     NB. return jdsetadmin"1 arg for this admin.ijs
+NB. * db ; dan               NB. remove admin
+NB. * db ; dan ; users ; ops NB. set admin
 NB. set admin.ijs for db
-NB. db opened, admin.ijs set, and db closed
-jdsetadmin=: 4 : 0
-p=. adminp y
+NB. user blank delimited users
+NB. op blank delimite ops
+NB. existing entries for dan are removed before adding new ones
+NB. admin.ijs will be loaded next time db is opened
+jdsetadmin=: 3 : 0
+y=. boxopen y
+'require 1 2 or 4 arg'assert 1 2 4 e.~=#y
+'db dan user op'=: 4{.y,'';'';''
+p=. adminp db NB. path to db folder
+pa=. p,'/admin.ijs'
 'not a folder'assert 2=ftype p
 'not a database'assert 'database'-:jdfread p,'/jdclass'
+if. -.fexist pa do. ''fwrite pa end.
+d=. deb each <;._2 fread pa
+if. 0=#dan do. NB. admin as jsetadmin args
+ d=. ;:each d
+ d=. d-.<''
+ d=. d#~(<'NB.')~:3{.each;each d
+ 'bad admin.ijs'assert 0=3|#d
+ d=. (3,~(3%~#d))$d
+ 'bad admin.ijs'assert ('jdadminfpjdadminupjdadminop')-:"1  ;"1 ;"1 [ 1{each d
+ 'bad admin.ijs'assert #"1 ~."1 {.each d
+ dans=.  >{.each {."1 d
+ d=. >2{"1 each }."1 d
+ d=. dans,.d
+ d=. d-.each''''
+ y,.d
+ return. 
+end.
+
+NB. delete first
+d=. deb each <;.2 fread p,'/admin.ijs'
+a=. (d i.each ' '){.each d
+a=. a -.each ''''
+b=. ;(a~:<dan)#d
+b fwrite p,'/admin.ijs'
+if. 0~:#user do.
 try.
- t=. dltb each <;._2 x
- t=. <;._1 each ';',each t
  r=. ''
- for_n. t do.
-  'dan users ops'=. '''',~each '''',each deb each>n
-  r=. r,(LF,~dan,' jdadminfp ''''')
-  r=. r,(LF,~dan,' jdadminup ',users)
-  r=. r,(LF,~dan,' jdadminop ',ops)
- end.
- r fwrite p,'/admin.ijs'
-catch.
+ dan=. quote_j_ dan
+ user=. quote_j_ user
+ op=. quote_j_ op
+ r=. r,LF,~dan,' jdadminfp '''''
+ r=. r,LF,~dan,' jdadminup ',user
+ r=. r,LF,~dan,' jdadminop ',op
+ r fappend p,'/admin.ijs'
+catchd.
 'jdsetadmin failed'assert 0
+end.
 end.
 i.0 0
 )

@@ -25,31 +25,10 @@ Subsequent requests with a cookie get the and and user from the ductable.
 See server1.ijs for an exmple of building an upfile.
 )
 
-NB. * upfile name - must be test_upfile or upfile
-create=: 3 :0
-'name must be upfile or test_upfile'assert (<y)e.'upfile';'test_upfile'
-'mkdir failed'assert 1=mkdir_j_ jdscpath_jd_,'up'
-UPFILE=: jdscpath_jd_,'up/',y
-if. -.fexist UPFILE do. '' fwrite UPFILE end.
-i.0 0
-)
-
 destroy=: codestroy
 
 require'guid'
 hash=: 1&(128!:6) 
-
-NB. update dan in ductable
-setdan=: 3 : 0
-'up dan'=. y
-i=. ({:"1 ductable)i.<up
-'logon required'assert i<#ductable
-NB.! what if bad user
-d=. i{ductable
-d=. dan;1}.d
-ductable=: d i}ductable
-,:'Jd OK';0
-)
 
 NB. ductable dan,user,cookie
 logon=: 3 : 0
@@ -57,8 +36,10 @@ logon=: 3 : 0
 if. check user;pswd do.
  cookie=. ,'0123456789abcdef' {~ 16 16 #: a. i. ,guids 1
  ductable=: ductable,dan;user;cookie
+ jdslog 'on';dan;user;cookie
  ({.a.),cookie
 else.
+ jdslog 'onx';'';'' NB. do not log info
  {.a. NB. failed
 end.
 )
@@ -67,28 +48,42 @@ NB. returns 1 to set cookie empty
 logoff=: 3 : 0
 cookie=. y
 ductable=: ((2{"1 ductable)~:<cookie)#ductable NB. remove entries with same cookie
+jdslog 'off';'';'';cookie
 1{a.
+)
+
+setuser=: 3 : 0
+y=. boxopen y
+'wrong number of args'assert 1 2 3 e.~#y
+'name user pswd'=. dltb each 3{.y,'';''
+'name must be upfile or test_upfile'assert (<name)e.'upfile';'test_upfile'
+'mkdir failed'assert 1=mkdir_j_ jdscpath_jd_,'up'
+UPFILE=: jdscpath_jd_,'up/',name
+if. -.fexist UPFILE do. '' fwrite UPFILE end.
+if. 0=#user do.
+ d=. <;.2 fread UPFILE
+ (d i.each ':'){.each d
+ return.
+end.
+'user can not contain blank'assert -.' 'e.user
+'invalid user' assert 8>:#user
+if. name-:'UPFILE' do.
+ 'upfile pswd must have 8 chars'assert 8<:#pswd
+else.
+ 'test_upfile pswd can not have more than 6 chars'assert 6>:#pswd
+end.
+if. (<user)e.getusers'' do. deluser user end. NB. remove an old entry
+if. 0~:#pswd do.
+ salt=. ,'0123456789abcdef' {~ 16 16 #: a. i. ,guids 1
+ ((fread UPFILE),LF,~user,':',salt,':',hash pswd,salt)fwrite UPFILE
+end. 
+i.0 0
 )
 
 NB. cookie - get user with cookie from ductable
 get_dan_user=: 3 : 0
 i=. ({:"1 ductable)i.<y
 if. i=#ductable do. '';'' else. 2{.i{ductable end.
-)
-
-NB. u/p
-NB. return 0 if not valid or 1 if valid
-NB. must
-NB.  not have blanks
-NB.  have 1 /
-NB.  u must have at least 1 char
-NB.  p must have at least 1 char
-NB.! testing p needs only 3 chars
-validateup=: 3 : 0
-if. (' 'e.y)+.1~:+/'/'=y do. 0 return. end.
-'u p'=. <;._1 '/',y
-if. (0=#u)+.0=#p do. 0 return. end.
-1
 )
 
 NB. create empty u/p UPfile
@@ -99,17 +94,6 @@ init=: 3 : 0
 
 getusers=: 3 : 0
 {."1 show UPFILE
-)
-
-NB. user/pswd
-NB. deletes user first if already added
-adduser=: 3 : 0
-'invalid u/p'assert validateup y 
-'u p'=. <;._1 '/',y
-if. (<u)e.getusers'' do. deluser u end.
-salt=. ,'0123456789abcdef' {~ 16 16 #: a. i. ,guids 1
-((fread UPFILE),LF,~u,':',salt,':',hash p,salt)fwrite UPFILE
-i.0 0
 )
 
 NB. user
@@ -137,5 +121,4 @@ if. h-:hash p,salt do. 1 return. end.
 show=: 3 :0
 ><;._1   each ':',each <;._2 fread UPFILE
 )
-
 

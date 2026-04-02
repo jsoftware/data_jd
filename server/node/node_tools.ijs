@@ -12,9 +12,9 @@ nodebin=. fread '~config/nodebinpath'
 p=. jpath path,('/'#~'/'~:{:path),'node/'
 mkdir_j_ p
 
-nodefile=. jpath'~addons/data/jd/server/node/reverse_proxy_binary.js'
+nodefile=. JDP,'/server/node/reverse_proxy_binary.js'
 curl=. (fread path,'node/curl')rplc'"';'\\\"';'/';'\/';'$';'\$' NB. has to get past shell rules
-config=. '{\"nport\":\"<NPORT>\",\"jport\":\"<JPORT>\",\"jdpath\":\"<JDPATH>\"}'rplc '<NPORT>';nport;'<JPORT>';jport;'<JDPATH>';jpath'~addons/data/jd'
+config=. '{\"nport\":\"<NPORT>\",\"jport\":\"<JPORT>\",\"jdpath\":\"<JDPATH>\"}'rplc '<NPORT>';nport;'<JPORT>';jport;'<JDPATH>';JDP
 nodeflags=. ;(inspect-:'inspect-yes'){' --no-inspect ';' --inspect=localhost:',":1+0".nport
 
 if. IFWIN do.
@@ -61,6 +61,6 @@ else.
  txt fwrite handle,'node/rundebug.txt'
 end. 
 
-(fread '~addons/data/jd/server/node/server.html') fwrite p,'/server.html' NB.! ???
+(fread JDP,'server/node/server.html') fwrite p,'/server.html' NB.! ???
 i.0 0
 )

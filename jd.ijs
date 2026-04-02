@@ -14,7 +14,7 @@ all use is through JDP_z_ (set when the library is loaded)
 )
 
 coclass'jd'
-jdversion=: '4.47'
+jdversion=: '4.48'
 
 jdwelcome=: 0 : 0
 Jd is Copyright 2026 by Jsoftware Inc. All Rights Reserved.
@@ -85,7 +85,7 @@ JDP_z_=: _6}.;f
 
 NB. sever requires setsid so jds and node task will not end when the start task ends
 NB. setsid is not in mac so we provide our own universal binary from github
-SETSID=: ;(UNAME-:'Darwin'){'setsid';jpath'~addons/data/jd/cd/setsid/setsid'
+SETSID=: ;(UNAME-:'Darwin'){'setsid';jpath JDP,'/cd/setsid/setsid'
 
 t=. jpath JDP,'cd/'
 if. (<UNAME)e.'Linux';'FreeBSD';'OpenBSD' do.
@@ -216,6 +216,7 @@ r=. get_handle_limits''
 if. _1=nc<'jdscpath' do. jdscpath=: 'jdscpath/' end. NB. path to all server/client files
 IFTESTS=: 0
 if. _1=nc<'OP' do. NB. one time inits
+ IFJDS_z_=: 0
  oplogdata=: '' NB. performance data
  jdaccess '';''
  JDMT=: MTRW_jmf_

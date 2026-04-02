@@ -20,8 +20,7 @@ bld''
 jd'tablecopy new ga gdb'
 jd'tablecopy again ga gdb' NB. show that table ga is still in gdb ((just copied)
 jd'tablemove moved ga gdb'
-jd etx 'tablecopy nope ga gdb'
-assert 'invalid srcdb'-:,;1{jdlast
+'invalid srcdb' jdae'tablecopy nope ga gdb'
 t=. jd'reads from new'
 assert t-:jd'reads from again'
 assert t-:jd'reads from moved'

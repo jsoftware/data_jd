@@ -59,28 +59,23 @@ DBOPS_jd_=: (<'read reads')(<i;1)}DBOPS_jd_
 'createtable'jdae'read  /types /table abc from f'
 DBOPS_jd_=: (<'*')(<i;1)}DBOPS_jd_
 
-assert (i.0 0)-:jd'read  /table abc from f'
-assert (i.0 0)-:jd'reads /table def from f'
+assert JDOK_jd_-:jd'read  /table abc from f'
+assert JDOK_jd_-:jd'reads /table def from f'
 a=. jd'read from f'
 assert a-:jd'read from abc'
 assert a-:jd'read from def'
 
 NB. f.b01 vs f__b01
-assert (i.0 0)-:jd'read  /table abc from f,f.g'
-assert (i.0 0)-:jd'reads /table def from f,f.g'
+assert JDOK_jd_-:jd'read  /table abc from f,f.g'
+assert JDOK_jd_-:jd'reads /table def from f,f.g'
 a=. {:"1 jd'read from f,f.g'
 assert a-:{:"1 jd'read from abc'
 assert a-:{:"1 jd'read from def'
 
 NB. /file option
 p=. jdpath_jd_'jdfile/'
-assert (i.0 0)-:jd'read /file foo from f'
+assert JDOK_jd_-:jd'read /file foo from f'
 assert (jd'read from f')-:3!:2 fread p,'foo'
 
-assert (i.0 0)-:jd'read /file "foo boo" from f,f.g'
+assert JDOK_jd_-:jd'read /file "foo boo" from f,f.g'
 assert (jd'read from f,f.g')-:3!:2 fread p,'foo boo'
-
-
-
-
-

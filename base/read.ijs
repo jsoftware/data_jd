@@ -186,9 +186,7 @@ t =. ; mask tnms"_^:[&.> <"0 t
 
 NB. table lookup
 inds =: (a: ,~ tnms) i. t
-if. +./ m=.(>:nt) = inds do.
-  throw 'Could not find table: ',([,', ',])&>/ m#t
-end.
+if. +./ m=.(>:nt) = inds do. throw 'Could not find table: ',([,', ',])&>/ m#t end.
 tl =. tloc {~ inds=:nt|inds
 
 NB. expand * columns

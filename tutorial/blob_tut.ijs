@@ -50,7 +50,7 @@ jd'blobwrite f de';'dededede'
 jd'blobwrite f fghi';'yet another blob'
 
 jd_myblobread_jd_=: 3 : 0
-a=. jdi_read'from f where num=',y
+a=. jd_read'from f where num=',y
 d=. 'name' jdfrom_jd_ a
 'can only read on blob at a time'assert 1=#d
 a,jd_blobread'f ',,d

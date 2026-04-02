@@ -21,23 +21,22 @@ check_zmq_jdserver_''
 check_node_jdserver_''
 check_lz4_jdserver_''
 
-load '~addons/data/jd/server/server1.ijs'
+load JDP,'server/server1.ijs'
 0 : 0
 edit the script to follow along for a more detailed experience,
-   edit '~addons/data/jd/server/server1.ijs'
+   edit JDP,'server/server1.ijs'
 )
-s1_build'' NB. create simple database
+s1_build''  NB. create simple database
 NB. note that s1_build ends with jdamin 0 so the server can open it
 
-s1_admin'' NB. set simple admin.ijs - dans/users/ops
-s1_up'' NB. create user/pswd upfile
+s1_up''     NB. create user/pswd upfile
 s1_create'' NB. create server1 folder
 
 NB. next step takes a few seconds to start jds and node tasks
-s1_run'' NB. start server jds and node tasks
+s1_run''   NB. start server jds and node tasks
 NB. new jds task is running loop for new zmq requests from new node task
 
-s1_test'' NB. run a few client requests on the server
+s1_test''  NB. run a few client requests on the server
 
 0 : 0
 Jd server is 2 tasks:

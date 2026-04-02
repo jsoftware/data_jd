@@ -10,34 +10,19 @@ jd'reads from ',T
 ins=: 3 : 0
 jd'insert';T;,N,.y
 :
-try.
- jd'insert';T;,N,.y
- assert 0
-catch.
- assert (<x)e.;:>;1{jdlast
-end.
+x jdae 'insert';T;,N,.y
 )
 
 mod1=: 3 : 0
 jd 'update';T;'w=0';,N,.y
 :
-try.
- jd'update';T;'w=0';,N,.y
- assert 0
-catch.
- assert (<x)e.;:>;1{jdlast
-end.
+x jdae 'update';T;'w=0';,N,.y
 )
 
 mod2=: 3 : 0
 jd 'update';T;'w in (1,2)';,N,.y
 :
-try.
- jd'update';T;'w in (1,2)';,N,.y
- assert 0
-catch.
- assert (<x)e.;:>;1{jdlast
-end.
+x jdae 'update';T;'w in (1,2)';,N,.y
 )
 
 foo=: 3 : 0

@@ -4,9 +4,11 @@ coclass'jdserver'
 coinsert'jd'
 
 jds_server_config_template=: 0 : 0
-load'jd'
-RELOAD=: '~addons/data/jd/server/jds/jds_server.ijs' NB. likely debug file
-load '~addons/data/jd/server/jds/jds_server_node.ijs'
+JDP_z_=: '<JDP>'
+load JDP,'jd.ijs'
+IFJDS_z_=: 1
+RELOAD=: JDP,'server/jds/jds_server.ijs' NB. likely debug file
+load JDP,'server/jds/jds_server_node.ijs'
 JDSPATH_z_=:    '<PATH>'
 UPFILE_jdup_=: fread '<PATH>upfilepath'
 ductable_jdup_=: 0 3$'' NB. each row has dan user cookie
@@ -26,7 +28,7 @@ log=. f,'log.log'
 logstd=. f,'logstd.log' NB. stdout/stderr
 loglevel=. 0
 
-t=. jds_server_config_template rplc '<PORT>';sport;'<DBS>';dbs;'<PATH>';path
+t=. jds_server_config_template rplc '<PORT>';sport;'<DBS>';dbs;'<PATH>';path;'<JDP>';JDP
 t fwrite f,'run.ijs'
 
 select. UNAME

@@ -15,10 +15,7 @@ y
 NB. '' or filename
 csvset=: 3 : 0
 csvy=: y NB. original arg foo.csv or foo.link
-if. IFJHS do.
- NB. assert -.(<'jjd')e. conl 0['job must run in task that is not a server'
- NB. 'job must run in task that is not a server' assert ''-:OKURL_jhs_
-end.
+NB. IFJDS
 assert 0=nc<'CSVFOLDER__'['CSVFOLDER must be defined as path to csv files'
 CSVFOLDER__=: CSVFOLDER__,>('/'={:CSVFOLDER__){'/';''
 jdcreatefolder CSVFOLDER__
@@ -162,7 +159,7 @@ if. -.option_combine do. ''fwrite csvfp end.
 
 if. #w do.
  try.
-  rows=. ,>{:jdi_reads'jdindex from ',table,' where ',w
+  rows=. ,>{:jd_reads'jdindex from ',table,' where ',w
  catchd.
   assert 0['where clause failed'
  end. 
@@ -196,7 +193,7 @@ for_t. tabs do.
  ('';'';1) csvwr (t,'.csv');t 
 end.
 NB. create jdcsvrefs.txt file (used by csvresore to create ref cols)
-'a b'=. {:jdi_info'ref'
+'a b'=. {:jd_info'ref'
 ((,LF,.~a,.5}."1 b)rplc"1 '_';' ')fwrite CSVFOLDER__,'jdcsvrefs.txt'
 copyscripts CSVFOLDER__;jdpath_jd_''
 i.0 0
@@ -280,7 +277,7 @@ csvset ;1 getnext a
 jd_csvcdefs (option_replace#'/replace '),'/h 0 /u ',csvy
 jd_droptable'csvprobe'
 jd_csvrd'/rows 12 ',csvy,' csvprobe'
-r=. jdi_reads'from csvprobe'
+r=. jd_reads'from csvprobe'
 jd_droptable'csvprobe'
 ferase csvfpcdefs
 r

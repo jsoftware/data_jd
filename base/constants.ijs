@@ -2,7 +2,7 @@ NB. Copyright 2016, Jsoftware Inc.  All rights reserved.
 
 coclass'jd'
 
-JDOK=: ,.<'Jd OK'
+JDOK=: ,:'Jd OK';0
 
 IMAX=:  9223372036854775807
 IMIN=:  _1+-IMAX

@@ -15,9 +15,10 @@ dbs     - 0 or more db names separated by ,
 up      - up or testup - which user/pswd file to use
 inspect - inspect-yes or inspect-no - enable node inspect
 
+db can be name (~temp/jd/name) or path '..../name'
+
 create starts by killing ports jport and nport
    jdserver name;'create';... NB. create server-folder
-   jdserver name;'createforces';... NB. delete before create
    jdserver name;'start'      NB. start server - kills existing task on jport and nport
    jdserver name;'debug'      NB. start - jds in visible jconsole and node --inspect
    jdserver name;'stop'       NB. stops server
@@ -40,21 +41,21 @@ Check the status with:
 
 How to install zmq, node, or lz4i s beyond the scope of this document. They are common tools and the install should not be too difficult.
 
-Mac is missing setsid utility so Mac univeral setsid is included in ~addons/data/jd/cd/setsid.
+Mac is missing setsid utility so Mac univeral setsid is included in JDP,'cd/setsid.
 )
 
 man_jd_server_debug=: 0 : 0
 Following assumes server1.ijs (adjust as necessary) and that you are on the sever machine.
 
 *** basic info
-   load'jd'
+   load'gitjd'
    jdserver 'server-name';'report'
 
  *** debug j  - running in a visible jconsole task can be useful
    killport_jport_ 65220 NB. kill jd server task
 
 start jconsole
-   load ...server-folder.../jds/run.ijs'
+   load jdscpath,'server/server1/jds/run.ijs'
 
 ctrl+c - interrupt server zmq loop
    RELOAD NB. jds main file
@@ -89,6 +90,7 @@ Jd server has a J task running zmq loop and a node task ruuning a reverse proxy.
 )
 
 NB. * name;op;...
+NB. man'jd server'
 jdserver=: 3 : 0
 'arg must be server-name;op[;...]'assert 2<:#y
 'name op'=. 2{.y
@@ -97,7 +99,6 @@ op=. dltb op
 handle=. jdscpath,'server/',(dltb name),'/' NB. server-folder from name
 if. (''-:name)*.op-:'report' do. names handle return. end.
 if. (op-:'delete')*.0=ftype handle do. i.0 0 return. end.
-if. op-:'createforce' do. op=. 6{.op[jdserver name;'delete' end.
 if. op-:'create' do.
  'handle (server-folder) already exists'assert 0=ftype handle
  create handle;y
@@ -111,16 +112,21 @@ case. 'start'  do. start handle return.
 case. 'debug'  do. debug handle return.
 case. 'stop'   do.
  ('stopped: ',isotimestamp 6!:0'') fwrite handle,'status'
- killport_jport_ jport
- killport_jport_ nport
+ clearports jport,nport
 case. 'delete' do.
- killport_jport_ jport
- killport_jport_ nport
+ clearports jport,nport
  rmdir_j_ }:handle
 case. 'report' do. report handle return.
 case.          do. 'invalid op' assert 0
 end.
 i.0 0
+)
+
+clearports=: 3 : 0
+'jport nport'=. y
+ killlibcurl'' NB.kill libcurl connections
+ killport_jport_ jport
+ killport_jport_ nport
 )
 
 names=: 3 : 0
@@ -172,12 +178,6 @@ setup=: 3 : 0
 (0".fread y,'jds/jport'),0".fread y,'node/nport'
 )
 
-adduser=: 3 : 0
-uj=: server conew'jdup'
-adduser__uj 'admin/funny'
-adduser__uj'user0/user0'
-)
-
 jdslog_format=: 3 : 0
 'handle count'=. y
 d=. rdrep handle,'jds.log'
@@ -213,6 +213,16 @@ ferase handle,'jds/logstd.log'
 ferase handle,'node/logstd.log'
 )
 
+NB. end libcurl connection before we can kill node
+killlibcurl=: 3 : 0
+for_c. conl 1 do.
+ if. 0=nc<'jdclass__c'do.
+  echo 'destroy: ',url__c
+  destroy__c''
+ end.
+end.
+)
+
 NB. start jds and node tasks
 NB. kills tasks on ports if already running - no error
 start=: 3 : 0
@@ -221,8 +231,10 @@ handle=. y
 'upfile does not exist'  assert 1=ftype fread handle,'upfilepath'
 certerror assert 1=;ftype each '.ssh/jserver/key.pem';'.ssh/jserver/fullchain.pem'
 
-while. 0<getpid_jport_ jport do. 6!:3[0.1[killport_jport_ jport end.
-while. 0<getpid_jport_ nport do. 6!:3[0.1[killport_jport_ nport end.
+clearports jport,nport
+
+NB. while. 0<getpid_jport_ jport do. 6!:3[0.1[killport_jport_ jport end.
+NB. while. 0<getpid_jport_ nport do. 6!:3[0.1[killport_jport_ nport end.
 
 cleanstatus handle;'started'
 

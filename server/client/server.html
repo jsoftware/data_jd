@@ -36,9 +36,9 @@ function runnxt()
   run();
 }
 
-// time 500 runs of read from t
+// time 500 runs of info schema
 async function runtime(){
- idvs('cmd','list version');
+ idvs('cmd','info schema');
  var i= 0;
  var result;
  var t= Date.now();
@@ -46,12 +46,13 @@ async function runtime(){
 
 
  while(i<1000){
+  idvs('out',i);
   i++;
   await getdata(idv('cmd'));
  }
  t= Date.now()-t;
  t= Math.floor(1000/(t/1000));
- idvs('out',t.toString()+' list version ops per second');
+ idvs('cmd',t.toString()+' info schema ops per second');
 }
 
 function logon(){getdata("logon "+idv("dan")+" "+idv("usr")+" "+idv("pwd"));}

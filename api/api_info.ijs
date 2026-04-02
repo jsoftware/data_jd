@@ -7,15 +7,13 @@ jd_list=: 3 : 0
 t=. bdnames y
 ECOUNT assert 1=#t
 select. ;t
-case. 'version' do. jdversion
+case. 'version' do. ,:'Jd version';jdversion
 case.           do. assert 0['unsupported list command'
 end. 
 )
 
 NB. jdi ops allow manageing state before and after an internal call
-jdi_info=: 3 : 0
-jd_info y
-)
+jdi_info=: jd_info
 
 jd_info=: 3 : 0
 t=. bdnames y
@@ -43,6 +41,10 @@ case. 'derived' do.
  infoderived a
 case. 'blob' do.
  infoblob a
+
+case. 'bundle' do.
+ (|:infosummary'';'');<|:infoschema'';''
+
 case. do.
  'unsupported info command'assert 0
 end. 

@@ -1,30 +1,135 @@
 NB. Copyright 2026, Jsoftware Inc.  All rights reserved.
 NB. nov 2025 - benchmark Jd for new server work
 
-NB. time multiple tasks doing read for server1
-
 0 : 0
-node performance
+performance for different types of access - rps - ops/seconds
 
-node server.keepAlive= 10000;
-curl --keepalive-time 10
+ideas for perfommance beyond individual ops
+1. s1'each';(<'info summary'),(<'info schema'),<'list version' NB. request with multiple ops
+   
+2. procedure - custom op with custom arg and result
+3. program run on server with localhost access
 
-node-loop (no call to jd) makes little diference on localhost
-beatit 4;500;'localhost' 69 vs 56
-so the time is in curl access to node
+jd direct rps 12416
+
+***
+  beatit 10;'http:localhost:3002'
+
+  runall''
+┌───────┬──────────────────────┬─────────────────────┬─────────────────────────────────┬─────────────────────┐
+│       │https://localhost:3000│http://localhost:3002│https://server.jsoftware.com:3000│http://localhost:3003│
+├───────┼──────────────────────┼─────────────────────┼─────────────────────────────────┼─────────────────────┤
+│libcurl│      910             │      912            │        7                        │        6            │
+├───────┼──────────────────────┼─────────────────────┼─────────────────────────────────┼─────────────────────┤
+│curl   │       91             │      119            │        5                        │       10            │
+├───────┼──────────────────────┼─────────────────────┼─────────────────────────────────┼─────────────────────┤
+│ab     │      365             │     1308            │        7                        │        7            │
+└───────┴──────────────────────┴─────────────────────┴─────────────────────────────────┴─────────────────────┘
 )
 
-NB. task-count;beat-count;host
-NB. 2;100;'localhost'
+cnt=: 100
+op=: 'list version'
+
+NB. remote server http access is through tunnel local 3003 -> remote 3002
+tunnel=: 3 : 0
+fork_jtask_ 'ssh -i ~/.ssh/jhs1-kp.pem -N -L 3003:localhost:3002 ec2-user@54.88.234.170'
+)
+
+NB. rps for op on server
+beat=: 3 :0
+a=. 6!:9''
+i=. 0
+while. i<cnt do.
+ jds1 op
+ i=. i+1
+end. 
+z=. 6!:9''
+9j0 ":<.cnt%(z-a)%6!:8''
+)
+
+NB. jd direct ops withtout server
+direct=: 3 : 0
+jdserver'server1';'stop'
+jdadmin'simple'
+a=. 6!:9''
+i=. 0
+while. i<cnt do.
+ jd op
+ i=. i+1
+end. 
+z=. 6!:9''
+jdadmin 0
+<.cnt%(z-a)%6!:8''
+)
+
+runall=: 3 : 0
+h=. ,:'';urls
+h=. h,'libcurl';libcurl each i.4
+h=. h,'curl';curl each i.4
+h=. h,'ab';ab each i.4
+)
+
+NB. localhost:3003 is tunnel to http://remote:3002
+urls=: <;._2 [0 : 0
+https://localhost:3000
+http://localhost:3002
+https://server.jsoftware.com:3000
+http://localhost:3003
+)
+
+NB. y{urls
+libcurl=: 3 : 0
+'tunnel required'assert -.(3=y)*._1=getpid_jport_ 3003
+jds1=: (;y{urls)jdcdefine
+jds1 'logon simple u u' NB. admin user can execute j sentences
+r=. beat''
+jds1'free'
+r
+)
+
+curl=: 3 : 0
+require JDP,'server/client/jcurlclient.ijs'
+a=. ;y{urls
+b=. (3+a i.':')}.a
+jdp1=: jdclient b
+jds1=: jdp1&jdreq
+n=. jdp1,'/curl'
+
+if. 'http:'-:5{.a do. ((fread n)rplc'https://';'http://')fwrite n end. 
+
+jds1'logon simple u u'
+r=. beat''
+jds1'logoff'
+r
+)
+
+get_ab_rps=: 3 : 0
+d=. <;._2 y
+t=. 'Requests per second:'
+r=. ;d#~(<t)=(#t){.each d
+r=. dltb (#t)}.r
+r=. 9j0 ":<.0.5+0".(r i.' '){.r
+)
+
+ab=: 3 : 0
+'' fwrite 'ab.jnk'
+a=. 'ab -n 100 -c 1 -p ab.jnk -T application/octet-stream ','/',~;y{urls
+get_ab_rps shell a
+)
+
+NB. time multiple tasks doing op on server
+NB. * task-count;url
+NB. * 3;'https://localhost:3000'
 NB. task-count is number of tasks to spawn
-NB. each task loads beat.ijs and runs beat[beat-count
+NB. each task loads beat.ijs and runs beat[0
 beatit=: 3 : 0
 ferase 'beatit.txt'
-'tasks count host'=: y
+'tasks url'=: y
 'too many'assert tasks<32
 for_i. i.tasks do.
- NB.spawn_jtask_ t=: 'x-terminal-emulator -e " \"j9.6/bin/jconsole\" -js load\''~addons/data/jd/pm/server/beat.ijs\'' beat[',(":count),' "'
- fork_jtask_ t=: ('j9.6/bin/jconsole -js load\''~addons/data/jd/pm/server/beat.ijs\'' host=:\''<HOST>\'' beat[',(":count)) rplc '<HOST>';host
+ a=. ' -js load\''',JDP,'pm/server/beat.ijs\'' url=:\''<URL>\'' beat[10 ' rplc '<URL>';url
+ spawn_jtask_ t=: 'x-terminal-emulator -e " \"j9.6/bin/jconsole\" ',a,'"'
+ NB. fork_jtask_ t=: 'j9.6/bin/jconsole ',a
 end. 
 while. 1 do.
  6!:3[5
@@ -34,54 +139,7 @@ end.
 <.0.5+;0".each<;._2 d
 )
 
-cnt=: 500
-
-beatserver=: 3 : 0
-echo'server.jsoftware.com'
-jds1=: (jdclient 'server.jsoftware.com:3000')&jdreq
-jds1'logon simple u u'
-echo jds1'list version'
-a=. 6!:9''
-i=. 0
-while. i<cnt do.
- jds1'list version'
- i=. i+1
-end. 
-z=. 6!:9''
-cnt%(z-a)%6!:8''
-)
-
-beatlocalserver=: 3 : 0
-echo'localhost'
-jdadmin 0
-jdserver'server1';'start'
-jds1=: (jdclient 'localhost:3000')&jdreq
-jds1'logon simple u u'
-echo jds1'list version'
-a=. 6!:9''
-i=. 0
-while. i<cnt do.
- jds1'list version'
- i=. i+1
-end. 
-z=. 6!:9''
-cnt%(z-a)%6!:8''
-)
-
-
-NB. rd ops with local jd
-beatlocal=: 3 : 0
-jdserver'server1';'stop'
-jdadmin'simple'
-a=. 6!:9''
-i=. 0
-while. i<1000 do.
- jd'list version'
- i=. i+1
-end. 
-z=. 6!:9''
-1000%(z-a)%6!:8''
-)
+NB. misc junk probably not used after here
 
 geninsert=: 3 : 0
 r=. 'c';'abc'
@@ -100,26 +158,6 @@ NB. timings from server oplogdata
 getoplog=: 3 : 0
 req__CL'logon admin/funny'
 req__CL'admin oplogdata_jd_'
-)
-
-
-NB. build and start server for bmserver db
-run_bms=: 3 :0
-sj=: 'jdserver/bms'conew'jdserver' NB. server config at folder jd/test
-delete__sj'' NB. delete any old stuff
-config__sj 3000;65220;'bmserver'
-
-uj=: 'jdserver'conew'jdup'
-adduser__uj 'admin/funny'
-
-for_i. i.6 do.
- adduser__uj 'userx/userx' rplc 'x';":i
-end. 
-
-kill__sj''   NB. kill old ports/tasks
-run__sj 1
-
-echo '   man''  jd  client'' NB. starting another client task'
 )
 
 ROWS=: 1e6 NB. #rows
@@ -149,10 +187,3 @@ end.
 jd'createcol t c byte 10';databyte
 i.0 0
 )
-
-NB. rate 1000#<'read sum b from t where a=5'  NB.  341
-NB. rate 1000#<'read sum b from t where a=15' NB. 1370 - empty result
-rate=: 3 : 0
-(#y)% timex 'jd each y'
-)
-

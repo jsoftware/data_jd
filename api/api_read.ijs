@@ -7,16 +7,6 @@ if. 0~:L.y do. y=. ;y[ECOUNT assert 1=#y end.
 '/lr 0 /e 0 /types 0 /table s /file s'getopts y
 )
 
-NB. jdi ops allow manageing state before and after an internal call
-jdi_read=: 3 : 0
-jd_read y
-)
-
-NB. jdi ops allow manageing state before and after an internal call
-jdi_reads=: 3 : 0
-jd_reads y
-)
-
 jd_read=: 3 : 0
 jd_reads '/lr ',y
 )
@@ -129,7 +119,7 @@ z=. a,each p,each b
 r=. 0
 for_i. i.#z do.
  FETAB=: ;i{p
- a=. jdi_read ;i{z
+ a=. jd_read ;i{z
  d=. {:"1 a
  t=. ;i{set
  sc=. <((#>{.d),#t)$t
