@@ -38,7 +38,7 @@ s1'free' NB. logoff, cleanup, destroy locale
 
 NB. a server can be configured to run with 0 or more dbs
 jdserver 'nw+simple';'delete'
-jdserver 'nw+simple';'create';65220;3000;'northwind,simple';'testup';'inspect-yes'
+jdserver 'nw+simple';'create';65220;3000;'northwind,simple';'testup';'inspect-no'
 jdserver 'nw+simple';'start'
 
 s1=: url jdclient
