@@ -8,13 +8,15 @@ tutorial has minimal text - use man system as required
 )
 
 0 : 0
-a server requires that zmq, node, and lz4 are installed
+a server requires that zmq, node, lz4, and libcurl are installed
 the following checks and reports issues that need to be resolved
+   man'jd server requirements'
 )
 
 check_zmq_jdserver_''
 check_node_jdserver_''
 check_lz4_jdserver_''
+check_libcurl_jdserver_''
 
 NB. we'll build, configure, and run a server called server1
 

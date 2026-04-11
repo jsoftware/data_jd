@@ -7,15 +7,21 @@ coinsert'jd'
 jdserver_z_=: jdserver_jdserver_
 
 man_jd_server_1_requirements=: 0 : 0
-Jd server uses zmq (zeromq), node (node.js), and lz4 (compression)
+Jd server uses zmq (zeromq), node (node.js), lz4 (compression), and libcurl
 
-check the status with:
+check status with:
    check_zmq_jdserver_''
    check_node_jdserver_''
    check_lz4_jdserver_''
+   check_libcurl_jdserver_''
 
-how to install zmq, node, or lz4i s beyond the scope of this document
+how to install zmq, node, lz4, and libcurl is beyond the scope of this document
 they are common tools and the hopefully the install is not too difficult
+
+windows libcurl install hints:
+1. download windows libcurl from curl.se/windows
+2. unzip and copy bin folder to c:\Program Files\curl
+3. mklink libcurl.dll "c:\Program Files\curl\bin\libcurl-x64.dll
 
 Mac is missing setsid utility so Mac univeral setsid is included in JDP,'cd/setsid.
 )
@@ -305,6 +311,10 @@ check_zmq=: 3 : 0
 
 check_lz4=: 3 : 0
 'lz4 not installed'assert -._1=shell :: _1: 'lz4 --version'
+)
+
+check_libcurl=: 3 : 0
+'libcurl not installed'assert 0=curl_global_init_jcurl_ :: 1: CURL_GLOBAL_ALL_jcurl_
 )
 
 NB. copy jhs self-signed certs to .ssh/jserver

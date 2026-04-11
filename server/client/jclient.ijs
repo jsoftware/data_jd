@@ -35,7 +35,7 @@ NB. 'https://localhst:3000' conew 'jdcurl'
 create=: 3 : 0
 jdclass=: 'client'
 url=: y
-(libcurl,' curl_global_init *') cd ''
+curl_global_init_jcurl_ CURL_GLOBAL_ALL_jcurl_
 curl=: >{. (libcurl,' curl_easy_init * i') cd 3
 chk curl_easy_setopt_str curl;CURLOPT_URL;var y
 chk curl_easy_setopt_str curl;CURLOPT_COOKIEFILE;var ''
