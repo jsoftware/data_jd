@@ -169,6 +169,7 @@ base/log.ijs
 base/validate.ijs
 tools/setscriptlists.ijs
 tools/csv_load.ijs
+tools/python3.ijs
 api/api.ijs
 api/api_adm.ijs
 api/api_blob.ijs

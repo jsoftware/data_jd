@@ -60,7 +60,7 @@ jdserver'server1';'start'
 
 t=. 0 : 0 rplc 'JDP';JDP
 load 'JDPserver/client/jclient.ijs'
-s1=. url jdclient
+s1=. 'https://localhost:3000' jdclient
 s1'logon simple user0 pswd0'
 s1'info schema'
 s1'free'
