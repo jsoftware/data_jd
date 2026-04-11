@@ -2,6 +2,7 @@ NB. Copyright 2026, Jsoftware Inc.  All rights reserved.
 
 NB. build database and create server folder
 s1_build=: {{
+jdserver'server1';'delete' NB. kill old server
 jdadminnew'simple'
 jd'createtable t'
 jd 'createcol t a int'
