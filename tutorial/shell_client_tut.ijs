@@ -1,13 +1,11 @@
-NB. rebuild server1 from scratch
-load JDP,'server/client/jcurlclient.ijs'
-load JDP,'server/server1.ijs'
-s1_start''
-s1'free' NB. free libcurl locale connection
-
 NB. server access from shell clients - windows bat and unix bash
-NB. j client folder could be built, but for now we just use a j client folder
-jdp1=: jdclient 'localhost:3000'
-jdreq jdp1;'logon simple user0 user0' NB. access dan simple with user and pswd
+load JDP,'server/client/jcurlclient.ijs' NB. curl tools
+load JDP,'server/server1.ijs'
+s1_build''
+jdserver'server1';'start'
+
+jdp1=: jdcurlclient 'localhost:3000' NB. build client folder with curl
+jdcurlreq jdp1;'logon simple user0 pswd0' NB. access dan simple with user and pswd
 
 bash_client=: 0 : 0
 #!/bin/bash
@@ -37,10 +35,11 @@ else.
 end.
 )
 
-shell name,' ',(hostpathsep_j_ jdp1),' "info schema"'
-
 shellcmd=: 3 : 0
 shell name,' ',(hostpathsep_j_ jdp1),' "',y,'"'
 )
 
+shellcmd'info schema'
 shellcmd'read from t'
+
+jdserver 'server1';'stop'

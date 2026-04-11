@@ -6,21 +6,6 @@ require'~addons/arc/lz4/lz4.ijs'
 coclass'jdcurl'
 coinsert 'jcurl'
 
-man_jd_jclient=: 0 : 0
-access jd server running on localhost port 3000:
-start J task 
-   load 'gitjd' NB. load development Jd
-NB. rather than load all of Jd, it is possible to load just the client   
-   load JDP,'server/client/jclient.ijs' NB. just client
-
-   s1=: 'https://localhost:3000'jdcdefine
-   s1'logon simple u u'
-   s1'info schema'
-   s1'free' NB. logoff and destroy locale
-
-   jdrt'j_client'
-)
-
 var=: 3 : 'setopt_variadic, <y'
 
 chk=: 3 : 0
@@ -96,9 +81,17 @@ end.
 r
 )
 
-NB. 'https://localhost:3000' *
-NB. return verb for requests to that server
-jdcdefine_z_=: 1 : 0
+NB.   s1=. 'https://localhost:3000' jdclient NB. verb to access server
+NB.   s1 'logon simple user0 pswd0'
+NB.   s1 'info schema'
+NB.   s1 'free' NB. logoff and destroy locale
+NB. 
+NB. jdclient defined in load of Jd or in load of just the client
+NB. start J 
+NB.    load 'jd' NB. or non-pacman: load 'path_to_non-pacman_addons/addons/data/jd/jd.ijs'
+NB. or you can load just the client   
+NB.    load 'path_to_addons/server/client/jclient.ijs'
+jdclient_z_=: 1 : 0
 NB. validate m format
 ('req_','_',~;m conew'jdcurl')~
 )

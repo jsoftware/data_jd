@@ -1,5 +1,77 @@
 NB. Copyright 2026, Jsoftware Inc.  All rights reserved.
-NB. nov 2025 - benchmark Jd for new server work
+
+xxx_man_jd_performance=: 0 : 0
+*** dictionaries
+manage refs with automatic update rather than dirty recalc?
+unigue?
+key cols with dict?
+
+*** multi-tasking
+dbwr available mtwr for update clients
+
+dbwr jd'snap...' creates snap folder with copy db (perhaps tar.gz)
+and snaplog file that will record all subsequent changes
+
+dbro jd'snapcopy...' creates mtro dbro with files from the snap 
+and updated by the snaplog
+
+dbro can be accessed by multiple clients
+each on their own port or with a node server spreading the load
+
+need to pause mtro clients to do update with new snaplog
+
+would be nice to be able to pause direct access client as well
+
+perhaps jd op could start with lock-wait that was set by dbrw jd request
+hand waving...
+
+dbro server client could have timer event that triggers update
+it could call set lockwait - get logfile from dbwr
+wait for all to be lockwait - do update and then release lock
+
+***
+rps (requests per second) varies considerably 
+depending on the request and network delays
+the numbers here are for a trivial request on network
+the actual values may not be important
+but the relative values are significant
+
+db direct access 12000
+
+db - server  - node - remote https 7 rps
+
+ssh task on server with local https gets 900 rps
+128 times more than remote https - but still 13 times less than direct access
+
+reducing ops over network is critical
+
+Jd each (batch) op can significantly reduce network delay
+100 ops in a batch are close to 100 times as fast
+
+Jd custom (stored procedure) op can reduce network delay
+custom op that did 3 ops is close to 3 times as fast
+
+multiple tasks using any of the above methods will add to a higher total rps
+
+the above method uses multiple threads but is essentially a single thread
+in that the requests move through Jd on at a time and a slow op will delay
+all others in the qeueu
+
+currently node supports both https-3000 and http-3002
+the difference may be neglible (only )
+
+SNAP/REFRESH
+new Jd features SNAP/REFRESH provide an easy and safe
+way to allow multiple tasks complete multi-threading acces to a db
+
+SNAP records a snapshot copy of the db in the db folder
+and starts a log recording all ops that change the db
+
+one or more tasks can open MTRO the snapshot db
+
+REFRESH stops (locks) MTRW ops and all MTRO ops, applies the writelog 
+to the SNAP shot, and releases the locks
+)
 
 0 : 0
 performance for different types of access - rps - ops/seconds
@@ -80,7 +152,7 @@ http://localhost:3003
 NB. y{urls
 libcurl=: 3 : 0
 'tunnel required'assert -.(3=y)*._1=getpid_jport_ 3003
-jds1=: (;y{urls)jdcdefine
+jds1=: (;y{urls)jdclient
 jds1 'logon simple u u' NB. admin user can execute j sentences
 r=. beat''
 jds1'free'

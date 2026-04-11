@@ -1,8 +1,10 @@
 NB. Copyright 2026, Jsoftware Inc.  All rights reserved.
-NB. j curl access to jd server
+NB. curl access to jd server
+NB. most clients use libcurl
+NB. if libcurl not available (e.g. in shell) then curl can be used
 
 0 : 0
-   jds1=: (jdclient 'localhost:3002')&jdreq
+   jds1=: (jdcurl 'localhost:3002')&jdcurlreq
    jds1 'logon simple u u'
    jds1 'info summary'
 )
@@ -13,8 +15,8 @@ if. _1=nc<'jdscpath' do. jdscpath=: 'jdscpath/' end. NB. path to all server/clie
 
 coclass'jd'
 
-jdclient_z_=: jdclient_jd_
-jdreq_z_=:    jdreq_jd_
+jdcurlclient_z_=: jdcurlclient_jd_
+jdcurlreq_z_=: jdcurlreq_jd_
 
 NB. stuff for client files for client that use curl instead of libcurl
 
@@ -44,7 +46,7 @@ NB. * 'host:port'
 NB. client files created at jdclientdefault/host-port-n
 NB. returns path to client files - jdreq arg
 NB. used by jd client that use curl intead of libcurl
-jdclient=: 3 : 0
+jdcurlclient=: 3 : 0
 'host port'=. <;._1 ':',y
 cert=. ('localhost'-:host){'';'-k' NB. localhost curl option -k
 path=. mkdirunique jdscpath,'client/',host,'-',port
@@ -61,7 +63,7 @@ NB. * path;'logon dan user pswd'
 NB. * path;'info schema'
 NB. * path;'logoff'  NB. logoff and delete folder
 NB. dyadic allows path&jdreq
-jdreq=: 3 : 0
+jdcurlreq=: 3 : 0
 path=. ;{.y
 cmds=. }.y
 'not a jd client folder'assert 'client'-:fread path,'/jdclass'

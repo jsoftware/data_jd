@@ -13,7 +13,8 @@ op
  createcol_derived
  createcol_derived_mapped
  createtable     
- delete          
+ delete
+ each
  gen             
  info            
  insert          
@@ -57,7 +58,6 @@ demo
  vr              
 server-client
  server
- server_admin
  j_client
  python_client
  shell_client

@@ -19,36 +19,50 @@ jdversion=: '4.48'
 jdwelcome=: 0 : 0
 Jd is Copyright 2026 by Jsoftware Inc. All Rights Reserved.
 Jd is provided "AS IS" without warranty or liability of any kind.
+License required: https://code.jsoftware.com/wiki/Jd/License
 
-All use must be under a Jd License:
-https://code.jsoftware.com/wiki/Jd/License
+*** 4.48 (jd'list version')
+4.48 is a major upgrade - most changes are upward compatible.
+But proceed with caution!
 
-Load csv file for use in J (rather than Jd):
-   jdrt'csv_load'
+*** server-client support in 4.48 is completely new
+   jdrt'server-client' NB. list server-client tutorials
 
-Load parquet (or other format file) for use in J (rather than Jd):
-   jdrt'pandas_load'
+tutorials relevant to server performance:
+   jdrt'each'   NB. list of s to perform in one request
+   jdrt'custom' NB. custom op to perform transaction
 
+*** man system
+Jd wiki pages have not been updated yet for 4.48.
+The latest is documented in the tutorials and with man.
+Man docs are at your fingertips and are in same script as the code.
+
+   man''         NB. list mans that cover a topic
+   man'jd'       NB. doc that preceeds jd=:
+   man'jdserver' NB. doc that preceeds jdserver=:
+
+
+*** import csv/parquet/... files to J or Jd
+   jdrt'csv_load'    NB. load csv file
+   jdrt'pandas_load' NB. load parquet or other formats
+
+*** Jd wiki
 Wiki documentation is at:
 https://code.jsoftware.com/wiki/Jd/Index
 
-man system provides latest info written alongsidethe code
-   man''
-   man'jdtests'
-
-Get started:
+*** get started
    jdrt '' NB. tutorials
 )
 
 man_jd=:jdwelcome_jd_
 
 man_jd_users=: 0 : 0
-jd direct access users do not have passwords
+direct access users do not have passwords
    jdaccess dan;user
 sets the user and then each jd op
 validates the user and op against the dan admin.ijs
 
-Jd serverrequires logon with user and a pswd
+server requires logon with user and a pswd
 )
 
 doin=: 4 : '(<x)(4 : ''do__y x'')each<"0 y' NB. run sentence in each locale
@@ -249,5 +263,49 @@ seebox=: 3 : 0
 ;((x+>./>#each y){.each "1 y),.<LF
 )
 
+t=. 0 : 0
 
+casual use is OK from pacman folder (pacman can update to new code)
+   load'jd' NB. ~addons/data/jd is fine for casual use
+   
+serious use should have its own folder (copy ~addons/data/jd to ~/production)
+   load'~/production/jd/jd.ijs' NB. load production Jd
+   
+)
+
+echo (JDP-:'/',~jpath'~addons/data/jd')#t
+echo (10<#1 1    dir jdscpath_jd_,'client')#LF,LF,~LF,~'warning: folder jdscpath/client may need attention'
 echo'   jdwelcome_jd_ NB. run this sentence for important information'
+
+0 : 0
+release 4.48 
+
+*** load
+    'git/addons/data/jd/jd.ijs'fwrite 'gitjd'
+    load'gitjd'
+
+*** jd server uses node/zmq - older servers killed off
+
+*** jd result
+   'Jd ok' mapped to i. 0 0 and now maps to ,:'Jd OK';0
+
+*** info /lr result forced for non jbin server users
+
+*** jd and s1 (server)
+   [signal] jd 'info x' NB. 1 default
+   0 jd 'info x' NB. returns Jd error result
+   1 jd 'info x' NB. signals error
+   'an op' jdce 0 jd 'info x' NB. like jdae but can be used with s1
+
+*** each
+   jd'each';(<...),(<...),<...
+
+*** IFJDS_z_ set for direct vs server
+
+*** jdi_... jd_read concerns about internal use
+jdi_ killed - seemed to be a noop
+custom.ijs and several others made internal jd_read/info calls
+most of these have been replace by normal jd'...' calls
+seems to be OK
+why was jdi or jd_... ever needed (p;erhaps older style sever)?
+)

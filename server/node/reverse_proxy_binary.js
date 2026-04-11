@@ -79,7 +79,8 @@ function doit(req,res){
 
  server_https.listen(nport, bind, () => {console.log(`Server running at https://${bind}:${nport}/`);});
 
- server_http.listen(Number(nport)+2, 'localhost', () => {console.log(`Server running at http://localhost:${Number(nport)+2}/`);});
+ // listen on nport+2 for http connections - probably not justified by the limited performance difference
+ //server_http.listen(Number(nport)+2, 'localhost', () => {console.log(`Server running at http://localhost:${Number(nport)+2}/`);});
 
  var get_cookies = function(request) {
   var cookies = {};

@@ -1,13 +1,15 @@
-NB. custom.ijs contains db custom ops (ops specific to the db)
-NB. custom ops are of the form jd_x...
-NB. custom ops can call any jd_... op 
-NB. custom ops are often patterned after similar jd_... ops
-NB. transaction example
-NB. jd'xadd 1001 300' - add new account and balance
-NB. jd'xtransfer 1001 1002 300' - transfer $ from 1001 to 1002 with check on sufficient $
+0 : 0
+custom.ijs contains db custom ops (ops specific to the db)
+custom ops are of the form jd_x...
+custom ops can call any jd_... op 
+custom ops are often patterned after similar jd_... ops
 
-custom=: 0 : 0
+custom ops are important with a server
+ run as a transaction wihout ops from other users interleaved
+ run as a single network request (nearly as many times faster as the reduction in requests)
+)
 
+custom=: 0 : 0 NB. define xadd and xtransfer
 jd_xadd=: {{
 a=. _".y
 'arg must be 2 numbers'assert (2=#a)*.-._ e. a
@@ -33,17 +35,14 @@ JDOK
 }}
 )
 
-'new'jdadmin'test'                               NB. new admin, new db, no custom.ijs
+'new'jdadmin'test' NB. new db with no custom.ijs
 custom fwrite '~temp/jd/test/custom.ijs'  NB. create custom.ijs
 jdloadcustom_jd_'' NB. load changes
 jd'createtable';'f';'account int,balance int'
 jd'xadd 1001 300'
 jd'xadd 1002 500'
-0 jd'xadd 1001 100'
 jd'reads from f'
+0 jd'xadd 1001 100'
 jd'xtransfer 1001 1002 50'
 jd'reads from f'
 0 jd'xtransfer 1001 1002 500'
-0 jd'xtransfer 1006 1002 50'
-0 jd'xtransfer 1001 1006 50'
-

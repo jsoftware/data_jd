@@ -10,11 +10,11 @@ srdecode_z_=: a.{~256 256 256 256 256#:]
 
 NB. global parameters: PORT DBS
 init=: 3 : 0
-jdslog_jd_'ini';'';'';'start: ',isotimestamp 6!:0''
+jdslog_jd_ ' ';'ini';'';'';'start: ',isotimestamp 6!:0''
 for_d. DBS do.
  d=. adminp_jd_ >d NB. path to DB folder
- jdslog_jd_ 'ini';'';'';'jdadmin: ',d
- if. fexist d,'/admin.ijs' do. jdadmin d else. jdslog_jd_ 'ini';'';'';'jdadmin failed: ',d end.
+ jdslog_jd_ ' ';'ini';'';'';'jdadmin: ',d
+ if. fexist d,'/admin.ijs' do. jdadmin d else. jdslog_jd_ ' ';'ini';'';'';'jdadmin failed: ',d end.
 end. 
 CJ=: jcssraw_jcs_ PORT
 coinsert__CJ 'jobs'
@@ -50,7 +50,7 @@ sr=. rcv_job y
 if. sr=_1 do. return. end.
 i=. SRS i. sr
 if. i=#SRS do.
- jdslog 'zmq';sr;'';'no connection'
+ jdslog ' ';'zmq';sr;'';'no connection'
  return.
 end. NB. no connection for this route - ignore it 
 data=. ;i{SDATA
@@ -69,7 +69,7 @@ try.
  assert _1-.@-:clen
  if. (hlen+clen)>#data do. return. end.
 catch.
- jdslog 'zmq';sr;'';'bad request'
+ jdslog ' ';'zmq';sr;'';'bad request'
  SDATA=: a: (SRS i. sr)}SDATA NB. do not use old data - best if client does new connect
  rs=. 3!:1 ,:'jds error';'bad request'
  addout sr;rs
@@ -83,7 +83,7 @@ data=. clen{.hlen}.data
 
 if. SHUTDOWN__ do.
  if. 'm'~:getopclass data do.
-  jdslog 'zmq';sr;'';'stopped'
+  jdslog ' ';'zmq';sr;'';'stopped'
   SDATA=: a: (SRS i. sr)}SDATA NB. do not use old data - best if client does new connect
   rs=. 3!:1 ,:'jds error';'stopped'
   addout sr;rs
@@ -114,7 +114,7 @@ end.
 
 i=. SRS i. sr
 if. i=#SRS do.
- jdslog 'zmq';sr;'';'invalid connection'
+ jdslog ' ';'zmq';sr;'';'invalid connection'
  _1 return.
 end.
 data=. (;i{SDATA),d
@@ -130,7 +130,7 @@ if. 0=#SRSOUT do. return. end.
 srx=. srdecode sr
 r=. send S;srx;(#srx);ZMQ_SNDMORE
 if. r~:#srx do.
- jdslog 'zmq';sr;'';'bad snd sr'
+ jdslog ' ';'zmq';sr;'';'bad snd sr'
  'send sr failed' assert 0
 end. 
 
@@ -138,7 +138,7 @@ r=. send S;data;(#data);ZMQ_SNDMORE
 if. r=#data do.
  SRSOUT=:   }.SRSOUT
 else.
- jdslog 'zmq';sr;'';'short snd'
+ jdslog ' ';'zmq';sr;'';'short snd'
  SRSOUT=: (<sr;r}.data) 0}SRSOUT
 end. 
 )

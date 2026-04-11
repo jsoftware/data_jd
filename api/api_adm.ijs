@@ -339,20 +339,36 @@ i=. ({:"1 DBPATHS)i.<adminfp
 jdaccess (;{.i{DBPATHS_jd_),' ',;{.bdnames ;{:i{DBUPS_jd_
 )
 
-NB. * table ; user [ ; pswd]
+NB. * table ; user ; pswd
 NB. * 'test_upfile';'john';'wonder'
-NB. remove user if pswd elided
-jdsetuser=: 3 : 0
-setuser_jdup_ y
-)
+NB. 
+NB. * table ; user NB. remove user
+NB.
+NB. * table NB. list users
+NB.
+NB. logon is required to access a server
+NB.    s1'logon dan user pswd'
+NB.    
+NB. user/pswd is validated against server upfile
+NB. server folder upfilepath has path to the upfile
+NB. pswds in the upfile are encrypted
+NB. 
+NB. valid logon updates ductable with dan;user;cookie
+NB. subsequent requests get dan and user from ductable by cookie
+NB.
+NB. the upfile needs to be built in a secure manner
+NB. and the password should be given securely to the user
+jdsetuser=: 3 : 'setuser_jdup_ y'
 
-NB. * db [ ; dan [ ; users... ; ops... ] ]
-NB. * db                     NB. return jdsetadmin"1 arg for this admin.ijs
-NB. * db ; dan               NB. remove admin
 NB. * db ; dan ; users ; ops NB. set admin
-NB. set admin.ijs for db
-NB. user blank delimited users
-NB. op blank delimite ops
+NB. * db ; dan               NB. remove admin
+NB. * db                     NB. return: db ; dan ; users ; ops
+NB.
+NB. users and ops are blank delimited
+NB.
+NB. db admin.ijs sets what dan(s) can be used to access the db
+NB. and what users and ops are allowed for that dan
+NB. 
 NB. existing entries for dan are removed before adding new ones
 NB. admin.ijs will be loaded next time db is opened
 jdsetadmin=: 3 : 0

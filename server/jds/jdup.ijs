@@ -7,24 +7,6 @@ NB. should consider replacing this with reviewed code
 coclass'jdup'
 coinsert'jd'
 
-man_jd_server_user_pswd=: 0 : 0
-user/pswd file for Jd server
-
-Jd server requires logon with dan user pswd.
-
-The user and pswd is validated against the server upfile.
-
-The upfile is in jdscpath up folder. A server-folder upfilepath specfies the server upfile.
-
-The upfile pswds are encrypted.
-
-Valid logon updates the ductable_jdup_ with dan;user;cookie.
-
-Subsequent requests with a cookie get the and and user from the ductable.
-
-See server1.ijs for an exmple of building an upfile.
-)
-
 destroy=: codestroy
 
 require'guid'
@@ -36,19 +18,20 @@ logon=: 3 : 0
 if. check user;pswd do.
  cookie=. ,'0123456789abcdef' {~ 16 16 #: a. i. ,guids 1
  ductable=: ductable,dan;user;cookie
- jdslog 'on';dan;user;cookie
+ jdslog (":<:#ductable);'on';dan;user
  ({.a.),cookie
 else.
- jdslog 'onx';'';'' NB. do not log info
+ jdslog '0';'onx';'';'' NB. do not log info
  {.a. NB. failed
 end.
 )
 
 NB. returns 1 to set cookie empty
 logoff=: 3 : 0
-cookie=. y
-ductable=: ((2{"1 ductable)~:<cookie)#ductable NB. remove entries with same cookie
-jdslog 'off';'';'';cookie
+cookie=. <y
+i=. (2{"1 ductable)i.cookie
+ductable=: ((2{"1 ductable)~:cookie)#ductable NB. remove entries with same cookie
+jdslog (":i);'off';'';''
 1{a.
 )
 
@@ -80,10 +63,10 @@ end.
 i.0 0
 )
 
-NB. cookie - get user with cookie from ductable
-get_dan_user=: 3 : 0
+NB. cookie - get ductable entry for cookie
+get_ductable=: 3 : 0
 i=. ({:"1 ductable)i.<y
-if. i=#ductable do. '';'' else. 2{.i{ductable end.
+if. i=#ductable do. '';'';'' else. (":i);2{.i{ductable end.
 )
 
 NB. create empty u/p UPfile

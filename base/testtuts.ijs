@@ -12,6 +12,7 @@ tutorial/csv_load_tut.ijs
 tutorial/custom_tut.ijs
 tutorial/delete_tut.ijs
 tutorial/dropstop_tut.ijs
+tutorial/each_tut.ijs
 tutorial/epochdt_tut.ijs
 tutorial/gen_tut.ijs
 tutorial/info_tut.ijs
@@ -44,7 +45,6 @@ tutorial/reads_option_table_tut.ijs
 tutorial/replicate_tut.ijs
 tutorial/sandp_tut.ijs
 tutorial/sed_tut.ijs
-tutorial/server_admin_tut.ijs
 tutorial/server_tut.ijs
 tutorial/setget_tut.ijs
 tutorial/shell_client_tut.ijs

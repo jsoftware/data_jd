@@ -97,8 +97,8 @@ logsize f
 
 NB. server log is separate and in addition to other logs
 jdslog=: 3 : 0
-'type dan user data'=. 4{.y
-m=. (isotimestamp 6!:0''),TAB,type,TAB,dan,TAB,user,TAB,data rplc LF;' LF ';TAB;' TAB '
+'ductable type dan user data'=. 5{.y
+m=. (isotimestamp 6!:0''),TAB,ductable,TAB,type,TAB,dan,TAB,user,TAB,data rplc LF;' LF ';TAB;' TAB '
 f=. JDSPATH,'jds.log'
 logsize f
 (m,LF) fappend f
@@ -193,9 +193,9 @@ try.
   return.
  end. 
  
- 'dan user'=. get_dan_user_jdup_ up
+ 'ductable dan user'=. get_ductable_jdup_ up
  'logon required'assert 0~:#user
- jdslog 'req';dan;user;opstring
+ jdslog ductable;'req';dan;user;opstring
  jdaccess dan;user
 
  if. op-:'admin' do.
@@ -210,8 +210,9 @@ try.
  
  opstart=. 6!:9''
 catch.
- jdslog 'err';dan;user;opstring,LF,}:13!:12''
+ jdslog ' ';'err';dan;user;opstring,LF,}:13!:12''
  a=. jdsresult jbin;lz4;<('Jd server error';'Jd extra'),.(13!:12'');;opstring
+ return.
 end.
 
 jdlast_z_=: jdx cmd
@@ -221,10 +222,10 @@ if. (op-:'info')*.-.jbin do. jdlast_z_=: |:jdlast end. NB. |: so we have a json 
 a=.jdsresult jbin;lz4;<jdlast
 )
 
-NB. [signal] * 'info summary'
-NB. * 'info summary'
-NB. 0 * 'info xxx' NB. returns Jd error
-NB. signal 1 (default) signals an error with a Jd error result
+NB.      jd 'info schema'
+NB.    1 jd 'info schema' NB. error is signaled
+NB.    0 jd 'info scheam' NB. Jd error result
+NB. [signal] * cmd
 NB. most results are boxed array of labeled rows or cols
 NB. {.{.result can be Jd ...
 NB. 'Jd report' has special treament

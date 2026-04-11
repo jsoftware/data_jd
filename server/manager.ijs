@@ -6,45 +6,21 @@ coinsert'jd'
 
 jdserver_z_=: jdserver_jdserver_
 
-man_jd_server=: 0 : 0
-   jdserver name;'create';jport;nport;dbs;up;inspect NB. create server-folder
-name    - jdscpath,name is server handle
-jport   - jds zmq port that serves node reverse-proxy
-nport   - node port that serves client requests
-dbs     - 0 or more db names separated by ,
-up      - up or testup - which user/pswd file to use
-inspect - inspect-yes or inspect-no - enable node inspect
-
-db can be name (~temp/jd/name) or path '..../name'
-
-create starts by killing ports jport and nport
-   jdserver name;'create';... NB. create server-folder
-   jdserver name;'start'      NB. start server - kills existing task on jport and nport
-   jdserver name;'debug'      NB. start - jds in visible jconsole and node --inspect
-   jdserver name;'stop'       NB. stops server
-   jdserver name;'report'     NB. detailed report
-   jdserver name;'handle'     NB. return server-folder
-   jdserver name;'delete'     NB. kill tasks and delete server-folder
-   jdserver ''  ;'report'     NB. status for all servers
-
-   jdrt 'server'
-)
-
-man_jd_server_requirements=: 0 : 0
+man_jd_server_1_requirements=: 0 : 0
 Jd server uses zmq (zeromq), node (node.js), and lz4 (compression)
 
-Check the status with:
-   load'jd'
+check the status with:
    check_zmq_jdserver_''
    check_node_jdserver_''
    check_lz4_jdserver_''
 
-How to install zmq, node, or lz4i s beyond the scope of this document. They are common tools and the install should not be too difficult.
+how to install zmq, node, or lz4i s beyond the scope of this document
+they are common tools and the hopefully the install is not too difficult
 
 Mac is missing setsid utility so Mac univeral setsid is included in JDP,'cd/setsid.
 )
 
-man_jd_server_debug=: 0 : 0
+man_jd_server_2_debug=: 0 : 0
 Following assumes server1.ijs (adjust as necessary) and that you are on the sever machine.
 
 *** basic info
@@ -73,24 +49,45 @@ start host terminal
  debug> sb('reverse_proxy_binary.js',35)
 )
 
-man_jd_server_overview=: 0 : 0
-Jd server has a J task running zmq loop and a node task ruuning a reverse proxy.
+man_jd_server_0_overview=: 0 : 0
+server - J task with Jd running a zmq loop and a node task running a proxy
 
-... https clients (browser and curl) ...
- node task
-  reverse_proxy_binary.js
-  requests passed to J task and reponse returned to client
+node task serves client requests
+ node handles https and is a reverse proxy to Jd
+ https://nodejs.org
 
- jd server task
-  zmq loop
-  zmq requests added to jds job queue with route info
-  jd runs request from job queue
-  jd result added to result gueue with route info
-  zmq returns repsonse to node task
+jds (Jd server) task handles http requests from node task
+ jds uses zmq for localhost connections from node task
+
+https clients (browser/libcurl/curl)
+  node task
+    reverse_proxy_binary.js
+    requests passed to J task and reponse returned to client
+  j task running Jd server
+    zmq loop
+    zmq requests added to jds job queue
+    jd runs request from job queue
+    jd result added to zmq result gueue
+    zmq returns response to node task
 )
 
 NB. * name;op;...
-NB. man'jd server'
+NB. name    - jdscpath,name is server handle
+NB. jport   - jds zmq port that serves node reverse-proxy
+NB. nport   - node port that serves client requests
+NB. dbs     - 0 or more db names separated by ,
+NB.           db can be name (~temp/jd/name) or path '..../name'
+NB. up      - up or testup - which user/pswd file to use
+NB. inspect - inspect-yes or inspect-no - enable node inspect
+NB.
+NB.    jdserver name;'create';jport;nport;dbs;up;inspect NB. create server-folder
+NB.    jdserver name;'start'      NB. start server - kills existing task on jport and nport
+NB.    jdserver name;'report'     NB. detailed report
+NB.    jdserver name;'stop'       NB. stops server
+NB.    jdserver name;'debug'      NB. start - jds in visible jconsole and node --inspect
+NB.    jdserver name;'handle'     NB. return server-folder
+NB.    jdserver name;'delete'     NB. kill tasks and delete server-folder
+NB.    jdserver ''  ;'report'     NB. status for all servers
 jdserver=: 3 : 0
 'arg must be server-name;op[;...]'assert 2<:#y
 'name op'=. 2{.y
@@ -193,7 +190,7 @@ NB. server summary report
 report=: 3 : 0
 r=. fread y,'config'
 r=. r,LF,fread y,'status'
-r=. r,LF,LF,'jds.log:',LF,jdslog_format y;5
+r=. r,LF,LF,'jds.log:',LF,jdslog_format y;10
 r=. r,LF,'jds/logstd.log:',LF,rdrep y,'jds/logstd.log'
 r=. r,LF,'node/logstd.log:',LF,rdrep y,'node/logstd.log'
 )
@@ -217,7 +214,7 @@ NB. end libcurl connection before we can kill node
 killlibcurl=: 3 : 0
 for_c. conl 1 do.
  if. 0=nc<'jdclass__c'do.
-  echo 'destroy: ',url__c
+  NB. echo 'destroy: ',url__c
   destroy__c''
  end.
 end.
@@ -257,14 +254,12 @@ end.
 
 'jds server failed to start'  assert _1~:getpidx_jport_ jport NB. delay to let spin up
 'node server failed to start' assert _1~:getpidx_jport_ nport
-report handle
+'server started: ',fread handle,'config'
 )
 
 debug=: 3 : 0
 handle=. y
 'must run in jconsole'assert -.IFQT+.IFJHS
-
-
 'jport nport'=. setup handle
 'upfile does not exist'  assert 1=ftype fread handle,'upfilepath'
 certerror assert 1=;ftype each '.ssh/jserver/key.pem';'.ssh/jserver/fullchain.pem'
