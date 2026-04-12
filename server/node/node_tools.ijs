@@ -37,7 +37,7 @@ default=. ;(inspect-:'inspect-yes'){'';' --inspect=localhost:',":1+0".nport
  b  fwrite handle,'node/rundebug.bat'
 
  a=. fread handle,'node/run.txt'
- b=. a rplc 'run.sh';'rundebug.bat'
+ b=. a rplc 'run.bat';'rundebug.bat'
  b fwrite handle,'node/rundebug.txt'
 
 else.
