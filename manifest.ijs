@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '4.4.119'
+VERSION=: '4.4.120'
 
 FILES=: 0 : 0
 manifest.ijs
@@ -66,6 +66,8 @@ cd/rpi/libjpcre.so
 )
 
 FILESDARWIN64=: 0 : 0
+cd/setsid/LICENSE.txt
+cd/setsid/setsid
 cd/libjd.dylib
 cd/libjpcre.dylib
 cd/setsid/setsid
