@@ -29,13 +29,16 @@ default=. ;(inspect-:'inspect-yes'){'';' --inspect=localhost:',":1+0".nport
  pw=. hostpathsep p
  ('"PATHrun.bat" > "LOG" 2>&1' rplc 'PATH';pw;'LOG';pw,'logstd.log') fwrite p,'run.txt'
 
- sh=.  fread handle,'node/run.bat'
- sh=. sh rplc '"INSPECT"';default
- sh  fwrite handle,'node/run.bat'
+ a=.  fread handle,'node/run.bat'
+ b=. sh rplc '"INSPECT"';default
+ b fwrite handle,'node/run.bat'
  
- sh=.  fread handle,'node/run.bat'
- sh=. sh rplc '"INSPECT"';yes
- sh  fwrite handle,'nodedebug/run.bat'
+ b=. sh rplc '"INSPECT"';yes
+ b  fwrite handle,'node/rundebug.bat'
+
+ a=. fread handle,'node/run.txt'
+ b=. a rplc 'run.sh';'rundebug.bat'
+ b fwrite handle,'node/rundebug.txt'
 
 else.
 
@@ -47,13 +50,18 @@ else.
  shell'chmod +x "',f,'"'
  (SETSID,' "PATHrun.sh" > "LOG" 2>&1' rplc 'PATH';p;'LOG';p,'logstd.log') fwrite p,'run.txt'
 
- sh=.  fread handle,'node/run.sh'
- sh=. sh rplc '"INSPECT"';default
- sh  fwrite handle,'node/run.sh'
+ a=. fread handle,'node/run.sh'
+ b=. a rplc '"INSPECT"';default
+ b  fwrite handle,'node/run.sh'
+ b=. a rplc '"INSPECT"';yes
+ f=. handle,'node/rundebug.sh'
+ b  fwrite f
+ shell'chmod +x "',f,'"'
+
+ a=. fread handle,'node/run.txt'
+ b=. a rplc 'run.sh';'rundebug.sh'
+ b fwrite handle,'node/rundebug.txt'
  
- sh=.  fread handle,'node/run.sh'
- sh=. sh rplc '"INSPECT"';yes
- sh  fwrite handle,'nodedebug/run.sh'
 end. 
 
 (fread JDP,'server/node/server.html') fwrite p,'/server.html' NB.! ???
