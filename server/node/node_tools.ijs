@@ -29,11 +29,11 @@ default=. ;(inspect-:'inspect-yes'){'';' --inspect=localhost:',":1+0".nport
  pw=. hostpathsep p
  ('"PATHrun.bat" > "LOG" 2>&1' rplc 'PATH';pw;'LOG';pw,'logstd.log') fwrite p,'run.txt'
 
- a=.  fread handle,'node/run.bat'
- b=. sh rplc '"INSPECT"';default
+ a=. fread handle,'node/run.bat'
+ b=. a rplc '"INSPECT"';default
  b fwrite handle,'node/run.bat'
  
- b=. sh rplc '"INSPECT"';yes
+ b=. a rplc '"INSPECT"';yes
  b  fwrite handle,'node/rundebug.bat'
 
  a=. fread handle,'node/run.txt'
