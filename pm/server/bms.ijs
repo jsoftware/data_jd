@@ -1,5 +1,16 @@
 NB. Copyright 2026, Jsoftware Inc.  All rights reserved.
 
+big=: 3 : 0
+'cols rows'=. y
+d=. rows$10000?IMAX_jd_
+jdadminnew'/media/ericb/driveb/big'
+jd'createtable f'
+for_i. i.cols do.
+ n=. 'a',":i
+ jd('createcol f ',n,' int');d
+end. 
+)
+
 xxx_man_jd_performance=: 0 : 0
 *** dictionaries
 manage refs with automatic update rather than dirty recalc?
