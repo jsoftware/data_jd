@@ -28,7 +28,13 @@ i.0 0
 )
 
 NB. shortcut 'jbreak' or 'jc' or 'jhs' or 'jqt' - create desktop launch icon
+NB. shortcut '' NB. create all icons
 shortcut=: 3 : 0
+if. ''-:y do.
+ shortcut each 'jc';'jqt';'jhs';'jbreak'
+ i.0 0
+ return.
+end. 
 if. ((<UNAME)e.'OpenBSD';'FreeBSD') do. uname=. 'Linux' else. uname=. UNAME end.
 try. ".uname,' y' catchd. echo 'create ',y,' launch icon failed' end.
 )
