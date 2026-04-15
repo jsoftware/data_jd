@@ -68,7 +68,7 @@ Winx y
 Winx=: 3 : 0
 select. y
 case.'jbreak' do.
-  win'jbreak' ;'jbrk';'jyellow.png';LIB
+  win'jbreak' ;'jbrk';'jyellow.ico';LIB
 case.'jc' do.
   win'jc' ;'jconsole';'jgray.ico';LIB
 case. 'jhs' do.
