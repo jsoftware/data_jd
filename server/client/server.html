@@ -23,8 +23,8 @@ let examples = [
 'info summary',
 'info schema',
 '["delete t","a<999"]',
-'["insert t","a",45,"byte","xxx"]',
-'["insert t","a",[6,7,8],"byte",["qwe","rqw","erq"]]',
+'["insert t","a",45]',
+'["insert t","a",[6,7,8]]',
 'read from t'
 ];
 
@@ -55,15 +55,17 @@ async function runtime(){
  idvs('cmd',t.toString()+' info schema ops per second');
 }
 
-function logon(){getdata("logon "+idv("dan")+" "+idv("usr")+" "+idv("pwd"));}
-function logoff(){getdata("logoff");}
-function run(){getdata(idv('cmd'));}
+function logon() {getdata('',"logon "+idv("dan")+" "+idv("usr")+" "+idv("pwd"));}
+function logoff(){getdata('',"logoff");}
+function run()   {getdata(idv('cmd'),'');}
 
-async function getdata(p) {
+// node request - jdcmd LF nodecmd
+async function getdata(jdcmd,nodecmd) {
+  const cmd= jdcmd+'\n'+nodecmd+';op '+(jdcmd.match(/[a-zA-Z]+/)?.[0] || ""); // add op cmd to nodecmd
   idvs("out","busy");
   const url= location.href;
   try {
-    const response = await fetch(url, {method: "POST",body: p,});
+    const response = await fetch(url, {method: "POST",body: cmd});
     if (!response.ok) {
       throw new Error(`Response status: ${response.status}`);
     }

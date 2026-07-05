@@ -4,7 +4,8 @@ coclass'jd'
 
 NB. multiple ops in one request
 NB. 1st result is Jd OK or error
-jd_each=: 3 : 0
+NB. runs on base server in replicate server
+jd_wreach=: 3 : 0
 r=. ''
 e=. 0
 for_n. y do.
@@ -15,6 +16,9 @@ for_n. y do.
 end.
 (e{(<'Jd OK';0),<'Jd error';0),r
 )
+
+NB. rdeach same as wreach except it will run on replicate clone readonly
+jd_rdeach=: jd_wreach
 
 NB. jdget 'tab col'
 jd_get=: 3 : 0
@@ -161,7 +165,7 @@ JDOK
 
 NB. run custom db jd_x... op in db locale if it exists
 jd_x=: 3 : 0
-JDE1001 assert 3=nc<'jd_',OP,'__dbl' 
+NB.! JDE1001 assert 3=nc<'jd_',OP,'__dbl' 
 ('jd_',OP,'__dbl')~y
 )
 
@@ -241,21 +245,5 @@ case. 'space' do. optionspace=: 1=0".;1{a
 case. 'sort'  do. optionsort =: 1=0".;1{a
 case.         do. assert 0['unsupported option'
 end.
-JDOK
-)
-
-NB. mtm read type op that spins for y seconds
-jd_rspin=: 3 : 0
-n=. 0 ". y
-s=. 6!:1''
-while. n>s-~6!:1'' do. end.
-JDOK
-)
-
-NB. mtm write type op that spins for y seconds
-jd_wspin=: 3 : 0
-n=. 0 ". y
-s=. 6!:1''
-while. n>s-~6!:1'' do. end.
 JDOK
 )

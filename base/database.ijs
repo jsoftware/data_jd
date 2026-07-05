@@ -8,22 +8,22 @@ CHILD =: <'jdtable'
 
 STATE=: <;._2 ]0 :0
 REPLICATE
-RLOGFOLDER
-RLOGINDEX
+WALFILE
+WALINDEX
+TARFILE
+CLONES
 DAMAGE
 REPAIR
 )
 
 NB. initial state values
 REPLICATE =: 0     NB. 1 for source, 2 for sink
-RLOGFOLDER=: ''    NB. folder for log files
-RLOGINDEX =: _1    NB. snk db index in file of next record 
 DAMAGE=: 0         NB. 1 if db marked as damaged
 REPAIR=: 0         NB. 1 if db marked as under repair
-
-NB. values not in state
-RLOGFH    =: 0     NB. src/snk rlog file handle
-RLOGBLOCK =: 0     NB. count lock collisions
+TARFILE=: ''
+WALFILE=: ''
+WALINDEX=: 0
+CLONES=: ''
 
 NB. define aggregation functions
 aggcreate=: 3 : 0
@@ -40,7 +40,6 @@ AGGFCNS=: 0 2$<''
 
 open=: 3 : 0
 readstate''
-if. REPLICATE~:0 do. RLOGFH=: 1!:21<jpath RLOGFOLDER,'rlog' end. 
 aggcreate''
 f=. PATH,'custom.ijs'
 if. fexist f do. load f end.
@@ -60,7 +59,7 @@ writestate''
 
 NB. close does not do writestate - DAMAGE/REPAIR and others do writestate as required
 close=: 3 : 0
-if. RLOGFH~:0 do. RLOGFH=: 0[1!:22 RLOGFH end.
+i.0 0
 )
 
 addagg=: 2 : 0
@@ -143,23 +142,3 @@ Modify
 
 Reads=: ({."1 ,: [:tocolumn{:"1)@:Read
 
-
-NB. replicate routines
-
-rops=:      ;:'delete insert update upsert sort ref intx'
-rops=: rops,;:'createcol createtable createptable'
-rops=: rops,;:'dropcol droptable'
-rops=: rops,;:'renamecol renametable'
-
-NB. some ops are trouble - createdb table... csv... ???
-
-NB. src db - write next rlog record
-rlog=: 4 : 0
-if. 1~:REPLICATE do. return. end.
-if. -.(<x) e. rops do. return. end.
-a=. 3!:1 x;<y
-d=. 'RLOGRLOG',(3 ic #a),a
-'rlog write failed' assert _1-.@-:d fappend RLOGFH
-setrlogend''
-writestate''
-)

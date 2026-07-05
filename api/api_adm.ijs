@@ -192,27 +192,18 @@ adminopen=: 3 : 0
   return.
  end. 
  'multiple open dbs must all be MTRW' assert (0=#DBPATHS)+.(mt=0)*.JDMT=0
- t=. 3!:2 ::((0 2$'')"_) fread y,'/jdstate'   NB. ok if jdstate is missing
- i=. ({."1 t)i.<'RLOGFOLDER'
- if. i~:#t do.
-  a=. ;{:i{t
-  t=. 'rlog',~jpath a
-  ('replicate folder ''',a,''' is in use')assert -.(<hostpathsep t) e. {:1!:20''
- end.
- 
  remove_admin y
- 
- fp=. y,'/admin.ijs'
+  fp=. y,'/admin.ijs'
  if. -.fexist fp do. (defaultadmin rplc 'D';d)fwrite fp end. NB. default admin.ijs
 
  NB. error if new admin has a dan that is already in use
  dans=. dltb each <;.2 fread fp
  dans=. ((dans i.each ' '){.each dans)-.each '''' NB. dans in new admin
  'new db admin has dan that is already in use'assert -.({."1 DBPATHS)e.dans
- 
+
+ locktype jdadminlk y
  try.
    bak=. (<DBPATHS),(<DBUPS),<DBOPS
-   locktype jdadminlk y
    load y,'/admin.ijs'
  catchd.
    'DBPATHS DBUPS DBOPS'=: bak
@@ -548,6 +539,13 @@ else.
  t=. getloc__dbl ;{.a
  getloc__t ;{:a
 end.
+)
+
+NB. * db 
+NB. get state from files
+NB. could be exteneded to db [table[col]]
+jdgstate=: 3 : 0
+3!:2 fread '/jdstate',~adminp_jd_ y
 )
 
 NB. get state for table or table column

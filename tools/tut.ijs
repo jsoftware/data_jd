@@ -61,6 +61,9 @@ server-client
  j_client
  python_client
  shell_client
+ replicate
+ replicate_beat
+ replicate_admin
 xtra
  blob
  custom          
@@ -69,6 +72,5 @@ xtra
  log             
  performance     
  ptable          
- replicate       
  table_table     
 )

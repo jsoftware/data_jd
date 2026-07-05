@@ -6,6 +6,8 @@ require'~addons/arc/lz4/lz4.ijs'
 coclass'jdcurl'
 coinsert 'jcurl'
 
+JDOK=: ,:'Jd OK';2-2
+
 var=: 3 : 'setopt_variadic, <y'
 
 chk=: 3 : 0
@@ -44,29 +46,45 @@ chk curl_easy_setopt curl;CURLOPT_SSL_VERIFYPEER;var 0
 chk curl_easy_setopt curl;CURLOPT_SSL_VERIFYHOST;var 0
 chk curl_easy_setopt curl; CURLOPT_WRITEFUNCTION;var f 4
 chk curl_easy_setopt curl; CURLOPT_WRITEDATA;var 0
+chk curl_easy_setopt curl; CURLOPT_TCP_KEEPALIVE; var 1
 )
 
 NB. logoff, curl cleanup, destory locale
 destroy=: 3 : 0
-req :: [ 'logoff'
+'logoff' req :: [ ''
 if. 0=nc<'curl' do. curl_easy_cleanup <curl end.
 codestroy''
 i.0 0
 )
 
-NB. [signal] * 'info summary'
+NB. lz4_compressframe_jlz4_=: [
+NB. lz4_uncompressframe_jlz4_=: [
+
+NB. [node] * jd
+NB. jd is same arg as to non-server request
 NB. * 'info summary'
-NB. 0 * 'info xxx' NB. returns Jd error
-NB. signal 1 (default) signals an error
-NB. POSTFIELDS fails for short arguments '    list version' is ok 'list version' fails
-NB. COPYFIELDS works
+NB. node cmds separated by ;
+NB. logon dan user pswd
+NB. logoff  - removes user from user table at end
+NB. free    - logoff and clear curl and destroy locale at end
+NB. eok     - Jd error result does not signal
+NB. op jdop - added automatically to route request to port
+NB. 'logon simple user0 pswd0;eok'simple'info xxx'
 req=: 3 : 0
-1 req y
+'' req y
 :
-if. 'free'-:dltb y do. destroy'' return. end.
-d=. lz4_compressframe_jlz4_ 3!:1 y
-chk curl_easy_setopt curl;CURLOPT_POSTFIELDSIZE_LARGE;var #d
-chk curl_easy_setopt_str curl;CURLOPT_COPYPOSTFIELDS;var d
+n=. deb each <;._2 x,';'
+signal=. -.n e.~<'eok'
+free=. n e.~<'free'
+n=. ;n,each';'
+op=. dltb;{.boxopen y
+n=. n,';op ',(op i.' '){.op
+j=. lz4_compressframe_jlz4_ 3!:1 y
+d=. j,LF,n
+
+chk curl_easy_setopt curl;CURLOPT_POSTFIELDSIZE;var #d
+chk curl_easy_setopt curl;CURLOPT_POSTFIELDS;var symdad<'d'
+
 result=: ''
 chk curl_easy_perform curl
 if. '{'={.result do.
@@ -74,24 +92,28 @@ if. '{'={.result do.
 else.
  r=. (3 !: 2) @ lz4_uncompressframe_jlz4_ result
 end. 
-if. x*.'Jd error'-:;{.{.r do.
+
+if. free do. NB. logoff has been done
+ curl_easy_cleanup <curl
+ codestroy''
+end.
+
+if. signal*.'Jd error'-:;{.{.r do.
  t=. _2}.;r,each <': '
  13!:8&3 t
 end.
 r
 )
 
-NB.   s1=. 'https://localhost:3000' jdclient NB. verb to access server
-NB.   s1 'logon simple user0 pswd0'
-NB.   s1 'info schema'
-NB.   s1 'free' NB. logoff and destroy locale
-NB. 
+NB.   simple=: 'https://localhost:3000' jdclient NB. verb to access server
+NB. 'logon simple user0 pswd0'simple'info schema'
 NB. jdclient defined in load of Jd or in load of just the client
 NB. start J 
-NB.    load 'jd' NB. or non-pacman: load 'path_to_non-pacman_addons/addons/data/jd/jd.ijs'
+NB.    load 'jd'
 NB. or you can load just the client   
 NB.    load 'path_to_addons/server/client/jclient.ijs'
 jdclient_z_=: 1 : 0
 NB. validate m format
+m=. ;(''-:m){m;'https://localhost:3000'
 ('req_','_',~;m conew'jdcurl')~
 )

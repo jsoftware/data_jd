@@ -1,129 +1,48 @@
-NB. Copyright 2018, Jsoftware Inc.  All rights reserved.
+NB. Copyright 2026, Jsoftware Inc.  All rights reserved.
+NB. validate replicate
 
-RLOG=: '~temp/jd/rlog/'
+load JDP,'test/util/rep.ijs'
+create_rep_server''
 
-NB. use of J file handles means a Jd task can have only 1 user of RLOG,'rlog'
+f0=. adminp_jd_'rep_clone_0'
+f1=. adminp_jd_'rep_clone_1'
 
-testerrors=: 3 : 0
-jdadmin 0
-jddeletefolder_jd_ jddeletefolderok_jd_ RLOG
-'should not be any open handles' assert 0=#1!:20''
-jddeletefolder_jd_ RLOG
-jdcreatefolder_jd_ RLOG
-h=: 1!:21 <jpath RLOG,'rlog'
+rep'createcol t b int'
+rep'createcol t c int'
+rep'insert t';'a';1;'b';1;'c';1
+rep'insert t';'a';2;'b';2;'c';2
+rep'insert t';'a';3;'b';3;'c';3
+rep'delete t';'jdindex<3'
 
-jdadminnew'jnk'
-'replicate'jdadmae_jd_ jdrepsrc_jd_ etx RLOG
-'replicate'jdadmae_jd_ jdrepsnk_jd_ etx RLOG
-1!:22 h
+'clone_0 does not have col b'assert 0=ftype f0,'/t/b'
+'port 65221'rep'read from t' NB. trigger clone_0 update
+'clone_0 has col b'assert 2=ftype f0,'/t/b'
 
-jdadminnew'jnk'
-jdrepsrc_jd_ RLOG
-jdadmin 0
-h=: 1!:21 <jpath RLOG,'rlog'
-'replicate handle error'assert 1-:jdadmin :: 1: 'jnk'
-1!:22 h
-)
+'clone_1 does not have col b'assert 0=ftype f1,'/t/b'
+'port 65222'rep'read from t' NB. trigger clone_0 update
+'clone_1 has col b'assert 2=ftype f1,'/t/b'
 
-insdata=: 3 : 0
-d=. y?10000
-'a';d;'b';d;'c';d;'d';d;'e';d;'f';d;'g';d;'h';d
-)
+check''
 
-NB. 200 addsrc 60*60*24
-addsrc=: 4 : 0
-jdaccess'src'
-for. i.y do.
- jd'insert t';insdata x
-end. 
-)
+rep'dropcol t b'
+rep'dropcol t c'
+rep'delete t';'a>0'
+check''
 
-rd=: 3 : 0
-jdaccess y
-jd'reads count a from t'
-)
+rep'delete t';'a>_1'
+rep'read from t'
+beat 8;1000;<10 3 1#'INSERT';'xdelete';'info summary'
+rep'read from t'
+d=: ;{:{:rep'read from t'
+cnts=: <.d%1000000 NB. pids
+pids=: <.1000000|d
+'bad cnts'assert 1=+/=cnts
+'bad cnts'assert (#cnts)=+/+/"1=cnts
+check''
 
-setsrc=: 3 : 0
-jd'createtable t'
-jd'createcol t a int'
-jd'createcol t b int'
-jd'createcol t c int'
-jd'createcol t d int'
-jd'createcol t e int'
-jd'createcol t f int'
-jd'createcol t g int'
-jd'createcol t h int'
-)
+beat 8;1000;<(<'info summary'),(<'delete t';'jdindex>0'),<'insert t';'a';10000$123
+check''
 
-testsrc=: 3 : 0
-jdadminnew'src'
-jdrepsrc_jd_ RLOG
-)
+checklog f0
+checklog f1
 
-NB. testsnk
-testsnk=: 3 : 0
-jdadminnew'snk'
-jdrepsnk_jd_ RLOG
-)
-
-NB. empty db
-test0=: 3 : 0
-jdadmin 0 NB. clean slate
-jddeletefolder_jd_ jddeletefolderok_jd_ RLOG
-testsrc''
-a=. jd'info summary'
-jdadmin 0 NB. so reader can use rlog
-testsnk''
-assert a-:jd'info summary'
-jdadmin 0 NB. close replog 
-)
-
-NB. db with 1 table and no rows
-test1=: 3 : 0
-jdadmin 0
-jddeletefolder_jd_ jddeletefolderok_jd_ RLOG
-testsrc''
-setsrc''
-a=. jd'info summary'
-jdadmin 0 NB. so reader can use rlog
-testsnk''
-assert a-:jd'info summary'
-jdadmin 0 NB. close replog 
-)
-
-NB. db with 1 table and some rows
-test2=: 3 : 0
-jdadmin 0
-jddeletefolder_jd_ jddeletefolderok_jd_ RLOG
-testsrc''
-setsrc''
-2 addsrc 3
-a=. jd'reads from t'
-jdadmin 0 NB. so reader can use rlog
-testsnk''
-assert a-:jd'reads from t'
-jdadmin 0 NB. close replog 
-)
-
-NB. db repsrc with data 
-NB. need to save copy of db in rlog and use it in repupdate
-test3=: 3 : 0
-jdadmin 0
-jddeletefolder_jd_ jddeletefolderok_jd_ RLOG
-jdadminnew'src'
-setsrc''
-2 addsrc 3
-jdrepsrc_jd_ RLOG
-2 addsrc 3
-a=. jd'reads from t'
-jdadmin 0 NB. so reader can use rlog
-testsnk''
-assert a-:jd'reads from t'
-jdadmin 0 NB. close replog 
-)
-
-testerrors''
-test0''
-test1''
-test2''
-test3''

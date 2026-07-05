@@ -1,20 +1,21 @@
 NB. server access from shell clients - windows bat and unix bash
-load JDP,'server/client/jcurlclient.ijs' NB. curl tools
-load JDP,'server/server1.ijs'
-s1_build''
-jdserver'server1';'start'
+load JDP,'test/util/simple.ijs'
+simple_play''
 
-jdp1=: jdcurlclient 'localhost:3000' NB. build client folder with curl
-jdcurlreq jdp1;'logon simple user0 pswd0' NB. access dan simple with user and pswd
+jdp1=: jdcurlclient_jdserver_ 'localhost:3000' NB. build client folder with curl
 
 bash_client=: 0 : 0
 #!/bin/bash
-# $1 path to j client folder, $2 command
-printf %s "$2" > $1/post
+# $1 path to j client folder, $2 jdcmd [, $3 nodecmd ]
+if [[ "$2" =~ ^[^[:alpha:]]*([[:alpha:]]+) ]]; then
+    op="${BASH_REMATCH[1]}"
+fi
+printf '%s\n%s;op %s' "$2" "$3" "$op" > $1/post
 $1/curl
 cat $1/result
 )
 
+NB.!!! needs work
 bat_client=: 0 : 0
 rem %1 path to j client folder, %2 command
 @echo %2 > %1\post
@@ -36,10 +37,16 @@ end.
 )
 
 shellcmd=: 3 : 0
-shell name,' ',(hostpathsep_j_ jdp1),' "',y,'"'
+arg=. }.;' ',each '''',~each'''',each boxopen y
+cmd=. name,' ',(hostpathsep_j_ jdp1),' ',arg
+techo cmd
+shell cmd
 )
 
-shellcmd'info schema'
-shellcmd'read from t'
+shellcmd '';'logon simple user0 pswd0'
+shellcmd 'info schema';''
+shellcmd '["insert t","a",45]';''
+shellcmd 'read from t';''
 
-jdserver 'server1';'stop'
+jdserver 'simple';'stop'
+jdnode   'simple';'stop'

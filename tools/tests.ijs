@@ -4,12 +4,12 @@ coclass'jd'
 
 JDTIMING=: 1 NB. avoid errors on timing tests - set 0 to check timings
 
-NB. actions are logged to ~temp/jd.txt'
-NB. y ''                      run csv-tests, build-demos, and all tests and tutorials
+NB. y ''                      runcsv-tests, build-demos, and all tests and tutorials
 NB. y 'fast'                  skip csv-tests
 NB. y 'csv'                   run just csv-tests
 NB. x 0 or elided             do not echo test scripts as they are run
 NB. x 1                       echo test scripts as they are run
+NB.   logtestshow_jd_'' NB. display test log'
 jdtests=: 3 : 0
 0 jdtests y
 :
@@ -28,11 +28,8 @@ EXCLUDETESTS=: (<'_tut.ijs'),each~(<'tutorial/'),each 'stock_data';'bus_lic';'ta
 t=. ALLTESTS=:  (tests_jd_,(testtuts_jd_))-.EXCLUDETESTS
 t=. t,~each<JDP
 if. -.IFJHS do. t=. t-.<JDP,'tutorial/jhs_tut.ijs' end.
-if. -.fexist'~addons/net/jcs/jcs.ijs' do. t=. t-.<JDP,'tutorial/jcs_tut.ijs' end. 
 if. IFWINE do.   NB. blacklist tests failed on wine
- t=. t-.<JDP,'tutorial/jcs_tut.ijs'
  t=. t-.<JDP,'tutorial/link_tut.ijs'
- t=. t-.<JDP,'test/replicate_test.ijs'
  t=. t-.<JDP,'tutorial/replicate_tut.ijs'
 end.
 failed=: ''
@@ -71,7 +68,7 @@ for_n. i.#t do.
  try.
   if. 0 do. return. end. NB. a-:JDP,'one to stop on'
   load a
- catch.
+ catchd.
   NB. reset to native Jd after jdc error
   jd__=: jd_jd_
   jdaccess__=: jdaccess_jd_

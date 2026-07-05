@@ -76,31 +76,3 @@ case. do.
  assert 0['lock not wrcx'
 end. 
 )
-
-NB. replicate get/set end locks
-NB. complications between file names, linux handles, and windows handles
-
-NB. under lock, set value in end file
-setrlogend=: 3 : 0
-f=. RLOGFOLDER,'end'
-s=. 3 ic fsize RLOGFH
-h=. lockopen f
-while. 1 do. if. locklock h do. break. end. 6!:3[0.001[RLOGBLOCK=: >:RLOGBLOCK end.
-if. IFWIN>IFWINE do. s fwrite h else. s fwrite f end.
-lockfree  h
-lockclose h
-)
-
-NB. y is RLGOFOLDER
-NB. under lock, read end file
-getrlogend=: 3 : 0
-f=. y,'end'
-h=. lockopen f
-while. 1 do. if. locklock h do. break. end.
- 6!:3[0.001[RLOGBLOCK__dbl=: >:RLOGBLOCK__dbl
-end.
-if. IFWIN>IFWINE do. r=. fread h else. r=. fread f end.
-lockfree  h
-lockclose h
-_3 ic r
-)

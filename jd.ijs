@@ -1,18 +1,5 @@
 NB. Copyright 2026, Jsoftware Inc.  All rights reserved.
 
-0 : 0
-package manager Jd library is ~addons/data/jd
-   load'data/jd' NB. 'data/jd/jd.ijs'
-
-production Jd application should run from dedicated folder to avoid pacman updates
-   load'~/production/jd/jd.ijs'
-
-git developer Jd library is ~Jddev (~config/folders.cfg)
-  load'~Jddev/jd.ijs'
-
-all use is through JDP_z_ (set when the library is loaded)
-)
-
 coclass'jd'
 jdversion=: '4.48'
 
@@ -94,7 +81,8 @@ NB. ensure different (production vs development) Jd libraries are not both loade
 n=. '/jd.ijs'
 d=. jpath each 4!:3''
 f=. (;(<n)-:each (-#n){.each d)#d
-'can not mix different Jd libraries' assert 1=#f
+NB. development has ~addons ln to git
+NB.! can not mix different Jd libraries' assert 1=#f
 JDP_z_=: _6}.;f
 
 NB. sever requires setsid so jds and node task will not end when the start task ends
@@ -193,9 +181,7 @@ dynamic/ref.ijs
 server/manager.ijs
 server/client/jclient.ijs
 server/jds/jds_server.ijs
-server/jds/jds_tools.ijs
 server/jds/jdup.ijs
-server/node/node_tools.ijs
 tools/tests.ijs
 types/base.ijs
 types/numeric.ijs
@@ -228,7 +214,7 @@ r=. get_handle_limits''
 )
 
 3 : 0''
-if. _1=nc<'jdscpath' do. jdscpath=: 'jdscpath/' end. NB. path to all server/client files
+if. _1=nc<'jdscpath' do. jdscpath=: jpath '~/jdscpath/' end. NB. path to all server/client files
 IFTESTS=: 0
 if. _1=nc<'OP' do. NB. one time inits
  IFJDS_z_=: 0
@@ -271,7 +257,9 @@ casual use is OK from pacman folder (pacman can update to new code)
    
 serious use should have its own folder (copy ~addons/data/jd to ~/production)
    load'~/production/jd/jd.ijs' NB. load production Jd
-   
+
+Jd load sets JDP_z_ as path to the Jd folder
+
 )
 
 echo (JDP-:'/',~jpath'~addons/data/jd')#t

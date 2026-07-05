@@ -42,6 +42,8 @@ tutorial/reads_clauses_tut.ijs
 tutorial/reads_from_tut.ijs
 tutorial/reads_join_tut.ijs
 tutorial/reads_option_table_tut.ijs
+tutorial/replicate_admin_tut.ijs
+tutorial/replicate_beat_tut.ijs
 tutorial/replicate_tut.ijs
 tutorial/sandp_tut.ijs
 tutorial/sed_tut.ijs

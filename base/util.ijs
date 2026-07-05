@@ -95,6 +95,8 @@ fexist y
 ftype  y
 )
 
+inrange =: ([: *./ (>: {.) , (<: {:))~ NB. general/misc/validate
+
 reduce =: 1 : ('u/ y';':';'for_z. |.x do. y=.z u y end.')
 
 dcreate=: (1!:5 :: 0:) @ (fboxname@:>)

@@ -127,3 +127,7 @@ logsize fn
 ((isotimestamp 6!:0''),' : ',(12{.x),' : ',y,LF)fappend fn
 )
 
+NB. show jdtests log
+logtestshow=: 3 : 0
+fread'~temp/jdlog/logtest.txt'
+)

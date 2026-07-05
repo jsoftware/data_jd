@@ -1,5 +1,26 @@
 NB. Copyright 2026, Jsoftware Inc.  All rights reserved.
-NB. only script required by J client of Jd server
+NB. jd server routines - turn jd into server
+
+NB. init server in task
+init=: 3 : 0
+jdslog_jd_ ' ';'ini';'';'';'start: ',isotimestamp 6!:0''
+for_d. DBS do.
+ d=. adminp_jd_ >d NB. path to DB folder
+ jdslog_jd_ ' ';'ini';'';'';'jdadmin: ',d
+ if. fexist d,'/admin.ijs' do. jdadmin d else. jdslog_jd_ ' ';'ini';'';'';'jdadmin failed: ',d end.
+end. 
+CJ=: jcss_jcs_ PORT NB.!!! jcss talks to node zmq 
+run''
+)
+
+NB. run server
+run=: 3 : 0
+while. 1 do.
+ q=. recvmsg__CJ'' NB. 2 frames
+ d=. jds ;{:q
+ send__CJ S__CJ;d;(#d);0 NB. single frame???
+end. 
+)
 
 jdaccess_z_=: jdaccess_jd_
 jd_z_  =:   jd_jd_
@@ -88,15 +109,6 @@ a
 
 NB. server log is separate and in addition to other logs
 jdslog=: 3 : 0
-'type dan user data'=. y
-m=. (_4}._12{.isotimestamp 6!:0''),' : ',(3{.type),' : ',(12{.dan),' : ',(12{.user),' : ',(50{.data) rplc LF;TAB
-f=. JDSPATH,'jds.log'
-logsize f
-(m,LF) fappend f
-)
-
-NB. server log is separate and in addition to other logs
-jdslog=: 3 : 0
 'ductable type dan user data'=. 5{.y
 m=. (isotimestamp 6!:0''),TAB,ductable,TAB,type,TAB,dan,TAB,user,TAB,data rplc LF;' LF ';TAB;' TAB '
 f=. JDSPATH,'jds.log'
@@ -110,7 +122,9 @@ timex 'jd''',y,''''
 )
 
 NODBOPS=: 'close';'createdb';'list';'option' NB. ops without DB
-ROOPS=: 'close';'read';'reads';'info';'list';'rspin'
+
+NB. node has same logic
+RDOPS=: 'close';'read';'reads';'key';'info';'list' NB. rd...;xrd...
 
 NB. log performance info
 NB. add this op info to memory log
@@ -146,17 +160,14 @@ end.
 )
 
 NB. client request
-NB. jds - similar to jd - except for server
-NB. cookie dan cmd
-NB. cookie is added by node
-NB. cookie must not contain blank
-NB. sinlge blank delimits cookie and dan
-NB. dan cmd can be compressed (lz4) or not
-NB. compression determined by examining initial bytes - lz4 first byte 4{a.
-NB. dan cmd is jbin or json or simple string
+NB. jds - similar to jd - except it is called from node server
+NB. node takes care of logon/logoff and pswd validation and sets cookie
+NB. cookie gets dan/user from node ductable and adds to the request
+NB. req LF dan user
+NB. compression determined by examining first byte - lz4 first byte 4{a.
+NB. req is jbin or json or simple string
 NB. simple string does not start with { or " and does not have " or other special chars
 NB.
-NB. cookie selects user from logon data
 NB. result is lz4 if arg was lz4
 NB. result data is jbin or json dictionary
 NB.
@@ -165,11 +176,10 @@ NB. most clients except browser will use curl
 jds=: 3 : 0
 'lz4 jbin dan user opstring'=. 0;0;3#<'not-set'
 try.
+ lastreq__=: y
  req=. y
-
- NB. strip off cookie from end
- i=. req i: ' '
- up=. (>:i)}.req
+ i=. req i: LF
+ 'dan user'=. bdnames (>:i)}.req NB. srinp dan user from end
  cmd=. i{.req
 
  NB. infer compression from data 
@@ -184,26 +194,20 @@ try.
  'invalid cmd' assert 2=3!:0 opstring
  op=. dltb(opstring i.' '){.opstring
 
- if. 'logoff'-:op do. a=. logoff_jdup_ up return. end.
-
- if. 'logon'-:op do.
-  t=. bdnames 6}.opstring
-  ETALLY assert 3=#t
-  a=. logon_jdup_ t
+ if. ''-:op do.
+  a=. jdsresult jbin;lz4;<JDOK
   return.
- end. 
+ end.
  
- 'ductable dan user'=. get_ductable_jdup_ up
- 'logon required'assert 0~:#user
- jdslog ductable;'req';dan;user;opstring
- jdaccess dan;user
-
  if. op-:'admin' do.
   'only admin can do admin'assert 'admin'-:user
   a=. do__ 6}.opstring
   a=. jdsresult jbin;lz4;<a
   return.
  end.
+
+jdaccess dan;user
+if. -.IFJDS do.  jdslog '';'req';dan;user;op end. NB. node has already logged 
 
  NB. troubles with jd treatment of <'read from t'
  if. 1=#cmd do. cmd=. opstring end.
@@ -242,6 +246,33 @@ if. x*.'Jd error'-:;{.{.jdlast do.
 end.
 )
 
+0 : 0
+jd op called 3 ways:
+ server   - jds
+ direct   - jd
+ internal - x... etc 
+
+server and direct call jdx which does lots of stuff including repupdate and rlog
+
+internal calls should not call jdx and should call jd_op with clean args
+ interal call of jdx would write extra records to walfile
+)
+
+NB. get op and arg from jd arg
+getoa=: 3 : 0
+if. 0=L.y do.
+  t=. dlb y
+  i=. t i.' '
+  FEOP=: OP=: i{.t
+  a=. dltb i}.t
+ else.
+  t=. (bdnames ;{.y),}.y
+  FEOP=: OP=: dltb ;{.t
+  a=. }.t
+ end.
+OP;a
+)
+
 NB. jdx always returns a boxed result - jd asserts it is not an error
 jdx=: 3 : 0
 jdlasty_z_=: y
@@ -266,8 +297,9 @@ try.
  pm OP
  'op'logtxt FEOP
  opx=. ;('x'-:{.OP){OP;'x'
- 
- 'MTRO db only allows read type ops' assert (JDMT~:MTRO_jmf_)+.(<OP) e. ROOPS
+
+ readop=. ((<OP) e. RDOPS)+.('rd'-:2{.OP)+.('xrd'-:3{.OP) NB. +.('x'={.OP)*.-.'xrd'-:3{OP
+ 'MTRO db only allows read type ops' assert (JDMT~:MTRO_jmf_)+.readop
  
  if. -. (<OP) e. NODBOPS do. 
   getdb'' NB. dbl global and test for damage
@@ -280,29 +312,29 @@ try.
   r=. dbrow DBOPS 
   JDE1001 assert r~:#DBOPS 
   JDE1001 assert +./(OP;,'*')e.bdnames>{:r{DBOPS
-  JDE1001 assert 3=nc<'jd_',opx 
+  NB.JDE1001 assert 3=nc<'jd_',opx 
+  JDE1001 assert 3=nc<'jd_',OP,'__dbl' NB. jd_OP defined in dbl
  else.
   dbl=: ''
+  JDE1001 assert 3=nc<'jd_',OP NB. jd_OP defined in jd
  end. 
 
  start=. 6!:1''
  parts=: _1
- if. optionspace do. NB.! this should be fixed or killed off
-  lastspace=: 7!:2'r=. (''jd_'',opx)~a' 
- else.
  
-  NB. do repupdate if required
-  if. 0~:#dbl do.
-   if. 2=REPLICATE__dbl do.
-    repupdate''
-   end. 
-  end.
-  jdlast_z_=. ('jd_',opx)~a
+ if. 0~:#dbl do.
+   repupdate''     NB. do repupdate if required before doing the op
 
-  if. (<opx) e. rops_jddatabase_ do. opx rlog__dbl a end. 
-  
-  lastspace=: _1
- end.
+   if. (-.readop) *. 1=REPLICATE__dbl do.
+    t=. 3!:1 OP;<a
+    d=. WALSIG,(3 ic #t),(2 ic crc32 t),t
+    'rlog fappend failed' assert (#d)=d fappend WALFILE__dbl
+   end. 
+  'write op not allowed on clone' assert (REPLICATE__dbl~:2)+.readop
+ end. 
+
+  jdlast_z_=. ('jd_',OP,('x'={.OP)#'__dbl')~a
+
  lasttime=: start-~6!:1''
  lastcmd=: FEOP
  lastparts=: parts

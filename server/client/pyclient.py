@@ -58,8 +58,15 @@ def fwrite(p,mode,d):
  f.write(d)
  f.close()
 
-def req(hostpath,a):
- fwrite(hostpath+'/'+'post','wb',lz4.frame.compress(a.encode('utf-8')))
+# should be changed from curl to libcurl
+# needs to handle eok and free
+def req(hostpath,jdcmd,nodecmd):
+ # find op in jdcmd
+ a= next((i for i, c in enumerate(jdcmd) if c.isalpha()), -1)
+ b= jdcmd.find(' ',a)
+ op= jdcmd[a : a+b-a]
+ 
+ fwrite(hostpath+'/'+'post','wb',lz4.frame.compress(jdcmd.encode('utf-8'))+('\n'+nodecmd+';op '+op).encode('utf-8'))
  
  try:
   e= 0
@@ -76,8 +83,8 @@ def req(hostpath,a):
 
  r= fread(hostpath+'/'+'result','rb')
 
- if('logoff'==a):
-  shutil.rmtree(hostpath)
+ #if('logoff'==a):
+ # shutil.rmtree(hostpath)
   
  if r[0] == 123: # {
   return json.loads(r.decode('utf-8'))

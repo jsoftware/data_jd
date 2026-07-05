@@ -1,17 +1,15 @@
 0 : 0
 Jd python3 client requires python3
-jd pandas (jdrt'pandas") also requires python3
+Jd pandas (jdrt'pandas") also requires python3
 )
 pystatus_jd_'' NB. check python3 install - pandas and pyarrow not required for Jd client
 NB. lz4 install required - next must indicate lz4 is available
 pysub_jd_ '-m pip install lz4'
-NB. pycurl required for use of libcurl - next must indicae pycurl is available
+NB. pycurl required for use of libcurl - next must indicate pycurl is available
 pysub_jd_ '-m pip install pycurl'
 
-NB. rebuild server1 from scratch
-load JDP,'server/server1.ijs'
-s1_build''
-jdserver'server1';'start'
+load JDP,'test/util/simple.ijs'
+simple_play''
 
 mkdir_j_ 'jdpycode' NB. folder to hold python3 files
 
@@ -34,7 +32,7 @@ pyclient.py - python3 code to create jd py client folder
 
 NB. python3 works with json
 [r=. pysub_jd_'pytest.py jdpycode jdclient py-server1 localhost 3000'
-'python3 client test failed'assert (8=#t)*.8=+/'{'=;{.each t=. <;._2 r
+'python3 client test failed'assert (5=#t)*.5=+/'{'=;{.each t=. <;._2 r
 
 0 : 0
 you can experiment with the python3 code in a terminal window

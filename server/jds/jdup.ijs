@@ -10,30 +10,7 @@ coinsert'jd'
 destroy=: codestroy
 
 require'guid'
-hash=: 1&(128!:6) 
-
-NB. ductable dan,user,cookie
-logon=: 3 : 0
-'dan user pswd'=: bdnames y
-if. check user;pswd do.
- cookie=. ,'0123456789abcdef' {~ 16 16 #: a. i. ,guids 1
- ductable=: ductable,dan;user;cookie
- jdslog (":<:#ductable);'on';dan;user
- ({.a.),cookie
-else.
- jdslog '0';'onx';'';'' NB. do not log info
- {.a. NB. failed
-end.
-)
-
-NB. returns 1 to set cookie empty
-logoff=: 3 : 0
-cookie=. <y
-i=. (2{"1 ductable)i.cookie
-ductable=: ((2{"1 ductable)~:cookie)#ductable NB. remove entries with same cookie
-jdslog (":i);'off';'';''
-1{a.
-)
+hash=: 7&(128!:6) NB. sha3_256
 
 setuser=: 3 : 0
 y=. boxopen y
@@ -63,12 +40,6 @@ end.
 i.0 0
 )
 
-NB. cookie - get ductable entry for cookie
-get_ductable=: 3 : 0
-i=. ({:"1 ductable)i.<y
-if. i=#ductable do. '';'';'' else. (":i);2{.i{ductable end.
-)
-
 NB. create empty u/p UPfile
 init=: 3 : 0
 'u/p table already exists'assert -.fexist UPFILE
@@ -87,18 +58,6 @@ i=. a i.<y
 d=. <;.2 fread UPFILE
 (;(i~:i.#a)#d)fwrite UPFILE
 i.0 0
-)
-
-NB. u;p
-NB. return 0 if not valid u/p
-NB. return 1 if valid u/p
-check=: 3 : 0
-if. -.fexist UPFILE do. 0 return. end.
-'u p'=. y
-if. -.(<u)e.getusers'' do. 0 return. end.
-'salt h'=. 1 2{((getusers'')i.<u){show''
-if. h-:hash p,salt do. 1 return. end.
-0
 )
 
 show=: 3 :0
