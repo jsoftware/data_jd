@@ -185,7 +185,7 @@ NB. option type 0 set to 1
 NB. option type 1 must be positive integer
 NB. option type a (alloc) must be 3 positive integer/float
 NB. option type s is a string - if string arg it can be in "s
-NB. a=. '/e 0 /nx 1 /a a /s s'getopt '/e /nx 23 /a 1 2 3.5 /s "abc def"'
+NB. a=. '/e 0 /nx 1 /a a /s s'getopts '/e /nx 23 /a 1 2 3.5 /s "abc def"'
 getopts=: 4 : 0
 t=. ca x
 t=. (2,~-:#t)$t
@@ -225,45 +225,6 @@ while. '/'=getoption a do.
   else.
    'a v'=. getnxt a
   end.
- case. do.
-  'bad option type' assert 0
- end.
- (p)=: v
-end.
-a
-)
-
-getopt=: 4 : 0
-t=. ca x
-t=. (2,~-:#t)$t
-n=. {."1 t
-c=. {:"1 t
-p=. ;(<'_jd_ '),~each (<'option_'),each}.each n
-(p)=: 0 NB. default value for options not provided
-a=. y
-while. '/'={.;{.a do.
- p=. 'option_',(}.;{.a),'_jd_'
- i=. n i. {.a
- EOPTION assert i<#n
- select. ''$;i{c
- case. '0' do.
-  a=. }.a
-  v=. 1
- case. '1' do.
-  EOPTIONV assert 1<#a
-  v=. 0+_".;1{a
-  EOPTIONV assert 4=3!:0 v
-  EOPTIONV assert 0<:v
-  a=. 2}.a
- case. 'a' do. NB. createtable /a - 3 values and float allowed
-  EOPTION assert 3<#a
-  v=. 0+_".each 1 2 3{a
-  EOPTIONV assert (0<:v),_~:v
-  a=. 4}.a
- case. 's' do. NB. string - asdf or "abc def"
-  EOPTION assert i<#n
-  v=. 1{a
-  a=. 2}.a
  case. do.
   'bad option type' assert 0
  end.

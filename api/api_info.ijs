@@ -12,9 +12,6 @@ case.           do. assert 0['unsupported list command'
 end. 
 )
 
-NB. jdi ops allow manageing state before and after an internal call
-jdi_info=: jd_info
-
 jd_info=: 3 : 0
 t=. bdnames y
 a=. 2{.}.t

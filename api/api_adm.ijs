@@ -349,7 +349,7 @@ NB. subsequent requests get dan and user from ductable by cookie
 NB.
 NB. the upfile needs to be built in a secure manner
 NB. and the password should be given securely to the user
-jdsetuser=: 3 : 'setuser_jdup_ y'
+jdsetuser=: setuser
 
 NB. * db ; dan ; users ; ops NB. set admin
 NB. * db ; dan               NB. remove admin

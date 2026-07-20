@@ -13,6 +13,7 @@ rep'insert t';'a';1;'b';1;'c';1
 rep'insert t';'a';2;'b';2;'c';2
 rep'insert t';'a';3;'b';3;'c';3
 rep'delete t';'jdindex<3'
+rep'each';(<'insert t';'a';7;'b';8;'c';9) NB. each is a write op and is in rlog
 
 'clone_0 does not have col b'assert 0=ftype f0,'/t/b'
 'port 65221'rep'read from t' NB. trigger clone_0 update

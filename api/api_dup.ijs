@@ -1,13 +1,8 @@
 NB. Copyright 2026, Jsoftware Inc.  All rights reserved.
 NB. manage Jd user table
+NB. serious production should consider replacing this with reviewed code
 
-NB. serious production use that might be attacked
-NB. should consider replacing this with reviewed code
-
-coclass'jdup'
-coinsert'jd'
-
-destroy=: codestroy
+coclass'jd'
 
 require'guid'
 hash=: 7&(128!:6) NB. sha3_256
@@ -40,14 +35,8 @@ end.
 i.0 0
 )
 
-NB. create empty u/p UPfile
-init=: 3 : 0
-'u/p table already exists'assert -.fexist UPFILE
-'' fwrite UPFILE
-)
-
 getusers=: 3 : 0
-{."1 show UPFILE
+{."1 ><;._1   each ':',each <;._2 fread UPFILE
 )
 
 NB. user
@@ -59,8 +48,3 @@ d=. <;.2 fread UPFILE
 (;(i~:i.#a)#d)fwrite UPFILE
 i.0 0
 )
-
-show=: 3 :0
-><;._1   each ':',each <;._2 fread UPFILE
-)
-

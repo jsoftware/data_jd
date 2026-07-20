@@ -2,7 +2,7 @@ NB. server access from shell clients - windows bat and unix bash
 load JDP,'test/util/simple.ijs'
 simple_play''
 
-jdp1=: jdcurlclient_jdserver_ 'localhost:3000' NB. build client folder with curl
+jdp1=: jdcurlclient_jd_ 'localhost:3000' NB. build client folder with curl
 
 bash_client=: 0 : 0
 #!/bin/bash

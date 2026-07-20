@@ -86,6 +86,7 @@ if. #failed do.
  echo LF,'following tests failed:'
  echo failedx
 end.
+killlibcurl_jd_'' NB. libcurl clients
 if. #conl 1 do.
  echo LF,'check for orphan locals in conl 1'  
 end.
@@ -119,26 +120,7 @@ for_n. t do.
  try. 
   jd'testerrors ',n
  catch.
-  t=. LASTRAW_jd_
-  t=. dltb each (}.^:('|'={.))each<;._2 t
-  v=. >{.t
-  if. 'assertion failure: assert'-:v do.
-   r=. >1{t
-   if. ''''={:r do.
-    r=. }:r
-    r=. r rplc '''''';{.a.
-    i=. r i: ''''
-    r=. }.i}.r
-    r=. r rplc ({.a.);''''
-   end.
-  elseif. ': assert'-:_8{.v do.
-   r=. _8}.v
-  elseif. ': throw'-:_7 {.v do.
-   r=. _7}.v
-  elseif. 1 do.
-   r=. ;  ( {.t) ,(<': '), }.t
-  end.
-  echo r
+  echo jderror''
  end.
 end. 
 )

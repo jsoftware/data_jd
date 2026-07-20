@@ -20,11 +20,11 @@ csvval=: (a:~:ccfiles)#cvfiles
 
 b=. ;fexist"0 csvdat
 assert b-:;fexist"0 jddat['mismatch between csv and jd dat files'
-jd=: b#jddat
+jd=. b#jddat
 csv=: b#csvdat
 b=. ;fexist"0 csvval
 assert b-:;fexist"0 jdval['mismatch between csv and jd val files'
-jd=: jd,b#jdval
+jd=. jd,b#jdval
 csv=: csv,b#csvval
 ferase each jd
 jd frename each csv

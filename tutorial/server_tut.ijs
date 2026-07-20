@@ -13,11 +13,11 @@ the following checks and reports issues that need to be resolved
    man'jd requirements'
 )
 
-check_zmq_jdserver_''
-check_node_jdserver_''
-check_lz4_jdserver_''
-check_libcurl_jdserver_''
-check_certs_jdserver_''
+check_zmq_jd_''
+check_node_jd_''
+check_lz4_jd_''
+check_libcurl_jd_''
+check_certs_jd_''
 
 0 : 0
 we'll build, configure, and run a server called simple

@@ -1,5 +1,12 @@
 NB. Copyright 2026, Jsoftware Inc.  All rights reserved.
 
+NB. only 1 code base is loadedboth loaded
+n=. '/jd.ijs'
+d=. jpath each 4!:3''
+f=. (;(<n)-:each (-#n){.each d)#d
+('Jd can not be loaded from different folders',LF,;f,each LF)assert 1=#f
+JDP_z_=: _6}.;f
+
 coclass'jd'
 jdversion=: '4.48'
 
@@ -61,13 +68,10 @@ doin=: 4 : '(<x)(4 : ''do__y x'')each<"0 y' NB. run sentence in each locale
 require'jfiles'
 require'data/jmf'
 require'convert/pjson'
-
-missingkey=: '!!! Jd key: non-commercial key automatically installed'
-noncomkey=:  '!!! Jd key: non-commercial use only!'
-invalidkey=: '!!! Jd key: invalid'
-updatekey=:  '!!! Jd key: expired - restore earlier version or get new key'
-fkey=:    '~config/jdkey.txt'
-noncom=:  'a11544796265500412' NB. old free key
+require'~addons/ide/jhs/extra/man.ijs'
+require'~addons/ide/jhs/port.ijs'
+require'~addons/net/jcs/jcs.ijs'
+erase'jd_jcs_' NB. avoid man duplicate
 
 3 : 0''
 if. IFWIN do.
@@ -76,14 +80,6 @@ if. IFWIN do.
  NB. t=. 'Jd requires msvcr120.dll',LF,'http://www.microsoft.com/en-ca/download/details.aspx?id=40784',LF,'download vcredist_x64.exe and run to install msvcr110.dll'
  NB. t assert 2 0=cder''
 end.
-
-NB. ensure different (production vs development) Jd libraries are not both loaded
-n=. '/jd.ijs'
-d=. jpath each 4!:3''
-f=. (;(<n)-:each (-#n){.each d)#d
-NB. development has ~addons ln to git
-NB.! can not mix different Jd libraries' assert 1=#f
-JDP_z_=: _6}.;f
 
 NB. sever requires setsid so jds and node task will not end when the start task ends
 NB. setsid is not in mac so we provide our own universal binary from github
@@ -116,20 +112,17 @@ q=. q,~JDP,'cd/'
 LIBJD=: '"',t,'"'
 JDT=: (LIBJD,' jdinit >x') cd '' NB. get jdt
 
-k=. fread fkey
-NB. no key or old free key map to JDP,'jdkey.txt'
-if. (_1-:k)+.noncom-:(#noncom){.k do.
- pk=. }:JDP
- echo noncomkey
+k=. fread '~config/jdkey.txt'
+if. _1-:k do.
+ pk=. }:JDP NB. no key or old free key map to JDP,'jdkey.txt'
+ echo '!!! Jd key: non-commercial use only!'
 else.
  pk=. '~config'
  echo '!!! Jd key:',(k i.' ')}.k
 end. 
 
 r=. (LIBJD,' jdlicense >x x *c') cd JDT;<jpath pk
-if. _1=r do. assert 0[echo invalidkey end.
-NB. if. _2=r do. assert 0[echo evalkey end.
-if. _3=r do. assert 0[echo updatekey end.
+'!!! Jd key: ~config/jdkey.txt is invalid - erase to use a free non-commercial key' assert r>0
 'Jd binary and J code mismatch - bad install'assert r=8 NB. 7 - jd3 and 8 -jd4
 'Jd regexinit failed'assert 0=(LIBJD,' regexinit >x x *c') cd JDT;<q 
 )
@@ -166,6 +159,7 @@ api/api_create.ijs
 api/api_csv.ijs
 api/api_csvcdefs.ijs
 api/api_drop.ijs
+api/api_dup.ijs
 api/api_gen.ijs
 api/api_info.ijs
 api/api_misc.ijs
@@ -180,8 +174,6 @@ dynamic/base.ijs
 dynamic/ref.ijs
 server/manager.ijs
 server/client/jclient.ijs
-server/jds/jds_server.ijs
-server/jds/jdup.ijs
 tools/tests.ijs
 types/base.ijs
 types/numeric.ijs
@@ -191,10 +183,6 @@ types/datetimes.ijs
 types/epoch.ijs
 types/varbyte.ijs
 )
-
-require'~addons/ide/jhs/extra/man.ijs'
-require'~addons/ide/jhs/port.ijs'
-require'~addons/net/jcs/jcs.ijs'
 
 repair=: 3 : 0
 load JDP,'tools/repair.ijs'
@@ -250,51 +238,20 @@ seebox=: 3 : 0
 ;((x+>./>#each y){.each "1 y),.<LF
 )
 
-t=. 0 : 0
-
-casual use is OK from pacman folder (pacman can update to new code)
-   load'jd' NB. ~addons/data/jd is fine for casual use
+3 : 0''
+if. IFUNIX do.
+ t=. -.+./'->'E. shell 'ls -l ',}:JDP
+else.
+ +.a.
+end. 
+m=. {{)n
+casual use is OK from pacman folder (pacman can update!)
    
-serious use should have its own folder (copy ~addons/data/jd to ~/production)
-   load'~/production/jd/jd.ijs' NB. load production Jd
-
-Jd load sets JDP_z_ as path to the Jd folder
-
-)
-
-echo (JDP-:'/',~jpath'~addons/data/jd')#t
-echo (10<#1 1    dir jdscpath_jd_,'client')#LF,LF,~LF,~'warning: folder jdscpath/client may need attention'
+serious use requires non-pacman folder
+copy ~addons/data/jd to ~/jdprod and symlink ~addons/data/jd to ~/jdprod
+   load'jd' NB. load jdprod code
+}}
+echo (t*.(JDP-:'/',~jpath'~addons/data/jd'))#LF,m,LF
+echo (20<#1 1    dir jdscpath_jd_,'client')#LF,LF,~LF,~'warning: folder jdscpath/client may need attention'
 echo'   jdwelcome_jd_ NB. run this sentence for important information'
-
-0 : 0
-release 4.48 
-
-*** load
-    'git/addons/data/jd/jd.ijs'fwrite 'gitjd'
-    load'gitjd'
-
-*** jd server uses node/zmq - older servers killed off
-
-*** jd result
-   'Jd ok' mapped to i. 0 0 and now maps to ,:'Jd OK';0
-
-*** info /lr result forced for non jbin server users
-
-*** jd and s1 (server)
-   [signal] jd 'info x' NB. 1 default
-   0 jd 'info x' NB. returns Jd error result
-   1 jd 'info x' NB. signals error
-   'an op' jdce 0 jd 'info x' NB. like jdae but can be used with s1
-
-*** each
-   jd'each';(<...),(<...),<...
-
-*** IFJDS_z_ set for direct vs server
-
-*** jdi_... jd_read concerns about internal use
-jdi_ killed - seemed to be a noop
-custom.ijs and several others made internal jd_read/info calls
-most of these have been replace by normal jd'...' calls
-seems to be OK
-why was jdi or jd_... ever needed (p;erhaps older style sever)?
 )

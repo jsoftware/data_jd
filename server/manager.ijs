@@ -1,11 +1,15 @@
 NB. Copyright 2026, Jsoftware Inc.  All rights reserved.
 NB. manage node-jd-DB server
 
-coclass'jdserver'
-coinsert'jd'
+NB. coclass'jdserver'
+NB. coinsert'jd'
 
-jdserver_z_=: jdserver_jdserver_
-jdnode_z_=: jdnode_jdserver_
+NB. jdserver_z_=: jdserver_jdserver_
+NB. jdnode_z_=: jdnode_jdserver_
+
+coclass'jd'
+jdserver_z_=: jdserver_jd_
+jdnode_z_=: jdnode_jd_
 
 man_jd_server_client=: 0 : 0
 libcurl/curl/browser/... post https request to node task
@@ -49,14 +53,14 @@ Jd server uses zmq (zeromq), node (node.js), lz4 (compression), and libcurl
 
 node server requires cert.pem and fullchain.pem files in .ssh/jserver
 for testing/development you can install self-signed certificates
-   install_self_signed_certs_jdserver_''
+   install_self_signed_certs_jd_''
 
 check status with:
-   check_zmq_jdserver_''
-   check_node_jdserver_''
-   check_lz4_jdserver_''
-   check_libcurl_jdserver_''
-   check_certs_jdserver_''
+   check_zmq_jd_''
+   check_node_jd_''
+   check_lz4_jd_''
+   check_libcurl_jd_''
+   check_certs_jd_''
 
 how to install zmq, node, lz4, and libcurl is beyond the scope of this document
 they are common tools and the hopefully the install is not too difficult
@@ -80,7 +84,7 @@ start jconsole
    jdserver 'simple';'debug' NB. run server in this task
 ctrl+c - interrupt server zmq loop
    RELOAD NB. jds main file
-edit RELOAD - e.g. add (decho jdsq__=: y) line at start jds defn   
+edit RELOAD - e.g. add (debug output of jdsq__=: y) at start jds defn   
    load 'jd' 
    run '' NB. resume zmq loop
 
@@ -517,14 +521,14 @@ jds_server_config_template=: 0 : 0
 JDP_z_=: '<JDP>'
 load JDP,'jd.ijs'
 IFJDS_z_=: 1
-RELOAD=: JDP,'server/jds/jds_server.ijs' NB. likely debug file
+RELOAD=: JDP,'api/api.ijs' NB. likely debug file
 load RELOAD
 JDSPATH_z_=:    '<PATH>'
-UPFILE_jdup_=: fread '<PATH>upfilepath'
-ductable_jdup_=: 0 3$'' NB. each row has dan user cookie
+UPFILE_jd_=: fread '<PATH>upfilepath'
+ductable_jd_=: 0 3$'' NB. each row has dan user cookie
 PORT=: <PORT>
 DBS=: jdremq_jd_ each ',' strsplit_jd_'<DBS>'
-init''
+jdserverinit''
 )
 
 NB. path;jport;'test,"foo,bar",~temp/jd/mum'

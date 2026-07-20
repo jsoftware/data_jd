@@ -5,20 +5,19 @@ coclass'jd'
 NB. multiple ops in one request
 NB. 1st result is Jd OK or error
 NB. runs on base server in replicate server
-jd_wreach=: 3 : 0
+NB. each routed to base table not clone
+NB. create custom read op to route to clones
+jd_each=: 3 : 0
 r=. ''
 e=. 0
 for_n. y do.
- a=. jdx;n
+ a=. 0 jdi__dbl ;n NB. internal call - does not signal error
  r=. r,<a
  e=. 'Jd error'-:;{.{.a
  if. e do. break. end.
 end.
 (e{(<'Jd OK';0),<'Jd error';0),r
 )
-
-NB. rdeach same as wreach except it will run on replicate clone readonly
-jd_rdeach=: jd_wreach
 
 NB. jdget 'tab col'
 jd_get=: 3 : 0

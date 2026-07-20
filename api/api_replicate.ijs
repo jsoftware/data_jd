@@ -70,13 +70,6 @@ jdadmin 0
 
 NB. replicate routines
 
-NB.! might be better to list read ops
-NB.! what about custome ops
-rops=:      ;:'delete insert update upsert sort ref intx'
-rops=: rops,;:'createcol createtable createptable'
-rops=: rops,;:'dropcol droptable'
-rops=: rops,;:'renamecol renametable'
-
 NB. some ops are trouble - createdb table... csv... ???
 
 WALSIG=: 'WAL' NB. wal record signature
@@ -95,29 +88,14 @@ NB.! op may fail after it has been added to walfile
 NB. torn page detection - crc32
 NB. repsrc appends new requests to the walfile
 rlog=: 3 : 0
-if. 1~:REPLICATE do. return. end.NB. if. -.(<x) e. rops do. return. end.
-'readop opx a'=. y
-
-if. readop do. return. end.
-NB. if. -.(<opx) e. rops do. return. end.
-
-NB. if. -.(<x) e. rops do. return. end.
-
-a=. 3!:1 opx;<a
-d=. WALSIG,(3 ic #a),(2 ic crc32 a),a
-'rlog fappend failed' assert (#d)=d fappend WALFILE
+'readop op a'=. y
+'write op not allowed on clone' assert (REPLICATE__dbl~:2)+.readop
+if. (-.readop) *. 1=REPLICATE__dbl do.
+ t=. 3!:1 OP;<a
+ d=. WALSIG,(3 ic #t),(2 ic crc32 t),t
+ 'rlog fappend failed' assert (#d)=d fappend WALFILE__dbl
+end. 
 )
-
-xxxrlog=: 4 : 0
-if. 1~:REPLICATE do. return. end.NB. if. -.(<x) e. rops do. return. end.
-
-if. -.(<x) e. rops do. return. end.
-
-a=. 3!:1 x;<y
-d=. WALSIG,(3 ic #a),(2 ic crc32 a),a
-'rlog fappend failed' assert (#d)=d fappend WALFILE
-)
-
 
 NB. display walfile
 jdwalread=: 3 : 0

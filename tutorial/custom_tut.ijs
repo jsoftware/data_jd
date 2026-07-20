@@ -7,6 +7,14 @@ custom ops are often patterned after similar jd_... ops
 custom ops are important with a server
  run as a transaction wihout ops from other users interleaved
  run as a single network request (nearly as many times faster as the reduction in requests)
+
+ops (including custom ops) can call other ops - internal calls
+ jdi is strongly prefered way to call other ops
+ [x] jdi'...' - same arg as jd
+ jdi'...' avoids jd overhead and checks
+ 
+ op options are global! - e.g., option_lr_jd
+  jdi call needs right options and must preserve callers options
 )
 
 custom=: 0 : 0 NB. define xadd and xtransfer
@@ -14,9 +22,9 @@ jd_xadd=: {{
 a=. _".y
 'arg must be 2 numbers'assert (2=#a)*.-._ e. a
 'da db'=: a
-a=. jd'get f account'
+a=. jdi'get f account'
 'account already exists'assert -.da e. a
-jd'insert f';'account';da;'balance';db
+jdi'insert f';'account';da;'balance';db
 JDOK
 }}
 
@@ -24,13 +32,12 @@ jd_xtransfer=: {{
 a=. _".y
 'arg must be 3 numbers'assert (3=#a)*.-._ e. a
 'da db dc'=: a
-a=. jd'get f account'
-b=. jd'get f balance'
-'dai dbi'=. a i. da,db
-((":da),': is not valid account to debit')  assert dai<#a
-((":db),': is not valid account to credit') assert dbi<#a
-'insufficient funds'assert dc<:dai{b
-jd'set f balance';( (dc-~dai{b) , dc+dbi{b ) (dai,dbi)} b
+ia=.  ,>{:"1 jdi'read jdindex,balance from f where account=',":da
+((":da),': is not valid account to debit')  assert #ia
+ib=.  ,>{:"1 jdi'read jdindex,balance from f where account=',":db
+((":db),': is not valid account to credit') assert #ib
+'insufficient funds'assert dc<:{:ia
+jdi'update f';(({.ia),{.ib);'balance';(dc-~{:ia),dc+{:ib
 JDOK
 }}
 )
