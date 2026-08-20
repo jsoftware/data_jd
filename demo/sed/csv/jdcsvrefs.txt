@@ -1,0 +1,4 @@
+s rno rname r rno rname
+e rno rname sno sname s rno rname sno sname
+t ename e ename
+

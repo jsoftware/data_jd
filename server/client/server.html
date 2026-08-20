@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html><head></head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<body><div><h2>Jd Server Interface</h2>
+<button type="button" id="logon" onclick="logon()">logon</button>
+dan: <input type="text" id="dan" value="simple" size="4">
+user: <input type="text" id="usr" value="user0" size="4">
+pswd: <input type="text" id="pwd" value="pswd0" size="4">
+<button type="button" id="logout" onclick="logoff()">logoff</button>
+<hr>
+<button type="button" onclick="run()">run</button>
+<button type="button" onclick="runnxt()">run next example</button>
+<button type="button" onclick="runtime()">run time</button>
+<br>
+<input type="text" id="cmd" size="60" value='info summary' onkeydown = "if (event.keyCode == 13) run('cmd')">
+<br/><textarea id="out" rows=10 cols=80></textarea><br/>
+</div>
+
+<script>
+var ix=-1;
+
+let examples = [
+'info summary',
+'info schema',
+'["delete t","a<999"]',
+'["insert t","a",45]',
+'["insert t","a",[6,7,8]]',
+'read from t'
+];
+
+function runnxt()
+{
+  ix+=1;
+  if(ix==examples.length) ix=0;
+  idvs('cmd',examples[ix]);
+  run();
+}
+
+// time 500 runs of info schema
+async function runtime(){
+ idvs('cmd','info schema');
+ var i= 0;
+ var result;
+ var t= Date.now();
+ await getdata(idv('cmd'));
+
+
+ while(i<1000){
+  idvs('out',i);
+  i++;
+  await getdata(idv('cmd'));
+ }
+ t= Date.now()-t;
+ t= Math.floor(1000/(t/1000));
+ idvs('cmd',t.toString()+' info schema ops per second');
+}
+
+function logon() {getdata('',"logon "+idv("dan")+" "+idv("usr")+" "+idv("pwd"));}
+function logoff(){getdata('',"logoff");}
+function run()   {getdata(idv('cmd'),'');}
+
+// node request - jdcmd LF nodecmd
+async function getdata(jdcmd,nodecmd) {
+  const cmd= jdcmd+'\n'+nodecmd+';op '+(jdcmd.match(/[a-zA-Z]+/)?.[0] || ""); // add op cmd to nodecmd
+  idvs("out","busy");
+  const url= location.href;
+  try {
+    const response = await fetch(url, {method: "POST",body: cmd});
+    if (!response.ok) {
+      throw new Error(`Response status: ${response.status}`);
+    }
+    const result = await response.json();
+    idvs('out',JSON.stringify(result));
+  } catch (error) {idvs('out',error.message);}
+}
+
+function byid(id){return document.getElementById(id);}
+function idv(id){return byid(id).value;}
+function idvs(id,v){byid(id).value=v;}
+</script>
+</body></html>

@@ -1,0 +1,6 @@
+1 Discount  float  
+2 OrderID   int    
+3 ProductID int    
+4 Quantity  int    
+5 UnitPrice float  
+options TAB LF NO \ 0

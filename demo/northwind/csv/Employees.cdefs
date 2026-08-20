@@ -1,0 +1,18 @@
+1  Address         varbyte   
+2  BirthDate       datetime  
+3  City            varbyte   
+4  Country         varbyte   
+5  EmployeeID      int       
+6  Extension       varbyte   
+7  FirstName       varbyte   
+8  HireDate        datetime  
+9  HomePhone       varbyte   
+10 LastName        varbyte   
+11 Notes           varbyte   
+12 Photo           varbyte   
+13 PostalCode      varbyte   
+14 Region          varbyte   
+15 ReportsTo       int       
+16 Title           varbyte   
+17 TitleOfCourtesy varbyte   
+options TAB LF NO \ 0

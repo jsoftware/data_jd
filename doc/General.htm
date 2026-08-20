@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="jd.css">
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm" class="act">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Replicate.htm">Replicate</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
+<h2 id="install">Install</h2>
+<p>Install Jd (addon data/jd) with JAL/Package Manager. Jd requires J64 (807 or later) on Windows, Linux, macOS, and RPI.</p>
+<h2 id="run-casual">Run Casual</h2>
+<pre><code>   load&#39;jd&#39; NB. &#39;~addons/data/jd/jd.ijs&#39;</code></pre>
+<h2 id="run-production">Run Production</h2>
+<p>Recommended to NOT run a Jd production system from the ~addons/data/jd folder. Package Manager update could update this folder and your production system would be running a new code base that you had not tested.</p>
+<p>A Jd production system should have its own folder. For example, copy your current jd folder from ~addons/data to create ~/production/jd.</p>
+<pre><code>   load&#39;~/production/jd/jd.ijs&#39; NB. load production Jd</code></pre>
+</body>
+</html>

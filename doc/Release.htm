@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="jd.css">
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Replicate.htm">Replicate</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm" class="act">Release</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
+<p>The Jd wiki is dynamic. It has the latest corrections and changes. It reflects not just the latest release, but development work that hasn't been finalized or released. It reflects the bleeding edge and may not be relevant for the version you are running.</p>
+<p>A snapshot of Jd wiki is converted to html and included in a release.</p>
+<p>For the latest on Jd, use the wiki. For details relevant to your release, use the release html.</p>
+<h2 id="beta---version-4.41">beta - version 4.41</h2>
+<h2 id="march-2021---version-4.40">5 March 2021 - version 4.40</h2>
+<ul>
+<li>improvements to tutorials jds, jds_client, and node</li>
+</ul>
+<h2 id="february-2021---version-4.39">10 February 2021 - version 4.39</h2>
+<ul>
+<li>see <a href="Server.htm" title="wikilink">Server</a> for significant new facilities (json/nodejs/https)</li>
+</ul>
+<p><code>  jdrt'jds'</code><br />
+<code>  jdrt'jds_client'</code><br />
+<code>  jdrt'node'</code></p>
+<h2 id="november-2020---version-4.38">4 November 2020 - version 4.38</h2>
+<ul>
+<li>read code now in standard location - previously read ran in a temporary locale
+<ul>
+<li>this makes it easier to use jpm (performance monitor) for read</li>
+</ul></li>
+</ul>
+<h2 id="october-2020---version-4.37">27 October 2020 - version 4.37</h2>
+<ul>
+<li>special code for read with single by column
+<ul>
+<li>this common case runs faster</li>
+</ul></li>
+</ul>
+<h2 id="october-2020---version-4.36">24 October 2020 - version 4.36</h2>
+<ul>
+<li>special code for read from single table with empty where clause
+<ul>
+<li>full support for aggregations, by, and order by</li>
+<li>3 times faster than previous use of the general case code</li>
+</ul></li>
+</ul>
+<h2 id="october-2020---version-4.35">17 October 2020 - version 4.35</h2>
+<ul>
+<li>new tutorial that downloads NYC taxi tripdata csv file</li>
+</ul>
+<p><code>jdrt'taxi'</code></p>
+<ul>
+<li>fixed csv load problem where headers had spurious chars (extra LF)</li>
+<li>minor code adjustments ahead of next JE 902 beta release</li>
+</ul>
+<h2 id="october-2020---version-4.34">13 October 2020 - version 4.34</h2>
+<ul>
+<li>fix JE overfetch crash - longstanding bug
+<ul>
+<li>triggered by some queries where data was too close to file size page boundary</li>
+<li>mapped cols now ensure pad before file size page boundary</li>
+</ul></li>
+</ul>
+<ul>
+<li>insert performance profiling allowed refactoring so that inserts run 2 times faster</li>
+</ul>
+<h2 id="september-2020---version-4.33">8 September 2020 - version 4.33</h2>
+<p>Lots of changes in sensitive areas. Deploy in production systems with caution.</p>
+<ul>
+<li>csv_load tutorial
+<ul>
+<li>easy to use utils for getting your csv file into J with minimal Jd knowledge</li>
+</ul></li>
+</ul>
+<p><code>jdrt'csv_load'</code></p>
+<ul>
+<li>renamecol updates column_create_order for default read selection</li>
+<li>col names can have any printable char
+<ul>
+<li>easier to work with other systems (especially with csv)</li>
+<li>Jd can now accept/create col names compatible with everyone</li>
+<li>see <a href="Ops_common.htm#names" title="wikilink">names</a> for details on rules for names</li>
+</ul></li>
+</ul>
+<p><code>'new'jdadmin'test'</code><br />
+<code>jd'createtable f'</code><br />
+<code>jd'createcol f </code>“<code>a/</code><code> </code><code>=\</code>”<code> \b&quot; int'</code><br />
+<code>jd'insert f';'a/ =&quot; \b';i.5</code><br />
+<code>jd'read from f where </code>“<code>a/</code><code> </code><code>=\</code>”<code> \b&quot;=3'</code><br />
+<code>jdaddq_jd_'a&quot; /'    NB. &quot; if required by &quot; or blank</code><br />
+<code>jdremq_jd_'</code>“<code>a\</code>”<code> /&quot;' NB. remove &quot;s</code></p>
+<h2 id="may-2020---version-4.32">23 May 2020 - version 4.32</h2>
+<ul>
+<li>jd'createcol /derived ...' - see tutorial createcol_derived</li>
+<li>jd'createcol /derived_mapped ...' - see tutorial createcol_derived_mapped</li>
+<li>jd'createdcol ...' - deprecated - replaced by /derived</li>
+<li>csvcdefs - null fields ignored in determining col type</li>
+</ul>
+<h2 id="may-2020---version-4.31">8 May 2020 - version 4.31</h2>
+<ul>
+<li>fix ptable bug in insert and key</li>
+</ul>
+<h2 id="april-2020---version-4.30">28 April 2020 - version 4.30</h2>
+<ul>
+<li>experimental jconsole task manager - jdrt'jctask'</li>
+</ul>
+<h2 id="april-2020---version-4.29">16 April 2020 - version 4.29</h2>
+<ul>
+<li>experimental blob support - jdrt'blob'</li>
+<li>experimental json/jbin string interface - jdrt'jdserver'</li>
+<li>experimental http server that manages multiple Jd tasks on same db - jdrt'mtm'</li>
+<li>jdrt'json'</li>
+<li>jd'list open' - removed</li>
+</ul>
+<h2 id="february-2020---version-4.28">26 February 2020 - version 4.28</h2>
+<ul>
+<li>Jd shared library - thread safe except for csv load routines
+<ul>
+<li>load routines could be threadsafe with a bit more work</li>
+</ul></li>
+<li>csvcdefs - changes to improve guesses on col types
+<ul>
+<li>will not set types date/datex/datetime/datetimex due to efs confusion</li>
+<li>csvcdefs is called from csvrd to create cdefs file if there isn't one</li>
+</ul></li>
+<li>csvrd - changes for bad or missing data for numeric types</li>
+<li>csvreport /errors option for table of csvrd errors</li>
+<li>csvreport /f option had opposite effect - fixed</li>
+<li>gen types table rows</li>
+<li>Jd windows shared library now uses same C runtime as J (/MT)</li>
+<li>Jd shared library - localtime changed to localtime_r to be threadsafe</li>
+</ul>
+<h2 id="january-2020---version-4.27">7 January 2020 - version 4.27</h2>
+<ul>
+<li>pm/bench improvements</li>
+<li>countdat extended over types for better colcheck and validate</li>
+<li>mtm support for concurrent MTRW and multiple MRRO tasks</li>
+<li>jdadminnew - deprecated - will be removed in a future release</li>
+<li>jdadminx - removed</li>
+<li>'access'jdaminx‘‘ - removed</li>
+<li>jdadmin takes mt (map type) parameter</li>
+<li>jmf addon updated for map types MTMRW, MTRO (read only), MTCW (copy on write)</li>
+</ul>
+<h2 id="august-2019---version-4.26">17 August 2019 - version 4.26</h2>
+<ul>
+<li>query_test.ijs code change for 901</li>
+<li>901 JE has sfe/efs support as foreigns 6!:16/17
+<ul>
+<li>6!:16 sfe is 6 times faster</li>
+<li>6!:17 efs is 10 times faster</li>
+<li>old dtmn and new d039 precision indicators are supported</li>
+<li>csv loader continues to use previous version</li>
+<li>bad date (imin_jd_) allowed in insert of sfe string
+<ul>
+<li>previously bad date only allowed with insert int</li>
+<li>bad date allowed in csv rd/wr</li>
+</ul></li>
+</ul></li>
+</ul>
+<h2 id="may-19---version-4.25">2019 May 19 - version 4.25</h2>
+<ul>
+<li>jd jcs server improved - jdrt'jcs'</li>
+<li>likeci/unlikeci - case insensitive</li>
+<li>key changed to use first match (similar to left1 change)</li>
+</ul>
+<h2 id="may-4---version-4.24">2019 May 4 - version 4.24</h2>
+<ul>
+<li>reads /table foo - create new table from reads result</li>
+<li>tutorials reworked and improved - better base for future work</li>
+<li>listing of a run of all tutorials is at <a href="https://www.jsoftware.com/jd_tuts.html"><strong>tutorials</strong></a></li>
+</ul>
+<h2 id="april-19---version-4.23">2019 April 19 - version 4.23</h2>
+<ul>
+<li>incompatible changes
+<ul>
+<li>left1 join matches first row (previously matched last row)</li>
+<li>read /types includes shape in byte type - (byte 4) - and proper agg type</li>
+</ul></li>
+<li>experimental,incomplete features
+<ul>
+<li>read /table foo - creates table foo from read result</li>
+<li>read /file abc - creates (3!:1) file FILEFOLDER/abc from read result</li>
+</ul></li>
+<li>significant rework on parsing options</li>
+<li>like/unlike shared lib calls adjusted to work for 901</li>
+<li>bug fixed - info validatebad does not report derived cols as bad because of filesize</li>
+<li>info avoids unnecessary mapping - derived col performance problems</li>
+</ul>
+<h2 id="march-19---version-4.22">2019 March 19 - version 4.22</h2>
+<ul>
+<li>jdrt 'jcs' - document jcs/zmq based Jd server</li>
+<li>fix local html doc problems</li>
+</ul>
+<h2 id="february-23---version-4.21">2019 February 23 - version 4.21</h2>
+<ul>
+<li>createdcol op - create derived col - jdrt'createdcol'</li>
+<li>info derived - report derived cols</li>
+<li>byten op - changes trailing shape of byte N col</li>
+<li>bug - read epoch cols incorrectly displayed as int instead of string</li>
+<li>bug - read with more than 1 blank between agg and col</li>
+<li>readtc op removed</li>
+</ul>
+<h2 id="january-18---version-4.20">2019 January 18 - version 4.20</h2>
+<ul>
+<li>reduced start overhead for all ops - simple read/insert run 20% faster</li>
+<li>fixed reported bug that prevented deleting a Jd folder</li>
+</ul>
+<h2 id="january-3---version-4.19">2019 January 3 - version 4.19</h2>
+<ul>
+<li>replicate - jdrt'replicate'</li>
+<li>jdadminnew'...' NB. create new db (jdadminx'...' and 'new'jdadmin'...' deprecated)</li>
+<li>see <a href="General.htm" title="wikilink">Run Production</a> - production Jd code base vs casual use of latest addon update code base</li>
+<li>setscriptlists run directly for tests and tuts</li>
+<li>forcecopy - memu instead of a:{]</li>
+<li>requires J807</li>
+<li>dbl_jd_ current DB locale</li>
+<li>misc fixes</li>
+</ul>
+<h2 id="august-30---version-4.18">2018 August 30 - version 4.18</h2>
+<ul>
+<li>allow table to join to itself</li>
+</ul>
+<h2 id="july-3---version-4.17">2018 July 3 - version 4.17</h2>
+<ul>
+<li>csvscan bug with cd call (new rules) fixed</li>
+<li>csvwr crash with byte col 0 avoided</li>
+<li>update with 0 rows to update allows scalars as well as no data</li>
+</ul>
+<h2 id="may-24---version-4.16">2018 May 24 - version 4.16</h2>
+<p>sort syntax changed to be same as read order by clause</p>
+<p>sort bug with multiple cols fixed</p>
+<h2 id="may-15---version-4.15">2018 May 15 - version 4.15</h2>
+<p>automatic free non-commercial key</p>
+<p>jdtests_jd_‘‘ NB. run tests</p>
+<h2 id="april-18---version-4.14">2018 April 18 - version 4.14</h2>
+<p>fix MAXROWCOUNT bug</p>
+<p>tutorials improved - see basic intro_a b and c</p>
+<p>Lam setdirty/jdmap bug fix</p>
+<h2 id="april-13---version-4.13">2018 April 13 - version 4.13</h2>
+<p>improve ref arg validation</p>
+<p>fix ref /left bug - read with more than 1 join</p>
+<p>fix ref /left bug - read with where clause</p>
+<h2 id="april-3---version-4.12">2018 April 3 - version 4.12</h2>
+<p>basic-pairs tutorial</p>
+<p>op examples in docs moved to tutorials</p>
+<p>demos moved to tutorials</p>
+<p>jdex decommitted</p>
+<p>jdrt changes</p>
+<p>'new'jdadmin'...'</p>
+<p>createtable /replace</p>
+<h2 id="march-29---version-4.11">2018 March 29 - version 4.11</h2>
+<p>table_from_pairs - new tutorial (replaces table_from_data tutorial)</p>
+<p>read[s] /types</p>
+<p>createtable /pairs /types</p>
+<p>performance monitor off - previously always on - see pmhelp_jd_ for details</p>
+<h2 id="march-14---version-4.10">2018 March 14 - version 4.10</h2>
+<p>pcre (not new pcre2) always in cd folder</p>
+<p>small adjustments for 807</p>
+<p>minor cleanup</p>
+<h2 id="january-13---version-4.9">2018 January 13 - version 4.9</h2>
+<p>break large source file into smaller op oriented files</p>
+<p>fix bugs in int1/2/4 support</p>
+<p>add intx op to convert between int types</p>
+<h2 id="january-11---version-4.8">2018 January 11 - version 4.8</h2>
+<p>update where _ selects all rows</p>
+<p>jdadmin 0 - fix bug - error if no db opened (showed up in convert jd3-jd4)</p>
+<p>csv support for int1/int2/int4 types</p>
+<p>int1/int2/int4 types</p>
+<p>ref /left can only be used in single joins - f,f-g,g-h signals an error</p>
+<p>fixpairs routine (adjust pairs for insert etc) improved and made consistent across all ops</p>
+<h2 id="december-11---version-4.7">2017 December 11 - version 4.7</h2>
+<p>linux cd folder contains libjpcre.so as it is not included in J deb install</p>
+<p>cd folder contains only jd platform binary</p>
+<p>where range clause runs faster</p>
+<p>FLUSHAUTO has been decommitted. Previously FLUSHAUTO_jd_ (default value 1) flushed buffers when a close, csvrd, createcol, ref, or set was done. This slowed things down (e.g., jdtests took twice as long) and wasn't required except for critical, production systems.</p>
+<p>Use <a href="Admin.htm#jdcloseflush" title="wikilink">jdcloseflush</a> to mark a db to require a flush when a close is done.</p>
+<p>Use <a href="Ops_misc.htm#flush" title="wikilink">flush</a> to flush buffers explicitly when it make sense for the application.</p>
+<h2 id="november-29---version-4.6">2017 November 29 - version 4.6</h2>
+<p>documentation reorg</p>
+<p>csv colsep/rowsep AUTO support added back in</p>
+<p><a href="Ops_common.htm#damaged" title="wikilink">damaged</a> db</p>
+<p><a href="Ops_common.htm#repair" title="wikilink">repair</a> tool can repair a damaged db</p>
+<p><a href="Ops_change.htm#delete" title="wikilink">delete</a> and <a href="Ops_change.htm#udate" title="wikilink">update</a> ops can use keys</p>
+<p><a href="Ops_change.htm#sort" title="wikilink">sort</a> op</p>
+<p><a href="Ops_change.htm#upsert" title="wikilink">upsert</a> op</p>
+<p><a href="Ops_raw.htm#key" title="wikilink">key</a> op</p>
+<p><a href="Ops_common.htm#keys" title="wikilink">keys</a> - one or more cols form a key</p>
+<p><a href="Ops_common.htm#col-data-pairs#col-data-pairs" title="wikilink">col-data-pairs</a> reworked</p>
+<h2 id="november-4---version-4.5">2017 November 4 - version 4.5</h2>
+<p>new tutorial - quandl_eod_stock_data</p>
+<p>jdtests‘‘ NB. run tests</p>
+<p>rationalize, reorganize, and clean up folders</p>
+<h2 id="november-1---version-4.4">2017 November 1 - version 4.4</h2>
+<p>old keys no longer work - new purchased keys are required</p>
+<p>quandl_ibm - new tutorial - load table with historical ibm pricing from quandl csv</p>
+<p>jdrt/jdex cleaned up</p>
+<p>validate streamlined to run faster</p>
+<p>docs updated to reflect join changes</p>
+<p>jd'reads from a,a.b where b.id=2' - bug fix - incorrectly included missing rows</p>
+<p>jd'ref /left ...' - left join - left1 and inner derived from left</p>
+<p>left1 - preferred join if appropriate - fast</p>
+<p>jdadmin'none' - proper error report</p>
+<h2 id="october-26---version-4.3">2017 October 26 - version 4.3</h2>
+<p>join tutorial has example of multiple refs between tables (bug fixed)</p>
+<p>some problems with jdex examples fixed</p>
+<p>Jd paypal page added to web site and docs updated</p>
+<p>new style keys supported</p>
+<p>old style keys still work</p>
+<p>OSX problems with unicode table and column names</p>
+<ul>
+<li>previously failed because of OSX file system decomposed unicode</li>
+<li>jdtests now flag this OSX error</li>
+<li>will be fixed in a future release</li>
+</ul>
+<p>806 new labs</p>
+<ul>
+<li>tutorials use new 806 labs if available</li>
+<li>sp.ijs loaded only if spx required to run labs</li>
+<li>sptable defined (in case sp.ijs not loaded)</li>
+</ul>
+<h2 id="september-28---version-4.2">2017 September 28 - version 4.2</h2>
+<p>Snapshot of Jd wiki with new proposed licensing and prices.</p>
+<p>Addition of tutorial server-zmq - high-performance, scalable zmq based Jd server.</p>
+<h2 id="may-17---version-4.1">2017 May 17 - version 4.1</h2>
+<p>Jd 4.1 is a major release and is incompatible with previous versions. A db from a previous version has to be converted to be used by this version.</p>
+<p>See <a href="Convert.htm" title="wikilink">Convert</a> for info on converting a Jd3 database to Jd4.</p>
+<p>Overall the changes were to simplify and streamline code for the use cases that have proved common and to remove unwarranted complications. The big changes were removing jdactive and support for other than a simple join.</p>
+<p>pacman 2.3.7</p>
+<ul>
+<li>rewrite createcol</li>
+</ul>
+<ul>
+<li>rewrite insert/update data validation to have similiar conformabilty rules</li>
+</ul>
+<ul>
+<li>fix createtable parse problem with , separated coldefs</li>
+</ul>
+<ul>
+<li>toJ for builddemo jdcsvrefs.txt</li>
+</ul>
+<p>pacman 2.3.6</p>
+<ul>
+<li>new Jd4 jdkey required (Jd4 key in ~confg and Jd3 key in ~addons/data/jd/config)</li>
+</ul>
+<ul>
+<li>new shared library - version 8</li>
+</ul>
+<ul>
+<li>jdactive col decommitted
+<ul>
+<li>delete immediately removes rows from the table</li>
+<li>not dealing with rows marked as deleted is a major code simplification</li>
+<li>everything (except delete) runs faster and cleaner</li>
+</ul></li>
+</ul>
+<ul>
+<li>left1 is the only join - all others are decommitted</li>
+</ul>
+<ul>
+<li>ref now supports multiple cols</li>
+</ul>
+<ul>
+<li>reference col decommitted
+<ul>
+<li>was required for non left1 joins</li>
+<li>creating reference was slow on large tables</li>
+<li>code to dynamically track changes was complicated</li>
+</ul></li>
+</ul>
+<ul>
+<li>hash col decommitted (primarily for reference)</li>
+</ul>
+<ul>
+<li>update in place (rather than delete/insert)
+<ul>
+<li>much simpler code and much faster</li>
+<li>update varbyte done in place (if space) or new data appended to val end</li>
+</ul></li>
+</ul>
+<ul>
+<li>modify decommitted (update does it all)</li>
+</ul>
+<ul>
+<li>insert
+<ul>
+<li>errors normally caught before insert starts - table unchanged on error</li>
+<li>an error after the insert starts now reverts - table unchanged on error</li>
+</ul></li>
+</ul>
+<ul>
+<li>when col is opened, its length is validated against Tlen - db damaged if wrong</li>
+</ul>
+<ul>
+<li>tableappend decommitted (tableinsert does it cleaner and faster)</li>
+</ul>
+<ul>
+<li>info changed to reflect other changes (deleted/reference/dynamic)</li>
+</ul>
+<ul>
+<li>csvdump /replace</li>
+<li>csvrestore /replace</li>
+<li>csvdump creates jdcsvrefs.txt and csvrestore uses it to create refs</li>
+<li>dropdynamic and createdynamic decommitted</li>
+</ul>
+<h2 id="april-27---version-3.3">2017 April 27 - version 3.3</h2>
+<ul>
+<li>Jd wiki - latest Jd documentation at: <a href="http://code.jsoftware.com/wiki/Jd/Index" class="uri">http://code.jsoftware.com/wiki/Jd/Index</a></li>
+<li>Jd wiki snapshot (release specific) at: ~addons/data/ide/doc/Index.htm</li>
+<li>update bug - bad shape deleted record</li>
+<li>modify bug - bad shape truncated byte data</li>
+<li>info validate/validate - col c marks bad tlen - col s marks bad fsize</li>
+<li>new jd shared library version 7</li>
+<li>db log.txt limited in size to 16mb</li>
+<li>table... changes - srcdan removed as arg from all except tablemove</li>
+<li>csv column names - bugs in utf8 and special chars fixed</li>
+<li>csv cdefs cols names can now be any valid Jd col name</li>
+<li>csv BOM UTF8 (239 187 191{.a.) skipped</li>
+<li>csv cdefs # starts a comment line</li>
+<li>csv csvcdefs creates cdefs with default &quot; and NO for escape</li>
+<li>csv cdefs AUTO no longer supported (handled in csvcdefs)</li>
+<li>csvprobe op to examine csv file</li>
+<li>csvscan - scans csv file and updates cdefs to have proper byte widths</li>
+<li>csvcdefs /u no longer takes value - value is derived from data</li>
+<li>csv tutorial reworked</li>
+<li>csv_load tutorial added</li>
+</ul>
+<h2 id="may-12---version-3.2">2016 May 12 - version 3.2</h2>
+<ul>
+<li>partitioned table - significant new facility - see tutorial ptable</li>
+<li>invalid epoch data passes precision assertions</li>
+<li>default epoch and sfe display does not have Z suffix</li>
+<li>table/column/dan name validation (<a href="General.htm#names" title="wikilink">General|Names</a>)</li>
+<li>read op parsing reworked and some bugs fixed</li>
+<li>documentation of ops reorganized and improved</li>
+<li>readtc requires jdtc clause (:::s::: no longer supported)</li>
+<li>validate no longer done before/after insert/update/modify/delete</li>
+<li>Tlen (active+deleted rows) maintained in table state</li>
+<li>S_deleted (deleted rows) maintained in table state</li>
+<li>info summary uses Tlen/S_deleted - fast as no read of jdactive</li>
+<li>info improved and enhanced to handle ptable</li>
+<li>csv loader bug with fields longer than 1000 fixed</li>
+<li>where clause not bug fixed</li>
+<li>datatune support removed</li>
+<li>regex cd problem with linux debian installs fixed</li>
+</ul>
+<h2 id="january-12---version-3.1">2016 January 12 - version 3.1</h2>
+<ul>
+<li>showbox bug fixed for jconsole (non linedraw) box chars</li>
+<li>showbox replaced by sptable (from simple project)</li>
+<li>insert/update datatune bugs fixed</li>
+<li>modify now does datatune</li>
+<li>tutorial datatune updated</li>
+<li>datatune doc</li>
+<li>key enforced by shared library</li>
+<li>Jd binary and code version match enforced</li>
+<li>csv now supports epoch cols (<a href="Ops_csv.htm#csv" title="wikilink">Ops csv</a>)</li>
+<li>csvrd default reads all rows (rather than just 10)</li>
+<li>tutorial csv updated</li>
+<li>install over previous install (orphans) now OK (scriptlists.ijs)</li>
+<li>JAL version no longer tied to jd'list version'</li>
+</ul>
+<h2 id="december-12---version-2.2.11">2015 December 12 - version 2.2.11</h2>
+<ul>
+<li>dropcol does not update column_create_order.txt - bug fix</li>
+<li>csvappend fails in some cases - bug fix</li>
+<li>min-max/epochdt with no records works (not domain error)</li>
+<li>logging and db validation improved (<a href="Technical.htm#damaged" title="wikilink">Technical|Damaged</a>)</li>
+<li>tutorial log</li>
+<li>validate - detects db problems (<a href="Ops_misc.htm#validate" title="wikilink">Ops misc|validate</a>)</li>
+<li>info validate - info on all db mappings (<a href="Ops_info.htm#info" title="wikilink">Ops info</a>)</li>
+<li>info validatebad - validate mappings with problems (<a href="Ops_misc.htm#validate" title="wikilink">Ops misc|validate</a>)</li>
+<li>jdadmin does validate</li>
+<li>validate done before/after insert/update/modify/delete</li>
+<li>insert revert bug - detailed log and marks db damaged</li>
+</ul>
+<h2 id="october-1---version-2.2.10">2015 October 1 - version 2.2.10</h2>
+<ul>
+<li>linux lock bug fixed - concurrent Jd task not locked out</li>
+<li>info dynamic - (<a href="Ops_info.htm#info" title="wikilink">Ops info</a>)</li>
+<li>createhash/createunique 2 to 10 times faster on large tables</li>
+<li>createhash /nc</li>
+<li>createunique simplified and changed</li>
+<li>insert unique simplified and changed</li>
+<li>flush - flush mapped file dirty buffers (<a href="Ops_misc.htm#flush" title="wikilink">Ops misc|flush</a>)</li>
+<li>ref changed and improved</li>
+<li>performance tutorial - table size vs ram</li>
+</ul>
+<h2 id="june-18---version-2.2.9">2015 June 18 - version 2.2.9</h2>
+<ul>
+<li>where cola,colb = 1,2 doc and implementation bug fixed</li>
+<li>jddropstop prevents drops (<a href="General.htm#dropdelete" title="wikilink">General|Drop/Delete</a>)</li>
+<li>jddeletefolder fails if criteria not met (<a href="General.htm#dropdelete" title="wikilink">General|Drop/Delete</a>)</li>
+<li>jddeletefolder more robust vs background tasks (<a href="Technical.htm#windows_search_service" title="wikilink">Technical|Windows search service</a>)</li>
+<li>jddeletefolderok allows otherwise blocked jddeletefolder</li>
+<li>welcome replaced by short message after jdtests run</li>
+<li>modify with indexes as well as where clause - jdex_jd_'modify'</li>
+<li>bugs fixed in where col in ()</li>
+<li>rough version of pm (performance measurement) - pmhelp_jd_</li>
+<li>droptable /reset</li>
+<li>info jd - info on jd... cols (<a href="Ops_info.htm#info" title="wikilink">Ops info</a>)</li>
+<li>better createhash/createunique performance</li>
+<li>fix bug in createhash/createunique for multiple cols</li>
+<li>libjd.so built with stable linux (RH 4/Centos 5) (<a href="Technical.htm#libjd.so" title="wikilink">Technical|libjd.so</a>)</li>
+</ul>
+<h2 id="may-11---version-2.2.7">2015 May 11 - version 2.2.7</h2>
+<ul>
+<li>where cola range (23,64) - tutorial reads</li>
+<li>where cola,colb = 1,2 - tutorial where</li>
+<li>jdadminx'a' (single letter) bug fixed</li>
+<li>new doc page (<a href="General.htm" title="wikilink">General</a>)</li>
+<li>consistent rules for dan/table/col names (<a href="General.htm#names" title="wikilink">General|Names</a>)</li>
+<li>modify bugs fixed</li>
+<li>createtable /a option must be before table name</li>
+<li>create table from array - tutorial table_from_array</li>
+<li>better error messages</li>
+</ul>
+<h2 id="april-14---version-2.2.6">2015 April 14 - version 2.2.6</h2>
+<ul>
+<li>CDEFSFILE (tutorial csv)</li>
+<li>gethashlen bug fixed</li>
+<li>where in () bug fixed</li>
+<li>jdtests reports elapsed time</li>
+<li>performance measurement - pmhelp_jd_</li>
+<li>read.ijs sortfrom bug fixed</li>
+<li>createcol shape validated</li>
+<li>droptable allowed with hash (fails with reference)</li>
+<li>some aggregates sped up</li>
+<li>better error message for insert/update/modify</li>
+<li>jdlast last line shuffled</li>
+<li>renametable implemented</li>
+<li>renamecol implemented</li>
+<li>modify implemented - update in place</li>
+<li>libjd_centos.so (<a href="Technical.htm#libjd.so" title="wikilink">Technical|libjd.so</a>)</li>
+</ul>
+<h2 id="march-10---version-2.2.1">2015 March 10 - version 2.2.1</h2>
+<ul>
+<li>dropdynamic for specified columns</li>
+<li>info unique</li>
+</ul>
+<h2 id="march-9---version-2.2">2015 March 9 - version 2.2</h2>
+<ul>
+<li>ref join - simpler than reference but with restrictions (tutorial join,<a href="Technical.htm#ref" title="wikilink">Technical|Ref</a>)</li>
+<li>improved handle management and related errors (<a href="Technical.htm#file-handles" title="wikilink">Technical|File handles</a>)</li>
+<li>epochdt new features - tutorial epochdt</li>
+<li>epochdt allows blank (as well at T) as delimiter of time fields</li>
+<li>epochdt bug with UTC offsets fixed</li>
+<li>join with empty table bug fixed</li>
+<li>join with createunique crash now signals error</li>
+<li>csvrd bug with float .x vs 0.x fixed</li>
+</ul>
+<h2 id="jan-5---version-2.1">2014 Jan 5 - version 2.1</h2>
+<ul>
+<li>key required to run Jd</li>
+<li>epoch datetime col types (tutorial epochdt, <a href="General.htm#types" title="wikilink">General|Types</a>)</li>
+<li>smarter file allocation and resize</li>
+<li>all column files mapped when db is opened</li>
+<li>list lists version and open databases (<a href="Ops_info.htm#list" title="wikilink">Ops info|list</a>)</li>
+<li>info works only on current database</li>
+</ul>
+<h2 id="april-22---version-2.0">2014 April 22 - version 2.0</h2>
+<ul>
+<li>Jd released as addon</li>
+</ul>
+</body>
+</html>

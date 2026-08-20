@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="jd.css">
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Replicate.htm">Replicate</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
+<h2 id="createcol">createcol</h2>
+<p>create col</p>
+<ul>
+<li>string arg</li>
+</ul>
+<p>createcol table col <a href="Ops_common.htm#types-" title="wikilink"> type</a><br />
+createcol /derived table col <a href="Ops_common.htm#types-" title="wikilink"> type</a> verb<br />
+createcol /derived_mapped table col <a href="Ops_common.htm#types-" title="wikilink"> type</a> verb<br />
+</p>
+<p><code>/derived creates a derived col</code><br />
+<code>derived col is not mapped</code><br />
+<code>derived col data is the result of verb derived_verb in custom.ijs</code></p>
+<p><code>/derived_mapped creates a derived_mapped col</code><br />
+<code>derived_mapped col is mapped</code><br />
+<code>derived_mapped col data is the result of verb derived_mapped_verb in custom.ijs</code></p>
+<ul>
+<li>boxed arg provides data to initialize the col</li>
+</ul>
+<p>createcol table ; col ; <a href="Ops_common.htm#types-" title="wikilink"> type</a> ; data<br />
+tutorials createcol , createcol_derived , createcol_derived_mapped</p>
+<h2 id="createdb">createdb</h2>
+<p>createdb</p>
+<p>valid only after a dropdb<br />
+creates filefolder, initial files, and gets lock</p>
+<h2 id="createdcol">createdcol</h2>
+<ul>
+<li>deprecated - use createcol /derived</li>
+</ul>
+<h2 id="createtable">createtable</h2>
+<p>createtable [/a ...] table [coldefs]<br />
+createtable /pairs [/types] [/a ...] table ; <a href="Ops_common.htm#pairs" title="wikilink">pairs</a></p>
+<p><code>/a min_rows multiplier extra_rows</code><br />
+<code>when insert requires mapped col file resize, new size is:</code><br />
+<code>min_rows&gt;.&gt;.multiplier*extra_rows+current_rows+new_rows</code><br />
+<code>default is 2000 1.5 0</code></p>
+<p><code>/pairs</code></p>
+<p><code>/types - pairs have types in parens - cola(edate)</code></p>
+<p>createtable with 0 or more cols</p>
+<p>coldefs - col type [trailing-shape]<br />
+string arg coldefs separated by , or LF<br />
+boxed arg coldefs in separate boxes</p>
+<h2 id="createptable">createptable</h2>
+<p>createptable table pcol</p>
+<p>allowed pcol types: int edate edatetime date datetime</p>
+<p>table must have 0 rows</p>
+<p>tutorial ptable</p>
+</body>
+</html>

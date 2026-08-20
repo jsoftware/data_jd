@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="jd.css">
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm" class="act">Admin</a>&nbsp;|&nbsp;<a href="Replicate.htm">Replicate</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
+<p>Admin names have a <code>jd</code> prefix and are defined in the <code>z</code> or <code>jd</code> locales. See tutorial admin_tut.</p>
+<p><a href="Admin.htm#jdadmin" title="wikilink">jdadmin</a>  <a href="Admin.htm#jdaccess" title="wikilink">jdaccess</a>  <a href="Admin.htm#jdadminx" title="wikilink">jdadminx</a></p>
+<p><a href="Admin.htm#admin.ijs" title="wikilink">admin.ijs</a>  <a href="Admin.htm#custom.ijs" title="wikilink">custom.ijs</a> </p>
+<p><a href="Admin.htm#jdadminfp" title="wikilink">admin/general utilities in the jd locale</a></p>
+<h2 id="jdadmin">jdadmin</h2>
+<p><code>  'new' jdadmin 'ab'     NB. create and open new db ~temp/jd/ab</code><br />
+<code>  'new' jdadmin '.../ab' NB. create and open new db .../ab</code><br />
+<code>  jdadmin 'ab' [;mt]     NB. open db ~temp/jd/ab</code><br />
+<code>  jdadmin '.../ab' [;mt] NB. open db .../ab</code><br />
+<code>  jdadmin ''             NB. admin report</code><br />
+<code>  jdadmin 0              NB. close all</code></p>
+<p>Left arg 'new' creates and opens a new database in the folder. It fails if the folder:</p>
+<ul>
+<li>is not a jd folder and is not empty</li>
+<li>is a jd folder but not class database</li>
+<li>is a jd class database folder with <a href="Admin.htm#jddropstop" title="wikilink">jddropstop</a></li>
+</ul>
+<p>mt parameter is map type and is used in mapping files.</p>
+<p><code>0 - MTRW - [w] - write and read - default</code><br />
+<code>1 - MTRO - [r] - read only</code><br />
+<code>2 - MTCW - [c] - copy on write</code></p>
+<p>A Jd task can have more than 1 db open as MTRW. A Jd task can have only 1 db open if it is MTRO or MTCW.</p>
+<p>An exclusive lock prevents more than one task mapping a db as MTRW.</p>
+<p>Multiple tasks can map a db as MTRO or MTCW while another task has the same db mapped MTRW. But care is required or changes by the MTRW task will cause problems or crashes in the MTRO/MTCW tasks.</p>
+<p>MTCW allows efficiently working with what seems to be a private copy of the db. When the db is closed, all changes are discarded.</p>
+<p>MTCW does not support file resizing. Insert works as expected as long as the data fits in space already allocated to the file. But a file resize does not work properly.</p>
+<p>When a db is opened its admin.ijs is loaded to set the DAN (db access name) info and does jdaccess for the first DAN.</p>
+<p>The db in a folder is accessed by a DAN. A DAN maps to folder, user/pwds, ops. Different DANs can access the same or different folders.</p>
+<h2 id="jdaccess">jdaccess</h2>
+<p>Set DAN (db access name), user/pwd, and server for jd ops:</p>
+<pre><code>server intask       - op runs in the current J task
+server localhost:x  - op runs in the J JHS task at port x
+server ipaddress:x  - op runs in the J JHS task at ipaddress port x
+server hostname:x   - op runs in the J JHS task at hostname t port x</code></pre>
+<p>A SSH tunnel can securely connect localhost:x to a J task on a server:</p>
+<pre><code>jdaccess &#39;test me/xx intask&#39;         NB. DAN test, user/pswd u/p
+jdaccess &#39;foo&#39;                       NB. same as &#39;foo u/p intask&#39;
+jdaccess &#39;zz me/xx localhost:65002&#39;
+jdaccess &#39;&#39;                          NB. report
+jdaccess 0                           NB. clear access </code></pre>
+<h2 id="admin.ijs">admin.ijs</h2>
+<p>admin.ijs is a script in the db folder, and is loaded by jdadmin.</p>
+<p>The default contents are:</p>
+<pre><code>&#39;ab&#39; jdadminfp &#39;&#39;       NB. DAN ab maps to ~temp/jd/ab     
+&#39;ab&#39; jdadminup &#39;u/p&#39;    NB. requires default user/pwd
+&#39;ab&#39; jdadminop &#39;*&#39;      NB. allow all ops</code></pre>
+<p>Other examples:</p>
+<pre><code>&#39;test&#39;   jdadminfp &#39;&#39;                 NB. DAN test maps to this db folder
+&#39;test&#39;   jdadminup &#39;u/p&#39;              NB. requires this user/pswd
+&#39;test&#39;   jdadminop &#39;*&#39;                NB. allow all ops
+&#39;testro&#39; jdadminfp &#39;&#39;                 NB. DAN testro maps to this db folder
+&#39;testro&#39; jdadminup &#39;ab/de gh/jk&#39;      NB. requires these user/pwds
+&#39;testro&#39; jdadminop &#39;read reads&#39;       NB. allow only read and reads</code></pre>
+<p>The verbs jdadminfp/jdadminup/jdadminop are usually run only in admin.ijs, and are used directly for temp changes or tests.</p>
+<h2 id="custom.ijs">custom.ijs</h2>
+<p>This is an optional script in the db folder. If present, it is loaded into the db locale when the db is opened.</p>
+<p>It defines:</p>
+<ul>
+<li><code>jd_xxx</code> - a jd op</li>
+<li>... addagg ... - custom aggregation</li>
+</ul>
+<p>See tutorials custom and aggregation.</p>
+<h2 id="jdadminfp">jdadminfp</h2>
+<p>Set DAN file path:</p>
+<pre><code>&#39;test&#39; jdadminfp_jd_ &#39;&#39;
+       jdadminfp_jd_ &#39;&#39;     NB. report</code></pre>
+<h2 id="jdadminlk">jdadminlk</h2>
+<p>Set lock on DAN db folder:</p>
+<pre><code>&#39;test&#39; jdadminlk_jd_ &#39;&#39;
+       jdadminlk_jd_ &#39;&#39;     NB. report </code></pre>
+<h2 id="jdadminop">jdadminop</h2>
+<p>Set ops allowed with DAN:</p>
+<pre><code>&#39;test&#39; jdadminop_jd_ &#39;read reads insert&#39;
+       jdadminop_jd_ &#39;&#39;     NB. report </code></pre>
+<h2 id="jdadminup">jdadminup</h2>
+<p>Set user/pswds allowed with DAN:</p>
+<pre><code>&#39;test&#39; jdadminup_jd_ &#39;fred/secret sam/birthday&#39;
+       jdadminup_jd_ &#39;&#39;     NB. report </code></pre>
+<h2 id="jdcdef">jdcdef</h2>
+<p>Set column defs for createtable from labeled row data:</p>
+<pre><code>   jdcdef d</code></pre>
+<p>See tutorial table_from_array.</p>
+<h2 id="jdcloseflush">jdcloseflush</h2>
+<p>mark db to do flush in a close</p>
+<pre><code>   jdcloseflush_jd_ 1 NB. mark to do
+   jdcloseflush_jd_ 0 NB. remove mark</code></pre>
+<h2 id="jdclocs">jdclocs</h2>
+<p>Get column locales:</p>
+<pre><code>   jdclocs t;c</code></pre>
+<ul>
+<li>t is <code>''</code> for all tables or <code>'tab'</code> for just that table</li>
+<li>c is <code>''</code> for all cols or <code>'col'</code> for just that col</li>
+</ul>
+<p>The result is sorted by table names.</p>
+<p>Column names int a table are in created order followed by jd... names</p>
+<h2 id="jdcols">jdcols</h2>
+<p>Return normal (not jd prefix) column names and locales sorted by name:</p>
+<pre><code>   jdcols&#39;tab&#39;</code></pre>
+<h2 id="jdcolsx">jdcolsx</h2>
+<p>Same as jdcols except it includes ref cols.</p>
+<h2 id="jdcreatefolder">jdcreatefolder</h2>
+<p>Creates required folders for path:</p>
+<pre><code>   jdcreatefolder&#39;~temp/jd/a/b&#39;</code></pre>
+<h2 id="jddamage">jddamage</h2>
+<p>Writes a db <code>jddamage</code> file.</p>
+<pre><code>   jddamage_jd_&#39;reason&#39;      NB. writes db jddamage file - prevents jd ops
+   jddamage_jd_&#39;&#39;            NB. erases db jddamage file - allows jd ops</code></pre>
+<h2 id="jddeletefolder">jddeletefolder</h2>
+<p>This deletes a folder, and is used internally by jd drop... ops.</p>
+<pre><code>   jddeletefolder_jd_&#39;~/jd/test&#39;</code></pre>
+<p>It follows these rules in order:</p>
+<ul>
+<li>error if locked</li>
+<li>error if a file</li>
+<li>OK if jddeletok exists</li>
+<li>error if jddropstop exists</li>
+<li>OK if empty</li>
+<li>OK if jdclass or in ~temp</li>
+<li>otherwise, not allowed</li>
+</ul>
+<h2 id="jddeletefolderok">jddeletefolderok</h2>
+<p>This writes a jddeleteok file to a folder to allow <a href="Admin.htm#jddeletefolder" title="wikilink">jddeletefolder</a>. Result is the arg.</p>
+<pre><code>   jddeletefolderrok_jd_&#39;~/jd/test&#39;</code></pre>
+<h2 id="jddropstop">jddropstop</h2>
+<p>This writes a jddropstop file to a folder:</p>
+<pre><code>[1] jddropstop &#39;&#39;        NB. write jddropstop file in folder and subfolders
+[1] jddropstop &#39;tab&#39;
+[1] jddropstop &#39;tab col&#39;
+
+ 0 jddropstop &#39;&#39;         NB. erase jddropstop file in folder and subfolders
+ 1 jddropstop &#39;tab&#39;
+ 1 jddropstop &#39;tab col&#39;</code></pre>
+<p>dropdb/droptable/dropcol fail if there is a jddropstop file in the folder.</p>
+<p>See tutorial dropstop.</p>
+<h2 id="jdex">jdex</h2>
+<p>Run insert example from User:</p>
+<pre><code>   jdex&#39;insert&#39;</code></pre>
+<h2 id="jdfixcolnames">jdfixcolnames</h2>
+<p>Make col names valid in labeled row data:</p>
+<pre><code>   jdfixcolnames d</code></pre>
+<ul>
+<li>table.col changes to table-col</li>
+<li>blank changes to underscore (_)</li>
+</ul>
+<h2 id="jdflush">jdflush</h2>
+<p>Performance measurement (pm) scripts use jdflush for more accurate benchmarks.</p>
+<pre><code>   jdflush_jd_&#39;&#39;</code></pre>
+<p>On Windows this is a noop.</p>
+<p>On Linux, this calls a <code>jdflush</code> shell script, which should be defined in the path as appropriate for your system. For example:</p>
+<pre><code>#!/bin/bash
+sudo sync
+sudo blockdev --flushbuf /dev/sda
+sudo blockdev --flushbuf /dev/sdb
+sudo sysctl vm/drop_caches=3</code></pre>
+<h2 id="jdforce_clean">jdforce_clean</h2>
+<p>Brute force clean slate: unmaps all files and erases all locales. Can be useful if session state is badly messed up and things don't work properly. Similar to a complete restart. Used in jd3 to jd4 conversion if a conversion fails in order to continue with the next conversion.</p>
+<h2 id="jdfread">jdfread</h2>
+<p>Calls <code>fread</code> with handle limit error assert.</p>
+<h2 id="jdfrom">jdfrom</h2>
+<p>Returns a column from a <code>jd'read...'</code></p>
+<pre><code>   &#39;col&#39; jdfrom_jd_ jd&#39;read from f&#39;</code></pre>
+<h2 id="jdfroms">jdfroms</h2>
+<p>Returns a column from a <code>jd'reads...'</code></p>
+<pre><code>   &#39;col&#39; jdfroms_jd_ jd&#39;reads from f&#39;</code></pre>
+<h2 id="jdfwrite">jdfwrite</h2>
+<p>Calls <code>fwrite</code> with handle limit error assert.</p>
+<h2 id="jdgl">jdgl</h2>
+<p>Get locales:</p>
+<pre><code>   jdgl_jd_&#39;tab&#39;          NB. get locale for table
+   jdgl_jd_&#39;tab col&#39;      NB. get locale for table column</code></pre>
+<h2 id="jdgs">jdgs</h2>
+<p>Get states:</p>
+<pre><code>   jdgs_jd_&#39;tab&#39;        NB. get state for table
+   jdgs_jd_&#39;tab col&#39;    NB. get state for table column</code></pre>
+<h2 id="jdlinkmove">jdlinkmove</h2>
+<p>Move column data files:</p>
+<pre><code>   jdlinkmove_jd_ &#39;tab/col ~temp/linker&#39;</code></pre>
+<p>Column data files can be moved (usually to another drive). The folder structure is updated so the column folder points to the new location.</p>
+<p>Some reasons for relocating cols:</p>
+<ul>
+<li>improve performance by having i/o on multiple drives</li>
+<li>take advantage of particular drives</li>
+<li>ssd or slower or faster or high capacity</li>
+</ul>
+<p>See tutorial link.</p>
+<h2 id="jdlinkset">jdlinkset</h2>
+<p>Set (table/column path) definitions in the db folder link.txt file.</p>
+<pre><code>jdlinkset_jd_ 0 : 0
+f/int     ~temp/linker0
+f/varbyte ~temp/linker1
+)</code></pre>
+<pre><code>   jdlinkset_jd_&#39;&#39; NB. report db links.txt</code></pre>
+<p>Create column (including csvrd/csvrestore) uses link.txt to do folder links.</p>
+<p>See tutorial link.</p>
+<h2 id="jdlinktargets">jdlinktargets</h2>
+<p>Report jdlinkmove/jdlinkset folder targets:</p>
+<pre><code>   jdlinktargets_jd_&#39;&#39;      </code></pre>
+<p>See tutorial link.</p>
+<h2 id="jdlogijfshow">jdlogijfshow</h2>
+<p>Show log.ijf:</p>
+<pre><code>   jdlogijfshow_jd_&#39;&#39;      NB. log.ijf summary
+   jdlogijfshow_jd_ 0      NB. component 0</code></pre>
+<p>See tutorial log.</p>
+<h2 id="jdlogtxtshow">jdlogtxtshow</h2>
+<p>Show log.txt:</p>
+<pre><code>   jdlogtxtshow_jd_ 10      NB. log.txt last 10 lines</code></pre>
+<p>See tutorial log.</p>
+<h2 id="jdpath">jdpath</h2>
+<p>Return path (ending in /) to db folder plus y:</p>
+<pre><code>   jdpath_jd_&#39;&#39;
+   jdpath_jd_&#39;custom.ijs&#39;      </code></pre>
+<h2 id="jdpathx">jdpathx</h2>
+<p>Same as jdpath except jpath not used to resolved ~</p>
+<h2 id="jdrepair">jdrepair</h2>
+<p>See <a href="Ops_common.htm#repair" title="wikilink">repair</a>.</p>
+<h2 id="jdrt">jdrt</h2>
+<p>List or run tutorials:</p>
+<pre><code>   jdrt_jd_&#39;&#39;           NB. list tutorials
+   jdrt_jd_&#39;intro&#39;      NB. run tutorial</code></pre>
+<h2 id="jdserverstop">jdserverstop</h2>
+<p>Stop Jd JHS server:</p>
+<pre><code>   jdserverserverstop_jd_&#39;&#39;</code></pre>
+<p>This sets <code>OKURL_jhs_</code> to empty to stop Jd from serving clients.</p>
+<h2 id="jdshare">jdshare</h2>
+<p>This sets permissions for accessing the db from another account. This may be best done with host tools by someone who understands security, but <code>jdshare</code> might be useful in simple situations.</p>
+<pre><code>    jdshare_jd_&#39;rwrwrw&#39; NB. rw or r- or -- for owner/group/others</code></pre>
+<p>Normally the Jd task account owns the db folder.</p>
+<p>Giving another account access to the db folder allows Jd tasks running as that account to access the db.</p>
+<p>Lock prevents problems with multiple Jd tasks running as the owner or another account from using the db at the same time.</p>
+<h2 id="jdshuffle">jdshuffle</h2>
+<p>This randomly deletes and reinserts rows, and can be used in tests for the proper functioning of dynamic cols. The table at the end has the same number rows it started with.</p>
+<pre><code>   jdshuffle_jd_ &#39;tab&#39;</code></pre>
+<h2 id="jdtables">jdtables</h2>
+<p>Lists table names and locales sorted by names:</p>
+<pre><code>   jdtables_jd_&#39;tab&#39;</code></pre>
+<h2 id="jdtesterrors">jdtesterrors</h2>
+<p>Test error formatting:</p>
+<pre><code>   jdtesterrors_jd_&#39;&#39;        </code></pre>
+<h2 id="jdtests">jdtests</h2>
+<p>Run tests:</p>
+<pre><code>   [0 or 1] jdtests_jd_ y     NB. 1 echos names as tests are run</code></pre>
+<p>The right argument is:</p>
+<ul>
+<li><code>''</code> - csv-tests, build-demos, and all tests/tutorials</li>
+<li><code>'fast'</code> - skip csv-tests and build-demos</li>
+<li><code>'csv'</code> - run only csv-tests</li>
+</ul>
+<p>The source folders are:</p>
+<ul>
+<li><code>~addons/data/jd/test/core</code> - original non api tests (0!:3 implied assert on every line)</li>
+<li><code>~addons/data/jd/test</code> - tests with asserts</li>
+<li><code>~addons/data/jd/tutorial</code> - tutorials with asserts</li>
+<li><code>~addons/data/jd/demo</code> - scripts that build/test northwind,sandp,sed,vr</li>
+</ul>
+<h2 id="jdtypefromdata">jdtypefromdata</h2>
+<p>Return basic Jd type from data. Does not handle edate etc.</p>
+</body>
+</html>

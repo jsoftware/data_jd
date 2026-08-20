@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="jd.css">
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Replicate.htm">Replicate</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
+<h2 id="close">close</h2>
+<p>close</p>
+<p>unmap all files and close all locales<br />
+does not affect admin or locks</p>
+<p>using a table creates all locales and maps all files</p>
+<p>creating locales and mapping takes time so close only when necessary</p>
+<h2 id="flush">flush</h2>
+<p>flush - flush mapped file dirty memory pages to disk</p>
+<p>a flush after lots of writes can help ensure that data is on disk</p>
+<p>close does a flush before it unmaps files if <a href="Admin.htm#jdcloseflush" title="wikilink">jdcloseflush</a> has been run</p>
+<p>disk hardware buffers mean flushed data is not guaranteed<br />
+to be on disk in the event of a failure such as loss of power,<br />
+but the chance of corrupted disk data is significantly reduced</p>
+<p>Windows: FlushViewOfFile and FlushFileBuffers<br />
+Unix: fsync</p>
+<h2 id="gen">gen</h2>
+<p>gen types table rows</br> gen test table rows<br />
+gen ref2 table1 rows1 cols table2 rows2<br />
+gen one table rows cols<br />
+gen two table1 rows1 table2 [rows2]</p>
+<p>generate test table(s)</p>
+<p>types - table with all col types<br />
+test - table with some col types<br />
+ref2 - reference table1 aref table2 bref - extra cols<br />
+one - table with extras cols<br />
+two - default rows2 is &lt;.rows1%10 - suitable for many to one join</p>
+<h2 id="option">option</h2>
+<p>option space ...</p>
+<p>option space 1 to record last command space<br />
+option space 0 to not record (reported as _1)</p>
+<p>jd'info last' report last cmd, time, space</p>
+<h2 id="validate">validate</h2>
+<p>validate</p>
+<p>Runs info validatebad and marks the db damaged if there are problems.</p>
+<p>See <a href="Technical.htm#damaged" title="wikilink">Technical|Damaged</a>.</p>
+<p>See tutorial log.</p>
+</body>
+</html>

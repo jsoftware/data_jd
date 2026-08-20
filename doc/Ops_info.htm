@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="jd.css">
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Replicate.htm">Replicate</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
+<h2 id="info">info</h2>
+<p>info type [...] - info about current DB</p>
+<p><code>agg                         - aggregators</code><br />
+<code>derived     [table[column]] - derived cols</code><br />
+<code>last                        - cmd time space parts</code><br />
+<code>ref         [table[column]] - ref cols</code><br />
+<code>schema      [table[column]] - normal cols (non jd...)</code><br />
+<code>summary     [table^*]       - tables or tables that make up the ptable</code><br />
+<code>table       [table^*]       - tables or tables that make up the ptable</code><br />
+<code>validate    [table[column]]</code><br />
+<code>validatebad [table[column]]</code><br />
+<code>varbyte     [table[column]]</code></p>
+<p>Tables are sorted and cols are in default selection order</p>
+<p>Schema and similar types treat ptable as a single table<br />
+validate and validatebad list ptable parts</p>
+<h2 id="list">list</h2>
+<p>list version - Jd version<br />
+list open - open databases</p>
+</body>
+</html>

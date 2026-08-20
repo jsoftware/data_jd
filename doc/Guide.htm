@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="jd.css">
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Replicate.htm">Replicate</a>&nbsp;|&nbsp;<a href="Guide.htm" class="act">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
+<p>Guide to Jd terminology.</p>
+<h2 id="definitions">Definitions</h2>
+<p><b>admin</b> - manages dan rules for users<br />
+<b>dac</b> - data column - folder for table column<br />
+<b>dan</b> - database access name<br />
+<b>db</b> - database - folder with all data and metadata for db tables and columns<br />
+<b>intask</b> - ops run in the Jd task (jconsole/jijx) - client and server are same task<br />
+<b>remote</b> - ops run in different task (socket) - client and server are different tasks<br />
+<b>user</b> - access controlled by dan</p>
+<h2 id="db">db</h2>
+<p>A db is a folder with a folder for each table. Each table folder has a folder for each column. Each folder has a few metadata files (prefix jd). Following is a simplified db folder/file list:</p>
+<pre><code>db
+  jdlock           - lock prevents multiple task access
+  jdclass          - &#39;database&#39;
+  jdstate          - state (3!:1)
+  admin.ijs        - dan rules
+  custom.ijs       - custom code
+  table folder f
+    jdclass        - &#39;table&#39;
+    jdstate
+    dac a
+      jdclass      - &#39;column&#39;
+      jdstate
+      dat          - column data - file mapped as J noun with col data
+  table folder g
+    ...</code></pre>
+<h2 id="admin">Admin</h2>
+<p>Manages user access to a db with dan rules. A dan selects a db and which user/pswds and ops are allowed. Different dans (different rules) can access the same or different folders.</p>
+<p>Admin can configure the Jd task to listen on a socket for requests from remote users.</p>
+<p>Dan rules are usually set by the db admin.ijs (defaults used if admin.ijs does not exist).</p>
+<p>Following ~temp/jd/test/admin.ijs sets dans all and ro for a db.</p>
+<pre><code>&#39;all&#39; jdadminfp &#39;&#39;            NB. all dan uses db that contains this script
+&#39;all&#39; jdadminup &#39;abc/def&#39;     NB.   requires this user/pswd           
+&#39;all&#39; jdadminop &#39;*&#39;           NB.   allows all ops                       
+
+&#39;ro&#39;  jdadminfp &#39;&#39;            NB. ro dan uses db that contains this script
+&#39;ro&#39;  jdadminup &#39;ab/de gh/jk&#39; NB.   requires these user/pswds            
+&#39;ro&#39;  jdadminop &#39;read reads &#39; NB.   allows only read and reads </code></pre>
+<p>Following is intask:</p>
+<pre><code>   jdadmin &#39;~temp/jd/test&#39; NB. load ~temp/jd/test/admin.ijs
+   jdadmin &#39;&#39;              NB. report
+┌───┬───────────────────────────────────────┐
+│[w]│c:/users/eric/j64-701-user/temp/jd/test│
+├───┼───────────────────────────────────────┤
+│all│~temp/jd/test                          │
+├───┼───────────────────────────────────────┤
+│all│abc/def                                │
+├───┼───────────────────────────────────────┤
+│all│*                                      │
+├───┼───────────────────────────────────────┤
+│ro │~temp/jd/test                          │
+├───┼───────────────────────────────────────┤
+│ro │ab/de gh/jk                            │
+├───┼───────────────────────────────────────┤
+│ro │read reads                             │
+└───┴───────────────────────────────────────┘</code></pre>
+<p>[w] line indicates a lock to prevent interference from other tasks.</p>
+<p>A user accesses the db with a dan. Access with dan all requires abc/def and allows all ops. Access with dan ro requires a ab/de or gh/jk and allows only read/reads.</p>
+<h2 id="custom.ijs">custom.ijs</h2>
+<p>Admin can customize a database with custom.ijs.</p>
+<ul>
+<li>custom jd ops (e.g., common complex query handled as simpler op with simpler args)</li>
+<li>custom aggregations</li>
+</ul>
+<h2 id="user">User</h2>
+<p>A db user performs jd ops such as read/insert/delete/update on a db.</p>
+<p>A jd op has implicit args of dan, user/pswd, intask/remote. Remote is indicated by localhost:port</p>
+<p>A db user sets the implicit args with verb jdaccess in a Jd client task (or equivalent if a non-J task).</p>
+<pre><code>   jdaccess &#39;all abc/def intask&#39;
+   jd&#39;read from j&#39; NB. all dan - intask
+
+   jdaccess &#39;ro ab/de localhost:65002&#39;
+   jd&#39;read from j&#39; NB. ro dan - socket request to localhost:65002</code></pre>
+</body>
+</html>

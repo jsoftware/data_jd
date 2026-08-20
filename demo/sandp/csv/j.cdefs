@@ -1,0 +1,4 @@
+1 jid   byte 3  
+2 jname byte 10 
+3 city  byte 10 
+options TAB LF NO \ 0

@@ -1,0 +1,582 @@
+NB. Copyright 2019, Jsoftware Inc.  All rights reserved.
+
+jdadmin_z_   =: jdadmin_jd_
+jdadminnew_z_=: jdadminnew_jd_
+jdadminx_z_  =: jdadminx_jd_
+jdadminro_z_ =: jdadminro_jd_
+jdsetadmin_z_=: jdsetadmin_jd_
+jdsetuser_z_=:  jdsetuser_jd_
+
+
+coclass'jd'
+
+NB. jd... verbs assert expected error (similar to jdae)
+jdadmae_jd_=: 4 : 0
+t=. 13!:12''
+assert 'assertion failure'-:y
+assert +./x E. t
+t=. (t i. LF){.t
+}.(t i:':'){.t
+)
+
+jdpath=:  3 : 'jpath jdpathx y'
+jdpathx=: 3 : '(dbpath DB),''/'',y'
+
+assertnodamage=: 3 : 0
+'db damaged and not under repair' assert REPAIR__dbl+.-.DAMAGE__dbl
+)
+
+NB. old version - still required by csv funnies
+getdbx=: 3 : 0
+db=. dbpath DB
+i=. db i:'/'
+f=. Open_jd_ jpath i{.db
+dbl=: Open__f (>:i)}.db
+assertnodamage''
+dbl
+)
+
+getdb=: 3 : 0
+i=. ({."1 DBLOCS)i.<jpath dbpath DB
+dbl=: {:i{DBLOCS
+NB.! kludge - locale may have been closed
+if.-.dbl e. conl 1 do.
+ getdbx''
+ DBLOCS=: dbl (<i;1)}DBLOCS
+end. 
+dbl=: {:i{DBLOCS
+assertnodamage''
+dbl
+)
+
+NB. table names,.locales sorted by name
+jdtables=: 3 : 0
+n=. NAMES__dbl
+a=. CHILDREN__dbl
+(/:n){n,.a
+)
+
+NB. y is t;c
+NB. t is '' for all tables  or 'tab' for just that table
+NB. c is '' for all cols    or 'col' for just that col
+NB. tables  in sorted order
+NB. cols in defaultselection order
+NB. x 1 does mapcolfile
+jdclocs=: 3 : 0
+0 jdclocs y
+:
+'t c'=. ,each y
+r=. ''
+tables=. /:~NAMES__dbl
+if. #t do.
+ 'not a table' assert NAMES__dbl e.~ <t
+ tables=. <t
+end. 
+tablelocs=. ''
+
+NB. table children may not be open - getloc forces open
+for_n. tables do.
+ tablelocs=. tablelocs,getloc__dbl n
+end. 
+
+for_i. i.#tables do.
+ t=. i{tablelocs
+ if. #c do.
+  'not a column' assert NAMES__t e.~ <c
+  cols=. <c
+ else. 
+  cols=. getdefaultselection__t''
+  cols=. cols,(bjdn NAMES__t)#NAMES__t
+ end.
+ r=. r,(NAMES__t i. cols){CHILDREN__t
+end.
+
+if. x do.
+ for_c. r do. NB. do the mapping
+  if. _1=nc {.MAP__c,each <'__c' do.
+    mapcolfile__c"0 MAP__c
+    opentyp__c ''
+  end.
+ end. 
+end. 
+r
+)
+
+NB. non-system col names,.locales sorted by name
+jdcols=: 3 : 0
+t=. getloc__dbl y
+n=. NAMES__t
+a=. CHILDREN__t
+b=. -.bjdn n
+n=. b#n
+a=. b#a
+(/:n){n,.a
+)
+
+jdcolsx=: 3 : 0
+t=. getloc__dbl y
+n=. NAMES__t
+a=. CHILDREN__t
+b=. (<'jdindex')~:2{.each n
+n=. b#n
+a=. b#a
+(/:n){n,.a
+)
+
+jdserverstop=: 3 : 0
+if. IFJHS do. OKURL_jhs_=: '' end.
+)
+
+NB. simple name treated as ~temp/jd/name
+adminp=: 3 : 0
+y=. jpathsep y
+y=. y,~(-.'/'e.y)#'~temp/jd/'
+y=. (-'/'={:y)}.y NB. no trailing /
+)
+
+defaultadmin=: 0 : 0
+'D' jdadminfp ''
+'D' jdadminup 'user0'
+'D' jdadminop '*'
+)
+
+NB. jdadmin dbpath - simple name treated as ~temp/jd/name
+NB. existing db - set rules
+NB. new db in ~temp is created
+jdadmin=: 3 : 0
+if. ''-:y do.
+ t=. (jdadminfp''),(jdadminup''),(jdadminop''),jdadminlk''
+ (/:{."1 t){t
+elseif. 0-:y do.
+ JDMT=: 0
+ jd_close''
+ jdadminlk 0
+ jdadminfp 0
+ jdadminup 0
+ jdadminop 0
+ jdaccess 0
+ DBLOCS=: 0 2$''
+ i.0 0
+elseif. 1 do.
+ adminopen y
+end.
+:
+select. x
+case. 'new' do. jdadminx y
+case. 'access' do.
+ 'bad y'assert ''-:y
+ d=. {."1 jdadmin''
+ d=. /:~~.d#~;'['~:;{.each d
+ m=. (d=<DB){' ''';'['''
+ d=. >(<'   jdaccess'),each m,each d,each''''
+case. do. 'bad x'assert 0
+end.
+)
+
+adminopen=: 3 : 0
+ if. 0=L.y do. mt=. 0 else. 'y mt'=. y end.
+ adminfp=: y=. adminp y
+ 'not a folder'assert 2=ftype y
+ 'not a database'assert 'database'-:jdfread y,'/jdclass'
+ v=. fread y,'/jdversion'
+ v=. (-.v-:_1){3,<.0".":v
+ 'db version not compatible with this Jd version'assert v=<.".jdversion
+ 'invalid map type' assert mt e. i.3
+ locktype=. mt{'wrc'
+ t=. {:"1 jdadminlk''
+ i=. t i. <jpath y
+ if. i<#t do. NB. already open - just do access to first dan for the db
+  'reopen must have same map type' assert JDMT=mt
+  defaultaccess''
+  i.0 0
+  return.
+ end. 
+ 'multiple open dbs must all be MTRW' assert (0=#DBPATHS)+.(mt=0)*.JDMT=0
+ remove_admin y
+  fp=. y,'/admin.ijs'
+ if. -.fexist fp do. (defaultadmin rplc 'D';d)fwrite fp end. NB. default admin.ijs
+
+ NB. error if new admin has a dan that is already in use
+ dans=. dltb each <;.2 fread fp
+ dans=. ((dans i.each ' '){.each dans)-.each '''' NB. dans in new admin
+ 'new db admin has dan that is already in use'assert -.({."1 DBPATHS)e.dans
+
+ locktype jdadminlk y
+ try.
+   bak=. (<DBPATHS),(<DBUPS),<DBOPS
+   load y,'/admin.ijs'
+ catchd.
+   'DBPATHS DBUPS DBOPS'=: bak
+   'x'jdadminlk y
+   'load admin.ijs failed'assert 0
+ end.
+ defaultaccess'' NB. default access for 1st of the new dans
+ 
+ db=. dbpath DB
+ i=. db i:'/'
+ f=. Open_jd_ jpath i{.db
+ JDMT=: mt NB. must be set before first Tlen map done by open
+ dbl=: Open__f (>:i)}.db
+ 
+ DBLOCS=: (-.({."1 DBLOCS)e.<jpath db)#DBLOCS NB. remove previous
+ DBLOCS=: DBLOCS,(jpath db);dbl
+ assertnodamage''
+ 
+ i.0 0
+)
+
+NB. remove old admin for folder y
+remove_admin=: 3 : 0
+t=. jpath y
+t=. <(-'/'={:t)}.t
+dan=. (;t=jpath each {:"1 DBPATHS)#{."1 DBPATHS
+DBPATHS=: (-.({."1 DBPATHS)e.dan)#DBPATHS
+DBUPS=: (-.({."1 DBUPS)e.dan)#DBUPS
+DBOPS=: (-.({."1 DBOPS)e.dan)#DBOPS
+)
+
+jdadminnew=: 3 : 0
+'new'jdadmin y
+)
+
+jdadminx=: 3 : 0
+'y must not be empty'assert 0~:#y
+yy=. y
+y=. jpath adminp y
+d=. }.(y i: '/')}.y
+vdname d
+i=. y i:'/'
+f=. Open_jd_ i{.y
+if. (<y)e.{:"1 jdadminlk_jd_'' do. NB. if locked, assume open, and should be dropped
+ 'x'jdadminlk y NB. should be done after Drop - but there are problems
+ Drop__f d
+end.
+jddeletefolder y
+'w'jdadminlk y
+Create__f d
+'x'jdadminlk y
+jdadmin yy
+)
+
+dbrow=: 3 : '({."1 y)i.<DB'
+
+admind=: 4 : 0
+db=. x-.' '
+assert 0~:#db['DB empty'
+db;<deb y rplc LF,' '
+)
+
+adminm=: 4 : 0
+if. ''-:y do. x      return. end.
+if. 0-:y  do. 0 2$'' return. end.
+assert 0['need DB as left arg'
+)
+
+NB. DBPATHS
+jdadminfp=: 3 : 0
+DBPATHS=: DBPATHS adminm y
+:
+assert ''-:y
+y=. adminfp
+b=. ({."1 DBPATHS)~:<x
+DBPATHS=: (b#DBPATHS),((0~:#y),2)$(,x);y
+i.0 0
+)
+
+NB. DBUPS
+jdadminup=: 3 : 0
+DBUPS=: DBUPS adminm y
+:
+a=. bdnames y
+y=. }.;' ',each(a i.each '/'){.each a NB. remove old style /p from u/p
+t=. x admind y
+b=. ({."1 DBUPS)~:{.t
+DBUPS=: (b#DBUPS),((0~:#>{:t),2)$t
+i.0 0
+)
+
+NB. DBOPS
+jdadminop=: 3 : 0
+DBOPS=: DBOPS adminm y
+:
+t=. x admind y
+b=. ({."1 DBOPS)~:{.t
+DBOPS=: (b#DBOPS),((0~:#>{:t),2)$t
+i.0 0
+)
+
+NB. jdadminlk'' is query on lock state
+NB. adminlk 0 frees all locks
+NB. type adminlk path
+NB. type is 'w' 'r' or 'x' unlock
+NB. lock is on a file in the database folder
+jdadminlk=: 3 : 0
+select. y
+case. '' do.
+ ((0=;{."1 LOCKED_jd_){'[w]';JDMT{'[w]';'[r]';'[c]'),._7}.each{:"1 LOCKED
+case. 0 do.
+ i.0 0['x'jdadminlk each _7}.each{:"1 LOCKED
+case. do.
+ assert 0['invalid argument'
+end.
+:
+x lock y
+i.0 0
+)
+
+NB. default access is db first dan and first user
+defaultaccess=: 3 : 0
+i=. ({:"1 DBPATHS)i.<adminfp
+jdaccess (;{.i{DBPATHS_jd_),' ',;{.bdnames ;{:i{DBUPS_jd_
+)
+
+NB. * table ; user ; pswd
+NB. * 'test_upfile';'john';'wonder'
+NB. 
+NB. * table ; user NB. remove user
+NB.
+NB. * table NB. list users
+NB.
+NB. logon is required to access a server
+NB.    s1'logon dan user pswd'
+NB.    
+NB. user/pswd is validated against server upfile
+NB. server folder upfilepath has path to the upfile
+NB. pswds in the upfile are encrypted
+NB. 
+NB. valid logon updates ductable with dan;user;cookie
+NB. subsequent requests get dan and user from ductable by cookie
+NB.
+NB. the upfile needs to be built in a secure manner
+NB. and the password should be given securely to the user
+jdsetuser=: setuser
+
+NB. * db ; dan ; users ; ops NB. set admin
+NB. * db ; dan               NB. remove admin
+NB. * db                     NB. return: db ; dan ; users ; ops
+NB.
+NB. users and ops are blank delimited
+NB.
+NB. db admin.ijs sets what dan(s) can be used to access the db
+NB. and what users and ops are allowed for that dan
+NB. 
+NB. existing entries for dan are removed before adding new ones
+NB. admin.ijs will be loaded next time db is opened
+jdsetadmin=: 3 : 0
+y=. boxopen y
+'require 1 2 or 4 arg'assert 1 2 4 e.~=#y
+'db dan user op'=: 4{.y,'';'';''
+p=. adminp db NB. path to db folder
+pa=. p,'/admin.ijs'
+'not a folder'assert 2=ftype p
+'not a database'assert 'database'-:jdfread p,'/jdclass'
+if. -.fexist pa do. ''fwrite pa end.
+d=. deb each <;._2 fread pa
+if. 0=#dan do. NB. admin as jsetadmin args
+ d=. ;:each d
+ d=. d-.<''
+ d=. d#~(<'NB.')~:3{.each;each d
+ 'bad admin.ijs'assert 0=3|#d
+ d=. (3,~(3%~#d))$d
+ 'bad admin.ijs'assert ('jdadminfpjdadminupjdadminop')-:"1  ;"1 ;"1 [ 1{each d
+ 'bad admin.ijs'assert #"1 ~."1 {.each d
+ dans=.  >{.each {."1 d
+ d=. >2{"1 each }."1 d
+ d=. dans,.d
+ d=. d-.each''''
+ y,.d
+ return. 
+end.
+
+NB. delete first
+d=. deb each <;.2 fread p,'/admin.ijs'
+a=. (d i.each ' '){.each d
+a=. a -.each ''''
+b=. ;(a~:<dan)#d
+b fwrite p,'/admin.ijs'
+if. 0~:#user do.
+try.
+ r=. ''
+ dan=. quote_j_ dan
+ user=. quote_j_ user
+ op=. quote_j_ op
+ r=. r,LF,~dan,' jdadminfp '''''
+ r=. r,LF,~dan,' jdadminup ',user
+ r=. r,LF,~dan,' jdadminop ',op
+ r fappend p,'/admin.ijs'
+catchd.
+'jdsetadmin failed'assert 0
+end.
+end.
+i.0 0
+)
+
+NB. mark db as damaged - prevent any more ops on db
+NB. signal error
+jddamage=: 3 : 0
+if. 0~:JDMT do. 'RO/CW db serious error - but db not marked as damaged'assert 0 end.
+if. #y do.
+ 'damage'logtxt y
+ 'damage'logjd y
+ y=. 'db marked as damaged - ',y,' - see doc technical|damaged'
+ DAMAGE__dbl=: 1
+ writestate__dbl''
+ y assert 0
+end.
+DAMAGE__dbl=: REPAIR__dbl=: 0 NB. all good now
+writestate__dbl''
+i.0 0 
+)
+
+NB. jdrepair 'reason' - mark damaged db as under repair
+NB. jdrepair ''       - unmark
+jdrepair=: 3 : 0
+if. #y do.
+ REPAIR__dbl=: 1
+else.
+ REPAIR__dbl=: 0
+end.
+writestate__dbl''
+i.0 0
+)
+
+3 : 0''
+if. _1=nc<'DBLOCS'  do. DBLOCS=:  0 2$'' end.
+if. _1=nc<'DBPATHS' do. DBPATHS=: 0 2$'' end.
+if. _1=nc<'DBUPS'   do. DBUPS=:   0 2$'' end.
+if. _1=nc<'DBOPS'   do. DBOPS=:   0 2$'' end.
+if. _1=nc<'LOCKED'  do. LOCKED=:  0 2$'' end.
+LIBC=: unxlib'c'
+)
+
+jdshare=: 3 : 0
+p=. dltb y
+assert 6=#p
+p=. 3 2$p
+t=. IFWIN{9 3
+(t{.,p,.'x') 1!:7 dirpath dbpath DB
+(t{.,p,.'-') 1!:7 {."1 dirtree dbpath DB
+JDOK
+)
+
+NB. y is tab/col path
+NB. jdfread/jdfwrite col folder files to new location (probably on another drive)
+NB. and make symbolic link
+jdlinkmove=: 3 : 0
+'tc newp'=. bd2 y
+p=. jdpath_jd_''
+i=. '/' i:~ }:p
+p=. p,tc
+newp=. jpath newp,i}.p
+jdcreatefolder newp
+('folder * is not empty'erf newp)assert 0=#fdir newp,'/*'
+a=. {."1 [1!:0 <p,'/*'
+for_f. a do. (jdfread p,'/',;f) fwrite newp,'/',;f end.
+jd'close' NB. necessary so remap is done with new stuff
+if. IFWIN do.
+ t=. '"',p,'" "',newp,'"'
+ t=. 'mklink /D /J ',hostpathsep t
+ jddeletefolder p
+ shell t NB. wndows does junction between folders
+else.
+NB. !!! n=. '"',newp,'" "',(_5}.p),'"'
+ n=. '"',newp,'" "',p,'"'
+ t=. 'ln -s ',n
+ jddeletefolder p
+ shell t
+end.
+6!:3^:(2~:ftypex p) 0.1 NB. sometimes required in windows so next test works
+'link failed' assert (2=ftypex) p
+)
+
+NB. report db link targets
+jdlinktargets=: 3 : 0
+if. IFWIN do.
+ r=. <;._2 toJ shell 'dir /S "P"'rplc 'P';hostpathsep jdpath''
+ b=. ;+./each(<' <JUNCTION> ')E.each r
+ r=. b#r
+ }:each(>:;r i.each'[')}.each r
+else.
+ r=. <;._2 toJ shell 'ls -l -R "P"'rplc 'P';jpath jdpath''
+ r=. ((<'lrw')=3{.each r)#r
+ (r i.each'/')}.each r
+end.
+)
+
+NB. set links.txt in database folder
+jdlinkset=: 3 : 0
+f=. 'links.txt',~jdpath''
+if. y-:0 do.
+ ferase f
+ i.0 0
+ return.
+end.
+if. y-:'' do.
+ if. _1=r=.jdfread f do. r=. '' end.
+ r
+ return.
+end.
+links=. toJ y
+links=. links,LF#~LF~:{:links
+links=. <;._2 links
+links=. >bd2 each links
+n=. {."1 links
+'invalid tab/col - missing /' assert 1=;+/each'/'=each n
+'invalid tab or col name' assert _2~:nc bdnames(;n,each' ')rplc '/';' '
+p=. {:"1 links
+jdcreatefolder each p
+r=. ,LF,.~sptable links
+r fwrite 'links.txt',~jdpath''
+r
+)
+
+NB. get locale for table or table column 
+jdgl=: 3 : 0
+a=. bdnames y
+if. 1=#a do.
+ getloc__dbl ;a
+else.
+ t=. getloc__dbl ;{.a
+ getloc__t ;{:a
+end.
+)
+
+NB. * db 
+NB. get state from files
+NB. could be exteneded to db [table[col]]
+jdgstate=: 3 : 0
+3!:2 fread '/jdstate',~adminp_jd_ y
+)
+
+NB. get state for table or table column
+jdgs=: 3 : 0
+c=. jdgl y
+3!:2 fread PATH__c,'jdstate'
+)
+ 
+jdfrom=:  4 : '>{:(({."1 y)i.<,x){y'
+
+jdfroms=: 4 : '>(({.y)i.<,x){"1{:y'
+
+NB. if jd'close' or jdadmin 0 fail, things are messed up, so try this
+jdforce_clean=: 3 : 0
+'NAMES_jd_'=: ''
+unmapall_jmf_''
+1 unmap_jmf_ each 0{"1 mappings NB. extra force
+coerase conl 1
+jdadmin 0
+)
+
+NB. add y defns to custom.ijs and reload it
+jdloadcustom=: 3 : 0
+p=. jdpath_jd_'custom.ijs' 
+if. #y do. y fappend p end.   
+load__dbl p
+)
+
+jdcsvfolder=: 3 : 0
+CSVFOLDER__=: PATH__dbl,'jdcsv/'
+jdcreatefolder CSVFOLDER__
+'csv'fwrite CSVFOLDER__,'jdclass'
+i.0 0
+)

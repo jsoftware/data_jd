@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="jd.css">
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<p><div id="nav"><a href="Index.htm">Jd</a>&nbsp;|&nbsp;<a href="Overview.htm">Overview</a>&nbsp;|&nbsp;<a href="General.htm">General</a>&nbsp;|&nbsp;<a href="Ops.htm">Ops</a>&nbsp;|&nbsp;<a href="Admin.htm">Admin</a>&nbsp;|&nbsp;<a href="Replicate.htm">Replicate</a>&nbsp;|&nbsp;<a href="Guide.htm">Guide</a>&nbsp;|&nbsp;<a href="Technical.htm">Technical</a>&nbsp;|&nbsp;<a href="Release.htm">Release</a>&nbsp;|&nbsp;<a href="License.htm">License</a>&nbsp;|&nbsp;<a href="Support.htm">Support</a></div></p>
+<h2 id="dropcol">dropcol</h2>
+<p>dropcol table col<br />
+OK if col does not exist<br />
+error if col is used in a ref</p>
+<p>drop a ref col by name as you would any other col<br />
+get ref col names with:</p>
+<p><code>jd'info ref' </code></p>
+<h2 id="dropdb">dropdb</h2>
+<p>drops each col of each table<br />
+releases lock<br />
+deletes filefolder</p>
+<h2 id="dropfilesize">dropfilesize</h2>
+<p>dropfilesize</p>
+<p>files tend to be kept larger than required<br />
+data in the file can grow without having to resize/remap</p>
+<p>dropfilesize frees up unused file space - use if a db is static</p>
+<p>dropfilesize returns filenames, old size, new size</p>
+<h2 id="droptable">droptable</h2>
+<p>droptable [/reset] table</p>
+<p>/reset preserves schema<br />
+  drops rows<br />
+  drops dynamic hash/unique/... cols<br />
+  keeps filesize</p>
+<p>OK if table does not exist<br />
+error if table has reference (refers to or referred by)</p>
+</body>
+</html>
