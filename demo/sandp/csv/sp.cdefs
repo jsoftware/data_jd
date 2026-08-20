@@ -1,4 +1,0 @@
-1 sid byte 3 
-2 pid byte 3 
-3 qty int    
-options TAB LF NO \ 0

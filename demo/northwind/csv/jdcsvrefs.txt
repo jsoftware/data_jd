@@ -1,7 +1,0 @@
-OrderDetails OrderID    Orders OrderID
-OrderDetails ProductID  Products     ProductID
-Orders       CustomerID Customers    CustomerID
-Orders       EmployeeID Employees    EmployeeID
-Orders       ShipVia    Shippers     ShipperID
-Products     SupplierID Suppliers    SupplierID
-Products     CategoryID Categories    CategoryID

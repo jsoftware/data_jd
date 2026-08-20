@@ -1,6 +1,0 @@
-1 pid    byte 3  
-2 pname  byte 10 
-3 color  byte 10 
-4 weight int     
-5 city   byte 10 
-options TAB LF NO \ 0

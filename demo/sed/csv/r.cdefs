@@ -1,4 +1,0 @@
-1 rno   int     
-2 rname byte 12 
-3 popul int     
-options TAB LF NO \ 0

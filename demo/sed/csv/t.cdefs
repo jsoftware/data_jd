@@ -1,6 +1,0 @@
-1 tno   int     
-2 ename byte 12 
-3 tname byte 12 
-4 tsize byte 12 
-5 tcat  byte 12 
-options TAB LF NO \ 0

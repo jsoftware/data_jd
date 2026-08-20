@@ -1,5 +1,0 @@
-1 CategoryID   int      
-2 CategoryName varbyte  
-3 Description  varbyte  
-4 Picture      varbyte  
-options TAB LF NO \ 0

@@ -1,4 +1,0 @@
-1 CompanyName varbyte  
-2 Phone       varbyte  
-3 ShipperID   int      
-options TAB LF NO \ 0

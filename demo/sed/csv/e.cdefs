@@ -1,6 +1,0 @@
-1 ename byte 12 
-2 sno   int     
-3 sname byte 12 
-4 rno   int     
-5 rname byte 12 
-options TAB LF NO \ 0
