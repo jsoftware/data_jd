@@ -59,7 +59,7 @@ CLONES__dbl=: CLONES__dbl,<dbsnk
 writestate__dbl'' 
 jdadmin 0
 jdadminnew dbsnk
-shell 'tar -xzf ',tar,' -C "',(jpath dbsnk),'" .'
+shell 'tar -xzf ',tar,' -C "',(jpath dbsnk),'"'
 REPLICATE__dbl=: 2
 TARFILE__dbl=: tar
 WALINDEX__dbl=: 0

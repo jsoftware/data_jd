@@ -445,59 +445,6 @@ for_c. conl 1 do.
 end.
 )
 
-NB. check ~config/nodebinpath for for valid node binary
-NB. set ~confid/nodebinpath if required and verify --version
-check_node=: 3 : 0
-fn=. '~config/nodebinpath'
-if. _1-:fread fn do.  NB. not set - try to set it
- if. IFWIN do. if. 1~: ftype fp=. 'c:\Program Files\nodejs\node.exe' do. fp=. _1 end.
- else. if. _1 -.@-: fp=. 2!:0 ::_1: 'which node' do. fp=. fp-.LF end.
- end.
- if. _1 -.@-: fp do.
-  echo'setting ',fn,' to: ',fp
-  (jpath fp) fwrite fn
- else.
-  m=. 'you need to run following sentence to set the path to node binary',LF
-  m=. m,'   (jpath''path to node binary'') fwrite ',fn,LF
-  m assert 0
- end.
-end.
-NB. check that it is set properly
-r=. shell :: _1: '"',(fread fn),'" --version'
-'~config/nodebinpath is not path to node binary'assert -._1-:r
-'~config/nodebinpath has bad --version'assert 18<:{.0".(}.r)rplc'.';' '
-i.0 0
-)
-
-check_zmq=: 3 : 0
-'zmq must be version 4.1.4 or later'assert 414<:10#.version_jcs_''
-)
-
-check_lz4=: 3 : 0
-'lz4 not installed'assert -._1=shell :: _1: 'lz4 --version'
-)
-
-check_libcurl=: 3 : 0
-'libcurl not installed'assert 0=curl_global_init_jcurl_ :: 1: CURL_GLOBAL_ALL_jcurl_
-)
-
-check_certs=: 3 : 0
-'.ssh/jserver/key.pem does not exists'       assert 1=ftype '.ssh/jserver/key.pem'
-'.ssh/jserver/fullchain.pem does not exists' assert 1=ftype '.ssh/jserver/fullchain.pem'
-)
-
-NB. copy jhs self-signed certs to .ssh/jserver
-install_self_signed_certs=: 3 : 0
-p=. '.ssh/jserver'
-'.ssh stuff failed' assert 1=mkdir_j_ p
-'key.pem already exists'       assert 0=ftype p,'/key.pem'
-'fullchain.pem already exists' assert 0=ftype p,'/fullchain.pem'
-d=. fread'~addons/ide/jhs/node/cert.pem'
-d fwrite p,'/fullchain.pem'
-d=. fread'~addons/ide/jhs/node/key.pem'
-d fwrite p,'/key.pem'
-i.0 0
-)
 
 NB. create jds server folder
 
@@ -558,7 +505,7 @@ NB. PATH;nport;jport
 NB. create node files in folder PATH/PORT
 create_node=: 3 : 0
 'path nport inspect'=. y
-nodebin=. fread '~config/nodebinpath'
+nodebin=. 'node'
 NB. p=. jpath path,('/'#~'/'~:{:path),'node/'
 NB. mkdir_j_ p
 p=. jpath path
@@ -632,4 +579,52 @@ a=. a rplc '$1';path;'$2';(host,':',port);'$3';cert
 a fwrite path,'/curl'
 'client'fwrite path,'/jdclass'
 path
+)
+
+server_requirements=: 3 : 0
+   check_zmq_jd_''
+   check_node_jd_''
+   check_lz4_jd_''
+   check_libcurl_jd_''
+   check_certs_jd_''
+)
+
+NB. node --version must have suitable version
+check_node=: 3 : 0
+r=. shell :: _1: 'node --version'
+'node is not installed'assert -._1-:r
+'node --version is too old'assert 18<:{.0".(}.r)rplc'.';' '
+'node zeromq not installed'assert 0=#shell :: _1: 'node -e "require(''zeromq'')"'
+'node async-mutex not installed'assert 0=# shell'node -e "require(''async-mutex'')"'
+)
+
+check_zmq=: 3 : 0
+'zmq must be version 4.1.4 or later'assert 414<:10#.version_jcs_''
+)
+
+check_lz4=: 3 : 0
+t=. '*** LZ4 command line interface 64-bits '
+'lz4 not installed'assert t-:($t){.shell :: _1: 'lz4 --version'
+)
+
+check_libcurl=: 3 : 0
+'libcurl not installed'assert 0=curl_global_init_jcurl_ :: 1: CURL_GLOBAL_ALL_jcurl_
+)
+
+check_certs=: 3 : 0
+'.ssh/jserver/key.pem does not exists'       assert 1=ftype '.ssh/jserver/key.pem'
+'.ssh/jserver/fullchain.pem does not exists' assert 1=ftype '.ssh/jserver/fullchain.pem'
+)
+
+NB. copy jhs self-signed certs to .ssh/jserver
+install_self_signed_certs=: 3 : 0
+p=. '.ssh/jserver'
+'.ssh stuff failed' assert 1=mkdir_j_ p
+'key.pem already exists'       assert 0=ftype p,'/key.pem'
+'fullchain.pem already exists' assert 0=ftype p,'/fullchain.pem'
+d=. fread'~addons/ide/jhs/node/cert.pem'
+d fwrite p,'/fullchain.pem'
+d=. fread'~addons/ide/jhs/node/key.pem'
+d fwrite p,'/key.pem'
+i.0 0
 )
