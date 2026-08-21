@@ -75,7 +75,7 @@ s1'info summary'
 
 jdserver 's1 stop' NB. graceful shutdown
 jdserver 's1 report node 5'
-jdserver 's1 report base'
+jdserver 's1 report base 5'
 
 jdserver's1 start' NB. start s1 server
 s1_req''
@@ -83,7 +83,7 @@ s1_req''
 NB. next step runs a task with xrdspin that takes 3 seconds - stop allows 10 seconds
 jdserver's1 stop 10'[beatone 'xrdspin 3'
 jdserver's1 pids'
-jdserver's1 report node' NB. note stop lines in std.log
+jdserver's1 report node 5' NB. note stop lines in std.log
 
 jdserver's1 start' NB. start s1 server
 s1_req''
@@ -93,7 +93,7 @@ jdserver ::['s1 stop 3'[beatone 'xrdspin 6'
 13!:12''
 jdserver's1 stop 20' NB. time for shutdown to complete
 jdserver's1 pids'
-jdserver's1 report node'
+jdserver's1 report node 5'
 
 NB. look at server performance
 NB. following can sometimes take many seconds to run

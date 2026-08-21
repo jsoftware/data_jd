@@ -34,8 +34,8 @@ r1'read from t' NB. read op goes to clone db - which updates from wal
 'WALINDEX'jdfrom_jd_ jdgstate_jd_'rep_clone_0' NB. index updated to end of wal
 
 jdserver'r1 report node 15' NB. note inserts to port 65220 and read to port 65221
-jdserver'r1 report base'
-jdserver'r1 report clone_0'
+jdserver'r1 report base 5'
+jdserver'r1 report clone_0 3' 
 
 NB. many write ops would create many wal records to update
 NB. and this could block another read op causing a timeout

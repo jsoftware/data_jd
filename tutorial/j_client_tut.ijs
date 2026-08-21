@@ -39,7 +39,7 @@ s1'read from t'
 
 'logon simple admin funny's1'' NB. admin user can execute j sentences
 s1'admin i.2 3'
-s1'admin jdserver''s1 report node'''
+s1'admin jdserver''s1 report node 5'''
 s1'admin fread (jdserver''s1 handle''),''base/jds.log'''
 'free's1'' NB. logoff, cleanup, destroy locale
 

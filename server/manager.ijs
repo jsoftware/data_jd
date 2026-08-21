@@ -118,7 +118,7 @@ NB.   jdserver 'name delete'     NB. kill tasks and delete server-folder
 NB.   jdserver 'name start'      NB. start server - ports must not be in use
 NB.   jdserver 'name stop [10]'  NB. graceful shutdown
 NB.   jdserver 'name status'     NB. status
-NB.   jdserver 'name report folder [5]' NB. folder is base,clone...,node and [5] is record count
+NB.   jdserver 'name report f c' NB. f is base,clone...,node and c is record count
 NB.   jdserver 'name kill'       NB. kill tasks on server ports
 NB.   jdserver 'name ports'      NB. ports used by this server
 NB.   jdserver 'name pids'       NB. pids on the server ports
@@ -365,8 +365,6 @@ end.
 )
 
 jdsreport=: 3 : 0
-NB. if. (2=#y)*.a:={:y do. y=. ({.y),'node';10 end.
-if. 2=#y do. y=. y,<5 end.
 'name f c'=: y
 c=. 0".":c
 h=. gethandle name
@@ -467,7 +465,7 @@ end.
 NB. check that it is set properly
 r=. shell :: _1: '"',(fread fn),'" --version'
 '~config/nodebinpath is not path to node binary'assert -._1-:r
-'~config/nodebinpath has bad --version'assert ('v'={.r)*.18>:{.0".(}.r)rplc'.';' '
+'~config/nodebinpath has bad --version'assert 18<:{.0".(}.r)rplc'.';' '
 i.0 0
 )
 
