@@ -524,7 +524,7 @@ default=. ;(inspect-:'inspect-yes'){'';' --inspect=localhost:',":1+0".":nport
  f=. p,'run.bat'
  t fwrite f
  pw=. hostpathsep p
- ('"PATHrun.bat" > "LOG" 2>&1' rplc 'PATH';pw;'LOG';pw,'std.log') fwrite p,'node/run.txt'
+ ('"PATHrun.bat" > "LOG" 2>&1' rplc 'PATH';pw;'LOG';pw,'std.log') fwrite p,'run.txt'
 
  a=. fread f
  b=. a rplc '"INSPECT"';default
