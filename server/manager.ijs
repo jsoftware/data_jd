@@ -533,9 +533,9 @@ default=. ;(inspect-:'inspect-yes'){'';' --inspect=localhost:',":1+0".":nport
  b=. a rplc '"INSPECT"';yes
  b  fwrite p,'node/rundebug.bat'
 
- a=. fread p,'node/run.txt'
+ a=. fread p,'run.txt'
  b=. a rplc 'run.bat';'rundebug.bat'
- b fwrite p,'node/rundebug.txt'
+ b fwrite p,'rundebug.txt'
 
 else.
 
