@@ -521,14 +521,14 @@ default=. ;(inspect-:'inspect-yes'){'';' --inspect=localhost:',":1+0".":nport
  if. IFWIN do.
  NB. create run.bat and run.txt
  t=. run rplc 'NODEBIN';nodebin;'JS';nodefile;'CONFIG';config
- f=. p,'run.bat'
- t fwrite p,'run.bat'
+ f=. p,'node/run.bat'
+ t fwrite f
  pw=. hostpathsep p
- ('"PATHrun.bat" > "LOG" 2>&1' rplc 'PATH';pw;'LOG';pw,'std.log') fwrite p,'run.txt'
+ ('"PATHrun.bat" > "LOG" 2>&1' rplc 'PATH';pw;'LOG';pw,'std.log') fwrite p,'node/run.txt'
 
- a=. fread p,'node/run.bat'
+ a=. fread f
  b=. a rplc '"INSPECT"';default
- b fwrite p,'node/run.bat'
+ b fwrite f
  
  b=. a rplc '"INSPECT"';yes
  b  fwrite p,'node/rundebug.bat'
