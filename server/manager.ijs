@@ -603,6 +603,7 @@ check_zmq=: 3 : 0
 )
 
 check_lz4=: 3 : 0
+if. IFWIN+.UNAME-:'Darwin' do. return. end. NB. win and mac addons has binary
 t=. '*** LZ4 command line interface 64-bits '
 'lz4 not installed'assert t-:($t){.shell :: _1: 'lz4 --version'
 )

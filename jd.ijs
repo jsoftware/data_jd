@@ -232,7 +232,7 @@ seebox=: 3 : 0
 if. IFUNIX do.
  t=. -.+./'->'E. shell 'ls -l ',}:JDP
 else.
- +.a.
+ t=. 1 NB.!
 end. 
 m=. {{)n
 casual use is OK from pacman folder (pacman can update!)
