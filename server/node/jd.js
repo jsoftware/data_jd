@@ -56,6 +56,7 @@ var sndtimeout= -1;
 var rcvtimeout= -1;
 
 const server_https = https.createServer(options, (req, res) => {doit(req,res);});
+const server_admin  = http.createServer(options, (req, res) => {doitadmin(req,res);});
 
 // admin treated as a read op so port n will work
 const RDOPS= ['admin','close','read','reads','key','info','list']; // 'rd...','xrd...'
@@ -196,6 +197,22 @@ function logon(res,str){
   logit(res,'on')
 }
 
+function doitadmin(req,res){
+  res.writeHead(200, "OK", {'Content-Type': 'text/html'}); // ,'Content-Disposition': 'attachment'
+  if(req.method == 'POST')
+  {
+    res.end('admin post not supported'); // get reply
+  }
+
+  // get
+  var s= decodeURIComponent(req.url);
+  switch(s){
+   case '/shutdown': shutdown();s= 'shutdown requested'; break;
+   default: s= 'unknown admin command'; break;
+  }
+  res.end(s);
+}  
+
 function doit(req,res){
   if(req.method == 'POST')
   {
@@ -250,7 +267,9 @@ function doit(req,res){
 
  server_https.keepAliveTimeout=10000;
  
- server_https.listen(nport, bind, () => {console.log(`started at https://${bind}:${nport}/`);});
+ server_https.listen(nport, bind, () => {console.log(`https started at https://${bind}:${nport}/`);});
+
+ server_admin.listen(2 + +nport,'127.0.0.1',() => {console.log(`admin started at http://${bind}:${2 + +nport}/`);});
 
   var get_cookies = function(request) {
   var cookies = {};
@@ -377,11 +396,7 @@ function timeouts(){
 
 var stop= 0;
 
-// new requests
-// new requests (keep-alive)
-// queued requests
-// requests in jd
-
+// called by server_http/localhost get shutdown
 // stop - graceful shutdown request
 // node task will terminate when there is nothing to do
 // jobq requests will all complete before node goes idle and terminates
@@ -410,7 +425,4 @@ function shutdown(signal) {
   
   }
 }
-
-process.on('SIGINT', () => shutdown('SIGINT'));   // windows
-process.on('SIGTERM', () => shutdown('SIGTERM')); // linux
 

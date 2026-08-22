@@ -56,7 +56,6 @@ LOGON  s1 '' NB. logon to server
 }}
 
 s1_run=: {{
-killport_jport_ 3000 65220 NB. avoid conflicts during dev - especially in windows
 s1_build''
 s1_server''
 jdserver's1 start'

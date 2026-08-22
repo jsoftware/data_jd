@@ -167,7 +167,6 @@ jport=. _1".fread base,'jport'
 'this pid is already base pid'assert(2!:6'')~:getpid_jport_ jport
 node=. handle,'node/'
 nport=. _1".fread node,'a_nport'
-decho nport
 if. _1~:getpid_jport_ >:nport do.
  decho 'restart node'
  killport_jport_ 0 1+nport
@@ -350,8 +349,10 @@ time=. 1".":;(0=#time){time;10
 p=. jdserver name,' pids'
 if. *./_1=p do. i.0 0 return. end. NB. return if no pids
 
-NB. signal node pid to shutdown
-if. _1~:{.p do. shell (":{.p),~;IFUNIX{'taskkill /PID ';'kill -15 ' end. 
+NB. request shutdown on http localhost port
+admin=. ":2+0".fread  (jdserver (name,' handle')),'node/a_nport'
+decho admin
+httpgetr_jpacman_'http://127.0.0.1:',admin,'/shutdown' NB. no error check
 
 for. i.time do.
  6!:3[1
