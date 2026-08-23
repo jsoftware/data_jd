@@ -33,7 +33,7 @@ NB. windows fork_jtask_ new task is killed if creator task is killed
 NB. winservre_jcs_ avoids this
 jdfork=: 3 : 0
 if. IFWIN do.
- winserver y NB. jd version of winserver
+ winserver_jd_ y NB. jd version of winserver
 else.
  fork_jtask_ y
 end. 
