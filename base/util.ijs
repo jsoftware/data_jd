@@ -18,7 +18,7 @@ si=. (104{a.),104${.a.
 pi=. 24${.a.
 'r i1 c i2 i3 i4 f i5 i6 si pi'=. CreateProcess 0;c;0;0;0;f;0;0;si;pi
 'createprocess failed'assert 0~:r
-decho _3 pi
+decho _3 ic pi
 CloseHandle _3 ic 16{.pi
 )
 
