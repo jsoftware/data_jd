@@ -28,8 +28,7 @@ beat=: 3 : 0
 (3!:1 JDP;tasks;cnt;'https://localhost:3000';LOGON;<boxopen ops)fwrite 'beat'
 ferase 'beat.txt'
 for_i. i.tasks do.
-  a=. ' -js load\''',JDP,'test/util/beat.ijs\'' beattask[0 > /dev/null 2>&1'
-  jdfork_jd_ (hostpathsep jpath'~bin/jconsole'),a
+ beatrun ' -js load\''',JDP,'test/util/beat.ijs\'' beattask[0 > /dev/null 2>&1'
 end.
 while. 1 do.
  6!:3[1
@@ -72,8 +71,14 @@ NB. fork server to run op and write result to beat.txt - does not wait for resul
 beatone=: 3 : 0
 (3!:1 JDP;URL;LOGON;<boxopen y)fwrite 'beat'
 ferase 'beat.txt'
-a=. ' -js load\''',JDP,'test/util/beat.ijs\'' beatonetask[0 > /dev/null 2>&1'
-jdfork_jd_ (hostpathsep jpath'~bin/jconsole'),a
+beatrun ' -js load\''',JDP,'test/util/beat.ijs\'' beatonetask[0 > /dev/null 2>&1'
+)
+
+beatrun=: 3 : 0
+a=. y
+if. IFWIN do. a=. y rplc '/''';'''';'/dev/null/';'NULL' end.
+decho a
+jdfork_jd_ t__=:(hostpathsep jpath'~bin/jconsole'),a
 )
 
 NB. run op in forked task and write result to beat.txt
