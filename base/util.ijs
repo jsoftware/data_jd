@@ -12,6 +12,7 @@ if. IFWIN do.
 else.
  fork_jtask_ y
 end. 
+i.0 0
 )
 
 NB. 'insert table * col * bad'erf table;col
