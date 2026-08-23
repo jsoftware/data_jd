@@ -18,9 +18,8 @@ si=. (104{a.),104${.a.
 pi=. 24${.a.
 'r i1 c i2 i3 i4 f i5 i6 si pi'=. CreateProcess 0;c;0;0;0;f;0;0;si;pi
 'createprocess failed'assert 0~:r
-q__=: pi
 decho (_3 ic 16{.pi),_4 ic 16}.pi
-CloseHandle _3 ic 16{.pi
+decho CloseHandle _3 ic 16{.pi
 )
 
 NB. fork task for all platforms
