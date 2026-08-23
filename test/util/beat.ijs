@@ -29,7 +29,7 @@ beat=: 3 : 0
 ferase 'beat.txt'
 for_i. i.tasks do.
   a=. ' -js load\''',JDP,'test/util/beat.ijs\'' beattask[0 > /dev/null 2>&1'
-  fork_jtask_ t=: (jpath'~bin/jconsole'),a
+  jdfork_jd_ t=: (jpath'~bin/jconsole'),a
 end.
 while. 1 do.
  6!:3[1
@@ -74,7 +74,7 @@ beatone=: 3 : 0
 (3!:1 JDP;URL;LOGON;<boxopen y)fwrite 'beat'
 ferase 'beat.txt'
 a=. ' -js load\''',JDP,'test/util/beat.ijs\'' beatonetask[0 > /dev/null 2>&1'
-fork_jtask_ t=: (jpath'~bin/jconsole'),a
+jdfork_jd_ t=: (jpath'~bin/jconsole'),a
 )
 
 NB. run op in forked task and write result to beat.txt

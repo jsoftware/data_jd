@@ -170,7 +170,7 @@ nport=. _1".fread node,'a_nport'
 if. _1~:getpid_jport_ >:nport do.
  decho 'restart node'
  killport_jport_ 0 1+nport
- fork_jtask_ fread node,'rundebug.txt'
+ jdfork fread node,'rundebug.txt'
 'node server failed to start'assert _1~:getpidx_jport_ nport
 end. 
 killport_jport_  jport
@@ -321,7 +321,7 @@ setstatus node;'start'
 ''fwrite node,'std.log'
 ''fwrite node,'node.log'
 nport=: 0".fread node,'a_nport'
-fork_jtask_ fread node,'run.txt'
+jdfork fread node,'run.txt'
 'node server failed to start'assert _1~:getpidx_jport_ nport
 i.0 0
 )
@@ -351,7 +351,6 @@ if. *./_1=p do. i.0 0 return. end. NB. return if no pids
 
 NB. request shutdown on http localhost port
 admin=. ":2+0".fread  (jdserver (name,' handle')),'node/a_nport'
-decho admin
 httpgetr_jpacman_'http://127.0.0.1:',admin,'/shutdown' NB. no error check
 
 for. i.time do.
@@ -402,7 +401,7 @@ if. _1~:getpid_jport_ jport do. 6!:3[0.5 end. NB. time for port to be killed
 'port is in use'assert _1=getpid_jport_ jport
 setstatus handle;'start'
 ferase handle,'jds.log'
-fork_jtask_ fread handle,'run.txt'
+jdfork fread handle,'run.txt'
 'jd server failed to start'assert _1~:getpidx_jport_ jport
 )
 

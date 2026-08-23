@@ -3,6 +3,17 @@ jdrt_z_=:      jdrt_jd_
 
 coclass 'jd'
 
+NB. fork task for all platforms
+NB. windows fork_jtask_ new task is killed if creator task is killed
+NB. winservre_jcs_ avoids this
+jdfork=: 3 : 0
+if. IFWIN do.
+ winsever_jcs_ y
+else.
+ fork_jtask_ y
+end. 
+)
+
 NB. 'insert table * col * bad'erf table;col
 erf=: 4 : 0
 y=. ')',~each'(',each boxopen y
