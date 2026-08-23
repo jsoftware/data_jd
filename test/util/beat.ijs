@@ -22,7 +22,6 @@ NB. beat.txt has task info
 NB. beat.txt has line per task if 1~:task,cnt
 NB. in which case beat.txt is reported
 beat=: 3 : 0
-'windows fork needs work'assert IFUNIX
 'tasks cnt ops'=. y
 'too many tasks'assert tasks<80
 (3!:1 JDP;tasks;cnt;'https://localhost:3000';LOGON;<boxopen ops)fwrite 'beat'
