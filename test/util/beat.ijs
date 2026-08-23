@@ -27,6 +27,7 @@ beat=: 3 : 0
 (3!:1 JDP;tasks;cnt;'https://localhost:3000';LOGON;<boxopen ops)fwrite 'beat'
 ferase 'beat.txt'
 for_i. i.tasks do.
+ NB.! ?????
  beatrun ' -js load\''',JDP,'test/util/beat.ijs\'' beattask[0 > /dev/null 2>&1'
 end.
 while. 1 do.
