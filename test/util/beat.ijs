@@ -77,7 +77,6 @@ beatrun ' -js load\''',JDP,'test/util/beat.ijs\'' beatonetask[0 > /dev/null 2>&1
 beatrun=: 3 : 0
 a=. y
 if. IFWIN do. a=. y rplc '\''';'''';'/dev/null';'NULL' end.
-decho a
 jdfork_jd_ t__=:(hostpathsep jpath'~bin/jconsole'),a
 )
 
