@@ -23,6 +23,7 @@ s1_config=: 65220;'simple';3000;'testup';'inspect-no';NODE_TIME_jd_
 
 NB. build database and create server folder
 s1_build=: {{
+killport_jport_ 3000 65220 NB. clean start is good - required in windows
 jdadminnew'simple'
 jdloadcustom_jd_ fread JDP,'test/util/custom.ijs' NB. set and load custom ops - xdelete xrdspin xwrspin
 jd'createtable t'

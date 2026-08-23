@@ -11,6 +11,7 @@ r1_config=: 65220;'rep';3000;'testup';'inspect-yes';NODE_TIME_jd_
 
 NB. create base db 
 r1_build=: 3 : 0
+killport_jport_ 3000 65220 65221 65222 NB. clean start is good - required in windows
 jdadmin 0
 jdadminnew'rep'
 jdloadcustom_jd_ fread JDP,'test/util/custom.ijs' NB. set and load custom ops - xdelete, xrdspin, xwrspin
