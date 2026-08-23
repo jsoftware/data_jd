@@ -3,10 +3,6 @@ jdrt_z_=:      jdrt_jd_
 
 coclass 'jd'
 
-
-NB. winserver_jcs is missing waitforingleobject to avoid failure in a loop
-NB. this jd version fixes the problem and should be moved to jcs
-NB. 
 NB. windows createprocess
 NB. fork_jtask_ leaves stdin/stdout hooked up
 NB. following should be refactored into jtasks
@@ -16,16 +12,14 @@ winserver=: 3 : 0
 'only valid on win64'assert IF64
 CloseHandle=. 'kernel32 CloseHandle i x'&cd"0
 CreateProcess=. 'kernel32 CreateProcessW i x *w x x i  i x x *c *c'&cd
-WaitForSingleObject=. 'kernel32 WaitForSingleObject i x i'&cd
 f=. 16b08000000
 c=. uucp 'cmd /S /C "',y,'"'
 si=. (104{a.),104${.a.
 pi=. 24${.a.
 'r i1 c i2 i3 i4 f i5 i6 si pi'=. CreateProcess 0;c;0;0;0;f;0;0;si;pi
 'createprocess failed'assert 0~:r
-'process thread'=. _3 ic 16{.pi
-WaitForSingleObject process;_1
-CloseHandle process,thread
+decho _3 pi
+CloseHandle _3 ic 16{.pi
 )
 
 NB. fork task for all platforms
@@ -33,7 +27,7 @@ NB. windows fork_jtask_ new task is killed if creator task is killed
 NB. winservre_jcs_ avoids this
 jdfork=: 3 : 0
 if. IFWIN do.
- winserver_jcs_ y NB. jd version of winserver
+ winserver_jd_ y NB. jd version of winserver
 else.
  fork_jtask_ y
 end. 
