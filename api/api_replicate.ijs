@@ -32,7 +32,7 @@ tar=. jpath tar
 wal=. wal
 'log file already exists' assert 0=fexist wal
 ''fwrite wal
-shell'tar -czf ',(hostpathsep tar),' -C "',(hostpathsep PATH__dbl),'" .'
+shell q__=: 'tar -czf ',(hostpathsep jpath tar),' -C "',(hostpathsep PATH__dbl),'" .'
 REPLICATE__dbl=: 1
 TARFILE__dbl=: tar
 WALFILE__dbl=: wal
