@@ -37,8 +37,9 @@ TARFILE__dbl=: tar
 WALFILE__dbl=: wal
 writestate__dbl''
 NB. win tar -C must not have \ and unix does not need /
+q__=: t=. 'tar -czf ',(hostpathsep jpath tar),' -C "',(}:hostpathsep PATH__dbl),'" .
 jdadmin 0 NB. win tar fails if locked
-shell q__=: 'tar -czf ',(hostpathsep jpath tar),' -C "',(}:hostpathsep PATH__dbl),'" .'
+shell t
 i.0 0
 )
 
