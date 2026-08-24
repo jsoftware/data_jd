@@ -32,7 +32,7 @@ tar=. jpath tar
 wal=. wal
 'log file already exists' assert 0=fexist wal
 ''fwrite wal
-shell 'tar -czf ',tar,' -C "',PATH__dbl,'" .'
+shell'tar -czf ',tar,' -C "',(hostpathsep PATH__dbl),'" .'
 REPLICATE__dbl=: 1
 TARFILE__dbl=: tar
 WALFILE__dbl=: wal
@@ -59,7 +59,7 @@ CLONES__dbl=: CLONES__dbl,<dbsnk
 writestate__dbl'' 
 jdadmin 0
 jdadminnew dbsnk
-shell 'tar -xzf ',tar,' -C "',(jpath dbsnk),'"'
+shell'tar -xzf ',tar,' -C "',(hostpathsep jpath dbsnk),'"'
 REPLICATE__dbl=: 2
 TARFILE__dbl=: tar
 WALINDEX__dbl=: 0

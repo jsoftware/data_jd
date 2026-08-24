@@ -305,7 +305,7 @@ for_n. clones do.
 jdadmin 0
  n=. ;n
  jdadmin n
- (n,' bad summary or shema')assert (sum-:jd'info summary')*.sch-:jd'info schema' NB. jd'...' does repupdate
+ (n,' bad summary or schema')assert (sum-:jd'info summary')*.sch-:jd'info schema' NB. jd'...' does repupdate
 end. 
 jdadmin 0
 
