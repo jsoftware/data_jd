@@ -232,8 +232,8 @@ seebox=: 3 : 0
 if. IFUNIX do.
  t=. -.+./'->'E. shell 'ls -l ',}:JDP
 else.
- a=. deb each <;._2 shell'dir /a ',hostpathsep ('/'i:~}:JDP){.JDP
- t=. +./;(>'<JUNCTION> jd ')E. each q
+ t=. deb each <;._2 shell'dir /a ',hostpathsep ('/'i:~}:JDP){.JDP
+ t=. +./;(>'<JUNCTION> jd ')E. each t
 end. 
 m=. {{)n
 casual use is OK from pacman folder (pacman can update!)
