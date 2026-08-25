@@ -232,7 +232,7 @@ seebox=: 3 : 0
 if. IFUNIX do.
  t=. -.+./'->'E. shell 'ls -l ',}:JDP
 else.
- a=. deb each <;._2 shell'dir /a ',hostpathsep ('/'i:~}:JDP'){.JDP
+ a=. deb each <;._2 shell'dir /a ',hostpathsep ('/'i:~}:JDP){.JDP
  t=. +./;(>'<JUNCTION> jd ')E. each q
 end. 
 m=. {{)n
