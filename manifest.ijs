@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
   
-VERSION=: '4.4.121'
+VERSION=: '10000.0.0'
 
 FILES=: 0 : 0
 manifest.ijs
