@@ -3,7 +3,7 @@ in progress:
 zip/unzip ops
 
 *********************************************
-not started: (testing)
+not started:
 
 * mark derived col dirty - slow as it walks over all col locales
 
