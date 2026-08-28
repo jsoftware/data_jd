@@ -6,17 +6,12 @@ tutorial has minimal text - use man system as required
    man'jdsetadmin'
 )
 
-0 : 0
-a server requires that zmq, node, lz4, libcurl, and certificates are installed
-   man'jd requirements' NB. requirements info
-the following checks and reports issues that need to be resolved
-)
+check_all_jd_'' NB. check that all requirements are met
 
-check_zmq_jd_''
-check_node_jd_''
-check_lz4_jd_''
-check_libcurl_jd_''
-check_certs_jd_''
+0 : 0
+problems reported by check_all need to be fixed before proceeding
+   man'check_all_jd_' NB. extra info
+)
 
 NB.we'll build, configure, and run a server called s1 that serves db simple
 

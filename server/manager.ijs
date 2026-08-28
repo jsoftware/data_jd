@@ -47,37 +47,7 @@ post request (with op command added):
    man'jdclient' NB. info on J client requests
 )
 
-man_jd_e_server_requirements=: 0 : 0
-node requires zeromq and async-mutex
-install details beyond scope of this document - for example:
- $ sudo apt install npm
- $ npm install zeromq # installs in ~/node_modules
- $ npm install async-mutex
-
-node requires cert.pem and fullchain.pem files in .ssh/jserver
-for testing/development you can install self-signed certificates
-   install_self_signed_certs_jd_''
-
-require: zmq, node, lz4, libcurl, and certs
-check status with:
-   check_zmq_jd_''
-   check_node_jd_''
-   check_lz4_jd_''
-   check_libcurl_jd_''
-   check_certs_jd_''
-
-how to install zmq, node, lz4, and libcurl is beyond the scope of this document
-they are common tools and the hopefully the install is not too difficult
-
-windows libcurl install hints:
-1. download windows libcurl from curl.se/windows
-2. unzip and copy bin folder to c:\Program Files\curl
-3. mklink libcurl.dll "c:\Program Files\curl\bin\libcurl-x64.dll
-
-Mac is missing setsid utility so Mac univeral setsid is included in JDP,'cd/setsid.
-)
-
-man_jd_f_server_debug=: 0 : 0
+man_jd_e_server_debug=: 0 : 0
 following assumes s1 server and that you are on the server machine
 
 *** jd debug
@@ -581,40 +551,74 @@ a fwrite path,'/curl'
 path
 )
 
-server_requirements=: 3 : 0
-   check_zmq_jd_''
-   check_node_jd_''
-   check_lz4_jd_''
-   check_libcurl_jd_''
-   check_certs_jd_''
+NB.   * '' NB. report requirements not met
+NB. Jd server requires binaries/files in addition to the base J install
+NB. 
+NB. steps to meet these requirements are beyond the scope of this document
+NB. they are well documented on the web and hopefully not too difficult
+NB.
+NB. *** zmq:
+NB. linux: $ sudo apt-get install libzmq3-dev
+NB. mac:   $ brew install zmq
+NB.
+NB. *** lz4:
+NB. windows/mac J lz4 addon includes lz4 binary
+NB. linux must install: $ sudo apt install lz4
+
+NB. *** node (nodejs.org) hints:
+NB. when node is installed you also have to install additional modules
+NB. install npm (node package manager) if not already installed
+NB.  $ npm install zeromq
+NB.  $ npm install async-mutex
+NB.
+NB. node requires cert.pem and fullchain.pem files in .ssh/jserver
+NB. for testing/development you can install self-signed certificates
+NB.    install_self_signed_certs_jd_''
+NB.
+NB. *** windows libcurl install hints:
+NB. 1. download windows libcurl from curl.se/windows
+NB. 2. unzip and copy bin folder to c:\Program Files\curl
+NB. 3. mklink libcurl.dll "c:\Program Files\curl\bin\libcurl-x64.dll
+NB.
+NB. *** mac is missing setsid utility so Mac univeral setsid is included in JDP,'cd/setsid.
+check_all=: 3 : 0
+check_zmq''
+check_lz4''
+check_libcurl''
+check_node''
+check_certs''
 )
 
 NB. node --version must have suitable version
 check_node=: 3 : 0
 r=. shell :: _1: 'node --version'
-'node is not installed'assert -._1-:r
-'node --version is too old'assert 18<:{.0".(}.r)rplc'.';' '
-'node zeromq not installed'assert 0=#shell :: _1: 'node -e "require(''zeromq'')"'
-'node async-mutex not installed'assert 0=# shell'node -e "require(''async-mutex'')"'
+'check_node failed - node is not installed'assert -._1-:r
+'check_node failed - node --version is too old'assert 18<:{.0".(}.r)rplc'.';' '
+'check_node failed - node zeromq not installed'assert 0=#shell :: _1: 'node -e "require(''zeromq'')"'
+'check_node failed - node async-mutex not installed'assert 0=# shell'node -e "require(''async-mutex'')"'
 )
 
 check_zmq=: 3 : 0
-'zmq must be version 4.1.4 or later'assert 414<:10#.version_jcs_''
+try. version_jcs_''
+catch.
+'check_zmq failed - zmq shared library not found'assert 0
+end.
+'check_zmq failed - must be version 4.1.4 or later'assert 414<:10#.version_jcs_''
 )
 
 check_lz4=: 3 : 0
 if. IFWIN+.UNAME-:'Darwin' do. return. end. NB. win and mac addons has binary
 t=. '*** LZ4 command line interface 64-bits '
-'lz4 not installed'assert t-:($t){.shell :: _1: 'lz4 --version'
+'check_lz4 failed - lz4 not installed'assert t-:($t){.shell :: _1: 'lz4 --version'
 )
 
 check_libcurl=: 3 : 0
-'libcurl not installed'assert 0=curl_global_init_jcurl_ :: 1: CURL_GLOBAL_ALL_jcurl_
+'check_libcurl failed - libcurl not installed'assert 0=curl_global_init_jcurl_ :: 1: CURL_GLOBAL_ALL_jcurl_
 )
 
 check_certs=: 3 : 0
-'.ssh/jserver/key.pem does not exists'       assert 1=ftype '.ssh/jserver/key.pem'
-'.ssh/jserver/fullchain.pem does not exists' assert 1=ftype '.ssh/jserver/fullchain.pem'
+'check_certs failed - .ssh/jserver/key.pem does not exists'       assert 1=ftype '.ssh/jserver/key.pem'
+'check_certs failed - .ssh/jserver/fullchain.pem does not exists' assert 1=ftype '.ssh/jserver/fullchain.pem'
 )
 
 NB. copy jhs self-signed certs to .ssh/jserver
