@@ -1,4 +1,4 @@
-in progress: mac
+in progress:
 
 zip/unzip ops
 
