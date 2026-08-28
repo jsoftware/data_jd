@@ -551,36 +551,46 @@ a fwrite path,'/curl'
 path
 )
 
-NB.   * '' NB. report requirements not met
-NB. Jd server requires binaries/files in addition to the base J install
+NB. * '' NB. report requirements not met
+NB. Jd server has requirements in addition to the base J install
 NB. 
 NB. steps to meet these requirements are beyond the scope of this document
 NB. they are well documented on the web and hopefully not too difficult
+NB. following hints might help
 NB.
 NB. *** zmq:
-NB. linux: $ sudo apt-get install libzmq3-dev
-NB. mac:   $ brew install zmq
-NB.
+NB.  follow advice at zeromg.org and on net
+NB.  linux: $ sudo apt-get install libzmq3-dev
+NB.  mac:   $ brew install zmq
+NB.  windows: vcpkg?
+NB. 
 NB. *** lz4:
-NB. windows/mac J lz4 addon includes lz4 binary
-NB. linux must install: $ sudo apt install lz4
-
+NB.  windows/mac: lz4 addon includes lz4 binary
+NB.  linux: $ sudo apt install lz4
+NB.
+NB. *** libcurl
+NB.  follow advice at https://curl.se/libcurl/ and on net
+NB.  linux: $ sudo apt install libcurl
+NB.  mac:   $ brew install libcurl
+NB.  windows:
+NB.   download windows libcurl from curl.se/windows
+NB.   unzip and copy bin folder to c:\Program Files\curl
+NB.   mklink libcurl.dll "c:\Program Files\curl\bin\libcurl-x64.dll
+NB. 
 NB. *** node (nodejs.org) hints:
-NB. when node is installed you also have to install additional modules
-NB. install npm (node package manager) if not already installed
+NB.  follow advice at node.org and on net
+NB.  you need to install node and npm (node package manager)
+NB.  when node is installed you also have to install additional modules
 NB.  $ npm install zeromq
 NB.  $ npm install async-mutex
 NB.
-NB. node requires cert.pem and fullchain.pem files in .ssh/jserver
-NB. for testing/development you can install self-signed certificates
-NB.    install_self_signed_certs_jd_''
+NB. *** certs
+NB.  node requires cert.pem and fullchain.pem files in .ssh/jserver
+NB.  for testing/development you can install self-signed certificates
+NB.   install_self_signed_certs_jd_''
 NB.
-NB. *** windows libcurl install hints:
-NB. 1. download windows libcurl from curl.se/windows
-NB. 2. unzip and copy bin folder to c:\Program Files\curl
-NB. 3. mklink libcurl.dll "c:\Program Files\curl\bin\libcurl-x64.dll
-NB.
-NB. *** mac is missing setsid utility so Mac univeral setsid is included in JDP,'cd/setsid.
+NB. *** setsid
+NB. mac is missing setsid utility so Mac univeral setsid is included in JDP,'cd/setsid.
 check_all=: 3 : 0
 check_zmq''
 check_lz4''
