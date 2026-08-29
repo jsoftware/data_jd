@@ -28,7 +28,7 @@ numerical data, and complex queries and aggregations.
 )
 
 NB. huh  
-VERSION=: '10000.0.0'
+VERSION=: '4.4.129'
 
 FILES=: 0 : 0
 manifest.ijs
