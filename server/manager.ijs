@@ -553,23 +553,33 @@ path
 
 NB. * '' NB. report requirements not met
 NB. Jd server has requirements in addition to the base J install
-NB. 
 NB. steps to meet these requirements are beyond the scope of this document
-NB. they are well documented on the web and hopefully not too difficult
-NB. following hints might help
+NB. they are well documented on the web - following hints might help
 NB.
-NB. *** zmq:
-NB.  follow advice at zeromg.org and on net
+NB. *** zmq
+NB.  https://zeromg.org
 NB.  linux: $ sudo apt-get install libzmq3-dev
 NB.  mac:   $ brew install zmq
-NB.  windows: vcpkg?
-NB. 
-NB. *** lz4:
+NB.  windows:
+NB.   perhaps best way to work with windows packages is with vcpkg
+NB.   install vcpkg if not already installed
+NB.    $ git clone https://github.com/microsoft/vcpkg.git
+NB.    $ cd vcpkg
+NB.    $ bootstrap-vcpkg.bat
+NB.    $ vcpkg integrate install
+NB.   install zeromq
+NB.    $ vcpkg install zeromq:x64-windows
+NB.   link libzmq.dll to the binary so if can be found - file name may be different!
+NB.    $ mklink /h vcpkg\installed\x64-windows\bin\libzmq-mt-4_3_5.dll libzmq.dll
+NB.   jd server does not require libsodium
+NB.
+NB. *** lz4
+NB.  https://lz4.org
 NB.  windows/mac: lz4 addon includes lz4 binary
 NB.  linux: $ sudo apt install lz4
 NB.
 NB. *** libcurl
-NB.  follow advice at https://curl.se/libcurl/ and on net
+NB.  https://curl.se/libcurl
 NB.  linux: $ sudo apt install libcurl
 NB.  mac:   $ brew install libcurl
 NB.  windows:
@@ -577,10 +587,14 @@ NB.   download windows libcurl from curl.se/windows
 NB.   unzip and copy bin folder to c:\Program Files\curl
 NB.   mklink libcurl.dll "c:\Program Files\curl\bin\libcurl-x64.dll
 NB. 
-NB. *** node (nodejs.org) hints:
-NB.  follow advice at node.org and on net
+NB. *** node
+NB.  https://nodejs.org
 NB.  you need to install node and npm (node package manager)
-NB.  when node is installed you also have to install additional modules
+NB.  linux: 
+NB.  mac:
+NB.  windows: download and run node???.msi
+NB.
+NB.  when node and npm are installed, use npm to install additional modules
 NB.  $ npm install zeromq
 NB.  $ npm install async-mutex
 NB.
@@ -609,6 +623,7 @@ r=. shell :: _1: 'node --version'
 )
 
 check_zmq=: 3 : 0
+if. IFWIN do. lib_jcs_=: 'libzmq.dll' end. NB. override jcs default end. 
 try. version_jcs_''
 catch.
 'check_zmq failed - zmq shared library not found'assert 0
