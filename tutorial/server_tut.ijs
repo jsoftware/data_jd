@@ -10,7 +10,7 @@ check_all_jd_'' NB. check that all requirements are met
 
 0 : 0
 problems reported by check_all need to be fixed before proceeding
-   man'check_all_jd_' NB. extra info
+   server_requirements_jd_ NB. info on resolving problems
 )
 
 NB.we'll build, configure, and run a server called s1 that serves db simple

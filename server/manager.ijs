@@ -553,7 +553,7 @@ path
 
 server_requirements=: 0 : 0
 server has requirements in addition to the base J install
-steps to meet these requirements are beyond the scope of this document
+detailed steps to meet these requirements are beyond the scope of this document
 well documented on the web - following hints might help - proceed cautiously
 requirements: zmq/lz4/libcurl/node/certs
 
@@ -561,7 +561,7 @@ requirements: zmq/lz4/libcurl/node/certs
  linux: $ sudo apt install libzmq3-dev
  mac:   $ brew install zmq
  windows:
-  perhaps best way is with vcpkg - https://vcpkg.io
+  https://vcpkg.io
   install vcpkg if not already installed
    $ git clone https://github.com/microsoft/vcpkg.git
    $ cd vcpkg
@@ -569,20 +569,21 @@ requirements: zmq/lz4/libcurl/node/certs
    $ vcpkg integrate install
   install zeromq
    $ vcpkg install zeromq:x64-windows
-  link libzmq.dll to the binary so Jd can find it - file name may be different!
-   $ mklink /h vcpkg\installed\x64-windows\bin\libzmq-mt-4_3_5.dll libzmq.dll
+   $ copy vcpkg\installed\x64-windows\bin\libzmq???.dll libzmq.dll
 
 *** lz4 - https://lz4.org - check_lz4_jd_''
- windows/mac: lz4 addon includes lz4 binary
  linux: $ sudo apt install lz4
+ windows/mac: lz4 addon includes lz4 binary
 
 *** libcurl - https://curl.se/libcurl - check_libcurl_jd_''
  linux: $ sudo apt install libcurl
  mac:   $ brew install libcurl
  windows:
-  download windows libcurl from curl.se/windows
-  unzip and copy bin folder to c:\Program Files\curl
-  mklink libcurl.dll "c:\Program Files\curl\bin\libcurl-x64.dll
+  download 'curl for x64' from https://curl.se/windows
+  unzip download and copy ...\bin\libcurl-x64.dll to your home folder
+  rename libcurl-x64.dll to libcurl.dll
+
+  vcpkg for curl/libcurl does not work???
 
 *** node - https://nodejs.org - check_node_jd_''
  node and npm (node package manager) are required
@@ -592,7 +593,9 @@ requirements: zmq/lz4/libcurl/node/certs
  mac:
   https://nodejs.org/en/download
   get node/js - lts - for macos - using nvm - with npm
- windows: download and run node???.msi
+ windows:
+  https://nodejs.org/en/download
+  click Windows Installer (.msi)
 
  use npm to install additional modules
  $ npm install zeromq
