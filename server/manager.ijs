@@ -551,60 +551,61 @@ a fwrite path,'/curl'
 path
 )
 
+server_requirements=: 0 : 0
+server has requirements in addition to the base J install
+steps to meet these requirements are beyond the scope of this document
+well documented on the web - following hints might help - proceed cautiously
+requirements: zmq/lz4/libcurl/node/certs
+
+*** zmq - https://zeromg.org - check_zmq_jd_''
+ linux: $ sudo apt install libzmq3-dev
+ mac:   $ brew install zmq
+ windows:
+  perhaps best way is with vcpkg - https://vcpkg.io
+  install vcpkg if not already installed
+   $ git clone https://github.com/microsoft/vcpkg.git
+   $ cd vcpkg
+   $ bootstrap-vcpkg.bat
+   $ vcpkg integrate install
+  install zeromq
+   $ vcpkg install zeromq:x64-windows
+  link libzmq.dll to the binary so Jd can find it - file name may be different!
+   $ mklink /h vcpkg\installed\x64-windows\bin\libzmq-mt-4_3_5.dll libzmq.dll
+
+*** lz4 - https://lz4.org - check_lz4_jd_''
+ windows/mac: lz4 addon includes lz4 binary
+ linux: $ sudo apt install lz4
+
+*** libcurl - https://curl.se/libcurl - check_libcurl_jd_''
+ linux: $ sudo apt install libcurl
+ mac:   $ brew install libcurl
+ windows:
+  download windows libcurl from curl.se/windows
+  unzip and copy bin folder to c:\Program Files\curl
+  mklink libcurl.dll "c:\Program Files\curl\bin\libcurl-x64.dll
+
+*** node - https://nodejs.org - check_node_jd_''
+ node and npm (node package manager) are required
+ linux:
+  sudo apt update
+  sudo apt install nodejs npm -y
+ mac:
+  https://nodejs.org/en/download
+  get node/js - lts - for macos - using nvm - with npm
+ windows: download and run node???.msi
+
+ use npm to install additional modules
+ $ npm install zeromq
+ $ npm install async-mutex
+
+*** certs - checkZ_certs_jd_''
+ node requires cert.pem and fullchain.pem files in .ssh/jserver
+ for testing/development you can install self-signed certificates
+  install_self_signed_certs_jd_''
+)
+
 NB. * '' NB. report requirements not met
-NB. Jd server has requirements in addition to the base J install
-NB. steps to meet these requirements are beyond the scope of this document
-NB. they are well documented on the web - following hints might help
-NB.
-NB. *** zmq
-NB.  https://zeromg.org
-NB.  linux: $ sudo apt-get install libzmq3-dev
-NB.  mac:   $ brew install zmq
-NB.  windows:
-NB.   perhaps best way to work with windows packages is with vcpkg
-NB.   install vcpkg if not already installed
-NB.    $ git clone https://github.com/microsoft/vcpkg.git
-NB.    $ cd vcpkg
-NB.    $ bootstrap-vcpkg.bat
-NB.    $ vcpkg integrate install
-NB.   install zeromq
-NB.    $ vcpkg install zeromq:x64-windows
-NB.   link libzmq.dll to the binary so if can be found - file name may be different!
-NB.    $ mklink /h vcpkg\installed\x64-windows\bin\libzmq-mt-4_3_5.dll libzmq.dll
-NB.   jd server does not require libsodium
-NB.
-NB. *** lz4
-NB.  https://lz4.org
-NB.  windows/mac: lz4 addon includes lz4 binary
-NB.  linux: $ sudo apt install lz4
-NB.
-NB. *** libcurl
-NB.  https://curl.se/libcurl
-NB.  linux: $ sudo apt install libcurl
-NB.  mac:   $ brew install libcurl
-NB.  windows:
-NB.   download windows libcurl from curl.se/windows
-NB.   unzip and copy bin folder to c:\Program Files\curl
-NB.   mklink libcurl.dll "c:\Program Files\curl\bin\libcurl-x64.dll
-NB. 
-NB. *** node
-NB.  https://nodejs.org
-NB.  you need to install node and npm (node package manager)
-NB.  linux: 
-NB.  mac:
-NB.  windows: download and run node???.msi
-NB.
-NB.  when node and npm are installed, use npm to install additional modules
-NB.  $ npm install zeromq
-NB.  $ npm install async-mutex
-NB.
-NB. *** certs
-NB.  node requires cert.pem and fullchain.pem files in .ssh/jserver
-NB.  for testing/development you can install self-signed certificates
-NB.   install_self_signed_certs_jd_''
-NB.
-NB. *** setsid
-NB. mac is missing setsid utility so Mac univeral setsid is included in JDP,'cd/setsid.
+NB.    server_requirements_jd_ NB. requirements
 check_all=: 3 : 0
 check_zmq''
 check_lz4''
