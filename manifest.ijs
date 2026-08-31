@@ -28,7 +28,7 @@ numerical data, and complex queries and aggregations.
 )
 
 
-VERSION=: '4.4.138'
+VERSION=: '4.4.139' NB. 4.4.139 force pacman update
 
 FILES=: 0 : 0
 manifest.ijs
