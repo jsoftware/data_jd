@@ -140,8 +140,8 @@ jport=. _1".fread base,'jport'
 'this pid is already base pid'assert(2!:6'')~:getpid_jport_ jport
 node=. handle,'node/'
 nport=. _1".fread node,'a_nport'
-if. _1~:getpid_jport_ >:nport do.
- decho 'restart node'
+if. _1=getpid_jport_ >:nport do.
+ decho 'start or restart node debug'
  killport_jport_ 0 1+nport
  jdfork fread node,'rundebug.txt'
 'node server failed to start'assert _1~:getpidx_jport_ nport
