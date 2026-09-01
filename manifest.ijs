@@ -28,7 +28,7 @@ numerical data, and complex queries and aggregations.
 )
 
 
-VERSION=: '4.4.143'
+VERSION=: '4.4.143' NB.asdfasdf
 
 FILES=: 0 : 0
 manifest.ijs
