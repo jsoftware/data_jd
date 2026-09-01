@@ -41,7 +41,7 @@ curl_global_init_jcurl_ CURL_GLOBAL_ALL_jcurl_
 curl=: >{. (libcurl,' curl_easy_init * i') cd 3
 chk curl_easy_setopt_str curl;CURLOPT_URL;var y
 chk curl_easy_setopt_str curl;CURLOPT_COOKIEFILE;var ''
-chk curl_easy_setopt curl;CURLOPT_HTTPHEADER;curl_slist_append 0;'Content-Type: application/octet-stream'
+chk curl_easy_setopt curl;CURLOPT_HTTPHEADER;var curl_slist_append 0;'Content-Type: application/octet-stream'
 chk curl_easy_setopt curl;CURLOPT_SSL_VERIFYPEER;var 0
 chk curl_easy_setopt curl;CURLOPT_SSL_VERIFYHOST;var 0
 chk curl_easy_setopt curl; CURLOPT_WRITEFUNCTION;var f 4
