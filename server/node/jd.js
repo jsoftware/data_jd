@@ -298,20 +298,17 @@ async function run(res) {
   try{ 
     var p;
     try{
-      logit(res,'jd');
       var jdi= jports.indexOf(res.jdport);
       var sock= socks[jdi];
       jts[jdi]=  Date.now(); // time when sent to jd
       jres[jdi]= res;        // res for the jd request
       jready[jdi]= 1;        // port busy
 
-      //logit(res,'jda',jdi+' '+jready[jdi]);
-
+      logit(res,'jda');
       await sock.send([res.jdpost.length.toString(),res.jdpost]);
       [p] = await sock.receive();
+      logit(res,'jdz');
       jready[jdi]= 0; // port is ready
-
-      //logit(res,'jdz',jdi+' '+jready[jdi]);
 
       setTimeout(() =>{runem()},0);
 
