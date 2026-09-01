@@ -4,7 +4,8 @@ NB. manage jd server
 coclass'jd'
 jdserver_z_=: jdserver_jd_
 
-man_jd_c_server_overview=: 0 : 0
+man_jd_server_overview=: 0 : 0
+Jd c
 server - node task running a proxy and a J task running a zmq loop
 
 node - https://nodejs.org
@@ -20,7 +21,8 @@ J task handles zmq requests from node task
 https clients (ibcurl/curl/browser)
 )
 
-man_jd_d_server_client=: 0 : 0
+man_jd_server_client=: 0 : 0
+Jd d
 libcurl/curl/browser - post https request to node task
 
 post data: jdcmd LF nodecmd
@@ -47,7 +49,8 @@ post request (with op command added):
    man'jdclient' NB. info on J client requests
 )
 
-man_jd_e_server_debug=: 0 : 0
+man_jd_server_debug=: 0 : 0
+Jd e
 following assumes s1 server and that you are on the server machine
 
 *** jd debug

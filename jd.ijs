@@ -39,9 +39,10 @@ man docs are at your fingertips and are in the script with the code
    jdrt '' NB. tutorials
 )
 
-man_jd_a_welcome=: jdwelcome_jd_
+man_jd_welcome=: 'Jd a',LF,jdwelcome_jd_
 
-man_jd_b_users=: 0 : 0
+man_jd_users=: 0 : 0
+Jd b
 direct access users do not have passwords
    jdaccess dan;user NB. validate user/op against admin.ijs
 
