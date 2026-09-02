@@ -1,6 +1,8 @@
 NB. Copyright 2026, Jsoftware Inc.  All rights reserved.
 NB. manage jd server
 
+require'pacman' NB. jdsstop
+
 coclass'jd'
 jdserver_z_=: jdserver_jd_
 
@@ -101,7 +103,6 @@ jdserver=: 3 : 0
 if. 0=L.y do. y=. bdnames y else. y=. (bdnames ;{.y),}.y end.
 'name op'=. 2{.y
 y=. 2}.y
-dbr 0          NB. otherwise server cannot handle error properly
 vdname name
 select. op
 case. 'create' do. jdscreate name;y
@@ -320,6 +321,7 @@ NB. jdsstop can be run again to see if node task has exited
 jdsstop=: 3 : 0
 'name time'=. y
 time=. 1".":;(0=#time){time;10
+db=. fread (jdserver name,' handle'),'base/db'
 p=. jdserver name,' pids'
 if. *./_1=p do. i.0 0 return. end. NB. return if no pids
 
@@ -423,6 +425,7 @@ end.
 NB. create jds server folder
 
 jds_server_config_template=: 0 : 0
+dbr 0 NB. server task must run with debug off
 JDP_z_=: '<JDP>'
 load JDP,'jd.ijs'
 IFJDS_z_=: 1

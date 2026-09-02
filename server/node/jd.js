@@ -91,7 +91,11 @@ async function createsocks(){
       //immediate:      true, // Only queue if a peer is connected
       //relaxed:        true, // allow new request without receiving a reply first
       //correlate:      true  // ignore late replies from previous dead requests
-  });
+
+      // following needs to have monitor set up to detect failure
+     // heartbeatInterval: 6000, // Send a ping
+      //heartbeatTimeout:  3000,  // Time out if no traffic
+    });
 
     // zmq sock connect must complete before doing send
     const promise = new Promise((resolve) => {
