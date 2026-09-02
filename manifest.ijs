@@ -27,7 +27,7 @@ multiple tables connected by complex joins, structured data,
 numerical data, and complex queries and aggregations.
 )
 
-VERSION=: '4.4.147' NB. 2026 9 1 16 26 0.014823 force pacman update
+VERSION=: '4.4.148' NB. 2026 9 2 11 54 1.01719 force pacman update
 
 FILES=: 0 : 0
 manifest.ijs
