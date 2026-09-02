@@ -101,6 +101,7 @@ jdserver=: 3 : 0
 if. 0=L.y do. y=. bdnames y else. y=. (bdnames ;{.y),}.y end.
 'name op'=. 2{.y
 y=. 2}.y
+dbr 0          NB. otherwise server cannot handle error properly
 vdname name
 select. op
 case. 'create' do. jdscreate name;y
