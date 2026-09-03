@@ -96,7 +96,7 @@ beatrun ' -js load\''',JDP,'test/util/beat.ijs\'' beatonetask[0 > /dev/null 2>&1
 beatrun=: 3 : 0
 a=. y
 if. IFWIN do. a=. y rplc '\''';'''';'/dev/null';'NUL' end.
-jdfork_jd_ t__=:(hostpathsep jpath'~bin/jconsole'),a
+jdfork_jd_ t__=:(hostpathsep jpath'~bin/',FHS{::'jconsole';'ijconsole'),a
 )
 
 NB. run op in forked task and write result to beatsnk/pid.txt
