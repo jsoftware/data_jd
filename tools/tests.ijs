@@ -15,6 +15,7 @@ jdtests=: 3 : 0
 :
 killport_jport_ 3000 65220 65221 65222 NB. clean test server port state
 'must not run in server' assert -.IFJDS
+dbr 0   NB. suppress error in 'MTRO db only allows read type ops' assert (JDMT~:MTRO_jmf_)+.readop
 jdadmin 0
 load JDP,'base/tests.ijs'
 load JDP,'base/testtuts.ijs'
